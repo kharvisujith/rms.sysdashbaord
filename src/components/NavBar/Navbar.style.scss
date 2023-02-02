@@ -1,0 +1,102 @@
+.action-info {
+  padding-left: 1rem;
+  margin-top: 0.3rem !important;
+  margin-bottom: 0.3rem !important;
+  font-weight: 500;
+  .MuiTypography-root {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.7rem;
+  }
+}
+.action-divider {
+  margin-top: 0.1rem !important;
+}
+.tabs-divider {
+  margin-top: 1rem !important;
+}
+
+.recent-actions-title {
+  padding-left: 0.5rem;
+  margin-top: 0.2rem !important;
+  margin-bottom: 0.2rem !important;
+  font-size: 0.8rem !important;
+  font-family: Arial, Helvetica, sans-serif !important;
+  font-weight: 550 !important;
+}
+
+.navbar-container-dark {
+  background-color: #202020;
+}
+.navbar-container-light {
+  background-color: aliceblue;
+}
+.take-action-tabs {
+  .MuiTab-root {
+    font-family: Arial, Helvetica, sans-serif;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin: 0;
+  }
+}
+// this is without action id part
+.action-taken-div {
+  overflow-y: scroll;
+  //  max-height: 20vh;
+  max-height: 30vh;
+}
+.action-taken-div-fromplusicon {
+  overflow-y: scroll;
+  max-height: 75vh;
+  // max-height: 65vh;
+}
+.action-taken-div::-webkit-scrollbar {
+  width: 6px;
+  background-color: #f7f7f7;
+}
+.action-taken-div::-webkit-scrollbar-thumb {
+  background-color: #000000;
+}
+.action-taken-div::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  background-color: #f7f7f7;
+}
+
+.action-taken-div-fromplusicon::-webkit-scrollbar {
+  width: 6px;
+  background-color: #f7f7f7;
+}
+.action-taken-div-fromplusicon::-webkit-scrollbar-thumb {
+  background-color: #000000;
+}
+.action-taken-div-fromplusicon::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  background-color: #f7f7f7;
+}
+
+.action-taken-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  padding-bottom: 0.5rem;
+}
+.action-taken-container-dark {
+  background-color: #202020;
+}
+.action-taken-container-light {
+  background-color: aliceblue;
+}
+
+.action-event-margin {
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+  color: #a0a0a0;
+  font-size: 0.8rem !important;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.take-action-loader {
+  display: flex;
+  justify-content: center;
+  margin-top: 20%;
+}
