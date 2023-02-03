@@ -20,14 +20,16 @@ const App = () => {
   }, [navigate]);
 
   return (
-    <Routes>
-      <Route path="/" element={<RmsHome />} />
-      <Route path="/assignments" element={<SubjectExpert />} />
-      <Route path="/reviewer" element={<Interviewer />} />
-      <Route path="/quiz" element={<StartQuiz />} />
-      <Route path="/test_submitted" element={<TestCompleted />} />
-      <Route path="*" element={<PageNotFound />} />
-    </Routes>
+    <>
+      <Routes>
+        <Route path="/" element={<RmsHome />} />
+        <Route path="/assignments" element={<SubjectExpert />} />
+        <Route path="/reviewer" element={<Interviewer />} />
+        <Route path="/quiz" element={<StartQuiz />} />
+        <Route path="/test_submitted" element={<TestCompleted />} />
+        <Route path="*" element={<PageNotFound />} />
+      </Routes>
+    </>
   );
 };
 export default App;

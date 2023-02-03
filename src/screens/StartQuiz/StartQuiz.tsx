@@ -13,16 +13,20 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Toolbar from "@mui/material/Toolbar";
 import ReactModal from "react-modal";
-import { useState } from "react";
-import "./common.css";
+import { useEffect, useState } from "react";
+import "./StartQuiz.style.scss";
 import AllQuestions from "../../components/DispalyQuizQuestions/AllQuestions";
 import SingleQuestion from "../../components/DispalyQuizQuestions/SingleQuestion";
 import { useNavigate } from "react-router-dom";
+import { getQuizQuestions } from "../../api/apiAgent";
 const StartQuiz = () => {
   const navigate = useNavigate();
   const [OpenTestModal, setOpenTestModal] = useState(false);
   const [modalContent, setModalContent] = useState("");
   const [openDialog, setOpenDialog] = useState<boolean>(false);
+  const [quizQuestions, setQuizQuestions] = useState<any>();
+  //const [numberOfQuestions, setNumberOfQuestions] = useState<number>();
+
   const handleClose = () => {
     setOpenDialog(false);
   };
@@ -48,6 +52,22 @@ const StartQuiz = () => {
     createData("Question Answered", 0),
     createData("Question Not Answered", 0),
   ];
+
+  useEffect(() => {
+    console.log("ueEffect is called");
+    getQuizQuestions(1, "javascript")
+      .then((res) => {
+        setQuizQuestions(res.data);
+        return res.data;
+      })
+      .then((resp) => {
+        console.log("value of ress is", resp);
+        console.log(resp.length);
+      })
+      .catch((error) => console.log("error is get question", error));
+  }, []);
+
+  console.log("value of quizquestion is", quizQuestions);
 
   return (
     <Box className="main-layout-wrap">
@@ -75,6 +95,7 @@ const StartQuiz = () => {
               openDialog={openDialog}
               handleClose={handleClose}
               setOpenDialog={setOpenDialog}
+              quizQuestions={quizQuestions}
             />
           ) : null}
           {modalContent && modalContent === "listView" ? (
@@ -82,10 +103,9 @@ const StartQuiz = () => {
               openDialog={openDialog}
               handleClose={handleClose}
               setOpenDialog={setOpenDialog}
+              quizQuestions={quizQuestions}
             />
           ) : null}
-
-          <button onClick={handleCloseFromModal}>Close Modal</button>
         </ReactModal>
         <div className="quiz-info-wrapper">
           <span className="quiz-information">

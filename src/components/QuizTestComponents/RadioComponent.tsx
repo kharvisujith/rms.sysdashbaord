@@ -5,34 +5,36 @@ import { useState } from "react";
 
 const RadioComponent = (props: any) => {
   const { question, handleAnswerChange } = props;
+
+  // question={{
+  //   questionNumber: index + 1,
+  //   questionData: question,
   //   console.log("value of props in radio is", props);
 
   const [value, setValue] = useState({});
-  console.log("value of questio is", question);
   return (
     <>
       <Box>
-        <Typography>{`${question.questionNumber}. ${question.questionText.question}`}</Typography>
+        <Typography>{`${question.questionNumber}. ${question.questionData.question}`}</Typography>
         <RadioGroup
-          aria-labelledby="demo-radio-buttons-group-label"
-          defaultValue="female"
-          name="radio-buttons-group"
           value={value}
           onChange={(event) => {
             setValue((event.target as HTMLInputElement).value);
-            handleAnswerChange(event, question.questionText.id);
+            handleAnswerChange(event, question.questionData.questionId);
           }}
         >
-          {question.questionText.options.map((option: any, index: any) => {
-            return (
-              <FormControlLabel
-                value={option.value}
-                control={<Radio />}
-                label={option.label}
-                key={index}
-              />
-            );
-          })}
+          {question.questionData.questionOptions.map(
+            (option: any, index: any) => {
+              return (
+                <FormControlLabel
+                  value={option}
+                  control={<Radio />}
+                  label={option}
+                  key={index}
+                />
+              );
+            }
+          )}
         </RadioGroup>
       </Box>
     </>

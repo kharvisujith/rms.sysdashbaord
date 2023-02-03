@@ -1,0 +1,53 @@
+.Dialog-Container {
+  display: flex;
+  flex-direction: column !important;
+  justify-content: space-around;
+
+  .items {
+    margin-top: 1rem;
+  }
+  .file {
+    margin-top: 1.5rem;
+  }
+  .button {
+    margin: 1rem;
+  }
+  .error {
+    color: red;
+    font-size: 0.8rem;
+  }
+}
+
+//   .label {
+//     margin: 1.5rem;
+//     margin-bottom: 0.3rem;
+//     text-transform: uppercase;
+//     text-align: start;
+//     font-weight: 520;
+//     font-size: 1rem;
+//   }
+// }
+
+// .Dialog-Container .items {
+//   margin-top: 1rem;
+// }
+// .Dialog-Container .file {
+//   margin-top: 1.5rem;
+// }
+
+// .Dialog-Container .button {
+//   margin: 1rem;
+// }
+// .Dialog-Container .error {
+//   color: red;
+//   font-size: 0.8rem;
+// }
+
+// .Dialog-Container .label {
+//   margin: 1.5rem;
+//   margin-bottom: 0.3rem;
+//   text-transform: uppercase;
+//   text-align: start;
+//   font-weight: 520;
+//   font-size: 1rem;
+// }

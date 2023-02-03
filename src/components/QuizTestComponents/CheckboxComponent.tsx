@@ -64,27 +64,30 @@ const CheckboxComponent = (props: any) => {
   return (
     <>
       <Box>
-        <Typography>{`${question.questionNumber}. ${question.questionText.question}`}</Typography>
+        <Typography>{`${question.questionNumber}. ${question.questionData.question}`}</Typography>
         <FormGroup>
-          {question.questionText.options.map((option: any, index: any) => {
-            return (
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    onChange={(event) =>
-                      handleCheckboxAnswerChange(
-                        event,
-                        question.questionText.id
-                      )
-                    }
-                    name={option.value}
-                  />
-                }
-                label={option.label}
-                key={index}
-              />
-            );
-          })}
+          {question.questionData.questionOptions.map(
+            (option: any, index: any) => {
+              console.log("value of option in map is", option);
+              return (
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      onChange={(event) =>
+                        handleCheckboxAnswerChange(
+                          event,
+                          question.questionData.questionId
+                        )
+                      }
+                      name={option}
+                    />
+                  }
+                  label={option}
+                  key={index}
+                />
+              );
+            }
+          )}
         </FormGroup>
       </Box>
     </>

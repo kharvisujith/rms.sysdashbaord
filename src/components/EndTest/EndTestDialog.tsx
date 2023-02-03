@@ -7,10 +7,19 @@ import {
   DialogActions,
   Button,
 } from "@mui/material";
+import Typography from "@mui/material/Typography";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+import "./EndTestDialog.style.scss";
 const EndTestDialog = (props: any) => {
-  const { openDialog, handleClose, setOpenDialog } = props;
+  const {
+    openDialog,
+    handleClose,
+    setOpenDialog,
+    selectedAnswers,
+    totalNumberOfQuestions,
+  } = props;
+  console.log("value of total number of questions", totalNumberOfQuestions);
 
   const navigate = useNavigate();
 
@@ -18,7 +27,7 @@ const EndTestDialog = (props: any) => {
     setOpenDialog(false);
     console.log("test ended");
     navigate("/test_submitted");
-    // console.log("the final answer set is", answers);
+    console.log("the final answer set is", selectedAnswers);
   };
 
   return (
@@ -27,19 +36,19 @@ const EndTestDialog = (props: any) => {
         <Dialog
           open={openDialog}
           onClose={handleClose}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
+          style={{ width: "100%", border: "2px solid red" }}
         >
-          <DialogTitle id="alert-dialog-title">
-            {"Do want to End the Test? "}
-          </DialogTitle>
+          <DialogTitle>{"Do want to End the Test? "}</DialogTitle>
           <DialogContent>
-            <DialogContentText id="alert-dialog-description">
-              Your latest answers will be submitted if you end the test. Once
-              you submit your test will be completed.
+            <DialogContentText>
+              {`Total Number Of Questions : ${totalNumberOfQuestions}`} <br />
+              {`Questions Answered : ${selectedAnswers.length}`} <br />
+              {`Questions Not Answered : ${
+                totalNumberOfQuestions - selectedAnswers.length
+              }`}
             </DialogContentText>
           </DialogContent>
-          <DialogActions>
+          <DialogActions className="actions">
             <Button onClick={handleClose} color="primary" variant="contained">
               Cancel
             </Button>
