@@ -59,8 +59,13 @@ export const upLoadExcel = (
 };
 
 export const getQuizQuestions = (set: number, subject: string) => {
-  //  https://localhost:5001/api/Rms/1/quiz/candidate/questions?set=1&subject=javascript
   return axiosClient.get(
     `quiz/candidate/questions?set=${set}&subject=${subject}`
   );
+};
+
+export const getSuBjectwiseQuiz = (subject: string) => {
+  return axiosClient.get("/quiz/SubjectExpert/allquestions", {
+    params: { subject: subject },
+  });
 };

@@ -12,23 +12,41 @@ import "./SubjectExpert.style.scss";
 import {
   Alert,
   AlertTitle,
+  Card,
+  CardContent,
   Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
+  Grid,
   MenuItem,
   TextField,
   Typography,
 } from "@mui/material";
-import { axiosClient, downnLoadExcel, upLoadExcel } from "../../api/apiAgent";
-import { ChangeEvent, useState } from "react";
-
+import {
+  axiosClient,
+  downnLoadExcel,
+  getSuBjectwiseQuiz,
+  upLoadExcel,
+} from "../../api/apiAgent";
+import { ChangeEvent, useEffect, useState } from "react";
 import Swal from "sweetalert2";
+import SubjectList from "../../components/SubjectExpertDataList/SubjectList";
 
 const SubjectExpert = (props: any) => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
+  const [file, setFile] = useState<File>();
+  const [data, setData] = useState<any>({
+    set: "",
+    subject: "",
+  });
+  const [formError, setFormError] = useState<any>({
+    set: false,
+    subject: false,
+    file: false,
+  });
 
   const handleOpen = () => {
     setOpen(true);
@@ -74,17 +92,6 @@ const SubjectExpert = (props: any) => {
         });
       });
   };
-
-  const [file, setFile] = useState<File>();
-  const [data, setData] = useState<any>({
-    set: "",
-    subject: "",
-  });
-  const [formError, setFormError] = useState<any>({
-    set: false,
-    subject: false,
-    file: false,
-  });
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -142,9 +149,6 @@ const SubjectExpert = (props: any) => {
     const value = e.target.value;
     setData({ ...data, [name]: value });
   };
-  console.log(data);
-  console.log(file);
-  console.log(formError);
 
   return (
     <Box className="main-layout-wrap">
@@ -181,7 +185,6 @@ const SubjectExpert = (props: any) => {
           Upload Quiz Question Set
         </Button>
       </Box>
-
       <Box>
         <Dialog open={open} onClose={handleClose}>
           <DialogTitle>Upload Questions Set</DialogTitle>
@@ -211,10 +214,6 @@ const SubjectExpert = (props: any) => {
                 Please Enter Subject Name
               </Typography>
             )}
-
-            {/* <label htmlFor="file" className="label">
-              Upload Excel file from given Template
-            </label> */}
             <TextField
               name="file"
               variant="standard"
@@ -247,6 +246,7 @@ const SubjectExpert = (props: any) => {
           </DialogContent>
         </Dialog>
       </Box>
+      <SubjectList />
     </Box>
   );
 };
