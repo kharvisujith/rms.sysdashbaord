@@ -8,13 +8,45 @@ import { makeStyles } from "@material-ui/core/styles";
 import FileUploadSingle from "../../components/FileUpload/FileUploadSingle";
 import CloseIcon from "@mui/icons-material/Close";
 import Menu from "@material-ui/icons/Menu";
-import { Dialog, DialogContent, MenuItem, Typography } from "@mui/material";
-import { axiosClient, downnLoadExcel } from "../../api/apiAgent";
-import { useState } from "react";
+import "./SubjectExpert.style.scss";
+import {
+  Alert,
+  AlertTitle,
+  Card,
+  CardContent,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Grid,
+  MenuItem,
+  TextField,
+  Typography,
+} from "@mui/material";
+import {
+  axiosClient,
+  downnLoadExcel,
+  getSuBjectwiseQuiz,
+  upLoadExcel,
+} from "../../api/apiAgent";
+import { ChangeEvent, useEffect, useState } from "react";
+import Swal from "sweetalert2";
+import SubjectList from "../../components/SubjectExpertDataList/SubjectList";
 
 const SubjectExpert = (props: any) => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
+  const [file, setFile] = useState<File>();
+  const [data, setData] = useState<any>({
+    set: "",
+    subject: "",
+  });
+  const [formError, setFormError] = useState<any>({
+    set: false,
+    subject: false,
+    file: false,
+  });
 
   const handleOpen = () => {
     setOpen(true);
@@ -41,22 +73,81 @@ const SubjectExpert = (props: any) => {
         document.body.appendChild(link);
         link.click();
       })
+      .then((res) => {
+        console.log("downloaded sucessfully");
+        Swal.fire({
+          title: "Success",
+          text: "Template downloaded succesfully",
+          icon: "success",
+          confirmButtonText: "Okay",
+        });
+      })
       .catch((error) => {
         console.error(error);
+        Swal.fire({
+          title: "Failed",
+          text: "Failed to Download the template",
+          icon: "error",
+          confirmButtonText: "Okay",
+        });
       });
-    // axiosClient
-    //   .get("/quiz/exportTemplate", { responseType: "blob" })
-    //   .then((response) => {
-    //     const url = window.URL.createObjectURL(new Blob([response.data]));
-    //     const link = document.createElement("a");
-    //     link.href = url;
-    //     link.setAttribute("download", "excel-file.xlsx"); // set the downloaded file name
-    //     document.body.appendChild(link);
-    //     link.click();
-    //   })
-    //   .catch((error) => {
-    //     console.error(error);
-    //   });
+  };
+
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setFormError({ ...formError, [e?.target.name]: false });
+      console.log(e.target.files[0]);
+      setFile(e.target.files[0]);
+    }
+  };
+  const handleUploadClick = () => {
+    if (file && data.set && data.subject) {
+      console.log("starting upload");
+      const formData = new FormData();
+      formData.append("formFile", file);
+
+      upLoadExcel(data.set, data.subject, formData)
+        .then((res) => res.data)
+        .then((res) => {
+          console.log("uploaded succesfully");
+          setOpen(false);
+          Swal.fire({
+            title: "Success",
+            text: "Question Set Uploaded Succesfully",
+            icon: "success",
+            confirmButtonText: "Okay",
+          });
+        })
+        .catch((error: any) => {
+          console.log(error);
+          Swal.fire({
+            title: "Failed",
+            text: "Failed to Upload Question Set",
+            icon: "error",
+            confirmButtonText: "Okay",
+          });
+        });
+    } else if (!data.set) {
+      console.log("inside !data.set");
+      setFormError({ ...formError, set: true });
+    } else if (!data.subject) {
+      setFormError({ ...formError, subject: true });
+    } else if (!file) {
+      setFormError({ ...formError, file: true });
+    }
+  };
+
+  const handleTextChange = (e: any) => {
+    console.log(e.target.value);
+    console.log(typeof e.target.value);
+    if (e.target.name === "set") {
+      const value = parseInt(e.target.value);
+      console.log(typeof value);
+    }
+    setFormError({ ...formError, [e?.target.name]: false });
+    const name = e.target.name;
+    const value = e.target.value;
+    setData({ ...data, [name]: value });
   };
 
   return (
@@ -86,38 +177,76 @@ const SubjectExpert = (props: any) => {
           <Button color="inherit">Log out</Button>
         </Toolbar>
       </AppBar>
-      <hr />
       <Box sx={{ "& button": { m: 2 } }}>
-        <div>
-          <Button
-            variant="contained"
-            onClick={handleOpen}
-            className={"manage-buttons"}
-          >
-            File Upload
-          </Button>
-        </div>
-        <Dialog maxWidth="sm" open={open}>
-          <DialogContent>
-            <AppBar className="add-appbar">
-              <Toolbar>
-                <IconButton
-                  color="inherit"
-                  onClick={handleClose}
-                  aria-label="close"
-                  className="add-close-dialog"
-                >
-                  <CloseIcon />
-                </IconButton>
-              </Toolbar>
-            </AppBar>
-            <FileUploadSingle />
+        <Button variant="contained" onClick={downloadFile}>
+          Download Template
+        </Button>
+        <Button variant="contained" onClick={handleOpen}>
+          Upload Quiz Question Set
+        </Button>
+      </Box>
+      <Box>
+        <Dialog open={open} onClose={handleClose}>
+          <DialogTitle>Upload Questions Set</DialogTitle>
+          <DialogContent className="Dialog-Container">
+            <TextField
+              name="set"
+              label="Set Number"
+              variant="standard"
+              type="number"
+              className="items"
+              onChange={handleTextChange}
+            />
+            {formError.set && (
+              <Typography className="error">Please Enter Set Number</Typography>
+            )}
+
+            <TextField
+              name="subject"
+              label="Subject Name"
+              variant="standard"
+              type="text"
+              className="items"
+              onChange={handleTextChange}
+            />
+            {formError.subject && (
+              <Typography className="error">
+                Please Enter Subject Name
+              </Typography>
+            )}
+            <TextField
+              name="file"
+              variant="standard"
+              type="file"
+              id="file"
+              className="file"
+              onChange={handleFileChange}
+            />
+            {formError.file && (
+              <Typography className="error">
+                Please Choose excel file
+              </Typography>
+            )}
+            <Box>
+              <Button
+                className="button"
+                variant="contained"
+                onClick={handleUploadClick}
+              >
+                Submit
+              </Button>
+              <Button
+                className="button"
+                variant="contained"
+                onClick={() => setOpen(false)}
+              >
+                Cancel
+              </Button>
+            </Box>
           </DialogContent>
         </Dialog>
       </Box>
-      <Button variant="contained" onClick={downloadFile}>
-        Download
-      </Button>
+      <SubjectList />
     </Box>
   );
 };

@@ -6,18 +6,21 @@ import { useState } from "react";
 import { Box, Button, Typography } from "@mui/material";
 import EndTestDialog from "../EndTest/EndTestDialog";
 import { LinearProgress } from "@mui/material";
-const TotalNumberOfQuestion = 5;
 
 const AllQuestions = (props: any) => {
-  const { openDialog, handleClose, setOpenDialog } = props;
-  const [answers, setAnswers] = useState<any>([]);
+  // const { openDialog, handleClose, setOpenDialog } = props;
+  const { openDialog, handleClose, setOpenDialog, quizQuestions } = props;
+  const [selectedAnswers, setSelectedAnswers] = useState<any>([]);
   const [progressStatus, setProgressStatus] = useState<number>(0);
   const [answeredQuestions, setAnsweredQuestions] = useState<number>(0);
+  const [totalNumberOfQuestions, setTotolNumberOfQuestions] = useState<number>(
+    quizQuestions.length
+  );
 
   const handleProgressStatus = () => {
     console.log("handePrgressstatus called");
     const statusPercentage =
-      ((answeredQuestions + 1) * 100) / TotalNumberOfQuestion;
+      ((answeredQuestions + 1) * 100) / totalNumberOfQuestions;
     setAnsweredQuestions((prev) => prev + 1);
     console.log("value of st is", statusPercentage);
     setProgressStatus(statusPercentage);
@@ -25,16 +28,16 @@ const AllQuestions = (props: any) => {
 
   const handleRadioAnswerChange = (
     event: React.ChangeEvent<HTMLInputElement>,
-    id: any
+    questionId: any
   ) => {
     const selectedOption = (event.target as HTMLInputElement).value;
-    const existingId = answers.find((e: any) => e.id === id);
+    const existingId = selectedAnswers.find((e: any) => e.id === questionId);
     if (existingId) {
       existingId.choosenAnswer = selectedOption;
     } else {
-      setAnswers((prev: any) => [
+      setSelectedAnswers((prev: any) => [
         ...prev,
-        { id: id, choosenAnswer: selectedOption },
+        { questionId: questionId, choosenAnswer: [selectedOption] },
       ]);
       handleProgressStatus();
     }
@@ -42,9 +45,11 @@ const AllQuestions = (props: any) => {
 
   const handleCheckboxAnswerChange = (
     event: React.ChangeEvent<HTMLInputElement>,
-    id: any
+    questionId: any
   ) => {
-    const existingId = answers.find((e: any) => e.id === id);
+    const existingId = selectedAnswers.find(
+      (e: any) => e.questionId === questionId
+    );
     if (existingId) {
       const valExist = existingId.choosenAnswer.find(
         (e: any) => e === event.target.name
@@ -59,9 +64,9 @@ const AllQuestions = (props: any) => {
         existingId.choosenAnswer.push(event.target.name);
       }
     } else {
-      setAnswers((prev: any) => [
+      setSelectedAnswers((prev: any) => [
         ...prev,
-        { id: id, choosenAnswer: [event.target.name] },
+        { questionId: questionId, choosenAnswer: [event.target.name] },
       ]);
       handleProgressStatus();
     }
@@ -69,27 +74,27 @@ const AllQuestions = (props: any) => {
 
   // const handleTestSubmit = () => {
   //   setOpenDialog(true);
-  //   console.log("The submited answer set is", answers);
+  //   console.log("The submited answer set is", selectedAnswers);
   //   //setConfirmSubmit(true);
   // };
 
-  console.log("value of answers is", answers);
+  console.log("value of selectedAnswers is", selectedAnswers);
 
   return (
     <>
-      <Typography>{`Answered ${answeredQuestions} out of ${TotalNumberOfQuestion}`}</Typography>
+      <Typography>{`Answered ${answeredQuestions} out of ${totalNumberOfQuestions}`}</Typography>
       <LinearProgress
         value={progressStatus}
         variant={"determinate"}
         color={"primary"}
       />
-      {jsQuestions.map((question, index) => {
-        switch (question.selectionType) {
-          case "radio":
+      {quizQuestions.map((question: any, index: any) => {
+        switch (question.questionType) {
+          case "Radio":
             return (
               <RadioComponent
                 key={index}
-                question={{ questionNumber: index + 1, questionText: question }}
+                question={{ questionNumber: index + 1, questionData: question }}
                 handleAnswerChange={handleRadioAnswerChange}
               />
             );
@@ -97,7 +102,7 @@ const AllQuestions = (props: any) => {
             return (
               <CheckboxComponent
                 key={index}
-                question={{ questionNumber: index + 1, questionText: question }}
+                question={{ questionNumber: index + 1, questionData: question }}
                 handleCheckboxAnswerChange={handleCheckboxAnswerChange}
               />
             );
@@ -109,7 +114,7 @@ const AllQuestions = (props: any) => {
       })}
 
       <Box>
-        <Typography>{`Answered ${answeredQuestions} out of ${TotalNumberOfQuestion}`}</Typography>
+        <Typography>{`Answered ${answeredQuestions} out of ${totalNumberOfQuestions}`}</Typography>
         <LinearProgress
           value={progressStatus}
           variant={"determinate"}
@@ -129,6 +134,8 @@ const AllQuestions = (props: any) => {
         openDialog={openDialog}
         handleClose={handleClose}
         setOpenDialog={setOpenDialog}
+        selectedAnswers={selectedAnswers}
+        totalNumberOfQuestions={totalNumberOfQuestions}
       />
     </>
   );

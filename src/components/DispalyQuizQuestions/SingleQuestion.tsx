@@ -1,5 +1,5 @@
 import { Box, Button, LinearProgress, Typography } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import EndTestDialog from "../EndTest/EndTestDialog";
 import CheckboxComponent from "../QuizTestComponents/CheckboxComponent";
 import CodingComponent from "../QuizTestComponents/CodingComponent";
@@ -9,11 +9,15 @@ import { jsQuestions } from "../../questions/questions";
 const TotalNumberOfQuestion = 5;
 
 const SingleQuestion = (props: any) => {
-  const { openDialog, handleClose, setOpenDialog } = props;
+  const { openDialog, handleClose, setOpenDialog, quizQuestions } = props;
+  console.log("value of quiz in singlereqion is", quizQuestions);
   const [currentQuestion, setCurrentQuestion] = useState<number>(1);
-  const [answers, setAnswers] = useState<any>([]);
+  const [selectedAnswers, setSelectedAnswers] = useState<any>([]);
   const [progressStatus, setProgressStatus] = useState<number>(0);
   const [answeredQuestions, setAnsweredQuestions] = useState<number>(0);
+  const [totalNumberOfQuestions, setTotolNumberOfQuestions] = useState<number>(
+    quizQuestions.length
+  );
 
   const moveToNextQuestion = () => {
     console.log("next question");
@@ -26,16 +30,18 @@ const SingleQuestion = (props: any) => {
 
   const handleRadioAnswerChange = (
     event: React.ChangeEvent<HTMLInputElement>,
-    id: any
+    questionId: any
   ) => {
     const selectedOption = (event.target as HTMLInputElement).value;
-    const existingId = answers.find((e: any) => e.id === id);
+    const existingId = selectedAnswers.find(
+      (e: any) => e.questionId === questionId
+    );
     if (existingId) {
       existingId.choosenAnswer = selectedOption;
     } else {
-      setAnswers((prev: any) => [
+      setSelectedAnswers((prev: any) => [
         ...prev,
-        { id: id, choosenAnswer: selectedOption },
+        { questionId: questionId, choosenAnswer: [selectedOption] },
       ]);
       handleProgressStatus();
     }
@@ -44,7 +50,7 @@ const SingleQuestion = (props: any) => {
   const handleProgressStatus = () => {
     console.log("handePrgressstatus called");
     const statusPercentage =
-      ((answeredQuestions + 1) * 100) / TotalNumberOfQuestion;
+      ((answeredQuestions + 1) * 100) / totalNumberOfQuestions;
     setAnsweredQuestions((prev) => prev + 1);
     console.log("value of st is", statusPercentage);
     setProgressStatus(statusPercentage);
@@ -52,10 +58,12 @@ const SingleQuestion = (props: any) => {
 
   const handleCheckboxAnswerChange = (
     event: React.ChangeEvent<HTMLInputElement>,
-    id: any
+    questionId: any
   ) => {
-    console.log(event.target.name, event.target.checked, id);
-    const existingId = answers.find((e: any) => e.id === id);
+    console.log(event.target.name, event.target.checked, questionId);
+    const existingId = selectedAnswers.find(
+      (e: any) => e.questionId === questionId
+    );
     console.log("exisidis", existingId);
     if (existingId) {
       console.log("inded if existingID");
@@ -76,19 +84,20 @@ const SingleQuestion = (props: any) => {
       }
     } else {
       console.log("inside main else part");
-      setAnswers((prev: any) => [
+      setSelectedAnswers((prev: any) => [
         ...prev,
-        { id: id, choosenAnswer: [event.target.name] },
+        { questionId: questionId, choosenAnswer: [event.target.name] },
       ]);
       handleProgressStatus();
     }
   };
-  console.log("answer is", answers);
+  console.log("answer is", selectedAnswers);
+
   return (
     <>
       <h1>single question</h1>
       <Box>
-        <Typography>{`Answered ${answeredQuestions} out of ${TotalNumberOfQuestion}`}</Typography>
+        <Typography>{`Answered ${answeredQuestions} out of ${totalNumberOfQuestions}`}</Typography>
         <LinearProgress
           value={progressStatus}
           variant={"determinate"}
@@ -96,16 +105,16 @@ const SingleQuestion = (props: any) => {
         />
       </Box>
       <Box>
-        {jsQuestions.map((question: any, index: any) => {
+        {quizQuestions.map((question: any, index: any) => {
           if (index + 1 === currentQuestion) {
-            switch (question.selectionType) {
-              case "radio":
+            switch (question.questionType) {
+              case "Radio":
                 return (
                   <RadioComponent
                     key={index}
                     question={{
                       questionNumber: index + 1,
-                      questionText: question,
+                      questionData: question,
                     }}
                     handleAnswerChange={handleRadioAnswerChange}
                   />
@@ -116,7 +125,7 @@ const SingleQuestion = (props: any) => {
                     key={index}
                     question={{
                       questionNumber: index + 1,
-                      questionText: question,
+                      questionData: question,
                     }}
                     handleCheckboxAnswerChange={handleCheckboxAnswerChange}
                   />
@@ -130,12 +139,12 @@ const SingleQuestion = (props: any) => {
         })}
       </Box>
       <Box>
-        {currentQuestion <= TotalNumberOfQuestion && currentQuestion > 1 && (
+        {currentQuestion <= totalNumberOfQuestions && currentQuestion > 1 && (
           <Button variant="outlined" onClick={moveToPreviousQuestion}>
             Previous
           </Button>
         )}
-        {currentQuestion < TotalNumberOfQuestion && (
+        {currentQuestion < totalNumberOfQuestions && (
           <Button variant="contained" onClick={moveToNextQuestion}>
             Next
           </Button>
@@ -154,6 +163,8 @@ const SingleQuestion = (props: any) => {
         openDialog={openDialog}
         handleClose={handleClose}
         setOpenDialog={setOpenDialog}
+        selectedAnswers={selectedAnswers}
+        totalNumberOfQuestions={totalNumberOfQuestions}
       />
     </>
   );
