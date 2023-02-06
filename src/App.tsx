@@ -7,6 +7,9 @@ import SubjectExpert from "./screens/subjectExpert/SubjectExpert";
 import Interviewer from "./screens/Interviewer/Interviewer";
 import PageNotFound from "./screens/PageNotFound/PageNotFound";
 import TestCompleted from "./screens/TestCompleted/TestCompleted";
+import NavBar from "./screens/subjectExpert/SubjectOptions";
+import SubjectOptions from "./screens/subjectExpert/SubjectOptions";
+
 
 let testAllreadyCompleted = false;
 const App = () => {
@@ -28,6 +31,7 @@ const App = () => {
         <Route path="/quiz" element={<StartQuiz />} />
         <Route path="/test_submitted" element={<TestCompleted />} />
         <Route path="*" element={<PageNotFound />} />
+        <Route path="/subjects" element={<SubjectOptions />} />
       </Routes>
     </>
   );
