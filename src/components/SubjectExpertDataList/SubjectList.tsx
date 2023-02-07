@@ -30,43 +30,44 @@ const SubjectList = () => {
         </Typography>
         <Box>
           <Grid container spacing={1} alignItems="flex-start">
-            {subjectList.map((elem: any, index: any) => (
-              <Grid item xs={12} sm={6} md={4} key={index} >
-                <Card>
-                  <Typography
-                    variant="h6"
-                    display="flex"
-                    justifyContent="space-between"
-                    alignItems="center"
-                    style={{ padding: 20 }}
-                  >
-                    {elem.subjectName}
-                    <Button variant="contained">View</Button>
-                  </Typography>
-                  <CardContent>
-                    <Typography>
-                      <strong>
-                        {`Set : ${elem.setNumber}`} &nbsp; &nbsp;
-                        {`Total Questions : ${elem.totalQuestionsCount}`}
-                      </strong>
+            {subjectList &&
+              subjectList.map((elem: any, index: any) => (
+                <Grid item xs={12} sm={6} md={4} key={index}>
+                  <Card>
+                    <Typography
+                      variant="h6"
+                      display="flex"
+                      justifyContent="space-between"
+                      alignItems="center"
+                      style={{ padding: 20 }}
+                    >
+                      {elem.subjectName}
+                      <Button variant="contained">View</Button>
                     </Typography>
-                    <Typography>
-                      {`Created By : ${
-                        elem.createdBy == null ? "Test User" : elem.createdBy
-                      }`}
-                      <br />
-                      {`Updated By : ${
-                        elem.updatedBy == null ? "Test User" : elem.updatedBy
-                      }`}
-                      <br />
-                      {`Created Date : ${elem.createdDate}`}
-                      <br />
-                      {`Updated Date : ${elem.updatedDate}`}
-                    </Typography>
-                  </CardContent>
-                </Card>
-              </Grid>
-            ))}
+                    <CardContent>
+                      <Typography>
+                        <strong>
+                          {`Set : ${elem.setNumber}`} &nbsp; &nbsp;
+                          {`Total Questions : ${elem.totalQuestionsCount}`}
+                        </strong>
+                      </Typography>
+                      <Typography>
+                        {`Created By : ${
+                          elem.createdBy == null ? "Test User" : elem.createdBy
+                        }`}
+                        <br />
+                        {`Updated By : ${
+                          elem.updatedBy == null ? "Test User" : elem.updatedBy
+                        }`}
+                        <br />
+                        {`Created Date : ${elem.createdDate}`}
+                        <br />
+                        {`Updated Date : ${elem.updatedDate}`}
+                      </Typography>
+                    </CardContent>
+                  </Card>
+                </Grid>
+              ))}
           </Grid>
         </Box>
       </Box>
