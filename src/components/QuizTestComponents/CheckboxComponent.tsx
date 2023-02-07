@@ -5,62 +5,38 @@ import {
   FormGroup,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 const CheckboxComponent = (props: any) => {
-  const { question, handleCheckboxAnswerChange } = props;
-  // const [state, setState] = useState<any>([]);
+  const { question, handleCheckboxAnswerChange, selectedAnswers } = props;
 
-  // const handleChange = (
-  //   event: React.ChangeEvent<HTMLInputElement>,
-  //   id: any
-  // ) => {
-  //   console.log(event.target.name, event.target.checked, id);
-  //   // setState((prev:any)=>{
-  //   //     [...prev, {a:"keek"}]
-  //   // })
+  const [value, setValue] = useState<any[]>([]);
 
-  //   const existingId = state.find((e: any) => e.id === id);
-  //   console.log("exisidis", existingId);
-  //   if (existingId) {
-  //     console.log("inded if existingID");
-  //     const valExist = existingId.choosenAnswer.find(
-  //       (e: any) => e === event.target.name
-  //     );
-  //     console.log("value of valExist is", valExist);
+  const getSelectedValue = useCallback(
+    (questionId: any) => {
+      console.log("value of quesiton id is", questionId);
+      const result = selectedAnswers.filter((cur: any) => {
+        return cur.questionId === questionId;
+      });
+      if (result[0]) {
+        //setValue(result[0].choosenAnswer);
+        console.log("result in check box is", result);
+        console.log(result[0].choosenAnswer);
+        // setValue(value.push(option));
+        setValue(result[0].choosenAnswer);
+      }
 
-  //     //   if (valExist && event.target.checked) {
-  //     //     console.log("inside valExist and event.target.checkd");
-  //     //     existingId.choosenAnswer?.push(event.target.name);
-  //     //   }
-  //     //else
-  //     if (valExist && !event.target.checked) {
-  //       console.log("inded valExist and !event.target.checked");
-  //       // const newData = valExist.choosenAnswer?.filter((e: any) => {
-  //       //   return e !== event.target.name;
-  //       // });
-  //       var index = existingId.choosenAnswer.indexOf(event.target.name);
-  //       if (index !== -1) {
-  //         existingId.choosenAnswer.splice(index, 1);
-  //       }
-  //     } else {
-  //       console.log("in else part of valexist false");
-  //       existingId.choosenAnswer.push(event.target.name);
-  //     }
-  //   } else {
-  //     console.log("inside main else part");
-  //     setState((prev: any) => [
-  //       ...prev,
-  //       { id: id, choosenAnswer: [event.target.name] },
-  //     ]);
-  //   }
+      console.log("vlaue of result is", result);
+      // console.log("value of vlue.choosenAnswer is", value.choosenAnswer);
+    },
+    [selectedAnswers]
+  );
 
-  //   console.log("value of state is", state);
+  useEffect(() => {
+    getSelectedValue(question.questionData.questionId);
+  }, [question.questionData.questionId, getSelectedValue]);
 
-  //   //   ...state,
-  //   //   [event.target.name]: event.target.checked,
-  // };
-
+  console.log("value of usestae value is", value);
   return (
     <>
       <Box>
@@ -73,12 +49,18 @@ const CheckboxComponent = (props: any) => {
                 <FormControlLabel
                   control={
                     <Checkbox
-                      onChange={(event) =>
+                      // checked={value.includes(option) ? true : false}
+                      // checked={value.indexOf(option) !== -1}
+                      checked={selectedAnswers}
+                      //  value={option}
+                      onChange={(event) => {
+                        getSelectedValue(question.questionData.questionId);
                         handleCheckboxAnswerChange(
                           event,
                           question.questionData.questionId
-                        )
-                      }
+                        );
+                        // getSelectedValue();
+                      }}
                       name={option}
                     />
                   }

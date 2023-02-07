@@ -52,11 +52,10 @@ import {
 import { ChangeEvent, useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import SubjectList from "../../components/SubjectExpertDataList/SubjectList";
-import HomeIcon from '@mui/icons-material/Home';
+import HomeIcon from "@mui/icons-material/Home";
 import { ExpandLess, ExpandMore, StarBorder } from "@material-ui/icons";
-import SubjectIcon from '@mui/icons-material/Subject';
-import ArticleIcon from '@mui/icons-material/Article';
-
+import SubjectIcon from "@mui/icons-material/Subject";
+import ArticleIcon from "@mui/icons-material/Article";
 
 const drawerWidth = 240;
 
@@ -133,7 +132,6 @@ const links = [
   { title: "HomePage", path: "/", icon: <HomeIcon /> },
   //{ title: "C#", path: "/Subjects", icon: <UploadFileIcon /> },
   // { title: "FileUpload", path: "/", icon: <UploadFileIcon /> },
-  
 ];
 
 const subjectlinks = [
@@ -142,9 +140,7 @@ const subjectlinks = [
   { title: "CosmosDb", path: "/subjects", icon: <SubjectIcon /> },
   { title: "JavaSript", path: "/subjects", icon: <SubjectIcon /> },
   // { title: "FileUpload", path: "/", icon: <UploadFileIcon /> },
-  
 ];
-
 
 const SubjectExpert = (props: any) => {
   const navigate = useNavigate();
@@ -152,7 +148,6 @@ const SubjectExpert = (props: any) => {
   const [open, setOpen] = useState(false);
   //const [reopen, setReOpen] = useState(false);
   const [openList, setOpenList] = useState(false);
-  
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -161,8 +156,7 @@ const SubjectExpert = (props: any) => {
   const handleDrawerClose = () => {
     setOpen(false);
   };
-  
-  
+
   const useStyles = makeStyles((theme) => ({
     root: {
       flexGrow: 1,
@@ -172,12 +166,13 @@ const SubjectExpert = (props: any) => {
     },
   }));
   const classes = useStyles();
-  
+
   // return (
-    // <>
-    // <Box  sx={{ display: "flex" }}>
-    // <>
-      {/* <AppBar position="static">
+  // <>
+  // <Box  sx={{ display: "flex" }}>
+  // <>
+  {
+    /* <AppBar position="static">
         <Toolbar>
           <IconButton
             edge="start"
@@ -201,163 +196,149 @@ const SubjectExpert = (props: any) => {
           </Typography>
           <Button color="inherit">Log out</Button>
         </Toolbar>
-      </AppBar> */}
-  
-       
- 
+      </AppBar> */
+  }
 
   return (
     <>
       <Box sx={{ display: "flex" }}>
-       
-          <>
-            <AppBar className="Appbar" position="fixed" open={open}>
-              <Toolbar style={{ minHeight: "8vh" }}
-          className="tool-bar "
-          >
-                <IconButton
-                  color="default"
-                  aria-label="open drawer"
-                  onClick={handleDrawerOpen}
-                  edge="start"
-                  id="menu-button"
-                  className={open ? "menu-icon-open" : "menu-icon-close"}
-                  sx={{
-                    marginRight: 5,
-                    ...(open && { display: "none" }),
+        <>
+          <AppBar className="Appbar" position="fixed" open={open}>
+            <Toolbar style={{ minHeight: "8vh" }} className="tool-bar ">
+              <IconButton
+                color="default"
+                aria-label="open drawer"
+                onClick={handleDrawerOpen}
+                edge="start"
+                id="menu-button"
+                className={open ? "menu-icon-open" : "menu-icon-close"}
+                sx={{
+                  marginRight: 5,
+                  ...(open && { display: "none" }),
+                }}
+              >
+                <MenuIcon />
+              </IconButton>
+              <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                Augmento Labs
+              </Typography>
+              <Typography variant="h6" component="div" sx={{ flexGrow: 0.02 }}>
+                {/* <Button color="inherit" onClick={authContext.logout}> */}
+                Log out
+              </Typography>
+              {/* </Button> */}
+              {/* LOG OUT */}
+              {/* </Typography> */}
+            </Toolbar>
+          </AppBar>
+          {/* <ThemeProvider theme={darkTheme}> */}
+          <Drawer variant="permanent" open={open}>
+            <DrawerHeader>
+              <IconButton onClick={handleDrawerClose}>
+                {theme.direction === "rtl" ? (
+                  <ChevronRightIcon />
+                ) : (
+                  <ChevronLeftIcon />
+                )}
+              </IconButton>
+            </DrawerHeader>
+            <Divider />
+
+            <List className="account-menu-list">
+              <ListItem disablePadding>
+                <ListItemButton
+                  onClick={() => {
+                    navigate("/");
+                    handleDrawerClose();
                   }}
                 >
-                  <MenuIcon />
-                </IconButton>
-                <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                  Augmento Labs
-                </Typography>
-                <Typography variant="h6" component="div" sx={{ flexGrow: 0.02 }}>
-                {/* <Button color="inherit" onClick={authContext.logout}> */}
-                 Log out
-                 </Typography>
-               {/* </Button> */}
-                  {/* LOG OUT */}
-                {/* </Typography> */}
-              </Toolbar>
-            </AppBar>
-            {/* <ThemeProvider theme={darkTheme}> */}
-              <Drawer variant="permanent" open={open}>
-                <DrawerHeader>
-                  <IconButton onClick={handleDrawerClose}>
-                    {theme.direction === "rtl" ? (
-                      <ChevronRightIcon />
-                    ) : (
-                      <ChevronLeftIcon />
-                    )}
-                  </IconButton>
-                </DrawerHeader>
-                <Divider />
-               
-          <List className="account-menu-list">
-          <ListItem disablePadding>
-            <ListItemButton 
-              onClick={() => {
-                navigate("/");
-                handleDrawerClose();
-              }}
-            >
-              <ListItemIcon sx={{
-                                minWidth: -0.5,
-                                mr: open ? 3 : "auto",
-                                justifyContent: "center",
-                              }}>
-                <SvgIcon component={HomeIcon} inheritViewBox />
-              </ListItemIcon>
-              <ListItemText primary={"Home Page"}  />
-            </ListItemButton>
-          </ListItem>
-            <ListItemButton className="account-menu-list" 
-                
-            onClick={() => {
-              setOpenList(!openList);
-            }}
-            
-          >
-            <ListItemIcon 
-            sx={{
-                                minWidth: -0.5,
-                                mr: open ? 3 : "auto",
-                                justifyContent: "center",
-                              }}>
-              <Icon component={ArticleIcon} />
-            </ListItemIcon>
-            <ListItemText primary="Subjects" sx={{ opacity: open ? 1 : 0 }}/>
-            {openList ? <ExpandLess /> : <ExpandMore />}
-            
-          </ListItemButton>
-          <Collapse
-         
-            in={openList}
-            timeout="auto"
-           unmountOnExit
-          >
-            <List>
-                  {
-                    subjectlinks.map(({ title, path, icon }) => {
-                      return (
-                        <ListItem
-                          component={NavLink}
-                          to={path}
-                          key={path}
+                  <ListItemIcon
+                    sx={{
+                      minWidth: -0.5,
+                      mr: open ? 3 : "auto",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <SvgIcon component={HomeIcon} inheritViewBox />
+                  </ListItemIcon>
+                  <ListItemText primary={"Home Page"} />
+                </ListItemButton>
+              </ListItem>
+              <ListItemButton
+                className="account-menu-list"
+                onClick={() => {
+                  setOpenList(!openList);
+                }}
+              >
+                <ListItemIcon
+                  sx={{
+                    minWidth: -0.5,
+                    mr: open ? 3 : "auto",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Icon component={ArticleIcon} />
+                </ListItemIcon>
+                <ListItemText
+                  primary="Subjects"
+                  sx={{ opacity: open ? 1 : 0 }}
+                />
+                {openList ? <ExpandLess /> : <ExpandMore />}
+              </ListItemButton>
+              <Collapse in={openList} timeout="auto" unmountOnExit>
+                <List>
+                  {subjectlinks.map(({ title, path, icon }) => {
+                    return (
+                      <ListItem
+                        component={NavLink}
+                        to={path}
+                        key={path}
+                        sx={{
+                          color: "inherit",
+                          typography: "body1",
+                          "&:hover": {
+                            color: "grey.500",
+                          },
+                          "&.active": {
+                            color: "text.secondary",
+                          },
+                        }}
+                      >
+                        <ListItemButton
                           sx={{
-                            color: "inherit",
-                            typography: "body1",
-                            "&:hover": {
-                              color: "grey.500",
-                            },
-                            "&.active": {
-                              color: "text.secondary",
-                            },
+                            minHeight: 48,
+                            justifyContent: open ? "initial" : "center",
+                            px: 2.5,
                           }}
                         >
-                          <ListItemButton
+                          <ListItemIcon
                             sx={{
-                              minHeight: 48,
-                              justifyContent: open ? "initial" : "center",
-                              px: 2.5,
+                              minWidth: 0,
+                              mr: open ? 3 : "auto",
+                              justifyContent: "center",
                             }}
                           >
-                            <ListItemIcon
-                              sx={{
-                                minWidth: 0,
-                                mr: open ? 3 : "auto",
-                                justifyContent: "center",
-                              }}
-                            >
-                              {icon}
-                            </ListItemIcon>
-                            <ListItemText
-                              primary={title}
-                              sx={{ opacity: open ? 1 : 0 }}
-                            />
-                          </ListItemButton>
-                        </ListItem>
-                      );
-                    })}
-                     
+                            {icon}
+                          </ListItemIcon>
+                          <ListItemText
+                            primary={title}
+                            sx={{ opacity: open ? 1 : 0 }}
+                          />
+                        </ListItemButton>
+                      </ListItem>
+                    );
+                  })}
                 </List>
-                
-               
-            
-          </Collapse>
-          </List>
-          
-        </Drawer>
-       {/* </ThemeProvider> */}
+              </Collapse>
+            </List>
+          </Drawer>
+          {/* </ThemeProvider> */}
         </>
         <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
           <DrawerHeader />
         </Box>
-        
-       
-        </Box>
-        <SubjectList /> 
+      </Box>
+      <SubjectList />
     </>
   );
 };

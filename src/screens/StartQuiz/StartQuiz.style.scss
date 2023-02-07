@@ -3,40 +3,31 @@
   flex-direction: column;
   height: 100vh;
 
-  .quiz-header {
+  .info-box {
     display: flex;
-    background-color: red;
-  }
-  .quiz-start-btn-wrap {
-    display: flex;
-    height: 100%;
     flex-direction: column;
-    justify-content: space-between;
+    margin: 3rem;
 
-    .quiz-info-wrapper {
-      display: flex;
-      padding-top: 5rem;
-    }
-
-    .quiz-information {
-      width: 50%;
+    .info-details {
+      margin-left: 6rem;
+      text-transform: capitalize;
     }
   }
 
-  .quiz-start-btn {
-    width: 50%;
-    margin: 5rem;
-  }
-
-  .ooter-start-test-page {
+  .start-test-box {
     display: flex;
-    height: 10%;
-  }
-}
+    width: 100%;
+    flex-direction: row;
+    justify-content: center;
 
-.manage-buttons {
-  margin: 20px;
-  width: 40%;
+    .start-test-btn {
+      padding-top: 1rem;
+      padding-bottom: 1rem;
+      padding-left: 3rem;
+      padding-right: 3rem;
+      font-size: 1.5rem;
+    }
+  }
 }
 
 // .main-layout-wrap .quiz-header {

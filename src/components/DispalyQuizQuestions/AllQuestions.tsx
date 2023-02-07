@@ -88,30 +88,39 @@ const AllQuestions = (props: any) => {
         variant={"determinate"}
         color={"primary"}
       />
-      {quizQuestions.map((question: any, index: any) => {
-        switch (question.questionType) {
-          case "SINGLECHOICE":
-            return (
-              <RadioComponent
-                key={index}
-                question={{ questionNumber: index + 1, questionData: question }}
-                handleAnswerChange={handleRadioAnswerChange}
-              />
-            );
-          case "MULTIPLECHOICE":
-            return (
-              <CheckboxComponent
-                key={index}
-                question={{ questionNumber: index + 1, questionData: question }}
-                handleCheckboxAnswerChange={handleCheckboxAnswerChange}
-              />
-            );
-          case "PROGRAMM":
-            return <CodingComponent key={index} question={question} />;
-          default:
-            return null;
-        }
-      })}
+      {quizQuestions &&
+        quizQuestions.map((question: any, index: any) => {
+          console.log("question type is", question);
+          switch (question.questionType) {
+            case "Single Choice":
+              console.log("single choice match...");
+              return (
+                <RadioComponent
+                  key={index}
+                  question={{
+                    questionNumber: index + 1,
+                    questionData: question,
+                  }}
+                  handleAnswerChange={handleRadioAnswerChange}
+                />
+              );
+            case "Multiple Choice":
+              return (
+                <CheckboxComponent
+                  key={index}
+                  question={{
+                    questionNumber: index + 1,
+                    questionData: question,
+                  }}
+                  handleCheckboxAnswerChange={handleCheckboxAnswerChange}
+                />
+              );
+            case "PROGRAMM":
+              return <CodingComponent key={index} question={question} />;
+            default:
+              return null;
+          }
+        })}
 
       <Box>
         <Typography>{`Answered ${answeredQuestions} out of ${totalNumberOfQuestions}`}</Typography>

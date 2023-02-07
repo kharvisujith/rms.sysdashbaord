@@ -84,6 +84,37 @@ const StartQuiz = () => {
           <Button color="inherit">Log out</Button>
         </Toolbar>
       </AppBar>
+
+      <Box className="info-box">
+        <Typography variant="h5">Test Informations : </Typography>
+        <Box className="info-details">
+          <Typography>{`* Total Number Of Question - ${10}`}</Typography>
+          <Typography>{`* Includes Multiple Choice questions and Coding questions`}</Typography>
+          <Typography>{`* Total Time given for the test is ${60} minutes`}</Typography>
+          <Typography>{`* After the completion of the given time the test is autosubmitted`}</Typography>
+          <Typography>{`* Do not switch the tabs once test is started`}</Typography>
+        </Box>
+      </Box>
+
+      <Box className="start-test-box">
+        <Button
+          className="start-test-btn"
+          variant="contained"
+          color="error"
+          onClick={() => startTestButtonHandler("slideView")}
+        >
+          Start Test
+        </Button>
+        {/* <Button
+          className="start-test-btn"
+          variant="contained"
+          color="success"
+          onClick={() => startTestButtonHandler("listView")}
+        >
+          Start in List View Test
+        </Button> */}
+      </Box>
+
       <div className="quiz-start-btn-wrap">
         <ReactModal
           isOpen={OpenTestModal}
@@ -98,17 +129,17 @@ const StartQuiz = () => {
               quizQuestions={quizQuestions}
             />
           ) : null}
-          {modalContent && modalContent === "listView" ? (
+          {/* {modalContent && modalContent === "listView" ? (
             <AllQuestions
               openDialog={openDialog}
               handleClose={handleClose}
               setOpenDialog={setOpenDialog}
               quizQuestions={quizQuestions}
             />
-          ) : null}
+          ) : null} */}
         </ReactModal>
         <div className="quiz-info-wrapper">
-          <span className="quiz-information">
+          {/* <span className="quiz-information">
             <TableContainer component={Paper}>
               <Table sx={{ minWidth: 150 }} aria-label="simple table">
                 <TableHead>
@@ -132,23 +163,7 @@ const StartQuiz = () => {
                 </TableBody>
               </Table>
             </TableContainer>
-          </span>
-          <Button
-            className="quiz-start-btn"
-            variant="contained"
-            color="success"
-            onClick={() => startTestButtonHandler("slideView")}
-          >
-            Start Slide View Test
-          </Button>
-          <Button
-            className="quiz-start-btn"
-            variant="contained"
-            color="success"
-            onClick={() => startTestButtonHandler("listView")}
-          >
-            Start in List View Test
-          </Button>
+          </span> */}
         </div>
       </div>
     </Box>
