@@ -9,6 +9,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 //import { AuthContext } from "../../context/AuthContectProvider";
 import { Typography } from "@mui/material";
 import Menu from "@material-ui/icons/Menu";
+import SideBar from "../../components/SideBar";
 
 const Interviewer = (props: any) => {
   const navigate = useNavigate();
@@ -22,8 +23,10 @@ const Interviewer = (props: any) => {
   }));
   const classes = useStyles();
   return (
-    <Box className="main-layout-wrap">
-      <AppBar position="static">
+    <>
+    < SideBar />
+    {/* <Box className="main-layout-wrap"> */}
+      {/* <AppBar position="static">
         <Toolbar>
           <IconButton
             edge="start"
@@ -48,13 +51,14 @@ const Interviewer = (props: any) => {
           <Button color="inherit">Log out</Button>
         </Toolbar>
       </AppBar>
-      <hr />
+      <hr /> */}
       <p>
         <h1>Interviewer Page Development in progrss</h1>
         <br />
         <button onClick={() => navigate(-1)}>Home</button>
       </p>
-    </Box>
+    {/* </Box> */}
+    </>
   );
 };
 

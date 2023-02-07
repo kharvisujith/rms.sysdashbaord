@@ -3,13 +3,16 @@ import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import { Typography } from "@mui/material";
+import SideBar from "../../components/SideBar";
 
 const RmsHome = (props: any) => {
   const navigate = useNavigate();
 
   return (
-    <Box className="main-layout-wrap">
-      <AppBar position="static">
+    <>
+    <SideBar />
+    {/* <Box className="main-layout-wrap"> */}
+      {/* <AppBar position="static">
         <Toolbar>
           <Typography
             variant="h6"
@@ -21,7 +24,7 @@ const RmsHome = (props: any) => {
           </Typography>
         </Toolbar>
       </AppBar>
-      <hr />
+      <hr /> */}
       <div>
         <p style={{ paddingLeft: "190px" }}>
           <li>
@@ -44,10 +47,11 @@ const RmsHome = (props: any) => {
           &nbsp;&nbsp;&nbsp;
           <button onClick={() => navigate("/reviewer")}>Interviewer</button>
           &nbsp;&nbsp;&nbsp;
-          <button onClick={() => navigate("/quiz")}>Candidate</button>
+          <button onClick={() => navigate("/candidateinfo")}>Candidate</button>
         </p>
       </div>
-    </Box>
+     {/* </Box> */}
+    </>
   );
 };
 export default RmsHome;

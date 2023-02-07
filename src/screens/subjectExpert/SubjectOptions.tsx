@@ -72,6 +72,7 @@ import ArticleIcon from '@mui/icons-material/Article';
 import { downnLoadExcel, upLoadExcel } from "../../api/apiAgent";
 import Swal from "sweetalert2";
 import SubjectList from "../../components/SubjectExpertDataList/SubjectList";
+import SideBar from "../../components/SideBar";
 
 
 
@@ -209,8 +210,9 @@ const SubjectOptions = (props:any) => {
 
   return (
     <>
-    <Box className="main-layout-wrap">
-    <AppBar position="static">
+    < SideBar />
+    {/* <Box className="main-layout-wrap"> */}
+    {/* <AppBar position="static">
       <Toolbar>
         
           <IconButton
@@ -219,11 +221,6 @@ const SubjectOptions = (props:any) => {
             color="inherit"
             aria-label="menu"
           >
-            {/* <Menu>
-              <MenuItem>Profile</MenuItem>
-              <MenuItem>My account</MenuItem>
-              <MenuItem>Logout</MenuItem>
-            </Menu> */}
           </IconButton>
           <Typography
             variant="h6"
@@ -235,7 +232,7 @@ const SubjectOptions = (props:any) => {
           </Typography>
           <Button color="inherit">Log out</Button>
           </Toolbar>
-      </AppBar>
+      </AppBar> */}
     <Box sx={{ "& button": { m: 2 } }}>
         <Button variant="contained" onClick={downloadFile}>
           Download Template
@@ -307,7 +304,7 @@ const SubjectOptions = (props:any) => {
       </Box>
       
 
-    </Box>
+    {/* </Box> */}
     
     </>
   );

@@ -24,14 +24,14 @@ const SubjectList = () => {
   }, []);
   return (
     <>
-      <Box>
+      <Box >
         <Typography variant="h5" align="center">
           Available Question Sets
         </Typography>
         <Box>
           <Grid container spacing={1} alignItems="flex-start">
             {subjectList.map((elem: any, index: any) => (
-              <Grid item xs={12} sm={6} md={4} key={index}>
+              <Grid item xs={12} sm={6} md={4} key={index} >
                 <Card>
                   <Typography
                     variant="h6"
