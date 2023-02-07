@@ -95,7 +95,7 @@ const SingleQuestion = (props: any) => {
 
   return (
     <>
-      <h1>single question</h1>
+      <h1>single/multiple question</h1>
       <Box>
         <Typography>{`Answered ${answeredQuestions} out of ${totalNumberOfQuestions}`}</Typography>
         <LinearProgress
@@ -108,7 +108,7 @@ const SingleQuestion = (props: any) => {
         {quizQuestions.map((question: any, index: any) => {
           if (index + 1 === currentQuestion) {
             switch (question.questionType) {
-              case "Radio":
+              case "SINGLECHOICE":
                 return (
                   <RadioComponent
                     key={index}
@@ -119,7 +119,7 @@ const SingleQuestion = (props: any) => {
                     handleAnswerChange={handleRadioAnswerChange}
                   />
                 );
-              case "checkbox":
+              case "MULTIPLECHOICE":
                 return (
                   <CheckboxComponent
                     key={index}
@@ -130,7 +130,7 @@ const SingleQuestion = (props: any) => {
                     handleCheckboxAnswerChange={handleCheckboxAnswerChange}
                   />
                 );
-              case "coding":
+              case "PROGRAMM":
                 return <CodingComponent key={index} question={question} />;
               default:
                 return null;
