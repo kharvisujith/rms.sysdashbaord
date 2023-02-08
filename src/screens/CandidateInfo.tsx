@@ -1,4 +1,5 @@
 import { Box, Button, Container, TextField, Typography } from "@mui/material";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import SideBar from "../components/SideBar";
 
@@ -6,7 +7,30 @@ import SideBar from "../components/SideBar";
 
 const CandidateInfo = () => {
   const navigate = useNavigate();
+  const [save, setSave] = useState<any>({
+    attendees: "",
+    firstname: "",
+    middlename: "",
+    lastname: "",
+    phonenumber: "",
+  });
 
+   const handlesubmit = (e: any) => {
+    console.log(e);
+    const name = e.target.name;
+    const value = e.target.value;
+    setSave({ ...save, [name]: value });
+
+  console.log(save); 
+   }
+
+   const handlenext = () => {
+     if (!save)
+     console.log("Please fill the details");
+     else 
+     navigate("/quiz");
+
+   }
 return(
 
 
@@ -30,7 +54,7 @@ return(
  
     <Box
       component="form"
-      // onSubmit={handlesubmit}
+      onSubmit={handlesubmit}
       // noValidate
       sx={{ mt: 1 }}
     >
@@ -48,8 +72,26 @@ return(
         required
         fullWidth
         type="text"
-        label="FullName"
-        name="FullName"
+        label="FirstName"
+        name="firstname"
+      
+      />
+      <TextField
+        margin="normal"
+        required
+        fullWidth
+        type="text"
+        label="MiddleName"
+        name="middlename"
+      
+      />
+      <TextField
+        margin="normal"
+        required
+        fullWidth
+        type="text"
+        label="LastName"
+        name="lastname"
       
       />
       <TextField
@@ -58,7 +100,7 @@ return(
         fullWidth
         type="text"
         label="PhoneNumber"
-        name="PhoneNumber"
+        name="phonenumber"
       
       />
     <Box>
@@ -67,6 +109,7 @@ return(
         // fullWidth
         variant="contained"
         sx={{ mt: 3, mb: 2, ml: 24 }}
+        onClick={handlesubmit}
       >
         Submit
       </Button>
@@ -74,9 +117,9 @@ return(
         type="button"
         // fullWidth
         variant="contained"
-        onClick={() => {
-        navigate("/quiz");
-        }}
+        onClick=  {
+         handlenext
+        }
         sx={{ mt: -11, mb: 1,  ml: 35}}
       >
         Next

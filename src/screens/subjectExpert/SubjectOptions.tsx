@@ -73,6 +73,7 @@ import { downnLoadExcel, upLoadExcel } from "../../api/apiAgent";
 import Swal from "sweetalert2";
 import SubjectList from "../../components/SubjectExpertDataList/SubjectList";
 import SideBar from "../../components/SideBar";
+import NavBar from "../../components/NavBar";
 
 
 
@@ -210,7 +211,8 @@ const SubjectOptions = (props:any) => {
 
   return (
     <>
-    < SideBar />
+    {/* < SideBar /> */}
+    < NavBar />
     {/* <Box className="main-layout-wrap"> */}
     {/* <AppBar position="static">
       <Toolbar>
@@ -233,7 +235,9 @@ const SubjectOptions = (props:any) => {
           <Button color="inherit">Log out</Button>
           </Toolbar>
       </AppBar> */}
-    <Box sx={{ "& button": { m: 2 } }}>
+    <Box sx={{ "& button": { m: 2 }, marginTop:2, display: "flex",  flexDirection: "column",
+      alignItems: "center" }}
+    >
         <Button variant="contained" onClick={downloadFile}>
           Download Template
         </Button>

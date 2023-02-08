@@ -1,62 +1,18 @@
+import { Box, Toolbar, IconButton, Typography,  Divider, List, ListItem, ListItemButton, ListItemIcon, SvgIcon, ListItemText, Theme, CSSObject, makeStyles, styled, useTheme, Collapse, Icon } from "@mui/material";
+import { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-//import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Toolbar from "@mui/material/Toolbar";
-import IconButton from "@mui/material/IconButton";
-import { makeStyles } from "@material-ui/core/styles";
-import FileUploadSingle from "../../components/FileUpload/FileUploadSingle";
-import CloseIcon from "@mui/icons-material/Close";
-import Menu from "@material-ui/icons/Menu";
-import Divider from "@mui/material/Divider";
-//import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-//import "./SubjectExpert.style.scss";
-import {
-  Alert,
-  AlertTitle,
-  Card,
-  CardContent,
-  Collapse,
-  CSSObject,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  Grid,
-  Icon,
-  List,
-  MenuItem,
-  styled,
-  SvgIcon,
-  TextField,
-  Theme,
-  Typography,
-  useTheme,
-} from "@mui/material";
-import MuiDrawer from "@mui/material/Drawer";
-import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
-import {
-  axiosClient,
-  downnLoadExcel,
-  getSuBjectwiseQuiz,
-  upLoadExcel,
-} from "../../api/apiAgent";
-import { ChangeEvent, useEffect, useState } from "react";
-import Swal from "sweetalert2";
-import SubjectList from "../../components/SubjectExpertDataList/SubjectList";
 import HomeIcon from "@mui/icons-material/Home";
 import { ExpandLess, ExpandMore, StarBorder } from "@material-ui/icons";
 import SubjectIcon from "@mui/icons-material/Subject";
 import ArticleIcon from "@mui/icons-material/Article";
-import NavBar from "../../components/NavBar";
+import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
+import MenuIcon from "@mui/icons-material/Menu";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import MuiDrawer from "@mui/material/Drawer";
+import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
+
+
 
 const drawerWidth = 240;
 
@@ -131,6 +87,7 @@ const Drawer = styled(MuiDrawer, {
 
 const links = [
   { title: "HomePage", path: "/", icon: <HomeIcon /> },
+  { title: "Back", path: "/assignments", icon: <HomeIcon /> },
   //{ title: "C#", path: "/Subjects", icon: <UploadFileIcon /> },
   // { title: "FileUpload", path: "/", icon: <UploadFileIcon /> },
 ];
@@ -143,67 +100,46 @@ const subjectlinks = [
   // { title: "FileUpload", path: "/", icon: <UploadFileIcon /> },
 ];
 
-const SubjectExpert = (props: any) => {
-  const navigate = useNavigate();
-  const theme = useTheme();
-  const [open, setOpen] = useState(false);
-  //const [reopen, setReOpen] = useState(false);
-  const [openList, setOpenList] = useState(false);
+const NavBar = (props: any) => {
+    const navigate = useNavigate();
+    const theme = useTheme();
+    const [open, setOpen] = useState(false);
+    const [openList, setOpenList] = useState(false);
 
-  const handleDrawerOpen = () => {
-    setOpen(true);
-  };
+  //   const Url = "/";
+  // let currentPath = window.location.pathname;
+  //   const [hide, setHide] = useState(false);
 
-  const handleDrawerClose = () => {
-    setOpen(false);
-  };
+  // useEffect(() => {
+  //   if (currentPath === Url) {
+  //     setHide(true);
+  //   } else {
+  //     setHide(false);
+  //   }
+  // }, [currentPath]);
+    
+  
+    const handleDrawerOpen = () => {
+      setOpen(true);
+    };
+  
+    const handleDrawerClose = () => {
+      setOpen(false);
+    };
 
-  const useStyles = makeStyles((theme) => ({
-    root: {
-      flexGrow: 1,
-    },
-    menuButton: {
-      marginRight: theme.spacing(2),
-    },
-  }));
-  const classes = useStyles();
+    // const useStyles = makeStyles((theme) => ({
+    //     root: {
+    //       flexGrow: 1,
+    //     },
+    //     menuButton: {
+    //       marginRight: theme.spacing(2),
+    //     },
+    //   }));
+    //   const classes = useStyles();
 
-  // return (
-  // <>
-  // <Box  sx={{ display: "flex" }}>
-  // <>
-  {
-    /* <AppBar position="static">
-        <Toolbar>
-          <IconButton
-            edge="start"
-            className={classes.menuButton}
-            color="inherit"
-            aria-label="menu"
-          >
-            <Menu>
-              <MenuItem>Profile</MenuItem>
-              <MenuItem>My account</MenuItem>
-              <MenuItem>Logout</MenuItem>
-            </Menu>
-          </IconButton>
-          <Typography
-            variant="h6"
-            component="div"
-            sx={{ flexGrow: 1 }}
-            onClick={() => navigate(-1)}
-          >
-            Augmento labs RMS
-          </Typography>
-          <Button color="inherit">Log out</Button>
-        </Toolbar>
-      </AppBar> */
-  }
-
-  return (
+return (
     <>
-    < NavBar />
-      {/* <Box sx={{ display: "flex" }}>
+      <Box sx={{ display: "flex" }}>
         <>
           <AppBar className="Appbar" position="fixed" open={open}>
             <Toolbar style={{ minHeight: "8vh" }} className="tool-bar ">
@@ -224,17 +160,17 @@ const SubjectExpert = (props: any) => {
               <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                 Augmento Labs
               </Typography>
-              <Typography variant="h6" component="div" sx={{ flexGrow: 0.02 }}> */}
+              <Typography variant="h6" component="div" sx={{ flexGrow: 0.02 }}>
                 {/* <Button color="inherit" onClick={authContext.logout}> */}
-                {/* Log out
+                Log out
               </Typography>
               {/* </Button> */}
               {/* LOG OUT */}
               {/* </Typography> */}
-            {/* </Toolbar>
-          </AppBar>  */}
+            </Toolbar>
+          </AppBar>
           {/* <ThemeProvider theme={darkTheme}> */}
-          {/* <Drawer variant="permanent" open={open}>
+          <Drawer variant="permanent" open={open}>
             <DrawerHeader>
               <IconButton onClick={handleDrawerClose}>
                 {theme.direction === "rtl" ? (
@@ -248,7 +184,7 @@ const SubjectExpert = (props: any) => {
 
             <List className="account-menu-list">
               <ListItem disablePadding>
-                <ListItemButton
+                <ListItemButton 
                   onClick={() => {
                     navigate("/");
                     handleDrawerClose();
@@ -264,6 +200,25 @@ const SubjectExpert = (props: any) => {
                     <SvgIcon component={HomeIcon} inheritViewBox />
                   </ListItemIcon>
                   <ListItemText primary={"Home Page"} />
+                </ListItemButton>
+              </ListItem>
+              <ListItem disablePadding>
+                <ListItemButton 
+                  onClick={() => {
+                    navigate("/assignments");
+                    handleDrawerClose();
+                  }}
+                >
+                  <ListItemIcon
+                    sx={{
+                      minWidth: -0.5,
+                      mr: open ? 3 : "auto",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <SvgIcon component={KeyboardBackspaceIcon} inheritViewBox />
+                  </ListItemIcon>
+                  <ListItemText primary={"Back"} />
                 </ListItemButton>
               </ListItem>
               <ListItemButton
@@ -289,10 +244,12 @@ const SubjectExpert = (props: any) => {
               </ListItemButton>
               <Collapse in={openList} timeout="auto" unmountOnExit>
                 <List>
-                  {subjectlinks.map(({ title, path, icon }) => {
+                  
+                  { subjectlinks.map(({ title, path, icon }) => {
                     return (
                       <ListItem
                         component={NavLink}
+                       
                         to={path}
                         key={path}
                         sx={{
@@ -332,17 +289,15 @@ const SubjectExpert = (props: any) => {
                   })}
                 </List>
               </Collapse>
-            </List>
-          </Drawer>
-          {/* </ThemeProvider> */}
-        {/* </>
+              </List>
+              </Drawer>
+              </>
         <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
           <DrawerHeader />
         </Box>
-      </Box> */} 
-      <SubjectList />
+      </Box>
+      
     </>
   );
 };
-
-export default SubjectExpert;
+export default NavBar;
