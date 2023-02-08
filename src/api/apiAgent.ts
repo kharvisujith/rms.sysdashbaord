@@ -1,4 +1,5 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
+import CandidateDetails from "../Interface/CandidateDetails";
 
 export const axiosClient = axios.create({
   baseURL: `https://localhost:5001/api/Rms/1/`,
@@ -68,4 +69,13 @@ export const getSuBjectwiseQuiz = (subject: string) => {
   return axiosClient.get("/quiz/SubjectExpert/allquestions", {
     params: { subject: subject },
   });
+};
+
+export const submitCandidateInfo = (
+  qId: number,
+  confirmcode: string,
+  user : CandidateDetails
+) => {
+  return axiosClient.post(
+    `/quiz/candidate/adduser?quizId=${qId}&confirmationCode=${confirmcode}`,user);
 };
