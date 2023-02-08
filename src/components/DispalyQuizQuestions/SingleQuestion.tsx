@@ -1,17 +1,18 @@
 import { Box, Button, LinearProgress, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import EndTestDialog from "../EndTest/EndTestDialog";
 import CheckboxComponent from "../QuizTestComponents/CheckboxComponent";
 import CodingComponent from "../QuizTestComponents/CodingComponent";
 import RadioComponent from "../QuizTestComponents/RadioComponent";
 import { jsQuestions } from "../../questions/questions";
 import "./SingleQuestion.style.scss";
-
-const TotalNumberOfQuestion = 5;
+import { clear } from "console";
+import { useNavigate } from "react-router-dom";
 
 const SingleQuestion = (props: any) => {
   const { openDialog, handleClose, setOpenDialog, quizQuestions } = props;
-  console.log("value of quiz in singlereqion is", quizQuestions);
+  //console.log("value of time in signle quesiton is", timer);
+  // console.log("value of quiz in singlereqion is", quizQuestions);
   const [currentQuestion, setCurrentQuestion] = useState<number>(1);
   const [selectedAnswers, setSelectedAnswers] = useState<any>([]);
   const [progressStatus, setProgressStatus] = useState<number>(0);
@@ -20,6 +21,7 @@ const SingleQuestion = (props: any) => {
     quizQuestions.length
   );
 
+  const navigate = useNavigate();
   const moveToNextQuestion = () => {
     console.log("next question");
     setCurrentQuestion((prev) => prev + 1);
@@ -57,44 +59,6 @@ const SingleQuestion = (props: any) => {
     setProgressStatus(statusPercentage);
   };
 
-  // this is updating the instances, this will not work for us bcz -> it will rerender like usestate->
-  //immediate update is not possible, so converted this code to using usestate
-
-  // const handleCheckboxAnswerChange = (
-  //   event: React.ChangeEvent<HTMLInputElement>,
-  //   questionId: any
-  // ) => {
-  //   console.log(event.target.name, event.target.checked, questionId);
-  //   const existingId = selectedAnswers.find(
-  //     (e: any) => e.questionId === questionId
-  //   );
-  //   console.log("exisidis", existingId);
-  //   if (existingId) {
-  //     console.log("inded if existingID");
-  //     const valExist = existingId.choosenAnswer.find(
-  //       (e: any) => e === event.target.name
-  //     );
-  //     console.log("value of valExist is", valExist);
-
-  //     if (valExist && !event.target.checked) {
-  //       console.log("inded valExist and !event.target.checked");
-  //       var index = existingId.choosenAnswer.indexOf(event.target.name);
-  //       if (index !== -1) {
-  //         existingId.choosenAnswer.splice(index, 1);
-  //       }
-  //     } else {
-  //       console.log("in else part of valexist false");
-  //       existingId.choosenAnswer.push(event.target.name);
-  //     }
-  //   } else {
-  //     console.log("inside main else part");
-  //     setSelectedAnswers((prev: any) => [
-  //       ...prev,
-  //       { questionId: questionId, choosenAnswer: [event.target.name] },
-  //     ]);
-  //     handleProgressStatus();
-  //   }
-  // };
   const handleCheckboxAnswerChange = (
     event: React.ChangeEvent<HTMLInputElement>,
     questionId: any
@@ -136,6 +100,70 @@ const SingleQuestion = (props: any) => {
     }
   };
 
+  // timer implementeations
+  const Ref = useRef<any>();
+
+  // The state for our timer
+  const [timer, setTimer] = useState("00:00:00");
+
+  const getTimeRemaining = (e: any) => {
+    // const e = new Date();
+    const total =
+      Date.parse(e.toISOString()) - Date.parse(new Date().toISOString());
+    console.log("value of total is", total);
+
+    //  const total = Date.parse(e) - Date.parse(new Date());
+    const seconds = Math.floor((total / 1000) % 60);
+    const minutes = Math.floor((total / 1000 / 60) % 60);
+    const hours = Math.floor((total / 1000 / 60 / 60) % 24);
+    return {
+      total,
+      hours,
+      minutes,
+      seconds,
+    };
+  };
+
+  const startTimer = (e: any) => {
+    let { total, hours, minutes, seconds } = getTimeRemaining(e);
+    if (total >= 0) {
+      setTimer(
+        (hours > 9 ? hours : "0" + hours) +
+          ":" +
+          (minutes > 9 ? minutes : "0" + minutes) +
+          ":" +
+          (seconds > 9 ? seconds : "0" + seconds)
+      );
+    } else {
+      console.log("inside else clear interval");
+      clearInterval(Ref.current);
+      // post the answers here -> selectedAnswers
+      // if the time is completed then autosubmit and navigate to submitted page
+      navigate("/test_submitted", { state: selectedAnswers });
+    }
+  };
+
+  const clearTimer = (e: any) => {
+    const id = setInterval(() => {
+      startTimer(e);
+    }, 1000);
+    Ref.current = id;
+  };
+
+  const getDeadTime = () => {
+    let deadline = new Date();
+
+    deadline.setSeconds(deadline.getSeconds() + 10);
+    // deadline.setMinutes(deadline.getMinutes() + 1);
+    // deadline.setHours(deadline.getHours() + 1);
+    return deadline;
+  };
+
+  useEffect(() => {
+    console.log("useEffect in single questions is called");
+    clearTimer(getDeadTime());
+  }, []);
+
   return (
     <>
       <Box className="progress-box">
@@ -145,6 +173,12 @@ const SingleQuestion = (props: any) => {
           variant={"determinate"}
           color={"primary"}
         />
+      </Box>
+      <Box>
+        <Typography>Time Remaining</Typography>
+        <Box>
+          <Typography variant="h5">{timer}</Typography>
+        </Box>
       </Box>
       <Box>
         {quizQuestions &&
@@ -219,6 +253,7 @@ const SingleQuestion = (props: any) => {
         setOpenDialog={setOpenDialog}
         selectedAnswers={selectedAnswers}
         totalNumberOfQuestions={totalNumberOfQuestions}
+        Ref={Ref}
       />
     </>
   );

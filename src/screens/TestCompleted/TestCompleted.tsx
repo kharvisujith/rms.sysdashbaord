@@ -7,8 +7,11 @@ import {
   TableCell,
   TableBody,
 } from "@mui/material";
+import { useLocation } from "react-router-dom";
 
 const TestCompleted = (props: any) => {
+  const location = useLocation();
+  console.log("value of answer in submitted is", location.state);
   return (
     <>
       <h1>test submitted succesfully</h1>

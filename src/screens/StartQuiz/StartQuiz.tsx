@@ -13,19 +13,19 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Toolbar from "@mui/material/Toolbar";
 import ReactModal from "react-modal";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./StartQuiz.style.scss";
 import AllQuestions from "../../components/DispalyQuizQuestions/AllQuestions";
 import SingleQuestion from "../../components/DispalyQuizQuestions/SingleQuestion";
 import { useNavigate } from "react-router-dom";
 import { getQuizQuestions } from "../../api/apiAgent";
+
 const StartQuiz = () => {
   const navigate = useNavigate();
   const [OpenTestModal, setOpenTestModal] = useState(false);
   const [modalContent, setModalContent] = useState("");
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [quizQuestions, setQuizQuestions] = useState<any>();
-  //const [numberOfQuestions, setNumberOfQuestions] = useState<number>();
 
   const handleClose = () => {
     setOpenDialog(false);
@@ -34,24 +34,87 @@ const StartQuiz = () => {
   const startTestButtonHandler = (viewToRender: "listView" | "slideView") => {
     setModalContent(viewToRender);
     setOpenTestModal(true);
+    // clearTimer(getDeadTime());
   };
-  const endTestButtonHandler = () => {
-    setOpenTestModal(false);
-  };
+  // const endTestButtonHandler = () => {
+  //   setOpenTestModal(false);
+  // };
 
-  const handleCloseFromModal = () => {
-    setOpenTestModal(false);
-  };
+  // const handleCloseFromModal = () => {
+  //   setOpenTestModal(false);
+  // };
 
-  function createData(name: string, calories: number) {
-    return { name, calories };
-  }
+  // function createData(name: string, calories: number) {
+  //   return { name, calories };
+  // }
 
-  const rows = [
-    createData("Total no of Questions", 5),
-    createData("Question Answered", 0),
-    createData("Question Not Answered", 0),
-  ];
+  // // timer implementeations
+  // const Ref = useRef<any>();
+
+  // // The state for our timer
+  // const [timer, setTimer] = useState("");
+
+  // const getTimeRemaining = (e: any) => {
+  //   // const e = new Date();
+  //   const total =
+  //     Date.parse(e.toISOString()) - Date.parse(new Date().toISOString());
+  //   console.log("value of total is", total);
+
+  //   //  const total = Date.parse(e) - Date.parse(new Date());
+  //   const seconds = Math.floor((total / 1000) % 60);
+  //   const minutes = Math.floor((total / 1000 / 60) % 60);
+  //   const hours = Math.floor((total / 1000 / 60 / 60) % 24);
+  //   return {
+  //     total,
+  //     hours,
+  //     minutes,
+  //     seconds,
+  //   };
+  // };
+
+  // const startTimer = (e: any) => {
+  //   let { total, hours, minutes, seconds } = getTimeRemaining(e);
+  //   if (total >= 0) {
+  //     setTimer(
+  //       (hours > 9 ? hours : "0" + hours) +
+  //         ":" +
+  //         (minutes > 9 ? minutes : "0" + minutes) +
+  //         ":" +
+  //         (seconds > 9 ? seconds : "0" + seconds)
+  //     );
+  //   } else {
+  //     console.log("inside else clear interval");
+  //     clearInterval(Ref.current);
+  //     // if the time is completed then autosubmit and navigate to submitted page
+  //   }
+  // };
+
+  // const clearTimer = (e: any) => {
+  //   if (Ref.current) {
+  //     console.log("insdie clearinteval");
+  //     clearInterval(Ref.current);
+  //   }
+
+  //   const id = setInterval(() => {
+  //     startTimer(e);
+  //   }, 1000);
+  //   Ref.current = id;
+  // };
+
+  // const getDeadTime = () => {
+  //   let deadline = new Date();
+
+  //   deadline.setSeconds(deadline.getSeconds() + 10);
+  //   // deadline.setMinutes(deadline.getMinutes() + 1);
+  //   // deadline.setHours(deadline.getHours() + 1);
+  //   return deadline;
+  // };
+
+  // We put empty array to act as componentDid
+  // mount only
+  // useEffect(() => {
+  //   clearTimer(getDeadTime());
+  // }, []);
 
   useEffect(() => {
     console.log("ueEffect is called");
@@ -63,9 +126,18 @@ const StartQuiz = () => {
       .then((resp) => {
         console.log("value of ress is", resp);
         console.log(resp.length);
+        let hour = "00";
+        let min = "00";
+        let sec = "10";
+        //   setTimer(hour + ":" + min + ":" + sec);
       })
       .catch((error) => console.log("error is get question", error));
   }, []);
+
+  // useEffect(() => {
+  //   console.log("useEffect of set timer is called");
+  //   setTimer({ hrs: 0, mins: 0, secs: 5 });
+  // }, []);
 
   console.log("value of quizquestion is", quizQuestions);
 
@@ -101,7 +173,9 @@ const StartQuiz = () => {
           className="start-test-btn"
           variant="contained"
           color="error"
-          onClick={() => startTestButtonHandler("slideView")}
+          onClick={() => {
+            startTestButtonHandler("slideView");
+          }}
         >
           Start Test
         </Button>
@@ -127,6 +201,7 @@ const StartQuiz = () => {
               handleClose={handleClose}
               setOpenDialog={setOpenDialog}
               quizQuestions={quizQuestions}
+              // timer={timer}
             />
           ) : null}
           {/* {modalContent && modalContent === "listView" ? (

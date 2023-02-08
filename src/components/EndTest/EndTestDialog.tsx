@@ -18,14 +18,17 @@ const EndTestDialog = (props: any) => {
     setOpenDialog,
     selectedAnswers,
     totalNumberOfQuestions,
+    Ref,
   } = props;
   console.log("value of total number of questions", totalNumberOfQuestions);
 
   const navigate = useNavigate();
 
   const endTest = () => {
+    // post answers here-> selectedAnswers
     setOpenDialog(false);
     console.log("test ended");
+    clearInterval(Ref.current);
     navigate("/test_submitted");
     console.log("the final answer set is", selectedAnswers);
   };
