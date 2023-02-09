@@ -1,7 +1,10 @@
+import SideBar from "../../components/SideBar/SideBar";
+
 const PageNotFound = () => {
   return (
     <>
-      <h1>Page not found</h1>
+    < SideBar />
+      Page not found
     </>
   );
 };

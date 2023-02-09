@@ -56,7 +56,7 @@ import HomeIcon from "@mui/icons-material/Home";
 import { ExpandLess, ExpandMore, StarBorder } from "@material-ui/icons";
 import SubjectIcon from "@mui/icons-material/Subject";
 import ArticleIcon from "@mui/icons-material/Article";
-import NavBar from "../../components/NavBar";
+import NavBar from "../../components/NavBar/NavBar";
 
 const drawerWidth = 240;
 

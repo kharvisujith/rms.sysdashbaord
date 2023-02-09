@@ -7,11 +7,13 @@ import {
   TableCell,
   TableBody,
 } from "@mui/material";
+import SideBar from "../../components/SideBar/SideBar";
 
 const TestCompleted = (props: any) => {
   return (
     <>
-      <h1>test submitted succesfully</h1>
+    <SideBar />
+        test submitted succesfully
       {/* <TableContainer component={Paper}>
         <Table sx={{ minWidth: 150 }} aria-label="simple table">
           <TableHead>

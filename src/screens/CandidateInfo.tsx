@@ -1,7 +1,7 @@
 import { Box, Button, Container, TextField, Typography } from "@mui/material";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import SideBar from "../components/SideBar";
+import SideBar from "../components/SideBar/SideBar";
 import { axiosClient, submitCandidateInfo  } from "../api/apiAgent";
 import CandidateDetails from "../Interface/CandidateDetails";
 
