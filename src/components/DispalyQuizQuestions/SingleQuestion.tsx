@@ -7,6 +7,7 @@ import RadioComponent from "../QuizTestComponents/RadioComponent";
 import "./SingleQuestion.style.scss";
 import { clear } from "console";
 import { useNavigate } from "react-router-dom";
+import { optionIds } from "../../utils/Utils";
 
 const SingleQuestion = (props: any) => {
   const { openDialog, handleClose, setOpenDialog, quizQuestions } = props;
@@ -34,18 +35,28 @@ const SingleQuestion = (props: any) => {
 
   const handleRadioAnswerChange = (
     event: React.ChangeEvent<HTMLInputElement>,
-    questionId: any
+    questionId: any,
+    questionType: any,
+    questionAnswerIds: any
   ) => {
     const selectedOption = (event.target as HTMLInputElement).value;
+    console.log("selected optin value is", selectedOption);
+    console.log("event in radio change is", event, event.target.id);
     const existingId = selectedAnswers.find(
       (e: any) => e.questionId === questionId
     );
     if (existingId) {
-      existingId.choosenAnswer = [selectedOption];
+      existingId.questionAnswers = [selectedOption];
+      existingId.questionAnswerIds = questionAnswerIds;
     } else {
       setSelectedAnswers((prev: any) => [
         ...prev,
-        { questionId: questionId, choosenAnswer: [selectedOption] },
+        {
+          questionId: questionId,
+          questionType: questionType,
+          questionAnswers: [selectedOption],
+          questionAnswerIds: questionAnswerIds,
+        },
       ]);
       handleProgressStatus();
     }
@@ -62,22 +73,32 @@ const SingleQuestion = (props: any) => {
 
   const handleCheckboxAnswerChange = (
     event: React.ChangeEvent<HTMLInputElement>,
-    questionId: any
+    questionId: any,
+    questionType: any,
+    selectedIndex: any
   ) => {
+    console.log("value of selectedindex is", selectedIndex);
     const existingIdIndex = selectedAnswers.findIndex(
       (e: any) => e.questionId === questionId
     );
     if (existingIdIndex !== -1) {
       const existingId = selectedAnswers[existingIdIndex];
-      const valExistIndex = existingId.choosenAnswer.indexOf(event.target.name);
+      const valExistIndex = existingId.questionAnswers.indexOf(
+        event.target.name
+      );
       if (valExistIndex !== -1 && !event.target.checked) {
         setSelectedAnswers((prev: any) => [
           ...prev.slice(0, existingIdIndex),
           {
             questionId: questionId,
-            choosenAnswer: [
-              ...existingId.choosenAnswer.slice(0, valExistIndex),
-              ...existingId.choosenAnswer.slice(valExistIndex + 1),
+            questionType: questionType,
+            questionAnswers: [
+              ...existingId.questionAnswers.slice(0, valExistIndex),
+              ...existingId.questionAnswers.slice(valExistIndex + 1),
+            ],
+            questionAnswerIds: [
+              ...existingId.questionAnswerIds.slice(0, valExistIndex),
+              ...existingId.questionAnswerIds.slice(valExistIndex + 1),
             ],
           },
           ...prev.slice(existingIdIndex + 1),
@@ -87,7 +108,12 @@ const SingleQuestion = (props: any) => {
           ...prev.slice(0, existingIdIndex),
           {
             questionId: questionId,
-            choosenAnswer: [...existingId.choosenAnswer, event.target.name],
+            questionType: questionType,
+            questionAnswers: [...existingId.questionAnswers, event.target.name],
+            questionAnswerIds: [
+              ...existingId.questionAnswerIds,
+              optionIds[selectedIndex],
+            ],
           },
           ...prev.slice(existingIdIndex + 1),
         ]);
@@ -95,7 +121,12 @@ const SingleQuestion = (props: any) => {
     } else {
       setSelectedAnswers((prev: any) => [
         ...prev,
-        { questionId: questionId, choosenAnswer: [event.target.name] },
+        {
+          questionId: questionId,
+          questionType: questionType,
+          questionAnswers: [event.target.name],
+          questionAnswerIds: [optionIds[selectedIndex]],
+        },
       ]);
       handleProgressStatus();
     }
@@ -160,25 +191,23 @@ const SingleQuestion = (props: any) => {
 
   useEffect(() => {
     console.log("useEffect in single questions is called");
-    clearTimer(getDeadTime());
+    // clearTimer(getDeadTime());
   }, []);
 
   return (
     <>
       <Box className="progress-box">
-        <Typography>{`Answered ${answeredQuestions} out of ${totalNumberOfQuestions}`}</Typography>
+        <Box className="progress-data">
+          <Typography variant="body1">{`Answered ${answeredQuestions} out of ${totalNumberOfQuestions}`}</Typography>
+          <Typography variant="body1">{`Time Remaining - ${timer}`}</Typography>
+        </Box>
         <LinearProgress
           value={progressStatus}
           variant={"determinate"}
           color={"primary"}
         />
       </Box>
-      <Box>
-        <Typography>Time Remaining</Typography>
-        <Box>
-          <Typography variant="h5">{timer}</Typography>
-        </Box>
-      </Box>
+
       <Box>
         {quizQuestions &&
           quizQuestions.map((question: any, index: any) => {

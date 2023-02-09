@@ -69,3 +69,11 @@ export const getSuBjectwiseQuiz = (subject: string) => {
     params: { subject: subject },
   });
 };
+
+export const submitQuiz = (quizAnswers: any) => {
+  return axiosClient.post("/quiz/interviewer/submitquiz", quizAnswers, {
+    headers: {
+      "Content-Type": "multipart/formData",
+    },
+  });
+};

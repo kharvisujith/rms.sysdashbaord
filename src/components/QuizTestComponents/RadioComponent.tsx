@@ -2,6 +2,7 @@ import { RadioGroup, FormControlLabel, Radio } from "@mui/material";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { useCallback, useEffect, useState } from "react";
+import { optionIds } from "../../utils/Utils";
 
 const RadioComponent = (props: any) => {
   const { question, handleAnswerChange, selectedAnswers } = props;
@@ -22,7 +23,7 @@ const RadioComponent = (props: any) => {
         return cur.questionId === questionId;
       });
       if (result[0]) {
-        setValue(result[0].choosenAnswer);
+        setValue(result[0].questionAnswers);
       }
 
       console.log("vlaue of result is", result);
@@ -35,8 +36,8 @@ const RadioComponent = (props: any) => {
   //     return cur.questionId === questionId;
   //   });
   //   if (result[0]) {
-  //     setValue(result[0].choosenAnswer);
-  //     console.log("reuslt is", result[0].choosenAnswer);
+  //     setValue(result[0].questionAnswers);
+  //     console.log("reuslt is", result[0].questionAnswers);
   //   }
   // };
 
@@ -50,8 +51,19 @@ const RadioComponent = (props: any) => {
         <RadioGroup
           value={value}
           onChange={(event) => {
-            handleAnswerChange(event, question.questionData.questionId);
-            //   setValue((event.target as HTMLInputElement).value);
+            const selectedIndex =
+              question.questionData.questionOptions.findIndex(
+                (option: any) =>
+                  option === (event.target as HTMLInputElement).value
+              );
+            let questionAnswerIds = [optionIds[selectedIndex]];
+            handleAnswerChange(
+              event,
+              question.questionData.questionId,
+              question.questionData.questionType,
+              questionAnswerIds
+            );
+
             getSelectedValue(question.questionData.questionId);
           }}
         >

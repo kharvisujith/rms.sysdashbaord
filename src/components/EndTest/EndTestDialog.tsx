@@ -10,6 +10,7 @@ import {
 import Typography from "@mui/material/Typography";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { submitQuiz } from "../../api/apiAgent";
 import "./EndTestDialog.style.scss";
 const EndTestDialog = (props: any) => {
   const {
@@ -26,9 +27,15 @@ const EndTestDialog = (props: any) => {
 
   const endTest = () => {
     // post answers here-> selectedAnswers
+    // submitQuiz(selectedAnswers)
+    //   .then((response) => {
+    //     console.log("response is", response.data);
+    //   })
+    //   .catch((error) => console.log("error"));
     setOpenDialog(false);
     console.log("test ended");
     clearInterval(Ref.current);
+
     navigate("/test_submitted", {
       state: {
         totalNumberOfQuestions: totalNumberOfQuestions,
