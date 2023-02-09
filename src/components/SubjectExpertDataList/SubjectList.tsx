@@ -108,13 +108,23 @@ const SubjectList = () => {
           contentLabel="Minimal Modal Example"
           ariaHideApp={false}
         >
-          {modalContent && modalContent === "listView" ? (
+          {modalContent && modalContent === "listView" ? (<>
             <AllQuestionsAnswers
               openDialog={openDialog}
               handleClose={handleClose}
               setOpenDialog={setOpenDialog}
               quizSubjectInfo={subjectAnswersList}
             />
+            <Box style={{ display: "flex", justifyContent: "center" }}>
+            <Button
+              variant="contained"
+              color="error"
+              onClick={endTestButtonHandler}
+            >
+              Close
+            </Button>
+          </Box>
+          </>
           ) : null}
         </ReactModal>
         </div>

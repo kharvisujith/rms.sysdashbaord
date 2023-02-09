@@ -8,13 +8,17 @@ import EndTestDialog from "../EndTest/EndTestDialog";
 import { LinearProgress } from "@mui/material";
 import "./AllQuestionsAnswers.style.scss"
 const AllQuestionsAnswers = (props: any) => {
-  const { openDialog, handleClose, setOpenDialog, quizSubjectInfo } = props;
+  const { openDialog, handleClose, setOpenDialog, quizSubjectInfo} = props;
   const [selectedAnswers, setSelectedAnswers] = useState<any>([]);
   const [progressStatus, setProgressStatus] = useState<number>(0);
   const [answeredQuestions, setAnsweredQuestions] = useState<number>(0);
+  const [OpenTestModal, setOpenTestModal] = useState(true);
   const [totalNumberOfQuestions, setTotolNumberOfQuestions] = useState<number>(
     quizSubjectInfo.length
   );
+  const endTestButtonHandler = () => {
+    setOpenTestModal(false);
+  };
  console.log("Answers main page Info",quizSubjectInfo);
   return (
     <>
@@ -61,14 +65,7 @@ const AllQuestionsAnswers = (props: any) => {
               return null;
           }
         })}
-      <Box style={{ display: "flex", justifyContent: "center" }}>
-        <Button
-          variant="contained"
-          color="error"
-        >
-          Close
-        </Button>
-      </Box>
+
       <EndTestDialog
         openDialog={openDialog}
         handleClose={handleClose}
