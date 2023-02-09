@@ -24,14 +24,15 @@ const SubjectList = () => {
   }, []);
   return (
     <>
-      <Box  
-       sx={{
-      marginTop: 2,
-      marginLeft: 10,
-      display: "flex",
-      flexDirection: "column",
-       alignItems: "center",
-    }}>
+      <Box
+        sx={{
+          marginTop: 2,
+          marginLeft: 10,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
         <Typography variant="h5" align="center">
           Available Question Sets
         </Typography>

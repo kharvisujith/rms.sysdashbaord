@@ -4,15 +4,13 @@ import EndTestDialog from "../EndTest/EndTestDialog";
 import CheckboxComponent from "../QuizTestComponents/CheckboxComponent";
 import CodingComponent from "../QuizTestComponents/CodingComponent";
 import RadioComponent from "../QuizTestComponents/RadioComponent";
-import { jsQuestions } from "../../questions/questions";
 import "./SingleQuestion.style.scss";
 import { clear } from "console";
 import { useNavigate } from "react-router-dom";
 
 const SingleQuestion = (props: any) => {
   const { openDialog, handleClose, setOpenDialog, quizQuestions } = props;
-  //console.log("value of time in signle quesiton is", timer);
-  // console.log("value of quiz in singlereqion is", quizQuestions);
+
   const [currentQuestion, setCurrentQuestion] = useState<number>(1);
   const [selectedAnswers, setSelectedAnswers] = useState<any>([]);
   const [progressStatus, setProgressStatus] = useState<number>(0);
@@ -20,8 +18,11 @@ const SingleQuestion = (props: any) => {
   const [totalNumberOfQuestions, setTotolNumberOfQuestions] = useState<number>(
     quizQuestions.length
   );
+  const [timer, setTimer] = useState("00:00:00");
 
+  const Ref = useRef<any>();
   const navigate = useNavigate();
+
   const moveToNextQuestion = () => {
     console.log("next question");
     setCurrentQuestion((prev) => prev + 1);
@@ -100,19 +101,10 @@ const SingleQuestion = (props: any) => {
     }
   };
 
-  // timer implementeations
-  const Ref = useRef<any>();
-
-  // The state for our timer
-  const [timer, setTimer] = useState("00:00:00");
-
   const getTimeRemaining = (e: any) => {
-    // const e = new Date();
     const total =
       Date.parse(e.toISOString()) - Date.parse(new Date().toISOString());
     console.log("value of total is", total);
-
-    //  const total = Date.parse(e) - Date.parse(new Date());
     const seconds = Math.floor((total / 1000) % 60);
     const minutes = Math.floor((total / 1000 / 60) % 60);
     const hours = Math.floor((total / 1000 / 60 / 60) % 24);
@@ -139,7 +131,14 @@ const SingleQuestion = (props: any) => {
       clearInterval(Ref.current);
       // post the answers here -> selectedAnswers
       // if the time is completed then autosubmit and navigate to submitted page
-      navigate("/test_submitted", { state: selectedAnswers });
+      console.log("selected answers");
+      navigate("/test_submitted", {
+        state: {
+          totalNumberOfQuestions: totalNumberOfQuestions,
+          answered: selectedAnswers.length,
+          notAnswered: totalNumberOfQuestions - selectedAnswers.length,
+        },
+      });
     }
   };
 
@@ -185,7 +184,7 @@ const SingleQuestion = (props: any) => {
           quizQuestions.map((question: any, index: any) => {
             if (index + 1 === currentQuestion) {
               switch (question.questionType) {
-                case "Single Choice":
+                case "SINGLE CHOICE":
                   return (
                     <RadioComponent
                       key={index}
@@ -197,7 +196,7 @@ const SingleQuestion = (props: any) => {
                       selectedAnswers={selectedAnswers}
                     />
                   );
-                case "Multiple Choice":
+                case "MULTIPLE CHOICE":
                   return (
                     <CheckboxComponent
                       key={index}

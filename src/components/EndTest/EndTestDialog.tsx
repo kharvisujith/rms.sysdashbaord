@@ -29,7 +29,13 @@ const EndTestDialog = (props: any) => {
     setOpenDialog(false);
     console.log("test ended");
     clearInterval(Ref.current);
-    navigate("/test_submitted");
+    navigate("/test_submitted", {
+      state: {
+        totalNumberOfQuestions: totalNumberOfQuestions,
+        answered: selectedAnswers.length,
+        notAnswered: totalNumberOfQuestions - selectedAnswers.length,
+      },
+    });
     console.log("the final answer set is", selectedAnswers);
   };
 

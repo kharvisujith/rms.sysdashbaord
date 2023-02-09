@@ -50,16 +50,13 @@ const CheckboxComponent = (props: any) => {
                   control={
                     <Checkbox
                       // checked={value.includes(option) ? true : false}
-                      // checked={value.indexOf(option) !== -1}
-                      checked={selectedAnswers}
-                      //  value={option}
+                      checked={value.indexOf(option) !== -1}
                       onChange={(event) => {
                         getSelectedValue(question.questionData.questionId);
                         handleCheckboxAnswerChange(
                           event,
                           question.questionData.questionId
                         );
-                        // getSelectedValue();
                       }}
                       name={option}
                     />
