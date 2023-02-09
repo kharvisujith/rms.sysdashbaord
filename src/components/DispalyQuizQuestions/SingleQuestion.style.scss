@@ -1,11 +1,19 @@
 .progress-box {
   margin-top: 1rem;
   margin-bottom: 1rem;
+
+  .progress-data {
+    display: flex;
+    justify-content: space-between;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    color: red;
+  }
 }
 .test-buttons-box {
   display: flex;
   width: 30%;
-  margin-top: 2rem;
+  margin-top: 1rem;
   margin-left: 0.5rem;
 
   .test-button {
@@ -18,7 +26,7 @@
 .end-test-box {
   display: flex;
   justify-content: center;
-  margin-top: 5rem;
+  margin-top: 3rem;
 
   .end-test-btn {
     font-size: 1rem;

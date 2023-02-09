@@ -19,15 +19,25 @@ const CheckboxComponent = (props: any) => {
         return cur.questionId === questionId;
       });
       if (result[0]) {
-        //setValue(result[0].choosenAnswer);
+        //setValue(result[0].questionAnswers);
         console.log("result in check box is", result);
-        console.log(result[0].choosenAnswer);
+        console.log(result[0].questionAnswers);
         // setValue(value.push(option));
-        setValue(result[0].choosenAnswer);
+        setValue(result[0].questionAnswers);
+
+        // foreach( var i in result[0].questionAnswers){
+
+        // }
+        result[0].questionAnswers.forEach((element: any) => {});
+        // const selectedIndex =
+        // question.questionData.questionOptions.findIndex(
+        //   (option: any) =>
+        //     option ===
+        // );
       }
 
       console.log("vlaue of result is", result);
-      // console.log("value of vlue.choosenAnswer is", value.choosenAnswer);
+      // console.log("value of vlue.questionAnswers is", value.questionAnswers);
     },
     [selectedAnswers]
   );
@@ -50,16 +60,29 @@ const CheckboxComponent = (props: any) => {
                   control={
                     <Checkbox
                       // checked={value.includes(option) ? true : false}
-                      // checked={value.indexOf(option) !== -1}
-                      checked={selectedAnswers}
-                      //  value={option}
+                      checked={value.indexOf(option) !== -1}
                       onChange={(event) => {
+                        console.log(
+                          "value of event in check box onchange is",
+                          event,
+                          event.target.value
+                        );
+                        const selectedIndex =
+                          question.questionData.questionOptions.findIndex(
+                            (option: any) =>
+                              option === (event.target as HTMLInputElement).name
+                          );
+                        console.log(
+                          "selectedINdex inside checkbo is",
+                          selectedIndex
+                        );
                         getSelectedValue(question.questionData.questionId);
                         handleCheckboxAnswerChange(
                           event,
-                          question.questionData.questionId
+                          question.questionData.questionId,
+                          question.questionData.questionType,
+                          selectedIndex
                         );
-                        // getSelectedValue();
                       }}
                       name={option}
                     />
