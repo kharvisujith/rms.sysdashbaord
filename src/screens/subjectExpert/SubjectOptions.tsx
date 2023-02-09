@@ -96,7 +96,7 @@ const SubjectOptions = (props:any) => {
   });
   const [openList, setOpenList] = useState(false);
   const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
 
   // const handleDrawerOpen = () => {
   //   setReOpen(true);

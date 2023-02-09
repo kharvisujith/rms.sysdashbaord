@@ -1,5 +1,5 @@
 import { Box, Button, Container, TextField, Typography } from "@mui/material";
-import { useState } from "react";
+ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import SideBar from "../components/SideBar/SideBar";
 import { axiosClient, submitCandidateInfo  } from "../api/apiAgent";
@@ -24,7 +24,7 @@ const CandidateInfo = () => {
     if (!user) {
       return;
     }
-    submitCandidateInfo(1, 'F_2EGdud3pjEIZg0vRyM4BOVBb1hGY2h7SRElCt5BpGCpae1zWr26eKjnpnOs8B4p5Y7KytsqL-Q7Nc1Qjl1Ug!!',user)    
+    submitCandidateInfo(1, 'ueFRzpMyVr3Hco11Y6XOfYEpFqVxnApqXcD27u45kOPZdJNR2ziB3DCL-ZGgvCMn1DfxX19Fx1k6ZacIrbyb-w!!',user)    
       .then((res:any) =>
       { setUser(res.data)
       } ) 
