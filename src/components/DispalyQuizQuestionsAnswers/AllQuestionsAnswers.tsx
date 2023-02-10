@@ -13,9 +13,6 @@ const AllQuestionsAnswers = (props: any) => {
   const [progressStatus, setProgressStatus] = useState<number>(0);
   const [answeredQuestions, setAnsweredQuestions] = useState<number>(0);
   const [OpenTestModal, setOpenTestModal] = useState(true);
-  const [totalNumberOfQuestions, setTotolNumberOfQuestions] = useState<number>(
-    quizSubjectInfo.length
-  );
   const endTestButtonHandler = () => {
     setOpenTestModal(false);
   };
@@ -24,9 +21,10 @@ const AllQuestionsAnswers = (props: any) => {
     <>
       <Box className="progress-box">
       <Typography style={{ padding: 20,textAlign:"center" }}>
-        <strong>{'SubjectName:'}&emsp;</strong>
-        <strong>{'SetNumber:'}&emsp;</strong>
-        <strong>{'TotalQuestions:'}&ensp;</strong>{`${totalNumberOfQuestions}`}
+        
+        <strong>{'SubjectName:'}&ensp;</strong>{`${quizSubjectInfo[0]?.subjectName.toString()}`}&emsp;
+        <strong>{'SetNumber:'}&ensp;</strong>{`${quizSubjectInfo[0]?.setNumber}`}&emsp;
+        <strong>{'TotalQuestions:'}&ensp;</strong>{`${quizSubjectInfo.length}`}
         </Typography>
         <LinearProgress
           value={progressStatus}
@@ -34,8 +32,9 @@ const AllQuestionsAnswers = (props: any) => {
           color={"primary"}
         />
       </Box>
+      <div className="">
       {quizSubjectInfo &&
-        quizSubjectInfo.map((question: any, index: any) => {
+        quizSubjectInfo?.map((question: any, index: any) => {
           console.log("Answers question type is", question);
           switch (question.questionType) {
             case "SINGLECHOICE":
@@ -65,14 +64,7 @@ const AllQuestionsAnswers = (props: any) => {
               return null;
           }
         })}
-
-      <EndTestDialog
-        openDialog={openDialog}
-        handleClose={handleClose}
-        setOpenDialog={setOpenDialog}
-        selectedAnswers={selectedAnswers}
-        totalNumberOfQuestions={totalNumberOfQuestions}
-      />
+        </div>
     </>
   );
 };
