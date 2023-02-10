@@ -33,27 +33,77 @@ const SingleQuestion = (props: any) => {
 
   const handleRadioAnswerChange = (
     event: React.ChangeEvent<HTMLInputElement>,
-    questionId: any,
-    questionType: any,
+    // questionId: any,
+    // questionType: any,
+    questionData: any,
     questionAnswerIds: any
   ) => {
-    const selectedOption = (event.target as HTMLInputElement).value;
-    console.log("selected optin value is", selectedOption);
-    console.log("event in radio change is", event, event.target.id);
-    const existingId = selectedAnswers.find(
-      (e: any) => e.questionId === questionId
+    console.log(
+      "IN radio answehange value of questionData is",
+      questionData,
+      questionAnswerIds
     );
-    if (existingId) {
-      existingId.questionAnswers = [selectedOption];
-      existingId.questionAnswerIds = questionAnswerIds;
+    const selectedAns = (event.target as HTMLInputElement).value;
+
+    console.log(
+      "value of selected ANswers in onchange radio is",
+      selectedAnswers
+    );
+    console.log("slectedans[0] is", selectedAnswers[0]);
+    if (selectedAns) {
+      console.log(
+        selectedAnswers[0]?.setNumber,
+        selectedAnswers[0]?.subjectName,
+        selectedAnswers[0]?.quizAnswers[0].questionAnswerIds
+      );
+    }
+    // const existingId = selectedAnswers.find(
+    //   (cur: any) => {
+    //     return (
+    //       cur.subjectName === questionData.subjectName &&
+    //       cur.setNumber === questionData.setNumber &&
+    //       (cur.quizAnswers.find((elem: any) => {
+    //         return elem.questionAnswerIds === questionData.questionAnswerIds;
+    //       })
+    //         ? true
+    //         : false)
+    //     );
+    //   }
+    //   // cur.subjectName === questionData.subjectName &&
+    //   // cur.setNumber === questionData.setNumber &&
+    //   // cur.quizAnswers.questionId === questionData.questionId
+    // );
+    const existingId = selectedAnswers.filter((cur: any) => {
+      return (
+        cur.subjectName === questionData.subjectName &&
+        cur.setNumber === questionData.setNumber &&
+        cur.quizAnswers.find((elem: any) => {
+          console.log("element inside filet quizans is", elem);
+          return elem.questionId === questionData.questionId;
+        })
+      );
+    });
+
+    //})
+    console.log("value of existing id is", existingId);
+    if (existingId[0]) {
+      existingId[0].quizAnswers[0].questionAnswers = [selectedAns];
+      existingId[0].quizAnswers[0].questionAnswerIds = questionAnswerIds;
     } else {
+      console.log("out of existing id");
       setSelectedAnswers((prev: any) => [
         ...prev,
         {
-          questionId: questionId,
-          questionType: questionType,
-          questionAnswers: [selectedOption],
-          questionAnswerIds: questionAnswerIds,
+          subjectName: questionData.subjectName,
+          setNumber: questionData.setNumber,
+          quizAnswers: [
+            {
+              questionId: questionData.questionId,
+              questionType: questionData.questionType,
+              questionAnswers: [selectedAns],
+              questionAnswerIds: questionAnswerIds,
+            },
+          ],
         },
       ]);
       handleProgressStatus();
@@ -254,7 +304,7 @@ const SingleQuestion = (props: any) => {
                   return (
                     <RadioComponent
                       key={index}
-                      question={{
+                      questionInfo={{
                         questionNumber: index + 1,
                         questionData: question,
                       }}

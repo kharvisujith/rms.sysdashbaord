@@ -5,28 +5,44 @@ import { useCallback, useEffect, useState } from "react";
 import { optionIds } from "../../utils/Utils";
 
 const RadioComponent = (props: any) => {
-  const { question, handleAnswerChange, selectedAnswers } = props;
+  const { questionInfo, handleAnswerChange, selectedAnswers } = props;
   console.log("value of selected answer in radio comp is", selectedAnswers);
 
-  // question={{
+  // questionInfo={{
   //   questionNumber: index + 1,
-  //   questionData: question,
+  //   questionData: questionInfo,
   //   console.log("value of props in radio is", props);
 
-  const [value, setValue] = useState({});
+  const [value, setValue] = useState([]);
   console.log("value in radio comp is", value);
 
   const getSelectedValue = useCallback(
-    (questionId: any) => {
-      console.log("value of quesiton id is", questionId);
+    (questionData: any) => {
+      console.log("get selected value is called");
+      console.log("value of quesiton id in getselected value is", questionData);
+      // const result = selectedAnswers.filter((cur: any) => {
+      //   return cur.quizAnswersquestionData === questionData;
+      // });
+      console.log("selected ans in getselectefd value is", selectedAnswers);
       const result = selectedAnswers.filter((cur: any) => {
-        return cur.questionId === questionId;
+        return (
+          cur.subjectName === questionData.subjectName &&
+          cur.setNumber === questionData.setNumber &&
+          cur.quizAnswers.find((elem: any) => {
+            console.log("element inside filet quizans is", elem);
+            return elem.questionId === questionData.questionId;
+          })
+        );
       });
+
+      console.log("value of result is", result);
+
       if (result[0]) {
-        setValue(result[0].questionAnswers);
+        console.log(result[0].quizAnswers[0].questionAnswers);
+        setValue(result[0].quizAnswers[0].questionAnswers);
       }
 
-      console.log("vlaue of result is", result);
+      // console.log("vlaue of result is", result);
     },
     [selectedAnswers]
   );
@@ -42,32 +58,45 @@ const RadioComponent = (props: any) => {
   // };
 
   useEffect(() => {
-    getSelectedValue(question.questionData.questionId);
-  }, [question.questionData.questionId, getSelectedValue]);
+    console.log(
+      "value of quesiton info in useffect is",
+      questionInfo.questionData
+    );
+    getSelectedValue(questionInfo.questionData);
+  }, [questionInfo.questionData, getSelectedValue, questionInfo]);
   return (
     <>
       <Box>
-        <Typography>{`${question.questionNumber}. ${question.questionData.question}`}</Typography>
+        <Typography>{`${questionInfo.questionNumber}. ${questionInfo.questionData.question}`}</Typography>
         <RadioGroup
           value={value}
           onChange={(event) => {
+            console.log("onchange in radio called");
             const selectedIndex =
-              question.questionData.questionOptions.findIndex(
+              questionInfo.questionData.questionOptions.findIndex(
                 (option: any) =>
                   option === (event.target as HTMLInputElement).value
               );
+
             let questionAnswerIds = [optionIds[selectedIndex]];
+            console.log(
+              "selectedIndex in onchange radio is and questio answerIds is",
+              selectedIndex,
+              questionAnswerIds
+            );
             handleAnswerChange(
               event,
-              question.questionData.questionId,
-              question.questionData.questionType,
+              questionInfo.questionData,
+              //  questionInfo.questionData.questionId,
+              //  questionInfo.questionData.questionType,
               questionAnswerIds
             );
 
-            getSelectedValue(question.questionData.questionId);
+            // getSelectedValue(questionInfo.questionData.questionId);
+            getSelectedValue(questionInfo.questionData);
           }}
         >
-          {question.questionData.questionOptions.map(
+          {questionInfo.questionData.questionOptions.map(
             (option: any, index: any) => {
               return (
                 <FormControlLabel

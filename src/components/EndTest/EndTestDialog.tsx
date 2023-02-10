@@ -27,18 +27,18 @@ const EndTestDialog = (props: any) => {
   const navigate = useNavigate();
 
   const endTest = () => {
-    const submitQuizData = {
-      quizId: 1,
-      data: [
-        {
-          subjectName: "JAVASCRIPT",
-          setNumber: 1,
-          quizAnswers: selectedAnswers,
-        },
-      ],
-    };
+    // const submitQuizData = {
+    //   quizId: 1,
+    //   data: [
+    //     {
+    //       subjectName: "JAVASCRIPT",
+    //       setNumber: 1,
+    //       quizAnswers: selectedAnswers,
+    //     },
+    //   ],
+    // };
     // post answers here-> selectedAnswers
-    submitQuiz(submitQuizData)
+    submitQuiz(selectedAnswers)
       .then((response) => {
         console.log("response is", response.data);
         Swal.fire({
