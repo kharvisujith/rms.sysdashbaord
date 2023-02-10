@@ -4,18 +4,16 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Toolbar from "@mui/material/Toolbar";
 import ReactModal from "react-modal";
-import { useEffect, useState } from "react";
 import "./StartQuiz.style.scss";
 import SingleQuestion from "../../components/DispalyQuizQuestions/SingleQuestion";
-import { useNavigate } from "react-router-dom";
-import { getQuizQuestions } from "../../api/apiAgent";
-
+import { useLocation, useNavigate } from "react-router-dom";
+import { useState } from "react";
 const StartQuiz = () => {
   const [OpenTestModal, setOpenTestModal] = useState(false);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
-  const [quizQuestions, setQuizQuestions] = useState<any>();
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleClose = () => {
     setOpenDialog(false);
@@ -25,17 +23,15 @@ const StartQuiz = () => {
     setOpenTestModal(true);
   };
 
-  useEffect(() => {
-    console.log("ueEffect is called");
-    getQuizQuestions(1, "javascript")
-      .then((res) => {
-        setQuizQuestions(res.data);
-        return res.data;
-      })
-      .catch((error) => console.log("error is get question", error));
-  }, []);
-
-  console.log("value of quizquestion is", quizQuestions);
+  // useEffect(() => {
+  //   console.log("ueEffect is called");
+  //   getQuizQuestions(1, "javascript")
+  //     .then((res) => {
+  //       setQuizQuestions(res.data);
+  //       return res.data;
+  //     })
+  //     .catch((error) => console.log("error is get question", error));
+  // }, []);
 
   return (
     <Box className="main-layout-wrap">
@@ -56,7 +52,6 @@ const StartQuiz = () => {
       <Box className="info-box">
         <Typography variant="h5">Test Informations : </Typography>
         <Box className="info-details">
-          <Typography>{`* Total Number Of Question - ${10}`}</Typography>
           <Typography>{`* Includes Multiple Choice questions and Coding questions`}</Typography>
           <Typography>{`* Total Time given for the test is ${60} minutes`}</Typography>
           <Typography>{`* After the completion of the given time the test is autosubmitted`}</Typography>
@@ -87,7 +82,7 @@ const StartQuiz = () => {
             openDialog={openDialog}
             handleClose={handleClose}
             setOpenDialog={setOpenDialog}
-            quizQuestions={quizQuestions}
+            quizQuestions={location.state}
           />
         </ReactModal>
       </Box>

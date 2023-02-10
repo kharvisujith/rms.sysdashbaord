@@ -10,6 +10,7 @@ import {
 import Typography from "@mui/material/Typography";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 import { submitQuiz } from "../../api/apiAgent";
 import "./EndTestDialog.style.scss";
 const EndTestDialog = (props: any) => {
@@ -26,15 +27,46 @@ const EndTestDialog = (props: any) => {
   const navigate = useNavigate();
 
   const endTest = () => {
+    const submitQuizData = {
+      quizId: 1,
+      data: [
+        {
+          subjectName: "JAVASCRIPT",
+          setNumber: 1,
+          quizAnswers: selectedAnswers,
+        },
+      ],
+    };
     // post answers here-> selectedAnswers
-    // submitQuiz(selectedAnswers)
-    //   .then((response) => {
-    //     console.log("response is", response.data);
-    //   })
-    //   .catch((error) => console.log("error"));
+    submitQuiz(submitQuizData)
+      .then((response) => {
+        console.log("response is", response.data);
+        Swal.fire({
+          title: "Success",
+          text: "Test Submitted Succesfully",
+          icon: "success",
+          confirmButtonText: "Okay",
+        });
+      })
+      .catch((error) => {
+        console.log("error");
+        Swal.fire({
+          title: "error",
+          text: "Failed to Submitt Test, Please Retry",
+          icon: "error",
+          confirmButtonText: "Okay",
+        });
+      });
+
     setOpenDialog(false);
     console.log("test ended");
     clearInterval(Ref.current);
+    // Swal.fire({
+    //   title: "Success",
+    //   text: "Test Submitted Succesfully",
+    //   icon: "success",
+    //   confirmButtonText: "Okay",
+    // });
 
     navigate("/test_submitted", {
       state: {

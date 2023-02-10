@@ -10,8 +10,8 @@ const RmsHome = (props: any) => {
 
   return (
     <>
-    <SideBar />
-    {/* <Box className="main-layout-wrap"> */}
+      <SideBar />
+      {/* <Box className="main-layout-wrap"> */}
       {/* <AppBar position="static">
         <Toolbar>
           <Typography
@@ -47,10 +47,12 @@ const RmsHome = (props: any) => {
           &nbsp;&nbsp;&nbsp;
           <button onClick={() => navigate("/reviewer")}>Interviewer</button>
           &nbsp;&nbsp;&nbsp;
-          <button onClick={() => navigate("/candidateinfo")}>Candidate</button>
+          <button onClick={() => navigate("/rms-aug/test/dummy-id")}>
+            Candidate
+          </button>
         </p>
       </div>
-     {/* </Box> */}
+      {/* </Box> */}
     </>
   );
 };

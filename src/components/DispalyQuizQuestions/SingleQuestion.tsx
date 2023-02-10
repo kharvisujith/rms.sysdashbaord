@@ -6,30 +6,28 @@ import CodingComponent from "../QuizTestComponents/CodingComponent";
 import RadioComponent from "../QuizTestComponents/RadioComponent";
 import "./SingleQuestion.style.scss";
 import { clear } from "console";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { optionIds } from "../../utils/Utils";
+import { submitQuiz } from "../../api/apiAgent";
+import Swal from "sweetalert2";
 
 const SingleQuestion = (props: any) => {
   const { openDialog, handleClose, setOpenDialog, quizQuestions } = props;
+  console.log("value of quizquestion in single question is", quizQuestions);
 
   const [currentQuestion, setCurrentQuestion] = useState<number>(1);
   const [selectedAnswers, setSelectedAnswers] = useState<any>([]);
   const [progressStatus, setProgressStatus] = useState<number>(0);
   const [answeredQuestions, setAnsweredQuestions] = useState<number>(0);
-  const [totalNumberOfQuestions, setTotolNumberOfQuestions] = useState<number>(
-    quizQuestions.length
-  );
   const [timer, setTimer] = useState("00:00:00");
 
   const Ref = useRef<any>();
   const navigate = useNavigate();
 
   const moveToNextQuestion = () => {
-    console.log("next question");
     setCurrentQuestion((prev) => prev + 1);
   };
   const moveToPreviousQuestion = () => {
-    console.log("previous question");
     setCurrentQuestion((prev) => prev - 1);
   };
 
@@ -65,7 +63,7 @@ const SingleQuestion = (props: any) => {
   const handleProgressStatus = () => {
     console.log("handePrgressstatus called");
     const statusPercentage =
-      ((answeredQuestions + 1) * 100) / totalNumberOfQuestions;
+      ((answeredQuestions + 1) * 100) / quizQuestions.length;
     setAnsweredQuestions((prev) => prev + 1);
     console.log("value of st is", statusPercentage);
     setProgressStatus(statusPercentage);
@@ -162,14 +160,53 @@ const SingleQuestion = (props: any) => {
       clearInterval(Ref.current);
       // post the answers here -> selectedAnswers
       // if the time is completed then autosubmit and navigate to submitted page
+      const submitQuizData = {
+        quizId: 1,
+        data: [
+          {
+            subjectName: "JAVASCRIPT",
+            setNumber: 1,
+            quizAnswers: selectedAnswers,
+          },
+        ],
+      };
+
+      submitQuiz(submitQuizData)
+        .then((response) => {
+          console.log("response is", response.data);
+          Swal.fire({
+            title: "Success",
+            text: "Test Submitted Succesfully",
+            icon: "success",
+            confirmButtonText: "Okay",
+          });
+        })
+        .then((res: any) => {
+          navigate("/test_submitted", {
+            state: {
+              totalNumberOfQuestions: quizQuestions.length,
+              answered: selectedAnswers.length,
+              notAnswered: quizQuestions.length - selectedAnswers.length,
+            },
+          });
+        })
+        .catch((error) => {
+          console.log("error");
+          Swal.fire({
+            title: "error",
+            text: "Failed to Submitt Test, Please Retry",
+            icon: "error",
+            confirmButtonText: "Okay",
+          });
+        });
       console.log("selected answers");
-      navigate("/test_submitted", {
-        state: {
-          totalNumberOfQuestions: totalNumberOfQuestions,
-          answered: selectedAnswers.length,
-          notAnswered: totalNumberOfQuestions - selectedAnswers.length,
-        },
-      });
+      // navigate("/test_submitted", {
+      //   state: {
+      //     totalNumberOfQuestions: quizQuestions.length,
+      //     answered: selectedAnswers.length,
+      //     notAnswered: quizQuestions.length - selectedAnswers.length,
+      //   },
+      // });
     }
   };
 
@@ -191,14 +228,14 @@ const SingleQuestion = (props: any) => {
 
   useEffect(() => {
     console.log("useEffect in single questions is called");
-    // clearTimer(getDeadTime());
+    //clearTimer(getDeadTime());
   }, []);
 
   return (
     <>
       <Box className="progress-box">
         <Box className="progress-data">
-          <Typography variant="body1">{`Answered ${answeredQuestions} out of ${totalNumberOfQuestions}`}</Typography>
+          <Typography variant="body1">{`Answered ${answeredQuestions} out of ${quizQuestions?.length}`}</Typography>
           <Typography variant="body1">{`Time Remaining - ${timer}`}</Typography>
         </Box>
         <LinearProgress
@@ -213,7 +250,7 @@ const SingleQuestion = (props: any) => {
           quizQuestions.map((question: any, index: any) => {
             if (index + 1 === currentQuestion) {
               switch (question.questionType) {
-                case "SINGLE CHOICE":
+                case "SINGLECHOICE":
                   return (
                     <RadioComponent
                       key={index}
@@ -225,7 +262,7 @@ const SingleQuestion = (props: any) => {
                       selectedAnswers={selectedAnswers}
                     />
                   );
-                case "MULTIPLE CHOICE":
+                case "MULTIPLECHOICE":
                   return (
                     <CheckboxComponent
                       key={index}
@@ -237,7 +274,7 @@ const SingleQuestion = (props: any) => {
                       selectedAnswers={selectedAnswers}
                     />
                   );
-                case "PROGRAMM":
+                case "PROGRAM":
                   return <CodingComponent key={index} question={question} />;
                 default:
                   return null;
@@ -246,7 +283,7 @@ const SingleQuestion = (props: any) => {
           })}
       </Box>
       <Box className="test-buttons-box">
-        {currentQuestion <= totalNumberOfQuestions && currentQuestion > 1 && (
+        {currentQuestion <= quizQuestions.length && currentQuestion > 1 && (
           <Button
             variant="outlined"
             onClick={moveToPreviousQuestion}
@@ -255,7 +292,7 @@ const SingleQuestion = (props: any) => {
             Previous
           </Button>
         )}
-        {currentQuestion < totalNumberOfQuestions && (
+        {currentQuestion < quizQuestions.length && (
           <Button
             variant="contained"
             onClick={moveToNextQuestion}
@@ -280,7 +317,7 @@ const SingleQuestion = (props: any) => {
         handleClose={handleClose}
         setOpenDialog={setOpenDialog}
         selectedAnswers={selectedAnswers}
-        totalNumberOfQuestions={totalNumberOfQuestions}
+        totalNumberOfQuestions={quizQuestions.length}
         Ref={Ref}
       />
     </>
