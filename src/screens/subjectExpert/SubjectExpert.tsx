@@ -46,7 +46,7 @@ import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
 import {
   axiosClient,
   downnLoadExcel,
-  getSuBjectwiseQuiz,
+  getSubjectwiseQuiz,
   upLoadExcel,
 } from "../../api/apiAgent";
 import { ChangeEvent, useEffect, useState } from "react";

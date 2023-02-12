@@ -7,13 +7,38 @@ import {
   Typography,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import { getSuBjectwiseQuiz } from "../../api/apiAgent";
-
+import { getSubjectwiseQuiz,getSubjectwiseQuizAnswers } from "../../api/apiAgent";
+import AllQuestionsAnswers from "../DispalyQuizQuestionsAnswers/AllQuestionsAnswers";
+import ReactModal from "react-modal";
 const SubjectList = () => {
   const [subjectList, setSubjectList] = useState<any>([]);
+  const [OpenTestModal, setOpenTestModal] = useState(false);
+  const [modalContent, setModalContent] = useState("");
+  const [openDialog, setOpenDialog] = useState<boolean>(false);
+  const [subjectAnswersList, setSubjectAnswerList] = useState<any>([]);
+  const handleClose = () => {
+    setOpenDialog(false);
+  };
 
+  const StartTestViewButtonHandler = (e:any) => { 
+    
+       getSubjectwiseQuizAnswers(e.setNumber,e.subjectName)
+         .then((response) => {
+           setSubjectAnswerList(response.data);
+        })
+        .catch((error: any) => console.log("error in subjwise answersapi"));
+        setModalContent("listView");
+    setOpenTestModal(true);
+  };
+  const endTestButtonHandler = () => {
+    setOpenTestModal(false);
+  };
+
+  const handleCloseFromModal = () => {
+    setOpenTestModal(false);
+  };
   const subjectwiseQuizDetails = async () => {
-    getSuBjectwiseQuiz("")
+    getSubjectwiseQuiz("")
       .then((response) => {
         setSubjectList(response.data);
       })
@@ -28,9 +53,9 @@ const SubjectList = () => {
        sx={{
       marginTop: 2,
       marginLeft: 10,
-      // display: "flex",
-      // flexDirection: "column",
-      //  alignItems: "center",
+      display: "flex",
+      flexDirection: "column",
+       alignItems: "center",
     }}>
         <Typography variant="h5" align="center">
           Available Question Sets
@@ -49,7 +74,7 @@ const SubjectList = () => {
                       style={{ padding: 20 }}
                     >
                       {elem.subjectName}
-                      <Button variant="contained">View</Button>
+                      <Button variant="contained"  onClick={() => StartTestViewButtonHandler(elem)}>View</Button>
                     </Typography>
                     <CardContent>
                       <Typography>
@@ -77,6 +102,33 @@ const SubjectList = () => {
               ))}
           </Grid>
         </Box>
+        <div className="quiz-start-btn-wrap">
+        <ReactModal
+          isOpen={OpenTestModal}
+          contentLabel="Minimal Modal Example"
+          ariaHideApp={false}
+        >
+         
+          {modalContent && modalContent === "listView" ? (<>
+            <AllQuestionsAnswers
+              openDialog={openDialog}
+              handleClose={handleClose}
+              setOpenDialog={setOpenDialog}
+              quizSubjectInfo={subjectAnswersList}
+            />
+            <Box style={{ display: "flex", justifyContent: "center" }}>
+            <Button
+              variant="contained"
+              color="error"
+              onClick={endTestButtonHandler}
+            >
+              Close
+            </Button>
+          </Box>
+          </>
+          ) : null}
+        </ReactModal>
+        </div>
       </Box>
     </>
   );

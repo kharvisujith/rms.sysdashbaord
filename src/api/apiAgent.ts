@@ -67,12 +67,17 @@ export const getQuizQuestions = (set: number, subject: string) => {
   );
 };
 
-export const getSuBjectwiseQuiz = (subject: string) => {
+export const getSubjectwiseQuiz = (subject: string) => {
   return axiosClient.get("/quiz/SubjectExpert/allquestions", {
     params: { subject: subject },
   });
 };
-
+export const getSubjectwiseQuizAnswers = (set: any, subject: any) => {
+  console.log("vlues are",set,subject);
+  return axiosClient.get(
+    `quiz/SubjectExpert/questions?set=${set}&subject=${subject}`
+  );
+};
 export const submitQuiz = (quizAnswers: any) => {
   return axiosClient.post("/quiz/interviewer/submitquiz", quizAnswers, {
     headers: {
