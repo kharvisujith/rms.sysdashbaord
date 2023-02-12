@@ -10,6 +10,7 @@ import TestCompleted from "./screens/TestCompleted/TestCompleted";
 import NavBar from "./screens/subjectExpert/SubjectOptions";
 import SubjectOptions from "./screens/subjectExpert/SubjectOptions";
 import CandidateInfo from "./screens/CandidateInfo";
+import CreateQuiz from "./screens/CreateQuiz/CreateQuiz";
 
 
 let testAllreadyCompleted = false;
@@ -34,6 +35,7 @@ const App = () => {
         <Route path="*" element={<PageNotFound />} />
         <Route path="/subjects" element={<SubjectOptions />} />
         <Route path="/candidateinfo" element={<CandidateInfo />} />
+        <Route path="/createquiz" element={<CreateQuiz />} />
       </Routes>
     </>
   );

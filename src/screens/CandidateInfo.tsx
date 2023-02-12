@@ -28,7 +28,9 @@ const CandidateInfo = () => {
       .then((res:any) =>
       { setUser(res.data)
       } ) 
-      .then((res:any) => console.log("Succesfully saved"))
+      .then((res:any) => console.log("Succesfully saved")
+      //  navigate(/quiz)
+      )
       .catch((error: any) => console.log("error"));
   };
 return(

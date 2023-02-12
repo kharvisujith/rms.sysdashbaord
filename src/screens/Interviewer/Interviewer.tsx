@@ -204,7 +204,7 @@ const Interviewer = (props: any) => {
               <ListItem disablePadding>
                 <ListItemButton 
                   onClick={() => {
-                    navigate("/reviewer");
+                    navigate("/createquiz");
                     handleDrawerClose();
                   }}
                 >

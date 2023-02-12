@@ -1,5 +1,7 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
 import CandidateDetails from "../Interface/CandidateDetails";
+import QuizDetails from "../Interface/QuizDetails";
+// import QuizDetails from "../Interface/QuizDetails";
 
 export const axiosClient = axios.create({
   baseURL: `https://localhost:5001/api/Rms/1/`,
@@ -86,4 +88,14 @@ export const submitCandidateInfo = (
 ) => {
   return axiosClient.post(
     `/quiz/candidate/adduser?quizId=${qId}&confirmationCode=${confirmcode}`,user);
+};
+
+export const createQuiz = (
+  setNumber: number,
+  subjectName: string,
+   quiz : QuizDetails
+  
+) => {
+  return axiosClient.post(
+    `/quiz/interviewer/createquiz?setNumber=${setNumber}&subjectName=${subjectName}`, {});
 };
