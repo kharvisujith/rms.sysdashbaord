@@ -34,7 +34,7 @@ const App = () => {
         <Route path="*" element={<PageNotFound />} />
         <Route path="/subjects" element={<SubjectOptions />} />
 
-        <Route path="/rms-aug/test/:key" element={<CandidateInfo />} />
+        <Route path="/rms-aug/test/:id/:key" element={<CandidateInfo />} />
         <Route path="/rms-aug/test/start" element={<StartQuiz />} />
         {/* <Route path="/candidateinfo" element={<CandidateInfo />} /> */}
         <Route path="/createquiz" element={<CreateQuiz />} />

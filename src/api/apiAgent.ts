@@ -5,7 +5,7 @@ import QuizDetails from "../Interface/QuizDetails";
 
 export const axiosClient = axios.create({
   baseURL: `https://localhost:5001/api/Rms/1/`,
- // https://localhost:5001/api/Rms/1/quiz/interviewer/createquiz
+  // https://localhost:5001/api/Rms/1/quiz/interviewer/createquiz
   // https://localhost:5001/api/Rms/1/quiz/getCandidateQuestions?set=1&subject=javascript
   // headers: {
   //   'Accept': 'application/json',
@@ -74,7 +74,7 @@ export const getSubjectwiseQuiz = (subject: string) => {
   });
 };
 export const getSubjectwiseQuizAnswers = (set: any, subject: any) => {
-  console.log("vlues are",set,subject);
+  console.log("vlues are", set, subject);
   return axiosClient.get(
     `quiz/SubjectExpert/questions?set=${set}&subject=${subject}`
   );
@@ -87,11 +87,19 @@ export const submitQuiz = (quizAnswers: any) => {
   });
 };
 
+export const verifyCandidate = (qId: number, confirmcode: string) => {
+  "https://localhost:5001/api/Rms/1/quiz/candidate/checkquizid?quizId=1&confirmationCode=sdfdsfsd";
+  return axiosClient.get(
+    `quiz/candidate/checkquizid?quizId=${qId}&confirmationCode=${confirmcode}`
+  );
+};
+
 export const submitCandidateInfo = (
   qId: number,
   confirmcode: string,
   user: CandidateDetails
 ) => {
+  console.log("confirm code in api is", confirmcode);
   return axiosClient.post(
     `/quiz/candidate/adduser?quizId=${qId}&confirmationCode=${confirmcode}`,
     user
@@ -99,16 +107,13 @@ export const submitCandidateInfo = (
 };
 
 export const createQuiz = (
-  
-  values : any
+  values: any
   // https://localhost:5001/api/Rms/1/quiz/interviewer/createquiz
-  
 ) => {
   return axiosClient.post(`/quiz/interviewer/createquiz`, values, {
-      headers: {
-        // "accept": 'application/json',
-        "Content-Type": "application/json",
-      },
-      
-    }) ;
+    headers: {
+      // "accept": 'application/json',
+      "Content-Type": "application/json",
+    },
+  });
 };
