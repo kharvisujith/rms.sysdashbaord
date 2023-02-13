@@ -12,7 +12,6 @@ import SubjectOptions from "./screens/subjectExpert/SubjectOptions";
 import CandidateInfo from "./screens/CandidateInfo";
 import CreateQuiz from "./screens/CreateQuiz/CreateQuiz";
 
-
 let testAllreadyCompleted = false;
 const App = () => {
   const navigate = useNavigate();
@@ -30,11 +29,14 @@ const App = () => {
         <Route path="/" element={<RmsHome />} />
         <Route path="/assignments" element={<SubjectExpert />} />
         <Route path="/reviewer" element={<Interviewer />} />
-        <Route path="/quiz" element={<StartQuiz />} />
+
         <Route path="/test_submitted" element={<TestCompleted />} />
         <Route path="*" element={<PageNotFound />} />
         <Route path="/subjects" element={<SubjectOptions />} />
-        <Route path="/candidateinfo" element={<CandidateInfo />} />
+
+        <Route path="/rms-aug/test/:key" element={<CandidateInfo />} />
+        <Route path="/rms-aug/test/start" element={<StartQuiz />} />
+        {/* <Route path="/candidateinfo" element={<CandidateInfo />} /> */}
         <Route path="/createquiz" element={<CreateQuiz />} />
       </Routes>
     </>

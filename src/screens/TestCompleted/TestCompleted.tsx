@@ -16,20 +16,20 @@ const TestCompleted = (props: any) => {
   const location = useLocation();
   console.log("value of answer in submitted is", location.state);
 
-  const showSuccess = () => {
-    Swal.fire({
-      title: "Success",
-      text: "Test Submitted Succesfully",
-      icon: "success",
-      confirmButtonText: "Okay",
-    });
-  };
-  useEffect(() => {
-    showSuccess();
-  });
+  // const showSuccess = () => {
+  // Swal.fire({
+  //   title: "Success",
+  //   text: "Test Submitted Succesfully",
+  //   icon: "success",
+  //   confirmButtonText: "Okay",
+  // });
+  // };
+  // useEffect(() => {
+  //   showSuccess();
+  // }, []);
   return (
     <>
-       <SideBar />
+      <SideBar />
       <Box className="test-submitted-box">
         {/* <Box className="test-submitted-report">
           <Typography></Typography>
@@ -63,8 +63,8 @@ const TestCompleted = (props: any) => {
           </Card>
         </Box>
       </Box>
-    
-        {/* <h1>test submitted succ</h1>test submitted succesfully */}
+
+      {/* <h1>test submitted succ</h1>test submitted succesfully */}
       {/* <TableContainer component={Paper}>
         <Table sx={{ minWidth: 150 }} aria-label="simple table">
           <TableHead>

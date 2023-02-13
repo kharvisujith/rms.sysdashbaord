@@ -5,6 +5,7 @@ import QuizDetails from "../Interface/QuizDetails";
 
 export const axiosClient = axios.create({
   baseURL: `https://localhost:5001/api/Rms/1/`,
+ // https://localhost:5001/api/Rms/1/quiz/interviewer/createquiz
   // https://localhost:5001/api/Rms/1/quiz/getCandidateQuestions?set=1&subject=javascript
   // headers: {
   //   'Accept': 'application/json',
@@ -81,7 +82,7 @@ export const getSubjectwiseQuizAnswers = (set: any, subject: any) => {
 export const submitQuiz = (quizAnswers: any) => {
   return axiosClient.post("/quiz/interviewer/submitquiz", quizAnswers, {
     headers: {
-      "Content-Type": "multipart/formData",
+      "Content-Type": "application/json",
     },
   });
 };
@@ -89,18 +90,25 @@ export const submitQuiz = (quizAnswers: any) => {
 export const submitCandidateInfo = (
   qId: number,
   confirmcode: string,
-  user : CandidateDetails
+  user: CandidateDetails
 ) => {
   return axiosClient.post(
-    `/quiz/candidate/adduser?quizId=${qId}&confirmationCode=${confirmcode}`,user);
+    `/quiz/candidate/adduser?quizId=${qId}&confirmationCode=${confirmcode}`,
+    user
+  );
 };
 
 export const createQuiz = (
-  setNumber: number,
-  subjectName: string,
-   quiz : QuizDetails
+  
+  values : any
+  // https://localhost:5001/api/Rms/1/quiz/interviewer/createquiz
   
 ) => {
-  return axiosClient.post(
-    `/quiz/interviewer/createquiz?setNumber=${setNumber}&subjectName=${subjectName}`, {});
+  return axiosClient.post(`/quiz/interviewer/createquiz`, values, {
+      headers: {
+        // "accept": 'application/json',
+        "Content-Type": "application/json",
+      },
+      
+    }) ;
 };

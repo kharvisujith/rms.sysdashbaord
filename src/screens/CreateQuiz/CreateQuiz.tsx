@@ -2,8 +2,9 @@ import { Box, Typography, Grid, Card, Button, CardContent, Checkbox, FormControl
 import { any } from "prop-types";
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { ImportsNotUsedAsValues } from "typescript";
 import { setEnvironmentData } from "worker_threads";
-import { createQuiz, getSuBjectwiseQuiz } from "../../api/apiAgent";
+import { createQuiz, getSubjectwiseQuiz } from "../../api/apiAgent";
 import SideBar from "../../components/SideBar/SideBar";
 import QuizDetails from "../../Interface/QuizDetails";
 
@@ -14,11 +15,9 @@ const CreateQuiz = (props:any) => {
     const [subjectList, setSubjectList] = useState<any>([]);
     const [checked, setChecked] = useState( false);
     const[values, setValues] = useState<any>([]);
-    const [newquiz, setNewQuiz] = useState<any>({
-      quizId: 0,
-      quizLink: "",
-      quizLinkExpiresAt: ""
-    });
+    const [newquiz, setNewQuiz] = useState<any>([]);
+     
+    
 
      const handleCheckboxChange = (e :any, quiz: any) => {
          // if(e.target.checked) {
@@ -36,33 +35,30 @@ const CreateQuiz = (props:any) => {
             else {
               setValues([...values, {setNumber: quiz.setNumber, subjectName: quiz.subjectName}])
             }
+            
       };
      console.log(values, 'value of use state');
      
 
-     const handleSubmit = (e: any) => {
-      // if (values.setNumber && values.subjectName) {
-      //   console.log("starting upload");
-      
-      e.preventDefault();
-      if (!newquiz) {
-        return;
-      }
-      createQuiz(3,'React', newquiz)    
-        .then((res) =>
-        { setNewQuiz(res.data)
-        } ) 
-        .then((res:any) => console.log("Succesfully saved")
-        //  navigate(/quiz)
-        )
+     const handleSubmit = () => {
+      // e.preventDefault();
+       createQuiz(values)    
+         .then((res) =>
+        { 
+          setNewQuiz(res.data);
+          return res.data;
+        }) 
+        .then((res:any) => {
+          console.log("Succesfully submitted", res.data);
+        })
         .catch((error: any) => console.log("error"));
     };
   
     console.log(newquiz, 'quiz values');
 
     const subjectwiseQuizDetails = async () => {
-        getSuBjectwiseQuiz("")
-          .then((response) => {
+        getSubjectwiseQuiz("")
+          .then((response: any) => {
             setSubjectList(response.data);
           })
           .catch((error: any) => console.log("error in subjwiseapi"));
@@ -139,6 +135,7 @@ const CreateQuiz = (props:any) => {
               </Grid>
             </Box>
             <Button variant="contained" 
+            type="submit"
              sx={{
                 marginTop: 5,
                 marginLeft: 10,
