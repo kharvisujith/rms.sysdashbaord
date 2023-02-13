@@ -1,7 +1,7 @@
 import { Box, Typography, Grid, Card, Button, CardContent, Checkbox, FormControl, FormControlLabel } from "@mui/material";
 import { any } from "prop-types";
 import { useCallback, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ImportsNotUsedAsValues } from "typescript";
 import { setEnvironmentData } from "worker_threads";
 import { createQuiz, getSubjectwiseQuiz } from "../../api/apiAgent";
@@ -18,7 +18,8 @@ const CreateQuiz = (props:any) => {
     const [newquiz, setNewQuiz] = useState<any>([]);
      
     
-
+    
+    
      const handleCheckboxChange = (e :any, quiz: any) => {
          // if(e.target.checked) {
             const existindex = values.findIndex((ele : any) => {
@@ -56,6 +57,8 @@ const CreateQuiz = (props:any) => {
   
     console.log(newquiz, 'quiz values');
 
+    
+ 
     const subjectwiseQuizDetails = async () => {
         getSubjectwiseQuiz("")
           .then((response: any) => {
