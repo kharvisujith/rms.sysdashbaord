@@ -18,13 +18,16 @@ import { setEnvironmentData } from "worker_threads";
 import { createQuiz, getSubjectwiseQuiz } from "../../api/apiAgent";
 import SideBar from "../../components/SideBar/SideBar";
 import QuizDetails from "../../Interface/QuizDetails";
+import "./CreateQuiz.style.scss";
 
 const CreateQuiz = (props: any) => {
   const navigate = useNavigate();
   const [subjectList, setSubjectList] = useState<any>([]);
   const [checked, setChecked] = useState(false);
   const [values, setValues] = useState<any>([]);
-  const [newquiz, setNewQuiz] = useState<any>([]);
+  const [newquiz, setNewQuiz] = useState<any>({});
+  // const [isQuizCreated, setIsQuizCreated] = useState<boolean>(false);
+  const [quizLink, setQuizLink] = useState<any>();
 
   const handleCheckboxChange = (e: any, quiz: any) => {
     // if(e.target.checked) {
@@ -59,6 +62,10 @@ const CreateQuiz = (props: any) => {
           icon: "success",
           confirmButtonText: "Okay",
         });
+        setQuizLink(
+          `http://localhost:3000/rms-aug/test/${res.data?.quizId}/${res.data?.quizLink}`
+        );
+        //  setIsQuizCreated(true);
         return res.data;
       })
       .then((res: any) => {
@@ -83,6 +90,18 @@ const CreateQuiz = (props: any) => {
         setSubjectList(response.data);
       })
       .catch((error: any) => console.log("error in subjwiseapi"));
+  };
+
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text).then(
+      function () {
+        console.log("copiies");
+        // setCopied(true);
+      },
+      function (err) {
+        console.error("Could not copy text: ", err);
+      }
+    );
   };
 
   useEffect(() => {
@@ -158,6 +177,24 @@ const CreateQuiz = (props: any) => {
         >
           Create
         </Button>
+
+        {quizLink && (
+          <Box>
+            <Typography>{`Test Link :`}</Typography>
+            <Box className="test-link">
+              <Typography>
+                {quizLink}
+                {/* {`http://localhost:3000/rms-aug/test/${newquiz?.quizId}/${newquiz?.quizLink}`} */}
+              </Typography>
+              <Button
+                variant="contained"
+                onClick={() => copyToClipboard(quizLink)}
+              >
+                Copy
+              </Button>
+            </Box>
+          </Box>
+        )}
       </Box>
     </>
   );
