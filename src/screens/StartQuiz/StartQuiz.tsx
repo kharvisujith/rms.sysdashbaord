@@ -1,4 +1,4 @@
-import { Typography } from "@mui/material";
+import { Divider, Typography } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -7,10 +7,13 @@ import ReactModal from "react-modal";
 import "./StartQuiz.style.scss";
 import SingleQuestion from "../../components/DispalyQuizQuestions/SingleQuestion";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { verifyCandidate } from "../../api/apiAgent";
 const StartQuiz = () => {
   const [OpenTestModal, setOpenTestModal] = useState(false);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
+  const [isKeyValid, setIsKeyValid] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<any>();
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -23,15 +26,33 @@ const StartQuiz = () => {
     setOpenTestModal(true);
   };
 
-  // useEffect(() => {
-  //   console.log("ueEffect is called");
-  //   getQuizQuestions(1, "javascript")
-  //     .then((res) => {
-  //       setQuizQuestions(res.data);
-  //       return res.data;
-  //     })
-  //     .catch((error) => console.log("error is get question", error));
-  // }, []);
+  useEffect(() => {
+    verifyCandidate(
+      parseInt(location.state.verifyCredentials.id!),
+      location.state.verifyCredentials.key!
+    )
+      .then((res: any) => {
+        setIsKeyValid(true);
+      })
+      .catch((error: any) => {
+        if (error.response.status === 400) {
+          if (error.response.data) {
+            setErrorMessage(error.response.data);
+          }
+        }
+      });
+  }, [location.state.verifyCredentials]);
+
+  if (!isKeyValid) {
+    return (
+      <>
+        <Box className="error-box">
+          <Typography variant="h4">{`400 ${errorMessage}`}</Typography>
+        </Box>
+        <Divider className="divider" />
+      </>
+    );
+  }
 
   return (
     <Box className="main-layout-wrap">
@@ -83,6 +104,7 @@ const StartQuiz = () => {
             handleClose={handleClose}
             setOpenDialog={setOpenDialog}
             quizQuestions={location.state}
+            quizId={location.state.verifyCredentials.id}
           />
         </ReactModal>
       </Box>

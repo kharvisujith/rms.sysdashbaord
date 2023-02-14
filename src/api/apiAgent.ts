@@ -32,7 +32,7 @@ axiosClient.interceptors.response.use(
       case 401:
         console.log("unauthorized");
     }
-    if (res.status == 401) {
+    if (res.status === 401) {
       // window.location.href = “https://example.com/login”;
       console.log("unauthorized");
     }
@@ -74,7 +74,6 @@ export const getSubjectwiseQuiz = (subject: string) => {
   });
 };
 export const getSubjectwiseQuizAnswers = (set: any, subject: any) => {
-  console.log("vlues are", set, subject);
   return axiosClient.get(
     `quiz/SubjectExpert/questions?set=${set}&subject=${subject}`
   );
@@ -99,7 +98,6 @@ export const submitCandidateInfo = (
   confirmcode: string,
   user: CandidateDetails
 ) => {
-  console.log("confirm code in api is", confirmcode);
   return axiosClient.post(
     `/quiz/candidate/adduser?quizId=${qId}&confirmationCode=${confirmcode}`,
     user

@@ -1,19 +1,24 @@
-import { Box, Button, Container, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Container,
+  Divider,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import SideBar from "../components/SideBar/SideBar";
+import SideBar from "../../components/SideBar/SideBar";
 import {
   axiosClient,
   submitCandidateInfo,
   verifyCandidate,
-} from "../api/apiAgent";
-import CandidateDetails from "../Interface/CandidateDetails";
+} from "../../api/apiAgent";
+import CandidateDetails from "../../Interface/CandidateDetails";
 import { useParams } from "react-router-dom";
 
 const CandidateInfo = (props: any) => {
   const { id, key } = useParams();
-  console.log("value of id and key is", id, key);
-
   const navigate = useNavigate();
 
   const [user, setUser] = useState<CandidateDetails>({
@@ -32,52 +37,52 @@ const CandidateInfo = (props: any) => {
     setUser({ ...user, [name]: value });
   };
   const handleSubmit = (e: any) => {
-    // e.preventDefault();
     if (!user) {
       return;
     }
     submitCandidateInfo(parseInt(id!), key!, user)
       .then((res: any) => {
-        console.log(" succes submit response is", res.data);
         setQuizQuestions(res.data);
         return res.data;
         //  setUser(res.data);
       })
       .then((res: any) => {
-        console.log("Value of usesTate after submit succes is", res);
-        navigate("/rms-aug/test/start", { state: { data: res, quizId: id } });
+        navigate("/rms-aug/test/start", {
+          state: {
+            data: res,
+            quizId: id,
+            verifyCredentials: { id: id, key: key },
+          },
+        });
       })
       .catch((error: any) => {
-        console.log("error in submitt");
         setErrorMessage(error.response.data);
       });
   };
 
   useEffect(() => {
-    console.log("value of key is", key);
-
     verifyCandidate(parseInt(id!), key!)
       .then((res: any) => {
-        console.log("response from validation is", res.data);
         setIsKeyValid(true);
       })
       .catch((error: any) => {
-        console.log("error in validation  is", error);
-        setErrorMessage(error.response.data);
+        if (error.response.status === 400) {
+          if (error.response.data) {
+            setErrorMessage(error.response.data);
+          }
+        }
       });
-
-    // if (key!.length > 20) {
-    //   console.log("yessss");
-    //   setIsKeyValid(true);
-    // } else {
-    //   setIsKeyValid(false);
-    //   console.log("nooooo accessss");
-    // }
-    // we have to check if the key is valid and not expired -> if good then proceed else return error
   }, [key, id]);
 
   if (!isKeyValid) {
-    return <Typography>{`Invalid Interview link`}</Typography>;
+    return (
+      <>
+        <Box className="error-box">
+          <Typography variant="h4">{`400 ${errorMessage}`}</Typography>
+        </Box>
+        <Divider className="divider" />
+      </>
+    );
   }
 
   return (

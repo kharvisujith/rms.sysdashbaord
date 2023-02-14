@@ -47,12 +47,8 @@ const RmsHome = (props: any) => {
           &nbsp;&nbsp;&nbsp;
           <button onClick={() => navigate("/reviewer")}>Interviewer</button>
           &nbsp;&nbsp;&nbsp;
-          <button onClick={() => navigate("/rms-aug/test/dummy-id/dummy-key")}>
-            Candidate
-          </button>
         </p>
       </div>
-      {/* </Box> */}
     </>
   );
 };

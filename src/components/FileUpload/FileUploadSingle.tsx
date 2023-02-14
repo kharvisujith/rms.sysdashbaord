@@ -10,7 +10,6 @@ function FileUploadSingle() {
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-      console.log(e.target.files[0]);
       setFile(e.target.files[0]);
     }
   };
@@ -18,23 +17,19 @@ function FileUploadSingle() {
     if (!file) {
       return;
     }
-    console.log("starting upload");
     const formData = new FormData();
     formData.append("formFile", file);
 
     upLoadExcel(data.set, data.subject, formData)
       .then((res) => res.data)
-      .then((res) => console.log("uploaded succesfully"))
       .catch((error: any) => console.log("error"));
   };
 
   const handleTextChange = (e: any) => {
-    console.log(e);
     const name = e.target.name;
     const value = e.target.value;
     setData({ ...data, [name]: value });
   };
-  console.log(data);
 
   return (
     <div>

@@ -6,15 +6,13 @@ import { useCallback, useEffect, useState } from "react";
 
 const RadioAnswerComponent = (props: any) => {
   const { question, handleAnswerChange, selectedAnswers } = props;
-  console.log("Raio Button answer in radio comp is", question);
-  //console.log("Raio Button  answer in radio-1 comp is", question.questionData.questionAnswers[0].toString());
-  //console.log("value of selected answer in radio-2 comp is", question.questionData.QuestionAnswers);
+
   return (
     <>
       <Box>
         <Typography>{`${question.questionNumber}. ${question.questionData.question}`}</Typography>
         <RadioGroup
-        defaultValue={`${question.questionData.questionAnswers[0]}`}
+          defaultValue={`${question.questionData.questionAnswers[0]}`}
         >
           {question.questionData.questionOptions.map(
             (option: any, index: any) => {
@@ -32,10 +30,16 @@ const RadioAnswerComponent = (props: any) => {
         </RadioGroup>
       </Box>
       <Box>
-      <Typography  justifyContent="space-between" alignItems="center"style={{ padding: 15 }}>
-          <strong>{'Answers:'}&ensp;</strong>{`${question.questionData.questionAnswersIds.toString()}`}<br/>
+        <Typography
+          justifyContent="space-between"
+          alignItems="center"
+          style={{ padding: 15 }}
+        >
+          <strong>{"Answers:"}&ensp;</strong>
+          {`${question.questionData.questionAnswersIds.toString()}`}
+          <br />
           {`${question.questionData.questionAnswers.toString()}`}
-      </Typography>
+        </Typography>
       </Box>
     </>
   );

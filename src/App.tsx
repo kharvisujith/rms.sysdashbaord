@@ -9,20 +9,11 @@ import PageNotFound from "./screens/PageNotFound/PageNotFound";
 import TestCompleted from "./screens/TestCompleted/TestCompleted";
 import NavBar from "./screens/subjectExpert/SubjectOptions";
 import SubjectOptions from "./screens/subjectExpert/SubjectOptions";
-import CandidateInfo from "./screens/CandidateInfo";
+import CandidateInfo from "./screens/Candidate/CandidateInfo";
 import CreateQuiz from "./screens/CreateQuiz/CreateQuiz";
 
 let testAllreadyCompleted = false;
 const App = () => {
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (testAllreadyCompleted) {
-      console.log("allready completed");
-      navigate("/test_submitted");
-    }
-  }, [navigate]);
-
   return (
     <>
       <Routes>
@@ -36,7 +27,6 @@ const App = () => {
 
         <Route path="/rms-aug/test/:id/:key" element={<CandidateInfo />} />
         <Route path="/rms-aug/test/start" element={<StartQuiz />} />
-        {/* <Route path="/candidateinfo" element={<CandidateInfo />} /> */}
         <Route path="/createquiz" element={<CreateQuiz />} />
       </Routes>
     </>

@@ -8,10 +8,11 @@ import {
   Button,
 } from "@mui/material";
 import Typography from "@mui/material/Typography";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { submitQuiz } from "../../api/apiAgent";
+import { CaluclateTotalNumberOfAnswers } from "../../utils/Utils";
 import "./EndTestDialog.style.scss";
 const EndTestDialog = (props: any) => {
   const {
@@ -22,51 +23,47 @@ const EndTestDialog = (props: any) => {
     totalNumberOfQuestions,
     Ref,
     quizId,
+    setOpenEndDialog,
   } = props;
-  console.log(
-    "value of total number of questions",
-    totalNumberOfQuestions,
-    quizId
-  );
-
   const navigate = useNavigate();
+  const [totalAnswerdQuestions, setTotalAnsweredQuestion] = useState<number>(0);
 
   const endTest = () => {
-    const submitQuizData = {
-      quizId: parseInt(quizId),
-      data: [
-        {
-          subjectName: "JAVASCRIPT",
-          setNumber: 1,
-          quizAnswers: selectedAnswers,
-        },
-      ],
-    };
+    setOpenEndDialog(false);
+    // const submitQuizData = {
+    //   quizId: 1,
+    //   data: [
+    //     {
+    //       subjectName: "JAVASCRIPT",
+    //       setNumber: 1,
+    //       quizAnswers: selectedAnswers,
+    //     },
+    //   ],
+    // };
     // post answers here-> selectedAnswers
-    submitQuiz(submitQuizData)
+    const quizAnswerModel = {
+      quizId: parseInt(quizId),
+      data: selectedAnswers,
+    };
+    submitQuiz(quizAnswerModel)
       .then((response) => {
-        console.log("response is", response.data);
         Swal.fire({
           title: "Success",
           text: "Test Submitted Succesfully",
           icon: "success",
           confirmButtonText: "Okay",
         });
-
         setOpenDialog(false);
-        console.log("test ended");
         clearInterval(Ref.current);
-
         navigate("/test_submitted", {
           state: {
             totalNumberOfQuestions: totalNumberOfQuestions,
-            answered: selectedAnswers.length,
-            notAnswered: totalNumberOfQuestions - selectedAnswers.length,
+            answered: totalAnswerdQuestions,
+            notAnswered: totalNumberOfQuestions - totalAnswerdQuestions,
           },
         });
       })
       .catch((error) => {
-        console.log("error");
         Swal.fire({
           title: "error",
           text: "Failed to Submitt Test, Please Retry",
@@ -74,26 +71,11 @@ const EndTestDialog = (props: any) => {
           confirmButtonText: "Okay",
         });
       });
-
-    // setOpenDialog(false);
-    // console.log("test ended");
-    // clearInterval(Ref.current);
-    // Swal.fire({
-    //   title: "Success",
-    //   text: "Test Submitted Succesfully",
-    //   icon: "success",
-    //   confirmButtonText: "Okay",
-    // });
-
-    // navigate("/test_submitted", {
-    //   state: {
-    //     totalNumberOfQuestions: totalNumberOfQuestions,
-    //     answered: selectedAnswers.length,
-    //     notAnswered: totalNumberOfQuestions - selectedAnswers.length,
-    //   },
-    // });
-    console.log("the final answer set is", selectedAnswers);
   };
+
+  useEffect(() => {
+    setTotalAnsweredQuestion(CaluclateTotalNumberOfAnswers(selectedAnswers));
+  }, [selectedAnswers]);
 
   return (
     <>
@@ -107,9 +89,9 @@ const EndTestDialog = (props: any) => {
           <DialogContent>
             <DialogContentText>
               {`Total Number Of Questions : ${totalNumberOfQuestions}`} <br />
-              {`Questions Answered : ${selectedAnswers.length}`} <br />
+              {`Questions Answered : ${totalAnswerdQuestions}`} <br />
               {`Questions Not Answered : ${
-                totalNumberOfQuestions - selectedAnswers.length
+                totalNumberOfQuestions - totalAnswerdQuestions!
               }`}
             </DialogContentText>
           </DialogContent>
@@ -123,7 +105,7 @@ const EndTestDialog = (props: any) => {
               variant="contained"
               color="error"
             >
-              submit and End Test
+              Submit and End Test
             </Button>
           </DialogActions>
         </Dialog>

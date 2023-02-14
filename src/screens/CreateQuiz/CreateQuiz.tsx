@@ -30,13 +30,11 @@ const CreateQuiz = (props: any) => {
   const [quizLink, setQuizLink] = useState<any>();
 
   const handleCheckboxChange = (e: any, quiz: any) => {
-    // if(e.target.checked) {
     const existindex = values.findIndex((ele: any) => {
       return (
         ele.subjectName === quiz.subjectName && ele.setNumber === quiz.setNumber
       );
     });
-    // console.log(existindex, 'index');
     if (existindex !== -1 && !e.target.checked) {
       setValues((prev: any) => [
         ...prev.slice(0, existindex),
@@ -49,10 +47,8 @@ const CreateQuiz = (props: any) => {
       ]);
     }
   };
-  console.log(values, "value of use state");
 
   const handleSubmit = () => {
-    // e.preventDefault();
     createQuiz(values)
       .then((res) => {
         setNewQuiz(res.data);
@@ -65,14 +61,10 @@ const CreateQuiz = (props: any) => {
         setQuizLink(
           `http://localhost:3000/rms-aug/test/${res.data?.quizId}/${res.data?.quizLink}`
         );
-        //  setIsQuizCreated(true);
         return res.data;
       })
-      .then((res: any) => {
-        console.log("Succesfully submitted", res.data);
-      })
+      .then((res: any) => {})
       .catch((error: any) => {
-        console.log("error");
         Swal.fire({
           title: "error",
           text: "Failed to create quiz! please retry",
@@ -81,8 +73,6 @@ const CreateQuiz = (props: any) => {
         });
       });
   };
-
-  console.log(newquiz, "quiz values");
 
   const subjectwiseQuizDetails = async () => {
     getSubjectwiseQuiz("")
@@ -95,7 +85,6 @@ const CreateQuiz = (props: any) => {
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text).then(
       function () {
-        console.log("copiies");
         // setCopied(true);
       },
       function (err) {
@@ -115,9 +104,6 @@ const CreateQuiz = (props: any) => {
         sx={{
           marginTop: 5,
           marginLeft: 10,
-          // display: "flex",
-          // flexDirection: "column",
-          //  alignItems: "center",
         }}
       >
         <Typography variant="h5" align="center">
@@ -141,14 +127,11 @@ const CreateQuiz = (props: any) => {
                         control={
                           <Checkbox
                             name="checkbox-1"
-                            //checked={checkboxData.value}
                             onChange={(e: any) => handleCheckboxChange(e, elem)}
                           />
                         }
                         label={elem.subjectName}
                       />
-
-                      {/* <Button variant="contained">View</Button> */}
                     </Typography>
                     <CardContent>
                       <Typography>
@@ -169,8 +152,6 @@ const CreateQuiz = (props: any) => {
           sx={{
             marginTop: 5,
             marginLeft: 10,
-            // display: "flex",
-            // flexDirection: "column",
             alignItems: "center",
           }}
           onClick={handleSubmit}

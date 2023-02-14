@@ -1,10 +1,17 @@
+import { Box, Divider } from "@mui/material";
+import Typography from "@mui/material/Typography";
 import SideBar from "../../components/SideBar/SideBar";
+import "./PageNotFound.style.scss";
 
 const PageNotFound = () => {
   return (
     <>
-    < SideBar />
-     <h1>Page not found</h1>
+      {/* <SideBar /> */}
+      <Box className="error-box">
+        <Typography variant="h4">404 Not Found</Typography>
+      </Box>
+
+      <Divider className="divider" />
     </>
   );
 };

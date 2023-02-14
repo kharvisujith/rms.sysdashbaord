@@ -7,19 +7,26 @@ import RadioComponent from "../QuizTestComponents/RadioComponent";
 import "./SingleQuestion.style.scss";
 import { clear } from "console";
 import { useLocation, useNavigate } from "react-router-dom";
-import { optionIds } from "../../utils/Utils";
+import {
+  CaluclateTotalNumberOfAnswers,
+  findInnerArrayElement,
+  optionIds,
+} from "../../utils/Utils";
 import { submitQuiz } from "../../api/apiAgent";
 import Swal from "sweetalert2";
+import { QuestionAnswer } from "@material-ui/icons";
 
 const SingleQuestion = (props: any) => {
-  const { openDialog, handleClose, setOpenDialog, quizQuestions } = props;
-  console.log("value of quizquestion in single question is", quizQuestions);
+  const { openDialog, handleClose, setOpenDialog, quizQuestions, quizId } =
+    props;
 
   const [currentQuestion, setCurrentQuestion] = useState<number>(1);
   const [selectedAnswers, setSelectedAnswers] = useState<any>([]);
   const [progressStatus, setProgressStatus] = useState<number>(0);
   const [answeredQuestions, setAnsweredQuestions] = useState<number>(0);
   const [timer, setTimer] = useState("00:00:00");
+  const [openEndDialog, setOpenEndDialog] = useState<boolean>(false);
+  const [timeCompletd, setTimeCompleted] = useState<boolean>(false);
 
   const Ref = useRef<any>();
   const navigate = useNavigate();
@@ -33,27 +40,72 @@ const SingleQuestion = (props: any) => {
 
   const handleRadioAnswerChange = (
     event: React.ChangeEvent<HTMLInputElement>,
-    questionId: any,
-    questionType: any,
+    questionData: any,
     questionAnswerIds: any
   ) => {
-    const selectedOption = (event.target as HTMLInputElement).value;
-    console.log("selected optin value is", selectedOption);
-    console.log("event in radio change is", event, event.target.id);
-    const existingId = selectedAnswers.find(
-      (e: any) => e.questionId === questionId
+    const selectedAns = (event.target as HTMLInputElement).value;
+
+    const existingId = selectedAnswers.filter((cur: any) => {
+      return (
+        cur.subjectName === questionData.subjectName &&
+        cur.setNumber === questionData.setNumber &&
+        cur.quizAnswers.find((elem: any) => {
+          return elem.questionId === questionData.questionId;
+        })
+      );
+    });
+    const existingSetAndSubject = selectedAnswers.filter((cur: any) => {
+      return (
+        cur.subjectName === questionData.subjectName &&
+        cur.setNumber === questionData.setNumber
+      );
+    });
+    const indexOFExistingSetAndSubject = selectedAnswers.findIndex(
+      (obj: any) =>
+        obj.subjectName === questionData.subjectName &&
+        obj.setNumber === questionData.setNumber
     );
-    if (existingId) {
-      existingId.questionAnswers = [selectedOption];
-      existingId.questionAnswerIds = questionAnswerIds;
+    if (indexOFExistingSetAndSubject !== -1) {
+      var quizAnswerIndex = selectedAnswers[
+        indexOFExistingSetAndSubject
+      ].quizAnswers.findIndex(
+        (item: any) => item.questionId === questionData.questionId
+      );
+    }
+
+    if (existingId[0]) {
+      const newArr = [...selectedAnswers];
+      newArr[indexOFExistingSetAndSubject].quizAnswers[
+        quizAnswerIndex
+      ].questionAnswerIds = questionAnswerIds;
+      newArr[indexOFExistingSetAndSubject].quizAnswers[
+        quizAnswerIndex
+      ].questionAnswers = [selectedAns];
+      setSelectedAnswers(newArr);
+    } else if (existingSetAndSubject[0]) {
+      const newArr = [...selectedAnswers];
+      newArr[indexOFExistingSetAndSubject].quizAnswers.push({
+        questionId: questionData.questionId,
+        questionType: questionData.questionType,
+        questionAnswers: [selectedAns],
+        questionAnswerIds: questionAnswerIds,
+      });
+      setSelectedAnswers(newArr);
+      handleProgressStatus();
     } else {
       setSelectedAnswers((prev: any) => [
         ...prev,
         {
-          questionId: questionId,
-          questionType: questionType,
-          questionAnswers: [selectedOption],
-          questionAnswerIds: questionAnswerIds,
+          subjectName: questionData.subjectName,
+          setNumber: questionData.setNumber,
+          quizAnswers: [
+            {
+              questionId: questionData.questionId,
+              questionType: questionData.questionType,
+              questionAnswers: [selectedAns],
+              questionAnswerIds: questionAnswerIds,
+            },
+          ],
         },
       ]);
       handleProgressStatus();
@@ -61,69 +113,94 @@ const SingleQuestion = (props: any) => {
   };
 
   const handleProgressStatus = () => {
-    console.log("handePrgressstatus called");
     const statusPercentage =
       ((answeredQuestions + 1) * 100) / quizQuestions.data.length;
     setAnsweredQuestions((prev) => prev + 1);
-    console.log("value of st is", statusPercentage);
     setProgressStatus(statusPercentage);
   };
 
   const handleCheckboxAnswerChange = (
     event: React.ChangeEvent<HTMLInputElement>,
-    questionId: any,
-    questionType: any,
+    questionData: any,
     selectedIndex: any
   ) => {
-    console.log("value of selectedindex is", selectedIndex);
-    const existingIdIndex = selectedAnswers.findIndex(
-      (e: any) => e.questionId === questionId
+    const indexOFExistingSetAndSubject = selectedAnswers.findIndex(
+      (obj: any) =>
+        obj.subjectName === questionData.subjectName &&
+        obj.setNumber === questionData.setNumber
     );
-    if (existingIdIndex !== -1) {
-      const existingId = selectedAnswers[existingIdIndex];
-      const valExistIndex = existingId.questionAnswers.indexOf(
-        event.target.name
+    let quizAnswerIndex;
+    if (indexOFExistingSetAndSubject !== -1) {
+      quizAnswerIndex = selectedAnswers[
+        indexOFExistingSetAndSubject
+      ].quizAnswers.findIndex(
+        (item: any) => item.questionId === questionData.questionId
       );
-      if (valExistIndex !== -1 && !event.target.checked) {
-        setSelectedAnswers((prev: any) => [
-          ...prev.slice(0, existingIdIndex),
-          {
-            questionId: questionId,
-            questionType: questionType,
-            questionAnswers: [
-              ...existingId.questionAnswers.slice(0, valExistIndex),
-              ...existingId.questionAnswers.slice(valExistIndex + 1),
-            ],
-            questionAnswerIds: [
-              ...existingId.questionAnswerIds.slice(0, valExistIndex),
-              ...existingId.questionAnswerIds.slice(valExistIndex + 1),
-            ],
-          },
-          ...prev.slice(existingIdIndex + 1),
-        ]);
-      } else if (valExistIndex === -1) {
-        setSelectedAnswers((prev: any) => [
-          ...prev.slice(0, existingIdIndex),
-          {
-            questionId: questionId,
-            questionType: questionType,
-            questionAnswers: [...existingId.questionAnswers, event.target.name],
-            questionAnswerIds: [
-              ...existingId.questionAnswerIds,
-              optionIds[selectedIndex],
-            ],
-          },
-          ...prev.slice(existingIdIndex + 1),
-        ]);
+    }
+
+    // const existingIdIndex = selectedAnswers.findIndex(
+    //   (cur: any) =>
+    //     cur.subjectName === questionData.subjectName &&
+    //     cur.setNumber === questionData.setNumber &&
+    //     cur.quizAnswers.find((elem: any) => {
+    //       return elem.questionId === questionData.questionId;
+    //     })
+    // );
+
+    if (indexOFExistingSetAndSubject !== -1) {
+      if (quizAnswerIndex !== -1 && !event.target.checked) {
+        const newArr = [...selectedAnswers];
+
+        var ansIndex = newArr[indexOFExistingSetAndSubject].quizAnswers[
+          quizAnswerIndex
+        ].questionAnswers.indexOf(event.target.name);
+
+        if (ansIndex !== -1) {
+          newArr[indexOFExistingSetAndSubject].quizAnswers[
+            quizAnswerIndex
+          ].questionAnswers.splice(ansIndex, 1);
+
+          newArr[indexOFExistingSetAndSubject].quizAnswers[
+            quizAnswerIndex
+          ].questionAnswerIds.splice(ansIndex, 1);
+        }
+
+        setSelectedAnswers(newArr);
+      } else if (quizAnswerIndex !== -1) {
+        const newArr = [...selectedAnswers];
+        const answerData = newArr[indexOFExistingSetAndSubject].quizAnswers[
+          quizAnswerIndex
+        ].questionAnswers.push(event.target.name);
+        newArr[indexOFExistingSetAndSubject].quizAnswers[
+          quizAnswerIndex
+        ].questionAnswerIds.push(optionIds[selectedIndex]);
+
+        setSelectedAnswers(newArr);
+      } else if (quizAnswerIndex === -1) {
+        const newArr = [...selectedAnswers];
+        newArr[indexOFExistingSetAndSubject].quizAnswers.push({
+          questionId: questionData.questionId,
+          questionType: questionData.questionType,
+          questionAnswers: [event.target.name],
+          questionAnswerIds: [optionIds[selectedIndex]],
+        });
+        setSelectedAnswers(newArr);
+        handleProgressStatus();
       }
     } else {
       setSelectedAnswers((prev: any) => [
         ...prev,
         {
-          questionId: questionId,
-          questionType: questionType,
-          questionAnswers: [event.target.name],
-          questionAnswerIds: [optionIds[selectedIndex]],
+          subjectName: questionData.subjectName,
+          setNumber: questionData.setNumber,
+          quizAnswers: [
+            {
+              questionId: questionData.questionId,
+              questionType: questionData.questionType,
+              questionAnswers: [event.target.name],
+              questionAnswerIds: [optionIds[selectedIndex]],
+            },
+          ],
         },
       ]);
       handleProgressStatus();
@@ -133,7 +210,6 @@ const SingleQuestion = (props: any) => {
   const getTimeRemaining = (e: any) => {
     const total =
       Date.parse(e.toISOString()) - Date.parse(new Date().toISOString());
-    console.log("value of total is", total);
     const seconds = Math.floor((total / 1000) % 60);
     const minutes = Math.floor((total / 1000 / 60) % 60);
     const hours = Math.floor((total / 1000 / 60 / 60) % 24);
@@ -144,6 +220,41 @@ const SingleQuestion = (props: any) => {
       seconds,
     };
   };
+
+  if (timeCompletd) {
+    const submitQuizData = {
+      quizId: parseInt(quizId),
+      data: selectedAnswers,
+    };
+    submitQuiz(submitQuizData)
+      .then((response: any) => {
+        Swal.fire({
+          title: "Success",
+          text: "Test Submitted Succesfully",
+          icon: "success",
+          confirmButtonText: "Okay",
+        });
+      })
+      .then((res: any) => {
+        const answeredQuestions =
+          CaluclateTotalNumberOfAnswers(selectedAnswers);
+        navigate("/test_submitted", {
+          state: {
+            totalNumberOfQuestions: quizQuestions.data.length,
+            answered: answeredQuestions,
+            notAnswered: quizQuestions.data.length - answeredQuestions,
+          },
+        });
+      })
+      .catch((error: any) => {
+        Swal.fire({
+          title: "error",
+          text: "Failed to Submitt Test, Please Retry",
+          icon: "error",
+          confirmButtonText: "Okay",
+        });
+      });
+  }
 
   const startTimer = (e: any) => {
     let { total, hours, minutes, seconds } = getTimeRemaining(e);
@@ -156,57 +267,8 @@ const SingleQuestion = (props: any) => {
           (seconds > 9 ? seconds : "0" + seconds)
       );
     } else {
-      console.log("inside else clear interval");
       clearInterval(Ref.current);
-      // post the answers here -> selectedAnswers
-      // if the time is completed then autosubmit and navigate to submitted page
-      const submitQuizData = {
-        quizId: 1,
-        data: [
-          {
-            subjectName: "JAVASCRIPT",
-            setNumber: 1,
-            quizAnswers: selectedAnswers,
-          },
-        ],
-      };
-
-      submitQuiz(submitQuizData)
-        .then((response) => {
-          console.log("response is", response.data);
-          Swal.fire({
-            title: "Success",
-            text: "Test Submitted Succesfully",
-            icon: "success",
-            confirmButtonText: "Okay",
-          });
-        })
-        .then((res: any) => {
-          navigate("/test_submitted", {
-            state: {
-              totalNumberOfQuestions: quizQuestions.data.length,
-              answered: selectedAnswers.length,
-              notAnswered: quizQuestions.data.length - selectedAnswers.length,
-            },
-          });
-        })
-        .catch((error) => {
-          console.log("error");
-          Swal.fire({
-            title: "error",
-            text: "Failed to Submitt Test, Please Retry",
-            icon: "error",
-            confirmButtonText: "Okay",
-          });
-        });
-      console.log("selected answers");
-      // navigate("/test_submitted", {
-      //   state: {
-      //     totalNumberOfQuestions: quizQuestions.length,
-      //     answered: selectedAnswers.length,
-      //     notAnswered: quizQuestions.length - selectedAnswers.length,
-      //   },
-      // });
+      setTimeCompleted(true);
     }
   };
 
@@ -221,21 +283,19 @@ const SingleQuestion = (props: any) => {
     let deadline = new Date();
 
     deadline.setSeconds(deadline.getSeconds() + 10);
-    // deadline.setMinutes(deadline.getMinutes() + 1);
-    // deadline.setHours(deadline.getHours() + 1);
+    deadline.setMinutes(deadline.getMinutes() + 10);
     return deadline;
   };
 
   useEffect(() => {
-    console.log("useEffect in single questions is called");
-    //clearTimer(getDeadTime());
+    clearTimer(getDeadTime());
   }, []);
 
   return (
     <>
       <Box className="progress-box">
         <Box className="progress-data">
-          <Typography variant="body1">{`Answered ${answeredQuestions} out of ${quizQuestions?.data.length}`}</Typography>
+          <Typography variant="body1">{`Answered ${answeredQuestions} out of ${quizQuestions.data?.length}`}</Typography>
           <Typography variant="body1">{`Time Remaining - ${timer}`}</Typography>
         </Box>
         <LinearProgress
@@ -246,15 +306,15 @@ const SingleQuestion = (props: any) => {
       </Box>
 
       <Box>
-        {quizQuestions &&
-          quizQuestions.data?.map((question: any, index: any) => {
+        {quizQuestions.data &&
+          quizQuestions.data.map((question: any, index: any) => {
             if (index + 1 === currentQuestion) {
               switch (question.questionType) {
                 case "SINGLECHOICE":
                   return (
                     <RadioComponent
                       key={index}
-                      question={{
+                      questionInfo={{
                         questionNumber: index + 1,
                         questionData: question,
                       }}
@@ -266,7 +326,7 @@ const SingleQuestion = (props: any) => {
                   return (
                     <CheckboxComponent
                       key={index}
-                      question={{
+                      questionInfo={{
                         questionNumber: index + 1,
                         questionData: question,
                       }}
@@ -306,22 +366,29 @@ const SingleQuestion = (props: any) => {
         <Button
           color="error"
           variant="contained"
-          onClick={() => setOpenDialog(true)}
+          onClick={() => {
+            setOpenEndDialog(true);
+            setOpenDialog(true);
+          }}
           className="end-test-btn"
         >
           Submit Test
         </Button>
       </Box>
-      <EndTestDialog
-        openDialog={openDialog}
-        handleClose={handleClose}
-        setOpenDialog={setOpenDialog}
-        selectedAnswers={selectedAnswers}
-        totalNumberOfQuestions={quizQuestions.data.length}
-        Ref={Ref}
-        quizId={quizQuestions.quizId}
-      />
+      {openEndDialog && (
+        <EndTestDialog
+          openDialog={openDialog}
+          handleClose={handleClose}
+          setOpenDialog={setOpenDialog}
+          selectedAnswers={selectedAnswers}
+          totalNumberOfQuestions={quizQuestions.data.length}
+          Ref={Ref}
+          quizId={quizQuestions.quizId}
+          setOpenEndDialog={setOpenDialog}
+        />
+      )}
     </>
   );
 };
+
 export default SingleQuestion;

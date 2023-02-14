@@ -5,14 +5,14 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from "@material-ui/core/styles";
 import "./SubjectExpert.style.scss";
 //import { AuthContext } from "../../context/AuthContectProvider";
 //import FileUploadSingle from "./FileUploadSingle";
 import CloseIcon from "@mui/icons-material/Close";
 import Menu from "@material-ui/icons/Menu";
 //import MenuIcon from '@material-ui/icons/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
+import MenuItem from "@material-ui/core/MenuItem";
 //import { EXCEL_FILE_BASE64 } from "../../data/constant";
 //import { styled, useTheme, Theme, CSSObject } from "@mui/material/styles";
 //import Box from "@mui/material/Box";
@@ -43,7 +43,14 @@ import BorderColorIcon from "@mui/icons-material/BorderColor";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import FileUploadSingle from "../../components/FileUpload/FileUploadSingle";
 //import "./SubjectExpert.css";
-import { ThemeProvider, createTheme, styled, Theme, useTheme, CSSObject } from "@mui/material/styles";
+import {
+  ThemeProvider,
+  createTheme,
+  styled,
+  Theme,
+  useTheme,
+  CSSObject,
+} from "@mui/material/styles";
 import {
   Paper,
   Table,
@@ -65,25 +72,19 @@ import {
 } from "@mui/material";
 // import "./screens/quiz/common.css";
 import FileSaver from "file-saver";
-import HomeIcon from '@mui/icons-material/Home';
+import HomeIcon from "@mui/icons-material/Home";
 import { ExpandLess, ExpandMore, StarBorder } from "@material-ui/icons";
-import SubjectIcon from '@mui/icons-material/Subject';
-import ArticleIcon from '@mui/icons-material/Article';
+import SubjectIcon from "@mui/icons-material/Subject";
+import ArticleIcon from "@mui/icons-material/Article";
 import { downnLoadExcel, upLoadExcel } from "../../api/apiAgent";
 import Swal from "sweetalert2";
 import SubjectList from "../../components/SubjectExpertDataList/SubjectList";
 import SideBar from "../../components/SideBar/SideBar";
 import NavBar from "../../components/NavBar/NavBar";
 
-
-
-
-
-
-
-const SubjectOptions = (props:any) => {
+const SubjectOptions = (props: any) => {
   const navigate = useNavigate();
- 
+
   const [file, setFile] = useState<File>();
   const [data, setData] = useState<any>({
     set: "",
@@ -132,7 +133,6 @@ const SubjectOptions = (props:any) => {
         link.click();
       })
       .then((res) => {
-        console.log("downloaded sucessfully");
         Swal.fire({
           title: "Success",
           text: "Template downloaded succesfully",
@@ -154,20 +154,17 @@ const SubjectOptions = (props:any) => {
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       setFormError({ ...formError, [e?.target.name]: false });
-      console.log(e.target.files[0]);
       setFile(e.target.files[0]);
     }
   };
   const handleUploadClick = () => {
     if (file && data.set && data.subject) {
-      console.log("starting upload");
       const formData = new FormData();
       formData.append("formFile", file);
 
       upLoadExcel(data.set, data.subject, formData)
         .then((res) => res.data)
         .then((res) => {
-          console.log("uploaded succesfully");
           setOpen(false);
           Swal.fire({
             title: "Success",
@@ -177,7 +174,6 @@ const SubjectOptions = (props:any) => {
           });
         })
         .catch((error: any) => {
-          console.log(error);
           Swal.fire({
             title: "Failed",
             text: "Failed to Upload Question Set",
@@ -186,7 +182,6 @@ const SubjectOptions = (props:any) => {
           });
         });
     } else if (!data.set) {
-      console.log("inside !data.set");
       setFormError({ ...formError, set: true });
     } else if (!data.subject) {
       setFormError({ ...formError, subject: true });
@@ -196,11 +191,8 @@ const SubjectOptions = (props:any) => {
   };
 
   const handleTextChange = (e: any) => {
-    console.log(e.target.value);
-    console.log(typeof e.target.value);
     if (e.target.name === "set") {
       const value = parseInt(e.target.value);
-      console.log(typeof value);
     }
     setFormError({ ...formError, [e?.target.name]: false });
     const name = e.target.name;
@@ -208,36 +200,19 @@ const SubjectOptions = (props:any) => {
     setData({ ...data, [name]: value });
   };
 
-
   return (
     <>
-    {/* < SideBar /> */}
-    < NavBar />
-    {/* <Box className="main-layout-wrap"> */}
-    {/* <AppBar position="static">
-      <Toolbar>
-        
-          <IconButton
-            edge="start"
-            className={classes.menuButton}
-            color="inherit"
-            aria-label="menu"
-          >
-          </IconButton>
-          <Typography
-            variant="h6"
-            component="div"
-            sx={{ flexGrow: 1 }}
-            onClick={() => navigate(-1)}
-          >
-            Augmento labs RMS
-          </Typography>
-          <Button color="inherit">Log out</Button>
-          </Toolbar>
-      </AppBar> */}
-    <Box sx={{ "& button": { m: 2 }, marginTop:2, display: "flex",  flexDirection: "column",
-      alignItems: "center" }}
-    >
+      <NavBar />
+
+      <Box
+        sx={{
+          "& button": { m: 2 },
+          marginTop: 2,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
         <Button variant="contained" onClick={downloadFile}>
           Download Template
         </Button>
@@ -303,20 +278,13 @@ const SubjectOptions = (props:any) => {
                 Cancel
               </Button>
             </Box>
-            </DialogContent>
+          </DialogContent>
         </Dialog>
       </Box>
-      
 
-    {/* </Box> */}
-    
+      {/* </Box> */}
     </>
   );
-
-
-
-
-
 };
 
 export default SubjectOptions;
