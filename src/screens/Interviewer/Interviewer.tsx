@@ -285,7 +285,7 @@ const Interviewer = (props: any) => {
           <DrawerHeader />
         </Box>
       </Box>
-      <InterviewerQuizTable></InterviewerQuizTable>
+      {/* <InterviewerQuizTable></InterviewerQuizTable> */}
       
     </>
     // <>
@@ -324,6 +324,7 @@ const Interviewer = (props: any) => {
       </p> */
     /* </Box> */
     /* </> */
+    
   );
 };
 

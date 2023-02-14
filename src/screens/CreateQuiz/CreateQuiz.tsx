@@ -28,10 +28,13 @@ import { createQuiz, getSubjectwiseQuiz } from "../../api/apiAgent";
 import SideBar from "../../components/SideBar/SideBar";
 import QuizDetails from "../../Interface/QuizDetails";
 import "./CreateQuiz.style.scss";
+import "./CreateQuiz.style.scss";
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import Interviewer from "../Interviewer/Interviewer";
 
-const CreateQuiz = (props: any) => {
+
+const CreateQuiz = (props: any) => 
+{
   const navigate = useNavigate();
   const [subjectList, setSubjectList] = useState<any>([]);
   const [checked, setChecked] = useState(false);
@@ -39,15 +42,6 @@ const CreateQuiz = (props: any) => {
   const [newquiz, setNewQuiz] = useState<any>({});
   // const [isQuizCreated, setIsQuizCreated] = useState<boolean>(false);
   const [quizLink, setQuizLink] = useState<any>();
-  // const useStyles = makeStyles({
-  //   table: {
-  //     width: 400,
-  //     margin: "auto"
-  //   }
-  //  });
-   	
-// const classes = useStyles();
-   
 
   const handleCheckboxChange = (e: any, quiz: any) => {
     // if(e.target.checked) {
@@ -104,13 +98,24 @@ const CreateQuiz = (props: any) => {
 
   console.log(newquiz, "quiz values");
 
-  const subjectwiseQuizDetails = async () => {
+  // const useStyles = makeStyles({
+  //   table: {
+  //     width: 400,
+  //     margin: "auto"
+  //   }
+  //  });
+   	
+  // const classes = useStyles();
+   
+
+    const subjectwiseQuizDetails = async () => {
     getSubjectwiseQuiz("")
       .then((response: any) => {
         setSubjectList(response.data);
       })
       .catch((error: any) => console.log("error in subjwiseapi"));
   };
+  
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text).then(
@@ -128,10 +133,12 @@ const CreateQuiz = (props: any) => {
     subjectwiseQuizDetails();
   }, []);
 
+ 
+
   return (
-    <>
-     <Interviewer />
-      <Box
+     <>
+       <Interviewer />
+        <Box
         sx={{
           marginTop: -1,
           marginLeft: 10,
@@ -139,8 +146,8 @@ const CreateQuiz = (props: any) => {
           // flexDirection: "column",
           //  alignItems: "center",
         }}
-      > 
-        <Typography variant="h5" align="center">
+       >
+       <Typography variant="h5" align="center">
           Available Question Sets
         </Typography>
         </Box>
@@ -173,16 +180,13 @@ const CreateQuiz = (props: any) => {
                 <TableCell align="center">{row.subjectName}</TableCell>
                 <TableCell align="center">{row.totalQuestionsCount}</TableCell>
                 <TableCell align="center">
-                {/* <FormControlLabel */}
+               
                         
                           <Checkbox
                             name="checkbox-1"
                             
                             onChange={(e: any) => handleCheckboxChange(e, row)}
                           />
-                        
-                      {/* label={row.setNumber} */}
-                      {/* >  */}
                 </TableCell>
 
                 </TableRow>
@@ -191,45 +195,10 @@ const CreateQuiz = (props: any) => {
           </TableBody>
          </Table>
         </TableContainer>
-        {/* <Box>
-          <Grid container spacing={1} alignItems="flex-start">
-            {subjectList &&
-              subjectList.map((elem: any, index: any) => (
-                <Grid item xs={12} sm={6} md={4} key={index}>
-                  <Card>
-                    <Typography
-                      variant="h6"
-                      display="flex"
-                      justifyContent="space-between"
-                      alignItems="center"
-                      style={{ padding: 20 }}
-                    > */}
-                      {/* /{elem.subjectName} */}
-                      {/* <FormControlLabel
-                        control={
-                          <Checkbox
-                            name="checkbox-1"
-                            
-                            onChange={(e: any) => handleCheckboxChange(e, elem)}
-                          />
-                        }
-                        label={elem.subjectName}
-                      /> */}
+        
+                   
+        
 
-                    {/* </Typography>
-                    <CardContent>
-                      <Typography>
-                        <strong>
-                          {`Set : ${elem.setNumber}`} &nbsp; &nbsp;
-                          {`Total Questions : ${elem.totalQuestionsCount}`}
-                        </strong>
-                      </Typography>
-                    </CardContent>
-                  </Card>
-                </Grid>
-              ))}
-          </Grid>
-        </Box> */}
         <Button
           variant="contained"
           type="submit"
@@ -268,10 +237,15 @@ const CreateQuiz = (props: any) => {
               </Button>
             </Box>
           </Box>
-         )} 
+        )}
       
-    </>
+     </>
   );
+        
+      
+    
+  
 };
 
 export default CreateQuiz;
+

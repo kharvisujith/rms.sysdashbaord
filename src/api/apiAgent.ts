@@ -108,7 +108,7 @@ export const submitCandidateInfo = (
 
 export const createQuiz = (
   values: any
-  // https://localhost:5001/api/Rms/1/quiz/interviewer/createquiz
+  
 ) => {
   return axiosClient.post(`/quiz/interviewer/createquiz`, values, {
     headers: {
@@ -119,4 +119,5 @@ export const createQuiz = (
 };
 export const getTotalQuizLinksInfo = ()=>{
   return axiosClient.get(`quiz/interviewer/quizdetails`);
+   
 };

@@ -160,6 +160,7 @@ const copyCodeToClipboard=(data:any)=>{
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
-    </Paper>:<span><h5>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;No Quiz results</h5></span>
+    </Paper>
+    :<span><h5>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;No Quiz results</h5></span>
 )};
 export default InterviewerQuizTable;
