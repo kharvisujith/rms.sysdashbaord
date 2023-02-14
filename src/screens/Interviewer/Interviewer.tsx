@@ -22,6 +22,7 @@ import MuiDrawer from "@mui/material/Drawer";
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import QuizIcon from '@mui/icons-material/Quiz';
 import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
+import InterviewerQuizTable from "../../components/InterviewerQuizList/InterviewerQuizTable";
 
 
 
@@ -284,6 +285,7 @@ const Interviewer = (props: any) => {
           <DrawerHeader />
         </Box>
       </Box>
+      <InterviewerQuizTable></InterviewerQuizTable>
       
     </>
     // <>
