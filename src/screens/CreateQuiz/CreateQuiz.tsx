@@ -259,6 +259,7 @@ const CreateQuiz = (props: any) => {
                 variant="outlined"
                 onClick={() => copyToClipboard(quizLink)}
                 
+                
               >
                 <SvgIcon 
                 sx={{marginLeft:-1}}

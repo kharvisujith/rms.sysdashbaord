@@ -52,11 +52,12 @@ const SubjectList = () => {
       <Box  
        sx={{
       marginTop: 2,
-      marginLeft: 10,
-      // display: "flex",
+      marginLeft: 10,}}
+      >
+      {/* // display: "flex",
       // flexDirection: "column",
-      //  alignItems: "center",
-    }}>
+      //  alignItems: "center", */}
+    
         <Typography variant="h5" align="center">
           Available Question Sets
         </Typography>
