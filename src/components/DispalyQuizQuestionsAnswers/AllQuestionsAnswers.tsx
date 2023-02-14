@@ -26,13 +26,14 @@ const AllQuestionsAnswers = (props: any) => {
         <strong>{'SetNumber:'}&ensp;</strong>{`${quizSubjectInfo[0]?.setNumber}`}&emsp;
         <strong>{'TotalQuestions:'}&ensp;</strong>{`${quizSubjectInfo.length}`}
         </Typography>
-        <LinearProgress
+        <LinearProgress 
           value={progressStatus}
           variant={"determinate"}
           color={"primary"}
+          
         />
       </Box>
-      <div className="">
+      <div className="answer-box">
       {quizSubjectInfo &&
         quizSubjectInfo?.map((question: any, index: any) => {
           console.log("Answers question type is", question);

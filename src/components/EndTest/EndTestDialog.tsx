@@ -21,14 +21,19 @@ const EndTestDialog = (props: any) => {
     selectedAnswers,
     totalNumberOfQuestions,
     Ref,
+    quizId,
   } = props;
-  console.log("value of total number of questions", totalNumberOfQuestions);
+  console.log(
+    "value of total number of questions",
+    totalNumberOfQuestions,
+    quizId
+  );
 
   const navigate = useNavigate();
 
   const endTest = () => {
     const submitQuizData = {
-      quizId: 1,
+      quizId: parseInt(quizId),
       data: [
         {
           subjectName: "JAVASCRIPT",
@@ -47,6 +52,18 @@ const EndTestDialog = (props: any) => {
           icon: "success",
           confirmButtonText: "Okay",
         });
+
+        setOpenDialog(false);
+        console.log("test ended");
+        clearInterval(Ref.current);
+
+        navigate("/test_submitted", {
+          state: {
+            totalNumberOfQuestions: totalNumberOfQuestions,
+            answered: selectedAnswers.length,
+            notAnswered: totalNumberOfQuestions - selectedAnswers.length,
+          },
+        });
       })
       .catch((error) => {
         console.log("error");
@@ -58,9 +75,9 @@ const EndTestDialog = (props: any) => {
         });
       });
 
-    setOpenDialog(false);
-    console.log("test ended");
-    clearInterval(Ref.current);
+    // setOpenDialog(false);
+    // console.log("test ended");
+    // clearInterval(Ref.current);
     // Swal.fire({
     //   title: "Success",
     //   text: "Test Submitted Succesfully",
@@ -68,19 +85,20 @@ const EndTestDialog = (props: any) => {
     //   confirmButtonText: "Okay",
     // });
 
-    navigate("/test_submitted", {
-      state: {
-        totalNumberOfQuestions: totalNumberOfQuestions,
-        answered: selectedAnswers.length,
-        notAnswered: totalNumberOfQuestions - selectedAnswers.length,
-      },
-    });
+    // navigate("/test_submitted", {
+    //   state: {
+    //     totalNumberOfQuestions: totalNumberOfQuestions,
+    //     answered: selectedAnswers.length,
+    //     notAnswered: totalNumberOfQuestions - selectedAnswers.length,
+    //   },
+    // });
     console.log("the final answer set is", selectedAnswers);
   };
 
   return (
     <>
-      <Box>
+      <Box sx={{marginTop: 5,
+          marginLeft: 10}}>
         <Dialog
           open={openDialog}
           onClose={handleClose}

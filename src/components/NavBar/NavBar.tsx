@@ -202,25 +202,7 @@ return (
                   <ListItemText primary={"Home Page"} />
                 </ListItemButton>
               </ListItem>
-              <ListItem disablePadding>
-                <ListItemButton 
-                  onClick={() => {
-                    navigate("/assignments");
-                    handleDrawerClose();
-                  }}
-                >
-                  <ListItemIcon
-                    sx={{
-                      minWidth: -0.5,
-                      mr: open ? 3 : "auto",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <SvgIcon component={KeyboardBackspaceIcon} inheritViewBox />
-                  </ListItemIcon>
-                  <ListItemText primary={"Back"} />
-                </ListItemButton>
-              </ListItem>
+              
               <ListItemButton
                 className="account-menu-list"
                 onClick={() => {
@@ -289,6 +271,25 @@ return (
                   })}
                 </List>
               </Collapse>
+              <ListItem disablePadding>
+                <ListItemButton 
+                  onClick={() => {
+                    navigate("/assignments");
+                    handleDrawerClose();
+                  }}
+                >
+                  <ListItemIcon
+                    sx={{
+                      minWidth: -0.5,
+                      mr: open ? 3 : "auto",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <SvgIcon component={KeyboardBackspaceIcon} inheritViewBox />
+                  </ListItemIcon>
+                  <ListItemText primary={"Back"} />
+                </ListItemButton>
+              </ListItem>
               </List>
               </Drawer>
               </>

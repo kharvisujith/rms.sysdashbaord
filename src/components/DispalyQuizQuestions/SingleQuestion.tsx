@@ -63,7 +63,7 @@ const SingleQuestion = (props: any) => {
   const handleProgressStatus = () => {
     console.log("handePrgressstatus called");
     const statusPercentage =
-      ((answeredQuestions + 1) * 100) / quizQuestions.length;
+      ((answeredQuestions + 1) * 100) / quizQuestions.data.length;
     setAnsweredQuestions((prev) => prev + 1);
     console.log("value of st is", statusPercentage);
     setProgressStatus(statusPercentage);
@@ -184,9 +184,9 @@ const SingleQuestion = (props: any) => {
         .then((res: any) => {
           navigate("/test_submitted", {
             state: {
-              totalNumberOfQuestions: quizQuestions.length,
+              totalNumberOfQuestions: quizQuestions.data.length,
               answered: selectedAnswers.length,
-              notAnswered: quizQuestions.length - selectedAnswers.length,
+              notAnswered: quizQuestions.data.length - selectedAnswers.length,
             },
           });
         })
@@ -235,7 +235,7 @@ const SingleQuestion = (props: any) => {
     <>
       <Box className="progress-box">
         <Box className="progress-data">
-          <Typography variant="body1">{`Answered ${answeredQuestions} out of ${quizQuestions?.length}`}</Typography>
+          <Typography variant="body1">{`Answered ${answeredQuestions} out of ${quizQuestions?.data.length}`}</Typography>
           <Typography variant="body1">{`Time Remaining - ${timer}`}</Typography>
         </Box>
         <LinearProgress
@@ -245,9 +245,9 @@ const SingleQuestion = (props: any) => {
         />
       </Box>
 
-      <Box>
+      <Box >
         {quizQuestions &&
-          quizQuestions.map((question: any, index: any) => {
+          quizQuestions.data?.map((question: any, index: any) => {
             if (index + 1 === currentQuestion) {
               switch (question.questionType) {
                 case "SINGLECHOICE":
@@ -283,7 +283,7 @@ const SingleQuestion = (props: any) => {
           })}
       </Box>
       <Box className="test-buttons-box">
-        {currentQuestion <= quizQuestions.length && currentQuestion > 1 && (
+        {currentQuestion <= quizQuestions.data.length && currentQuestion > 1 && (
           <Button
             variant="outlined"
             onClick={moveToPreviousQuestion}
@@ -292,7 +292,7 @@ const SingleQuestion = (props: any) => {
             Previous
           </Button>
         )}
-        {currentQuestion < quizQuestions.length && (
+        {currentQuestion < quizQuestions.data.length && (
           <Button
             variant="contained"
             onClick={moveToNextQuestion}
@@ -317,8 +317,9 @@ const SingleQuestion = (props: any) => {
         handleClose={handleClose}
         setOpenDialog={setOpenDialog}
         selectedAnswers={selectedAnswers}
-        totalNumberOfQuestions={quizQuestions.length}
+        totalNumberOfQuestions={quizQuestions.data.length}
         Ref={Ref}
+        quizId={quizQuestions.quizId}
       />
     </>
   );
