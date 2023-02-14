@@ -117,3 +117,6 @@ export const createQuiz = (
     },
   });
 };
+export const getTotalQuizLinksInfo = ()=>{
+  return axiosClient.get(`quiz/interviewer/quizdetails`);
+};
