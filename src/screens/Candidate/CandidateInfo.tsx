@@ -78,7 +78,7 @@ const CandidateInfo = (props: any) => {
     return (
       <>
         <Box className="error-box">
-          <Typography variant="h4">{`400 ${errorMessage}`}</Typography>
+          <Typography variant="h4">{`${errorMessage}`}</Typography>
         </Box>
         <Divider className="divider" />
       </>

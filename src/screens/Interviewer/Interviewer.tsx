@@ -6,7 +6,23 @@ import IconButton from "@mui/material/IconButton";
 import { makeStyles } from "@material-ui/core/styles";
 import MenuItem from "@material-ui/core/MenuItem";
 //import { AuthContext } from "../../context/AuthContectProvider";
-import { Collapse, CSSObject, Divider, Icon, List, ListItem, ListItemButton, ListItemIcon, ListItemText, styled, SvgIcon, Theme, Typography, useTheme } from "@mui/material";
+import {
+  Collapse,
+  CSSObject,
+  Divider,
+  Drawer,
+  Icon,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  styled,
+  SvgIcon,
+  Theme,
+  Typography,
+  useTheme,
+} from "@mui/material";
 import Menu from "@material-ui/icons/Menu";
 import SideBar from "../../components/SideBar/SideBar";
 import { useState } from "react";
@@ -19,34 +35,51 @@ import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import MuiDrawer from "@mui/material/Drawer";
-import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
-import QuizIcon from '@mui/icons-material/Quiz';
-import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
-
-
+import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
+import QuizIcon from "@mui/icons-material/Quiz";
+import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
+import InterviewerQuizTable from "../../components/InterviewerQuizList/InterviewerQuizTable";
 
 const drawerWidth = 240;
 
-const openedMixin = (theme: Theme): CSSObject => ({
-  width: drawerWidth,
-  transition: theme.transitions.create("width", {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.enteringScreen,
-  }),
-  overflowX: "hidden",
-});
-
-const closedMixin = (theme: Theme): CSSObject => ({
-  transition: theme.transitions.create("width", {
+const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
+  open?: boolean;
+}>(({ theme, open }) => ({
+  flexGrow: 1,
+  padding: theme.spacing(3),
+  transition: theme.transitions.create("margin", {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
-  overflowX: "hidden",
-  width: `calc(${theme.spacing(7)} + 1px)`,
-  [theme.breakpoints.up("sm")]: {
-    width: `calc(${theme.spacing(8)} + 1px)`,
-  },
-});
+  marginLeft: `-${drawerWidth}px`,
+  ...(open && {
+    transition: theme.transitions.create("margin", {
+      easing: theme.transitions.easing.easeOut,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+    marginLeft: 0,
+  }),
+}));
+// const openedMixin = (theme: Theme): CSSObject => ({
+//   width: drawerWidth,
+//   transition: theme.transitions.create("width", {
+//     easing: theme.transitions.easing.sharp,
+//     duration: theme.transitions.duration.enteringScreen,
+//   }),
+//   overflowX: "hidden",
+// });
+
+// const closedMixin = (theme: Theme): CSSObject => ({
+//   transition: theme.transitions.create("width", {
+//     easing: theme.transitions.easing.sharp,
+//     duration: theme.transitions.duration.leavingScreen,
+//   }),
+//   overflowX: "hidden",
+//   width: `calc(${theme.spacing(7)} + 1px)`,
+//   [theme.breakpoints.up("sm")]: {
+//     width: `calc(${theme.spacing(8)} + 1px)`,
+//   },
+// });
 
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
@@ -66,35 +99,35 @@ const AppBar = styled(MuiAppBar, {
 })<AppBarProps>(({ theme, open }) => ({
   zIndex: theme.zIndex.drawer + 1,
   transition: theme.transitions.create(["width", "margin"], {
-    easing: theme.transitions.easing.sharp,
+    easing: theme.transitions.easing.easeOut,
     duration: theme.transitions.duration.leavingScreen,
   }),
   ...(open && {
     marginLeft: drawerWidth,
     width: `calc(100% - ${drawerWidth}px)`,
     transition: theme.transitions.create(["width", "margin"], {
-      easing: theme.transitions.easing.sharp,
+      easing: theme.transitions.easing.easeOut,
       duration: theme.transitions.duration.enteringScreen,
     }),
   }),
 }));
 
-const Drawer = styled(MuiDrawer, {
-  shouldForwardProp: (prop) => prop !== "open",
-})(({ theme, open }) => ({
-  width: drawerWidth,
-  flexShrink: 0,
-  whiteSpace: "nowrap",
-  boxSizing: "border-box",
-  ...(open && {
-    ...openedMixin(theme),
-    "& .MuiDrawer-paper": openedMixin(theme),
-  }),
-  ...(!open && {
-    ...closedMixin(theme),
-    "& .MuiDrawer-paper": closedMixin(theme),
-  }),
-}));
+// const Drawer = styled(MuiDrawer, {
+//   shouldForwardProp: (prop) => prop !== "open",
+// })(({ theme, open }) => ({
+//   width: drawerWidth,
+//   flexShrink: 0,
+//   whiteSpace: "nowrap",
+//   boxSizing: "border-box",
+//   ...(open && {
+//     ...openedMixin(theme),
+//     "& .MuiDrawer-paper": openedMixin(theme),
+//   }),
+//   ...(!open && {
+//     ...closedMixin(theme),
+//     "& .MuiDrawer-paper": closedMixin(theme),
+//   }),
+// }));
 
 const links = [
   { title: "HomePage", path: "/", icon: <HomeIcon /> },
@@ -115,7 +148,7 @@ const Interviewer = (props: any) => {
   const navigate = useNavigate();
   const theme = useTheme();
   const [open, setOpen] = useState(false);
-    const [openList, setOpenList] = useState(false);
+  const [openList, setOpenList] = useState(false);
   const useStyles = makeStyles((theme) => ({
     root: {
       flexGrow: 1,
@@ -133,7 +166,6 @@ const Interviewer = (props: any) => {
   const handleDrawerClose = () => {
     setOpen(false);
   };
-
 
   return (
     <>
@@ -168,7 +200,7 @@ const Interviewer = (props: any) => {
             </Toolbar>
           </AppBar>
           {/* <ThemeProvider theme={darkTheme}> */}
-          <Drawer variant="permanent" open={open}>
+          <Drawer variant="persistent" open={open}>
             <DrawerHeader>
               <IconButton onClick={handleDrawerClose}>
                 {theme.direction === "rtl" ? (
@@ -182,7 +214,7 @@ const Interviewer = (props: any) => {
 
             <List className="account-menu-list">
               <ListItem disablePadding>
-                <ListItemButton 
+                <ListItemButton
                   onClick={() => {
                     navigate("/");
                     handleDrawerClose();
@@ -200,9 +232,9 @@ const Interviewer = (props: any) => {
                   <ListItemText primary={"Home Page"} />
                 </ListItemButton>
               </ListItem>
-              
+
               <ListItem disablePadding>
-                <ListItemButton 
+                <ListItemButton
                   onClick={() => {
                     navigate("/createquiz");
                     handleDrawerClose();
@@ -221,7 +253,7 @@ const Interviewer = (props: any) => {
                 </ListItemButton>
               </ListItem>
               <ListItem disablePadding>
-                <ListItemButton 
+                <ListItemButton
                   onClick={() => {
                     navigate("/reviewer");
                     handleDrawerClose();
@@ -234,13 +266,16 @@ const Interviewer = (props: any) => {
                       justifyContent: "center",
                     }}
                   >
-                    <SvgIcon component={AssignmentTurnedInIcon} inheritViewBox />
+                    <SvgIcon
+                      component={AssignmentTurnedInIcon}
+                      inheritViewBox
+                    />
                   </ListItemIcon>
                   <ListItemText primary={"Submit Quiz"} />
                 </ListItemButton>
               </ListItem>
               <ListItem disablePadding>
-                <ListItemButton 
+                <ListItemButton
                   onClick={() => {
                     navigate("/reviewer");
                     handleDrawerClose();
@@ -258,20 +293,19 @@ const Interviewer = (props: any) => {
                   <ListItemText primary={"Back"} />
                 </ListItemButton>
               </ListItem>
-              
-              </List>
-              </Drawer>
-              </>
+            </List>
+          </Drawer>
+        </>
         <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
           <DrawerHeader />
         </Box>
       </Box>
-      
+      <InterviewerQuizTable />
     </>
     // <>
     // < SideBar />
     /* <Box className="main-layout-wrap"> */
-      /* <AppBar position="static">
+    /* <AppBar position="static">
         <Toolbar>
           <IconButton
             edge="start"
@@ -297,7 +331,7 @@ const Interviewer = (props: any) => {
         </Toolbar>
       </AppBar>
       <hr /> */
-      /* <p>
+    /* <p>
         <h1>Interviewer Page Development in progrss</h1>
         <br />
         <button onClick={() => navigate(-1)}>Home</button>

@@ -52,11 +52,12 @@ const SubjectList = () => {
       <Box  
        sx={{
       marginTop: 2,
-      marginLeft: 10,
-      display: "flex",
-      flexDirection: "column",
-       alignItems: "center",
-    }}>
+      marginLeft: 10,}}
+      >
+      {/* // display: "flex",
+      // flexDirection: "column",
+      //  alignItems: "center", */}
+    
         <Typography variant="h5" align="center">
           Available Question Sets
         </Typography>
@@ -74,7 +75,10 @@ const SubjectList = () => {
                       style={{ padding: 20 }}
                     >
                       {elem.subjectName}
-                      <Button variant="contained"  onClick={() => StartTestViewButtonHandler(elem)}>View</Button>
+                      <Button variant="contained" 
+                      // sx={{ marginTop: 2,
+                      //   marginLeft: 10}} 
+                      onClick={() => StartTestViewButtonHandler(elem)}>View</Button>
                     </Typography>
                     <CardContent>
                       <Typography>

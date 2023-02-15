@@ -33,9 +33,10 @@ const AllQuestionsAnswers = (props: any) => {
           color={"primary"}
         />
       </Box>
-      <div className="">
+      <div className="answer-box">
         {quizSubjectInfo &&
           quizSubjectInfo?.map((question: any, index: any) => {
+            console.log("Answers question type is", question);
             switch (question.questionType) {
               case "SINGLECHOICE":
                 console.log("single choice match...");

@@ -79,7 +79,8 @@ const EndTestDialog = (props: any) => {
 
   return (
     <>
-      <Box>
+      <Box sx={{marginTop: 5,
+          marginLeft: 10}}>
         <Dialog
           open={openDialog}
           onClose={handleClose}

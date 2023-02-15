@@ -305,9 +305,12 @@ const SingleQuestion = (props: any) => {
         />
       </Box>
 
-      <Box>
+      {/* <Box>
         {quizQuestions.data &&
-          quizQuestions.data.map((question: any, index: any) => {
+          quizQuestions.data.map((question: any, index: any) => { */}
+      <Box>
+        {quizQuestions &&
+          quizQuestions.data?.map((question: any, index: any) => {
             if (index + 1 === currentQuestion) {
               switch (question.questionType) {
                 case "SINGLECHOICE":
