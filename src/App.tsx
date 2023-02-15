@@ -11,6 +11,7 @@ import NavBar from "./screens/subjectExpert/SubjectOptions";
 import SubjectOptions from "./screens/subjectExpert/SubjectOptions";
 import CandidateInfo from "./screens/Candidate/CandidateInfo";
 import CreateQuiz from "./screens/CreateQuiz/CreateQuiz";
+import SubmittedQuiz from "./screens/SubmittedQuiz/SubmittedQuiz";
 
 let testAllreadyCompleted = false;
 const App = () => {
@@ -28,6 +29,7 @@ const App = () => {
         <Route path="/rms-aug/test/:id/:key" element={<CandidateInfo />} />
         <Route path="/rms-aug/test/start" element={<StartQuiz />} />
         <Route path="/createquiz" element={<CreateQuiz />} />
+        <Route path="/SubmittedQuiz" element={<SubmittedQuiz />} />
       </Routes>
     </>
   );

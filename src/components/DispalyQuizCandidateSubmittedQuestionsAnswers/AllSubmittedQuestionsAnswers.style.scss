@@ -1,0 +1,36 @@
+.progress-box {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .answer-box {
+    margin-left: 1rem;
+  }
+  
+  .test-buttons-box {
+    display: flex;
+    width: 30%;
+    margin-top: 2rem;
+    margin-left: 0.5rem;
+  
+    .test-button {
+      margin-right: 1rem;
+      padding-left: 2rem;
+      padding-right: 2rem;
+    }
+  }
+  
+  .end-test-box {
+    display: flex;
+    justify-content: center;
+    margin-top: 5rem;
+  
+    .end-test-btn {
+      font-size: 1rem;
+      padding-left: 2rem;
+      padding-right: 2rem;
+      padding-top: 0.8rem;
+      padding-bottom: 0.8rem;
+    }
+  }
+  
