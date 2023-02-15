@@ -9,11 +9,12 @@ import SingleQuestion from "../../components/DispalyQuizQuestions/SingleQuestion
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { verifyCandidate } from "../../api/apiAgent";
+import { AxiosError, AxiosResponse } from "axios";
 const StartQuiz = () => {
-  const [OpenTestModal, setOpenTestModal] = useState(false);
+  const [OpenTestModal, setOpenTestModal] = useState<boolean>(false);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [isKeyValid, setIsKeyValid] = useState<boolean>(false);
-  const [errorMessage, setErrorMessage] = useState<any>();
+  const [errorMessage, setErrorMessage] = useState<string>();
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -31,7 +32,7 @@ const StartQuiz = () => {
       parseInt(location.state.verifyCredentials.id!),
       location.state.verifyCredentials.key!
     )
-      .then((res: any) => {
+      .then((res: AxiosResponse) => {
         setIsKeyValid(true);
       })
       .catch((error: any) => {

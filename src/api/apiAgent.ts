@@ -1,6 +1,6 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
 import CandidateDetails from "../Interface/CandidateDetails";
-import QuizDetails from "../Interface/QuizDetails";
+//import QuizDetails from "../Interface/QuizDetails";
 // import QuizDetails from "../Interface/QuizDetails";
 
 export const axiosClient = axios.create({

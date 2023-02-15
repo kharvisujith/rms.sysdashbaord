@@ -9,6 +9,7 @@ import {
   FormControl,
   FormControlLabel,
 } from "@mui/material";
+import { AxiosResponse } from "axios";
 import { any } from "prop-types";
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -17,20 +18,27 @@ import { ImportsNotUsedAsValues } from "typescript";
 import { setEnvironmentData } from "worker_threads";
 import { createQuiz, getSubjectwiseQuiz } from "../../api/apiAgent";
 import SideBar from "../../components/SideBar/SideBar";
-import QuizDetails from "../../Interface/QuizDetails";
+import {
+  createQuizRequest,
+  createQuizResponse,
+  subjectWiseQuizListResponse,
+} from "../../Interface/QuizDetails";
 import "./CreateQuiz.style.scss";
 
-const CreateQuiz = (props: any) => {
-  const navigate = useNavigate();
-  const [subjectList, setSubjectList] = useState<any>([]);
-  const [checked, setChecked] = useState(false);
-  const [values, setValues] = useState<any>([]);
-  const [newquiz, setNewQuiz] = useState<any>({});
-  // const [isQuizCreated, setIsQuizCreated] = useState<boolean>(false);
-  const [quizLink, setQuizLink] = useState<any>();
+const CreateQuiz = () => {
+  const [subjectList, setSubjectList] = useState<subjectWiseQuizListResponse[]>(
+    []
+  );
+  // const [checked, setChecked] = useState<boolean>(false);
+  const [values, setValues] = useState<createQuizRequest[]>([]);
+  const [newquiz, setNewQuiz] = useState<createQuizResponse | {}>({});
+  const [quizLink, setQuizLink] = useState<string>();
 
-  const handleCheckboxChange = (e: any, quiz: any) => {
-    const existindex = values.findIndex((ele: any) => {
+  const handleCheckboxChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    quiz: subjectWiseQuizListResponse
+  ) => {
+    const existindex = values.findIndex((ele: createQuizRequest) => {
       return (
         ele.subjectName === quiz.subjectName && ele.setNumber === quiz.setNumber
       );
@@ -50,7 +58,7 @@ const CreateQuiz = (props: any) => {
 
   const handleSubmit = () => {
     createQuiz(values)
-      .then((res) => {
+      .then((res: AxiosResponse) => {
         setNewQuiz(res.data);
         Swal.fire({
           title: "Success",
@@ -63,7 +71,6 @@ const CreateQuiz = (props: any) => {
         );
         return res.data;
       })
-      .then((res: any) => {})
       .catch((error: any) => {
         Swal.fire({
           title: "error",
@@ -76,7 +83,7 @@ const CreateQuiz = (props: any) => {
 
   const subjectwiseQuizDetails = async () => {
     getSubjectwiseQuiz("")
-      .then((response: any) => {
+      .then((response: AxiosResponse) => {
         setSubjectList(response.data);
       })
       .catch((error: any) => console.log("error in subjwiseapi"));
@@ -112,7 +119,7 @@ const CreateQuiz = (props: any) => {
         <Box>
           <Grid container spacing={1} alignItems="flex-start">
             {subjectList &&
-              subjectList.map((elem: any, index: any) => (
+              subjectList?.map((elem: any, index: any) => (
                 <Grid item xs={12} sm={6} md={4} key={index}>
                   <Card>
                     <Typography
