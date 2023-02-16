@@ -113,7 +113,7 @@ const InterviewerQuizTable=()=> {
 const copyCodeToClipboard=(data:any)=>{
   navigator.clipboard.writeText(data);
 };
-  return (
+  return ( totalQuizInfo.length>0? 
     <>
     {/* <NavBarInterviewer /> */}
      {/* totalQuizInfo.length>0? */}
@@ -167,6 +167,7 @@ const copyCodeToClipboard=(data:any)=>{
      {/* </Paper> */}
       {/* :<span><h5>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;No Quiz results</h5></span> */}
     </>   
+     :<span><h5>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;No Quiz results</h5></span> 
 )
 };
 export default InterviewerQuizTable;

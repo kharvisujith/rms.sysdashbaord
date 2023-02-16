@@ -8,7 +8,6 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import SideBar from "../../components/TopNavBar/TopNavBar";
 import {
   axiosClient,
   submitCandidateInfo,
@@ -31,54 +30,22 @@ const CandidateInfo = (props: any) => {
     email: "",
     phone: "",
   });
+  const [formError, setFormError] = useState<any>({
+    firstName: false,
+    lastName: false,
+    email: false,
+    phone: false
+  });
   const [quizQuestions, setQuizQuestions] = useState<any>([]);
   const [isKeyValid, setIsKeyValid] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<any>();
-  // const [formValues, setFormValues] = useState<any>({
-  //   firstName: false,
-  //   middleName: false,
-  //   lastName: false,
-  //   email: false,
-  //   phone: false,
-  // });
-  //  const [formError, setFormError] = useState({
-  //   firstName: false,
-  //   middleName: false,
-  //   lastName: false,
-  //   email: false,
-  //   phone: false,
-  //  });
-  // const [submit, setSubmit] = useState(false);
 
-
-
-//  const validate = (values: any) => {
-//   let errors : any = {};
-//   if (!values.email) {
-//     errors.email = "Please enter the Email.";
-//   } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i.test(values.email)) {
-//     errors.email = "Invalid email";
-//   }
-
-//   if (!values.firstName) {
-//     errors.firstName = "Please enter the FirstName.";
-//   }
-
-//   if (!values.lastName) {
-//     errors.lastName = "Please enter the LastName.";
-//   }
-//   if (!values.middleName) {
-//     errors.middleName = "Please enter the MiddleName.";
-//   }
-
-//   if (!values.phone) {
-//     errors.phone = "Please enter the PhoneNumber";
-//   }
-//   return errors;
-// };
+  const regex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
+ 
 
 
   const handleChange = (e: any) => {
+    setFormError({ ...formError, [e?.target.name]: false });
     const name = e.target.name;
     const value = e.target.value;
     setUser({ ...user, [name]: value });
@@ -87,11 +54,11 @@ const CandidateInfo = (props: any) => {
   
   
   const handleSubmit = (e: any) => {
-    
-      if (!user) {
-    
-        return;
-      }
+        if (!user) {
+           return;
+          }
+    if (user.email && user.firstName && user.lastName && user.phone)
+    {
       submitCandidateInfo(parseInt(id!), key!, user)
        .then((res: any) => {
         setQuizQuestions(res.data);
@@ -112,16 +79,21 @@ const CandidateInfo = (props: any) => {
       .catch((error: any) => {
         setErrorMessage(error.response.data);
       });
+    }  else if (!user.email) {
+      setFormError({ ...formError, email: true });
+     } else if (!regex.test(user.email)) {
+        setFormError({ ...formError, email: true });
+    } else if (!user.firstName) {
+      setFormError({ ...formError, firstName: true });
+    } else if (!user.lastName) {
+      setFormError({ ...formError, lastName: true });
+    } else if (!user.phone) {
+      setFormError({ ...formError, phone: true });
+    }
    
 
   };
 
-  // useEffect(() => {
-  //   console.log(formError);
-  //   if(Object.keys(formError).length === 0 && submit) {
-  //     console.log(formValues);
-  //   }
-  // }, [formError])
 
   useEffect(() => {
     verifyCandidate(parseInt(id!), key!)
@@ -163,7 +135,7 @@ const CandidateInfo = (props: any) => {
             alignItems: "center",
           }}
         >
-          <Box component="form"
+          <Box 
             //  onSubmit={handleSubmit}
              //noValidate
             sx={{ mt: 1 }}>
@@ -177,10 +149,9 @@ const CandidateInfo = (props: any) => {
               label="Candidate Email Address"
               name="email"
             />
-             {/* {formError.email && (
-              <Typography className="error">Please Enter Valid Email</Typography>
-            )} */}
-           {/* {formError.email} */}
+             {formError.email && (
+              <Typography className="error">Please include @ and enter valid email</Typography>
+            )}
             <TextField
               margin="normal"
               required
@@ -191,6 +162,9 @@ const CandidateInfo = (props: any) => {
               label="FirstName"
               name="firstName"
             />
+             {formError.firstName && (
+              <Typography className="error">Please Enter First Name</Typography>
+            )}
             
             <TextField
               margin="normal"
@@ -202,6 +176,7 @@ const CandidateInfo = (props: any) => {
               label="MiddleName"
               name="middleName"
             />
+            
            
             <TextField
               margin="normal"
@@ -213,6 +188,9 @@ const CandidateInfo = (props: any) => {
               label="LastName"
               name="lastName"
             />
+             {formError.lastName && (
+              <Typography className="error">Please Enter Last Name</Typography>
+            )}
           
             <TextField
               margin="normal"
@@ -224,6 +202,9 @@ const CandidateInfo = (props: any) => {
               label="PhoneNumber"
               name="phone"
             />
+             {formError.phone && (
+              <Typography className="error">Please Enter Phone Number</Typography>
+            )}
              
            
             <Box>

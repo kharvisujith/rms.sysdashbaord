@@ -35,6 +35,7 @@ import {
 import "./CreateQuiz.style.scss";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import NavBarInterviewer from "../../components/NavBar/NavBarInterviewer";
+import TopNavBar from "../../components/TopNavBar/TopNavBar";
 
 const useStyles = makeStyles({
   root: {
@@ -139,7 +140,7 @@ const CreateQuiz = () => {
     subjectwiseQuizDetails();
   }, []);
 
-  return (
+  return (subjectList.length>0? 
     <>
       <NavBarInterviewer />
       
@@ -207,7 +208,7 @@ const CreateQuiz = () => {
         variant="contained"
         type="submit"
         sx={{
-          marginTop: 5,
+          marginTop: 1,
           marginLeft: 90,
           // display: "flex",
           // flexDirection: "column",
@@ -243,6 +244,10 @@ const CreateQuiz = () => {
         </Box>
       )}
     </>
+     :<>
+     <NavBarInterviewer />
+     <span><h5>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;No  results</h5></span>
+     </>
   );
 };
 
