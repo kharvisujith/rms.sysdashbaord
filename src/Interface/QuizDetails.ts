@@ -30,6 +30,7 @@ export interface quizSubmitRequest {
 export interface createQuizRequest {
   setNumber: number;
   subjectName: string;
+  totalQuestionsCount: number;
 }
 
 export interface createQuizResponse {

@@ -32,6 +32,9 @@ const EndTestDialog = (props: any) => {
     setOpenEndDialog(false);
     const quizAnswerModel = {
       quizId: parseInt(quizId),
+      totalQuestions: totalNumberOfQuestions,
+      answeredQuestions: totalAnswerdQuestions,
+      notAnsweredQuestions: totalNumberOfQuestions - totalAnswerdQuestions,
       data: selectedAnswers,
     };
     submitQuiz(quizAnswerModel)

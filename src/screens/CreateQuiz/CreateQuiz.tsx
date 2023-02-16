@@ -50,6 +50,7 @@ const CreateQuiz = () => {
     e: React.ChangeEvent<HTMLInputElement>,
     quiz: subjectWiseQuizListResponse
   ) => {
+    console.log("value of quiz is", quiz);
     const existindex = values.findIndex((ele: createQuizRequest) => {
       return (
         ele.subjectName === quiz.subjectName && ele.setNumber === quiz.setNumber
@@ -63,7 +64,11 @@ const CreateQuiz = () => {
     } else {
       setValues([
         ...values,
-        { setNumber: quiz.setNumber, subjectName: quiz.subjectName },
+        {
+          setNumber: quiz.setNumber,
+          subjectName: quiz.subjectName,
+          totalQuestionsCount: quiz.totalQuestionsCount,
+        },
       ]);
     }
   };
