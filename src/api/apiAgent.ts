@@ -116,6 +116,11 @@ export const createQuiz = (
   });
 };
 export const getTotalQuizLinksInfo = ()=>{
-  return axiosClient.get(`quiz/interviewer/quizdetails`);
-   
+  return axiosClient.get(`quiz/interviewer/quizdetails`); 
+};
+export const getTotalSubmittedQuizInfo = ()=>{
+  return axiosClient.get(`quiz/interviewer/submitquiz`); 
+};
+export const getSubmittedQuizInfo = (qId: number,)=>{
+  return axiosClient.get(`quiz/interviewer/submitquiz/${qId}`); 
 };
