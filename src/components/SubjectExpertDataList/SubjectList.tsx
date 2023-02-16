@@ -14,13 +14,20 @@ import {
 import AllQuestionsAnswers from "../DispalyQuizQuestionsAnswers/AllQuestionsAnswers";
 import ReactModal from "react-modal";
 import "./SubjectList.style.scss";
+import {
+  subjectwiseQuizAnswersResponse,
+  subjectWiseQuizListResponse,
+} from "../../Interface/QuizDetails";
 
 const SubjectList = (props: any) => {
-  const [subjectList, setSubjectList] = useState<any>([]);
-  const [OpenTestModal, setOpenTestModal] = useState(false);
-  const [modalContent, setModalContent] = useState("");
+  const [subjectList, setSubjectList] = useState<subjectWiseQuizListResponse[]>(
+    []
+  );
+  const [OpenTestModal, setOpenTestModal] = useState<boolean>(false);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
-  const [subjectAnswersList, setSubjectAnswerList] = useState<any>([]);
+  const [subjectAnswersList, setSubjectAnswerList] = useState<
+    subjectwiseQuizAnswersResponse[]
+  >([]);
   const [isQuizSetExists, setIsQuizSetExists] = useState<boolean>(true);
   const handleClose = () => {
     setOpenDialog(false);
@@ -32,7 +39,6 @@ const SubjectList = (props: any) => {
         setSubjectAnswerList(response.data);
       })
       .catch((error: any) => console.log("error in subjwise answersapi"));
-    setModalContent("listView");
     setOpenTestModal(true);
   };
   const endTestButtonHandler = () => {
@@ -133,25 +139,23 @@ const SubjectList = (props: any) => {
           contentLabel="Minimal Modal Example"
           ariaHideApp={false}
         >
-          {modalContent && modalContent === "listView" ? (
-            <>
-              <AllQuestionsAnswers
-                openDialog={openDialog}
-                handleClose={handleClose}
-                setOpenDialog={setOpenDialog}
-                quizSubjectInfo={subjectAnswersList}
-              />
-              <Box style={{ display: "flex", justifyContent: "center" }}>
-                <Button
-                  variant="contained"
-                  color="error"
-                  onClick={endTestButtonHandler}
-                >
-                  Close
-                </Button>
-              </Box>
-            </>
-          ) : null}
+          <>
+            <AllQuestionsAnswers
+              openDialog={openDialog}
+              handleClose={handleClose}
+              setOpenDialog={setOpenDialog}
+              quizSubjectInfo={subjectAnswersList}
+            />
+            <Box style={{ display: "flex", justifyContent: "center" }}>
+              <Button
+                variant="contained"
+                color="error"
+                onClick={endTestButtonHandler}
+              >
+                Close
+              </Button>
+            </Box>
+          </>
         </ReactModal>
       </div>
     </>

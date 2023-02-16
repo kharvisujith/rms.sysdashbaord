@@ -41,7 +41,6 @@ import DashboardIcon from "@mui/icons-material/Dashboard";
 import FileCopyIcon from "@mui/icons-material/FileCopy";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import FileUploadSingle from "../../components/FileUpload/FileUploadSingle";
 //import "./SubjectExpert.css";
 import {
   ThemeProvider,

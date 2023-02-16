@@ -7,7 +7,7 @@ import { optionIds } from "../../utils/Utils";
 const RadioComponent = (props: any) => {
   const { questionInfo, handleAnswerChange, selectedAnswers } = props;
 
-  const [value, setValue] = useState([]);
+  const [value, setValue] = useState<any[]>([]);
 
   const getSelectedValue = useCallback(
     (questionData: any) => {

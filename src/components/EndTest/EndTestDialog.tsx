@@ -30,17 +30,6 @@ const EndTestDialog = (props: any) => {
 
   const endTest = () => {
     setOpenEndDialog(false);
-    // const submitQuizData = {
-    //   quizId: 1,
-    //   data: [
-    //     {
-    //       subjectName: "JAVASCRIPT",
-    //       setNumber: 1,
-    //       quizAnswers: selectedAnswers,
-    //     },
-    //   ],
-    // };
-    // post answers here-> selectedAnswers
     const quizAnswerModel = {
       quizId: parseInt(quizId),
       data: selectedAnswers,
@@ -79,8 +68,7 @@ const EndTestDialog = (props: any) => {
 
   return (
     <>
-      <Box sx={{marginTop: 5,
-          marginLeft: 10}}>
+      <Box sx={{ marginTop: 5, marginLeft: 10 }}>
         <Dialog
           open={openDialog}
           onClose={handleClose}

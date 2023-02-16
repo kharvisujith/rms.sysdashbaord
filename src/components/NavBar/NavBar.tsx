@@ -140,20 +140,8 @@ const subjectlinks = [
 const NavBar = (props: any) => {
   const navigate = useNavigate();
   const theme = useTheme();
-  const [open, setOpen] = useState(false);
-  const [openList, setOpenList] = useState(false);
-
-  //   const Url = "/";
-  // let currentPath = window.location.pathname;
-  //   const [hide, setHide] = useState(false);
-
-  // useEffect(() => {
-  //   if (currentPath === Url) {
-  //     setHide(true);
-  //   } else {
-  //     setHide(false);
-  //   }
-  // }, [currentPath]);
+  const [open, setOpen] = useState<boolean>(false);
+  const [openList, setOpenList] = useState<boolean>(false);
 
   const handleDrawerOpen = () => {
     setOpen(true);

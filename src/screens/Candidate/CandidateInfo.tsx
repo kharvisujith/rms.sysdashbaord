@@ -16,6 +16,7 @@ import {
 } from "../../api/apiAgent";
 import CandidateDetails from "../../Interface/CandidateDetails";
 import { useParams } from "react-router-dom";
+import { AxiosError, AxiosResponse } from "axios";
 
 const CandidateInfo = (props: any) => {
   const { id, key } = useParams();
@@ -28,9 +29,9 @@ const CandidateInfo = (props: any) => {
     email: "",
     phone: "",
   });
-  const [quizQuestions, setQuizQuestions] = useState<any>([]);
+  //const [quizQuestions, setQuizQuestions] = useState<any>([]);
   const [isKeyValid, setIsKeyValid] = useState<boolean>(false);
-  const [errorMessage, setErrorMessage] = useState<any>();
+  const [errorMessage, setErrorMessage] = useState<string>();
   const handleChange = (e: any) => {
     const name = e.target.name;
     const value = e.target.value;
@@ -42,11 +43,11 @@ const CandidateInfo = (props: any) => {
     }
     submitCandidateInfo(parseInt(id!), key!, user)
       .then((res: any) => {
-        setQuizQuestions(res.data);
+        // setQuizQuestions(res.data);
         return res.data;
         //  setUser(res.data);
       })
-      .then((res: any) => {
+      .then((res: AxiosResponse) => {
         navigate("/rms-aug/test/start", {
           state: {
             data: res,
@@ -67,7 +68,7 @@ const CandidateInfo = (props: any) => {
       navigate("/notfound");
     } else {
       verifyCandidate(parseInt(id!), key!)
-        .then((res: any) => {
+        .then((res: AxiosResponse) => {
           setIsKeyValid(true);
         })
         .catch((error: any) => {

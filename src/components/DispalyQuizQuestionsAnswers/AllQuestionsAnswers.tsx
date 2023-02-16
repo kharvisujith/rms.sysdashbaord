@@ -9,13 +9,14 @@ import { LinearProgress } from "@mui/material";
 import "./AllQuestionsAnswers.style.scss";
 const AllQuestionsAnswers = (props: any) => {
   const { openDialog, handleClose, setOpenDialog, quizSubjectInfo } = props;
-  const [selectedAnswers, setSelectedAnswers] = useState<any>([]);
+
+  //const [selectedAnswers, setSelectedAnswers] = useState<any>([]);
   const [progressStatus, setProgressStatus] = useState<number>(0);
-  const [answeredQuestions, setAnsweredQuestions] = useState<number>(0);
-  const [OpenTestModal, setOpenTestModal] = useState(true);
-  const endTestButtonHandler = () => {
-    setOpenTestModal(false);
-  };
+  // const [answeredQuestions, setAnsweredQuestions] = useState<number>(0);
+  // const [OpenTestModal, setOpenTestModal] = useState(true);
+  // const endTestButtonHandler = () => {
+  //   setOpenTestModal(false);
+  // };
   return (
     <>
       <Box className="progress-box">

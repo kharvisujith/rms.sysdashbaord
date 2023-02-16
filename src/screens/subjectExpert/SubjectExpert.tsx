@@ -5,7 +5,6 @@ import Button from "@mui/material/Button";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import { makeStyles } from "@material-ui/core/styles";
-import FileUploadSingle from "../../components/FileUpload/FileUploadSingle";
 import CloseIcon from "@mui/icons-material/Close";
 import Menu from "@material-ui/icons/Menu";
 import Divider from "@mui/material/Divider";

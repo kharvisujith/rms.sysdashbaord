@@ -48,6 +48,17 @@ export interface subjectWiseQuizListResponse {
   updatedDate?: string;
 }
 
+export interface subjectwiseQuizAnswersResponse {
+  questionId: number;
+  setNumber: number;
+  subjectName: string;
+  question: string;
+  questionType: string;
+  questionOptions: string[];
+  questionAnswers: string[];
+  questionAnswersIds: string[];
+}
+
 //   openDialog:boolean,
 //    handleClose:boolean,
 //   setOpenDialog:boolean,

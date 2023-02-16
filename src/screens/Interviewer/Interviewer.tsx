@@ -5,7 +5,6 @@ import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import { makeStyles } from "@material-ui/core/styles";
 import MenuItem from "@material-ui/core/MenuItem";
-//import { AuthContext } from "../../context/AuthContectProvider";
 import {
   Collapse,
   CSSObject,
@@ -60,26 +59,6 @@ const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
     marginLeft: 0,
   }),
 }));
-// const openedMixin = (theme: Theme): CSSObject => ({
-//   width: drawerWidth,
-//   transition: theme.transitions.create("width", {
-//     easing: theme.transitions.easing.sharp,
-//     duration: theme.transitions.duration.enteringScreen,
-//   }),
-//   overflowX: "hidden",
-// });
-
-// const closedMixin = (theme: Theme): CSSObject => ({
-//   transition: theme.transitions.create("width", {
-//     easing: theme.transitions.easing.sharp,
-//     duration: theme.transitions.duration.leavingScreen,
-//   }),
-//   overflowX: "hidden",
-//   width: `calc(${theme.spacing(7)} + 1px)`,
-//   [theme.breakpoints.up("sm")]: {
-//     width: `calc(${theme.spacing(8)} + 1px)`,
-//   },
-// });
 
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
@@ -112,23 +91,6 @@ const AppBar = styled(MuiAppBar, {
   }),
 }));
 
-// const Drawer = styled(MuiDrawer, {
-//   shouldForwardProp: (prop) => prop !== "open",
-// })(({ theme, open }) => ({
-//   width: drawerWidth,
-//   flexShrink: 0,
-//   whiteSpace: "nowrap",
-//   boxSizing: "border-box",
-//   ...(open && {
-//     ...openedMixin(theme),
-//     "& .MuiDrawer-paper": openedMixin(theme),
-//   }),
-//   ...(!open && {
-//     ...closedMixin(theme),
-//     "& .MuiDrawer-paper": closedMixin(theme),
-//   }),
-// }));
-
 const links = [
   { title: "HomePage", path: "/", icon: <HomeIcon /> },
   // { title: "Back", path: "/assignments", icon: <HomeIcon /> },
@@ -147,8 +109,8 @@ const links = [
 const Interviewer = (props: any) => {
   const navigate = useNavigate();
   const theme = useTheme();
-  const [open, setOpen] = useState(false);
-  const [openList, setOpenList] = useState(false);
+  const [open, setOpen] = useState<boolean>(false);
+  const [openList, setOpenList] = useState<boolean>(false);
   const useStyles = makeStyles((theme) => ({
     root: {
       flexGrow: 1,
