@@ -1,4 +1,12 @@
 import React from 'react';
+import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  Grid,
+  Typography,
+} from "@mui/material";
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Table from '@material-ui/core/Table';
@@ -9,8 +17,12 @@ import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import { TableRow } from '@material-ui/core';
 import { useEffect, useState } from "react";
-import { getTotalSubmittedQuizInfo,getSubmittedQuizInfo } from '../../api/apiAgent';
-import Interviewer from "../Interviewer/Interviewer";
+import { getTotalSubmittedQuizInfo,getSubmittedQuizInfo,getSubmittedQuizDetailedInfo } from '../../api/apiAgent';
+import { submittedQuizResponse,submittedQuizAnswersResponse,submittedQuizDetailedInfoResponse,createQuizRequest } from '../../Interface/QuizDetails';
+import Interviewer from '../Interviewer/Interviewer';
+import ReactModal from "react-modal";
+import AllSubmittedQuestionsAnswers from '../../components/DispalyQuizCandidateSubmittedQuestionsAnswers/AllSubmittedQuestionsAnswers';
+
 
 interface Column {
   id: 'quizId' | 'candidateId' | 'totalQuestions' | 'answeredQuestions'| 'notAnsweredQuestions' | 'correctAnswers'| 'inCorrectAnswers'| 'interviewLevel' | 'createdBy'| 'createdDate';
@@ -22,16 +34,16 @@ interface Column {
 
 const columns: Column[] = [
   //{ id: 'quizId', label: 'QuizId', minWidth: 30 },
-  { id: 'candidateId', label: 'CandidateId', minWidth: 150 },
-  { id: 'totalQuestions', label: 'TotalQuestions', minWidth: 30 },
-  { id: 'answeredQuestions', label: 'TotalAnswered', minWidth: 30 },
-  { id: 'notAnsweredQuestions', label: 'NotAnswered', minWidth: 30 },
-  { id: 'correctAnswers', label: 'CorrectAnswers', minWidth: 30 },
-  { id: 'inCorrectAnswers', label: 'InCorrectAnswers', minWidth: 30 },
-  { id: 'interviewLevel', label: 'InterviewLevel', minWidth: 30 },
-  { id: 'createdBy', label: 'CreatedBy', minWidth: 150 },
-  { id: 'createdDate', label: 'CreatedDate', minWidth: 150 },
-  { id: 'quizId', label: 'Result', minWidth: 50 },
+  { id: 'candidateId', label: 'CandidateId', minWidth: 160 },
+  { id: 'createdBy', label: 'CreatedBy', minWidth: 160 },
+  // { id: 'createdDate', label: 'CreatedDate', minWidth: 160 },
+  { id: 'interviewLevel', label: 'InterviewLevel', minWidth: 5 },
+  { id: 'totalQuestions', label: 'TotalQuestions', minWidth: 10 },
+  { id: 'answeredQuestions', label: 'Answered', minWidth: 10 },
+  { id: 'notAnsweredQuestions', label: 'NotAnswered', minWidth: 10 },
+  { id: 'inCorrectAnswers', label: 'InCorrect', minWidth: 10 },
+  { id: 'correctAnswers', label: 'Correct', minWidth: 10 },
+  { id: 'quizId', label: 'Result', minWidth: 20 },
 ];
 interface Data {
   candidateId: string;
@@ -53,12 +65,15 @@ const useStyles = makeStyles({
     maxHeight: 440,
   },
 });
-
-const SubmittedQuiz=()=> {
+const SubmittedQuiz=(props:any)=> {
   const classes = useStyles();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const [totalSubmittedQuizInfoList, setTotalSubmittedQuizInfoList] = useState<any>([]);
+  const [totalSubmittedQuizInfoList, setTotalSubmittedQuizInfoList] = useState<submittedQuizResponse[]>([]);
+  const [detailedSubmittedQuizInfoList, setDetailedSubmittedQuizInfoList] = useState<submittedQuizAnswersResponse[]>([]);
+  const [individualQuizDetailedInfo, setIndividualQuizDetailedInfo] = useState<submittedQuizDetailedInfoResponse>();
+  const [OpenTestModal, setOpenTestModal] = useState<boolean>(false);
+  const [openDialog, setOpenDialog] = useState<boolean>(false);
   //const [text, setText] = useState('');
   const totalSubmittedQuizurlInfo = async () => {
     getTotalSubmittedQuizInfo()
@@ -69,7 +84,7 @@ const SubmittedQuiz=()=> {
   };
   useEffect(() => {
     totalSubmittedQuizurlInfo();
-  }, []);
+  }, [props]);
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
   };
@@ -78,10 +93,27 @@ const SubmittedQuiz=()=> {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
-const copyCodeToClipboard=(data:any)=>{
-  navigator.clipboard.writeText(data);
+  const handleClose = () => {
+    setOpenDialog(false);
+  };
+  const endTestButtonHandler = () => {
+    setOpenTestModal(false);
+  };
+const StartTestViewButtonHandler = (e: any) => {
+  getSubmittedQuizInfo(e)
+    .then((response) => {
+      setDetailedSubmittedQuizInfoList(response.data);
+    })
+    .catch((error: any) => console.log("error in detailed Subject Answer answersapi"));
+    getSubmittedQuizDetailedInfo(e)
+    .then((response) => {
+      setIndividualQuizDetailedInfo(response.data);
+    })
+    .catch((error: any) => console.log("error in detailed Subject Answer answersapi"));
+  setOpenTestModal(true);
 };
   return (totalSubmittedQuizInfoList.length>0?
+    <>
     <Paper className={classes.root}>
       <TableContainer className={classes.container}>
         <Table stickyHeader aria-label="sticky table">
@@ -107,9 +139,7 @@ const copyCodeToClipboard=(data:any)=>{
                     const value = row[column.id];
                     return (
                       <TableCell key={column.id} align={column.align}>
-                        {column.format && typeof value === 'number' ? column.format(value) : value}
-                        {/* {column.format && typeof value === 'number' ? column.id=='url'?column.format(value):value :column.id=='url'?value.slice(value.length - 12):value} 
-                        {column.id==='url' &&(row['quizCodeExpirationAt']==null || row['quizSubmittedAt']==null)  ?<button onClick={() => copyCodeToClipboard(value)}>Copy</button>:''} */}
+                        {column.id==='quizId'?<button onClick={() => StartTestViewButtonHandler(value)}>Review</button>:column.format && typeof value === 'number' ? column.format(value) : value}
                       </TableCell>
 
                     );
@@ -130,6 +160,32 @@ const copyCodeToClipboard=(data:any)=>{
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
     </Paper>
+          <div className="quiz-start-btn-wrap">
+          <ReactModal
+            isOpen={OpenTestModal}
+            contentLabel="Minimal Modal Example"
+            ariaHideApp={false}
+          >
+            <>
+              <AllSubmittedQuestionsAnswers
+                openDialog={openDialog}
+                handleClose={handleClose}
+                setOpenDialog={setOpenDialog}
+                quizSubjectInfo={detailedSubmittedQuizInfoList}
+                totalQuizDetailedInfo={individualQuizDetailedInfo}
+              />
+              <Box style={{ display: "flex", justifyContent: "center" }}>
+                <Button
+                  variant="contained"
+                  color="error"
+                  onClick={endTestButtonHandler}
+                >
+                  Close
+                </Button>
+              </Box>
+            </>
+          </ReactModal>
+        </div></>
     :<span><h5>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;No Submitted Quiz Results</h5></span>
 )};
 export default SubmittedQuiz;

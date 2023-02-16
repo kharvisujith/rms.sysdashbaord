@@ -1,14 +1,33 @@
-import CheckboxAnswersComponent from "../QuizTestAnswersComponents/CheckboxAnswerComponent";
-import RadioAnswerComponent from "../QuizTestAnswersComponents/RadioAnswerComponent";
-import CodingAnswerComponent from "../QuizTestAnswersComponents/CodingAnswerComponent";
-import AnswersFooterComponent from "../QuizTestAnswersComponents/AnswersFooterComponent";
+import CheckboxSubmittedAnswerComponent from "../QuizSubmittedTestAnswersComponents/CheckboxSubmittedAnswerComponent";
+import RadioSubmittedAnswerComponent from "../QuizSubmittedTestAnswersComponents/RadioSubmittedAnswerComponent";
+import CodingSubmittedAnswerComponent from "../QuizSubmittedTestAnswersComponents/CodingSubmittedAnswerComponent";
 import { useState, useEffect } from "react";
-import { Box, Button, Typography } from "@mui/material";
 import EndTestDialog from "../EndTest/EndTestDialog";
-import { LinearProgress } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Grid,
+  Card,
+  Button,
+  CardContent,
+  Checkbox,
+  FormControl,
+  FormControlLabel,
+  SvgIcon,
+  TableContainer,
+  Paper,
+  Table,
+  TableHead,
+  TableCell,
+  TableRow,
+  TableBody,
+  makeStyles,
+  LinearProgress
+} from "@mui/material";
 import "./AllSubmittedQuestionsAnswers.style.scss";
+import { createQuizRequest } from '../../Interface/QuizDetails';
 const AllSubmittedQuestionsAnswers = (props: any) => {
-  const { openDialog, handleClose, setOpenDialog, quizSubjectInfo } = props;
+  const { openDialog, handleClose, setOpenDialog, quizSubjectInfo,individualQuizDetailedInfo} = props;
   const [selectedAnswers, setSelectedAnswers] = useState<any>([]);
   const [progressStatus, setProgressStatus] = useState<number>(0);
   const [answeredQuestions, setAnsweredQuestions] = useState<number>(0);
@@ -16,10 +35,32 @@ const AllSubmittedQuestionsAnswers = (props: any) => {
   const endTestButtonHandler = () => {
     setOpenTestModal(false);
   };
+  console.log("Check Quiz Sets"+individualQuizDetailedInfo);
   return (
     <>
       <Box className="progress-box">
-        <Typography style={{ padding: 20, textAlign: "center" }}>
+      {/* <TableContainer className="popup-table">
+        <Table >
+          <TableHead>
+            <TableRow>
+              <TableCell >Subject Name</TableCell>
+              <TableCell >Set Number</TableCell>
+              <TableCell >Total Questions</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {individualQuizDetailedInfo?.quizSets &&
+              individualQuizDetailedInfo?.quizSets?.map((row:createQuizRequest ) => (
+                <TableRow>
+                  <TableCell align="center">{row.setNumber}</TableCell>
+                  <TableCell align="center">{row.subjectName}</TableCell>
+                  <TableCell align="center">{row.totalQuestionsCount}</TableCell>
+                </TableRow>
+              ))}
+          </TableBody>
+        </Table>
+      </TableContainer> */}
+      <Typography style={{ padding: 20, textAlign: "right" }}>
           <strong>{"SubjectName:"}&ensp;</strong>
           {`${quizSubjectInfo[0]?.subjectName.toString()}`}&emsp;
           <strong>{"SetNumber:"}&ensp;</strong>
@@ -27,6 +68,28 @@ const AllSubmittedQuestionsAnswers = (props: any) => {
           <strong>{"TotalQuestions:"}&ensp;</strong>
           {`${quizSubjectInfo.length}`}
         </Typography>
+      {/* <div className="popup-table">
+      <table>
+        <thead>
+          <tr>
+            <th><b>Subject Name</b></th>
+            <th><b>Set Number</b></th>
+            <th><b>Total Questions</b></th>
+          </tr>
+        </thead>
+        <tbody>
+        {quizSubjectInfo.quizSets &&
+              quizSubjectInfo.quizSets?.map((row: any) => (
+                //console.log("Check set Results"+quizSubjectInfo.quizSets)
+          <tr>
+            <td>{row.subjectName} </td>
+            <td>{row.setNumber }</td>
+            <td>{row.totalQuestionsCount} </td>
+          </tr>
+          ))}
+        </tbody>
+      </table>
+      </div> */}
         <LinearProgress
           value={progressStatus}
           variant={"determinate"}
@@ -41,7 +104,7 @@ const AllSubmittedQuestionsAnswers = (props: any) => {
               case "SINGLECHOICE":
                 console.log("single choice match...");
                 return (
-                  <RadioAnswerComponent
+                  <RadioSubmittedAnswerComponent
                     key={index}
                     question={{
                       questionNumber: index + 1,
@@ -51,7 +114,7 @@ const AllSubmittedQuestionsAnswers = (props: any) => {
                 );
               case "MULTIPLECHOICE":
                 return (
-                  <CheckboxAnswersComponent
+                  <CheckboxSubmittedAnswerComponent
                     key={index}
                     question={{
                       questionNumber: index + 1,
@@ -61,7 +124,7 @@ const AllSubmittedQuestionsAnswers = (props: any) => {
                 );
               case "PROGRAMM":
                 return (
-                  <CodingAnswerComponent key={index} question={question} />
+                  <CodingSubmittedAnswerComponent key={index} question={question} />
                 );
               default:
                 return null;

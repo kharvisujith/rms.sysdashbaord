@@ -21,7 +21,7 @@ import {
                     control={
                       <Checkbox
                         disabled
-                        checked={question.questionData.questionAnswers.includes(
+                        checked={question.questionData.submittedAnswers.includes(
                           option
                         )}
                         name={option}
@@ -41,10 +41,15 @@ import {
             alignItems="center"
             style={{ padding: 15 }}
           >
-            <strong>{"Answers:"}&ensp;</strong>
-            {`${question.questionData.questionAnswersIds.toString()}`}
+             <strong>{"Submitted Answers:"}&ensp;</strong>
+            {`${question.questionData.submittedAnswersIds.toString()}`}
+            &ensp;&ensp;&ensp;
+            {`${question.questionData.submittedAnswers.toString()}`}
             <br />
-            {`${question.questionData.questionAnswers.toString()}`}
+            <strong>{"Correct Answers:"}&ensp;</strong>
+            {`${question.questionData.masterQuestionAnswersIds.toString()}`}
+            &ensp;&ensp;&ensp;
+            {`${question.questionData.masterQuestionAnswers.toString()}`}
           </Typography>
         </Box>
       </>

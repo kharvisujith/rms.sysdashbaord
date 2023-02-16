@@ -12,7 +12,7 @@ const RadioSubmittedAnswerComponent = (props: any) => {
       <Box>
         <Typography>{`${question.questionNumber}. ${question.questionData.question}`}</Typography>
         <RadioGroup
-          defaultValue={`${question.questionData.questionAnswers[0]}`}
+          defaultValue={`${question.questionData.submittedAnswers[0]}`}
         >
           {question.questionData.questionOptions.map(
             (option: any, index: any) => {
@@ -30,16 +30,21 @@ const RadioSubmittedAnswerComponent = (props: any) => {
         </RadioGroup>
       </Box>
       <Box>
-        <Typography
-          justifyContent="space-between"
-          alignItems="center"
-          style={{ padding: 15 }}
-        >
-          <strong>{"Answers:"}&ensp;</strong>
-          {`${question.questionData.questionAnswersIds.toString()}`}
-          <br />
-          {`${question.questionData.questionAnswers.toString()}`}
-        </Typography>
+      <Typography
+            justifyContent="space-between"
+            alignItems="center"
+            style={{ padding: 15 }}
+          >
+            <strong>{"Submitted Answers:"}&ensp;</strong>
+            {`${question.questionData.submittedAnswersIds.toString()}`}
+            &ensp;&ensp;&ensp;
+            {`${question.questionData.submittedAnswers.toString()}`}
+            <br />
+            <strong>{"Correct Answers:"}&ensp;</strong>
+            {`${question.questionData.masterQuestionAnswersIds.toString()}`}
+            &ensp;&ensp;&ensp;
+            {`${question.questionData.masterQuestionAnswers.toString()}`}
+      </Typography>
       </Box>
     </>
   );
