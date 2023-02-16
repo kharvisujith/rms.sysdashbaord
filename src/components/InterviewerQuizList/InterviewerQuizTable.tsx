@@ -10,6 +10,7 @@ import TablePagination from '@material-ui/core/TablePagination';
 import { TableRow } from '@material-ui/core';
 import { useEffect, useState } from "react";
 import { getTotalQuizLinksInfo } from '../../api/apiAgent';
+import NavBarInterviewer from '../NavBar/NavBarInterviewer';
 
 interface Column {
   id: 'quizId' | 'candidateId' | 'quizCodeExpirationAt' | 'quizSubmittedAt' | 'lastLoggedIn'| 'loginAttempts' | 'url';
@@ -112,8 +113,11 @@ const InterviewerQuizTable=()=> {
 const copyCodeToClipboard=(data:any)=>{
   navigator.clipboard.writeText(data);
 };
-  return (totalQuizInfo.length>0?
-    <Paper className={classes.root}>
+  return (
+    <>
+    {/* <NavBarInterviewer /> */}
+     {/* totalQuizInfo.length>0? */}
+    {/* <Paper className={classes.root}> */}
       <TableContainer className={classes.container}>
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
@@ -160,7 +164,9 @@ const copyCodeToClipboard=(data:any)=>{
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
-    </Paper>
-    :<span><h5>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;No Quiz results</h5></span>
-)};
+     {/* </Paper> */}
+      {/* :<span><h5>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;No Quiz results</h5></span> */}
+    </>   
+)
+};
 export default InterviewerQuizTable;

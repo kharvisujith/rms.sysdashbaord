@@ -63,11 +63,11 @@ const StartQuiz = () => {
             variant="h6"
             component="div"
             sx={{ flexGrow: 1 }}
-            onClick={() => navigate(-1)}
+            // onClick={() => navigate(-1)}
           >
             Quiz App
           </Typography>
-          <Button color="inherit">Log out</Button>
+          {/* <Button color="inherit">Log out</Button> */}
         </Toolbar>
       </AppBar>
 

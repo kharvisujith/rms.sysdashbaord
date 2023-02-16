@@ -10,6 +10,8 @@ import { useEffect, useState } from "react";
 import { getSubjectwiseQuiz,getSubjectwiseQuizAnswers } from "../../api/apiAgent";
 import AllQuestionsAnswers from "../DispalyQuizQuestionsAnswers/AllQuestionsAnswers";
 import ReactModal from "react-modal";
+import "./SubjectList.style.scss";
+
 const SubjectList = () => {
   const [subjectList, setSubjectList] = useState<any>([]);
   const [OpenTestModal, setOpenTestModal] = useState(false);
@@ -49,10 +51,10 @@ const SubjectList = () => {
   }, []);
   return (
     <>
-      <Box  
-       sx={{
-      marginTop: 2,
-      marginLeft: 10,}}
+      <Box  className="box"
+      //  sx={{
+      // marginTop: 2,
+      // marginLeft: 5 ,marginRight: 5,}}
       >
       {/* // display: "flex",
       // flexDirection: "column",

@@ -79,7 +79,7 @@ import ArticleIcon from "@mui/icons-material/Article";
 import { downnLoadExcel, upLoadExcel } from "../../api/apiAgent";
 import Swal from "sweetalert2";
 import SubjectList from "../../components/SubjectExpertDataList/SubjectList";
-import SideBar from "../../components/SideBar/SideBar";
+import SideBar from "../../components/TopNavBar/TopNavBar";
 import NavBar from "../../components/NavBar/NavBar";
 
 const SubjectOptions = (props: any) => {

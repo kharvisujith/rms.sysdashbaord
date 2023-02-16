@@ -3,7 +3,7 @@ import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import { Typography } from "@mui/material";
-import SideBar from "../../components/SideBar/SideBar";
+import SideBar from "../../components/TopNavBar/TopNavBar";
 
 const RmsHome = (props: any) => {
   const navigate = useNavigate();
