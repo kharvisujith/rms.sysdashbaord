@@ -9,21 +9,20 @@ const SideBar = (props: any) => {
 
   return (
     // <Box className="main-layout-wrap">
-       <AppBar position="static">
-        <Toolbar>
-          <Typography
-            variant="h6"
-            component="div"
-            sx={{ flexGrow: 1 }}
-            onClick={() => navigate(-1)}
-          >
-            Augmento labs RMS
-          </Typography>
-          <Button color="inherit">Log out</Button>
-        </Toolbar>
-      </AppBar> 
-      
-      
+    <AppBar position="static">
+      <Toolbar>
+        <Typography
+          variant="h6"
+          component="div"
+          sx={{ flexGrow: 1 }}
+          onClick={() => navigate(-1)}
+        >
+          Augmento labs RMS
+        </Typography>
+        <Button color="inherit">Log out</Button>
+      </Toolbar>
+    </AppBar>
+
     // {/* </Box> */}
   );
 };

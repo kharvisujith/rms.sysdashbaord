@@ -61,18 +61,25 @@ const CandidateInfo = (props: any) => {
   };
 
   useEffect(() => {
-    verifyCandidate(parseInt(id!), key!)
-      .then((res: any) => {
-        setIsKeyValid(true);
-      })
-      .catch((error: any) => {
-        if (error.response.status === 400) {
-          if (error.response.data) {
-            setErrorMessage(error.response.data);
+    // const k = parseInt(id!);
+    if (isNaN(parseInt(id!))) {
+      console.log("invalidd not foundddd");
+      navigate("/notfound");
+    } else {
+      verifyCandidate(parseInt(id!), key!)
+        .then((res: any) => {
+          setIsKeyValid(true);
+        })
+        .catch((error: any) => {
+          if (error.response.status === 400) {
+            if (error.response.data) {
+              setErrorMessage(error.response.data);
+            }
           }
-        }
-      });
-  }, [key, id]);
+        });
+    }
+    //console.log("value of id", k, typeof k);
+  }, [key, id, navigate]);
 
   if (!isKeyValid) {
     return (

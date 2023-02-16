@@ -58,8 +58,6 @@ import SubjectIcon from "@mui/icons-material/Subject";
 import ArticleIcon from "@mui/icons-material/Article";
 import NavBar from "../../components/NavBar/NavBar";
 
-
-
 const links = [
   { title: "HomePage", path: "/", icon: <HomeIcon /> },
   //{ title: "C#", path: "/Subjects", icon: <UploadFileIcon /> },
@@ -74,13 +72,12 @@ const subjectlinks = [
   // { title: "FileUpload", path: "/", icon: <UploadFileIcon /> },
 ];
 
-const SubjectExpert = (props: any) => {
+const SubjectExpert = () => {
   const navigate = useNavigate();
   const theme = useTheme();
   const [open, setOpen] = useState(false);
   //const [reopen, setReOpen] = useState(false);
   const [openList, setOpenList] = useState(false);
-
 
   const useStyles = makeStyles((theme) => ({
     root: {
@@ -92,12 +89,10 @@ const SubjectExpert = (props: any) => {
   }));
   const classes = useStyles();
 
- 
-
   return (
     <>
-    < NavBar />
-       
+      <NavBar />
+
       <SubjectList />
     </>
   );

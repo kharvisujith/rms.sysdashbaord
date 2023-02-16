@@ -7,27 +7,32 @@ import {
   Typography,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import { getSubjectwiseQuiz,getSubjectwiseQuizAnswers } from "../../api/apiAgent";
+import {
+  getSubjectwiseQuiz,
+  getSubjectwiseQuizAnswers,
+} from "../../api/apiAgent";
 import AllQuestionsAnswers from "../DispalyQuizQuestionsAnswers/AllQuestionsAnswers";
 import ReactModal from "react-modal";
-const SubjectList = () => {
+import "./SubjectList.style.scss";
+
+const SubjectList = (props: any) => {
   const [subjectList, setSubjectList] = useState<any>([]);
   const [OpenTestModal, setOpenTestModal] = useState(false);
   const [modalContent, setModalContent] = useState("");
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [subjectAnswersList, setSubjectAnswerList] = useState<any>([]);
+  const [isQuizSetExists, setIsQuizSetExists] = useState<boolean>(true);
   const handleClose = () => {
     setOpenDialog(false);
   };
 
-  const StartTestViewButtonHandler = (e:any) => { 
-    
-       getSubjectwiseQuizAnswers(e.setNumber,e.subjectName)
-         .then((response) => {
-           setSubjectAnswerList(response.data);
-        })
-        .catch((error: any) => console.log("error in subjwise answersapi"));
-        setModalContent("listView");
+  const StartTestViewButtonHandler = (e: any) => {
+    getSubjectwiseQuizAnswers(e.setNumber, e.subjectName)
+      .then((response) => {
+        setSubjectAnswerList(response.data);
+      })
+      .catch((error: any) => console.log("error in subjwise answersapi"));
+    setModalContent("listView");
     setOpenTestModal(true);
   };
   const endTestButtonHandler = () => {
@@ -38,30 +43,41 @@ const SubjectList = () => {
     setOpenTestModal(false);
   };
   const subjectwiseQuizDetails = async () => {
-    getSubjectwiseQuiz("")
+    getSubjectwiseQuiz(props.subjectName || "")
       .then((response) => {
-        setSubjectList(response.data);
+        if (response.status === 204) {
+          setIsQuizSetExists(false);
+        } else {
+          setSubjectList(response.data);
+          setIsQuizSetExists(true);
+        }
       })
       .catch((error: any) => console.log("error in subjwiseapi"));
   };
   useEffect(() => {
     subjectwiseQuizDetails();
-  }, []);
+  }, [props]);
+
+  if (!isQuizSetExists)
+    return (
+      <>
+        <Box className="no-quizset-box">
+          {props.subjectName ? (
+            <Typography variant="h5">{`No Question Sets Availabel ${props.subjectName}`}</Typography>
+          ) : (
+            <Typography variant="h5">{`No Question Sets Availabel`}</Typography>
+          )}
+        </Box>
+      </>
+    );
+
   return (
     <>
-      <Box  
-       sx={{
-      marginTop: 2,
-      marginLeft: 10,}}
-      >
-      {/* // display: "flex",
-      // flexDirection: "column",
-      //  alignItems: "center", */}
-    
+      <Box className="subjectlist-box">
         <Typography variant="h5" align="center">
           Available Question Sets
         </Typography>
-        <Box>
+        <Box className="subjects">
           <Grid container spacing={1} alignItems="flex-start">
             {subjectList &&
               subjectList.map((elem: any, index: any) => (
@@ -75,10 +91,14 @@ const SubjectList = () => {
                       style={{ padding: 20 }}
                     >
                       {elem.subjectName}
-                      <Button variant="contained" 
-                      // sx={{ marginTop: 2,
-                      //   marginLeft: 10}} 
-                      onClick={() => StartTestViewButtonHandler(elem)}>View</Button>
+                      <Button
+                        variant="contained"
+                        // sx={{ marginTop: 2,
+                        //   marginLeft: 10}}
+                        onClick={() => StartTestViewButtonHandler(elem)}
+                      >
+                        View
+                      </Button>
                     </Typography>
                     <CardContent>
                       <Typography>
@@ -106,34 +126,34 @@ const SubjectList = () => {
               ))}
           </Grid>
         </Box>
-        <div className="quiz-start-btn-wrap">
+      </Box>
+      <div className="quiz-start-btn-wrap">
         <ReactModal
           isOpen={OpenTestModal}
           contentLabel="Minimal Modal Example"
           ariaHideApp={false}
         >
-         
-          {modalContent && modalContent === "listView" ? (<>
-            <AllQuestionsAnswers
-              openDialog={openDialog}
-              handleClose={handleClose}
-              setOpenDialog={setOpenDialog}
-              quizSubjectInfo={subjectAnswersList}
-            />
-            <Box style={{ display: "flex", justifyContent: "center" }}>
-            <Button
-              variant="contained"
-              color="error"
-              onClick={endTestButtonHandler}
-            >
-              Close
-            </Button>
-          </Box>
-          </>
+          {modalContent && modalContent === "listView" ? (
+            <>
+              <AllQuestionsAnswers
+                openDialog={openDialog}
+                handleClose={handleClose}
+                setOpenDialog={setOpenDialog}
+                quizSubjectInfo={subjectAnswersList}
+              />
+              <Box style={{ display: "flex", justifyContent: "center" }}>
+                <Button
+                  variant="contained"
+                  color="error"
+                  onClick={endTestButtonHandler}
+                >
+                  Close
+                </Button>
+              </Box>
+            </>
           ) : null}
         </ReactModal>
-        </div>
-      </Box>
+      </div>
     </>
   );
 };

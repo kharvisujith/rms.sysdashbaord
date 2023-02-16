@@ -8,6 +8,24 @@ export interface QuizDetails {
   // updatedDate: string;
 }
 
+export interface questionAnswer {
+  questionId: number;
+  questionType: string;
+  questionAnswers: string[];
+  questionAnswerIds: string[];
+}
+
+export interface questionAnswerData {
+  subjectName: string;
+  setNumber: number;
+  quizAnswers: questionAnswer[];
+}
+
+export interface quizSubmitRequest {
+  quizId: number;
+  data: questionAnswerData[];
+}
+
 //export default QuizDetails;
 export interface createQuizRequest {
   setNumber: number;
@@ -30,8 +48,6 @@ export interface subjectWiseQuizListResponse {
   updatedDate?: string;
 }
 
-export interface quizQuestions {}
-export interface SingleQuestionsProps {}
 //   openDialog:boolean,
 //    handleClose:boolean,
 //   setOpenDialog:boolean,

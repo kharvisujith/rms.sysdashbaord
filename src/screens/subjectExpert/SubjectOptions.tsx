@@ -1,5 +1,5 @@
 import React, { ChangeEvent, useContext, useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 //import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -84,6 +84,8 @@ import NavBar from "../../components/NavBar/NavBar";
 
 const SubjectOptions = (props: any) => {
   const navigate = useNavigate();
+  const location = useLocation();
+  console.log(location.state);
 
   const [file, setFile] = useState<File>();
   const [data, setData] = useState<any>({
@@ -197,22 +199,18 @@ const SubjectOptions = (props: any) => {
     setFormError({ ...formError, [e?.target.name]: false });
     const name = e.target.name;
     const value = e.target.value;
-    setData({ ...data, [name]: value });
+    if (!data.subject) {
+      setData({ ...data, [name]: value, subject: location.state });
+    } else {
+      setData({ ...data, [name]: value });
+    }
   };
 
   return (
     <>
       <NavBar />
-
-      <Box
-        sx={{
-          "& button": { m: 2 },
-          marginTop: 2,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      >
+      <SubjectList subjectName={location.state} />
+      <Box className="question-upload-buttons">
         <Button variant="contained" onClick={downloadFile}>
           Download Template
         </Button>
@@ -242,7 +240,9 @@ const SubjectOptions = (props: any) => {
               variant="standard"
               type="text"
               className="items"
+              value={location.state}
               onChange={handleTextChange}
+              disabled
             />
             {formError.subject && (
               <Typography className="error">

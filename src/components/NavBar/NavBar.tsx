@@ -1,4 +1,24 @@
-import { Box, Toolbar, IconButton, Typography,  Divider, List, ListItem, ListItemButton, ListItemIcon, SvgIcon, ListItemText, Theme, CSSObject, makeStyles, styled, useTheme, Collapse, Icon, Drawer } from "@mui/material";
+import {
+  Box,
+  Toolbar,
+  IconButton,
+  Typography,
+  Divider,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  SvgIcon,
+  ListItemText,
+  Theme,
+  CSSObject,
+  makeStyles,
+  styled,
+  useTheme,
+  Collapse,
+  Icon,
+  Drawer,
+} from "@mui/material";
 import { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import HomeIcon from "@mui/icons-material/Home";
@@ -10,24 +30,22 @@ import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import MuiDrawer from "@mui/material/Drawer";
-import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
-
-
+import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
 
 const drawerWidth = 240;
 
-const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
+const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
   open?: boolean;
 }>(({ theme, open }) => ({
   flexGrow: 1,
   padding: theme.spacing(3),
-  transition: theme.transitions.create('margin', {
+  transition: theme.transitions.create("margin", {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
   marginLeft: `-${drawerWidth}px`,
   ...(open && {
-    transition: theme.transitions.create('margin', {
+    transition: theme.transitions.create("margin", {
       easing: theme.transitions.easing.easeOut,
       duration: theme.transitions.duration.enteringScreen,
     }),
@@ -104,8 +122,6 @@ const AppBar = styled(MuiAppBar, {
 //   }),
 // }));
 
-
-
 const links = [
   { title: "HomePage", path: "/", icon: <HomeIcon /> },
   { title: "Back", path: "/assignments", icon: <HomeIcon /> },
@@ -117,15 +133,15 @@ const subjectlinks = [
   { title: "React", path: "/subjects", icon: <SubjectIcon /> },
   { title: "C#", path: "/subjects", icon: <SubjectIcon /> },
   { title: "CosmosDb", path: "/subjects", icon: <SubjectIcon /> },
-  { title: "JavaSript", path: "/subjects", icon: <SubjectIcon /> },
+  { title: "JavaScript", path: "/subjects", icon: <SubjectIcon /> },
   // { title: "FileUpload", path: "/", icon: <UploadFileIcon /> },
 ];
 
 const NavBar = (props: any) => {
-    const navigate = useNavigate();
-    const theme = useTheme();
-    const [open, setOpen] = useState(false);
-    const [openList, setOpenList] = useState(false);
+  const navigate = useNavigate();
+  const theme = useTheme();
+  const [open, setOpen] = useState(false);
+  const [openList, setOpenList] = useState(false);
 
   //   const Url = "/";
   // let currentPath = window.location.pathname;
@@ -138,27 +154,26 @@ const NavBar = (props: any) => {
   //     setHide(false);
   //   }
   // }, [currentPath]);
-    
-  
-    const handleDrawerOpen = () => {
-      setOpen(true);
-    };
-  
-    const handleDrawerClose = () => {
-      setOpen(false);
-    };
 
-    // const useStyles = makeStyles((theme) => ({
-    //     root: {
-    //       flexGrow: 1,
-    //     },
-    //     menuButton: {
-    //       marginRight: theme.spacing(2),
-    //     },
-    //   }));
-    //   const classes = useStyles();
+  const handleDrawerOpen = () => {
+    setOpen(true);
+  };
 
-return (
+  const handleDrawerClose = () => {
+    setOpen(false);
+  };
+
+  // const useStyles = makeStyles((theme) => ({
+  //     root: {
+  //       flexGrow: 1,
+  //     },
+  //     menuButton: {
+  //       marginRight: theme.spacing(2),
+  //     },
+  //   }));
+  //   const classes = useStyles();
+
+  return (
     <>
       <Box sx={{ display: "flex" }}>
         <>
@@ -205,7 +220,7 @@ return (
 
             <List className="account-menu-list">
               <ListItem disablePadding>
-                <ListItemButton 
+                <ListItemButton
                   onClick={() => {
                     navigate("/");
                     handleDrawerClose();
@@ -223,7 +238,7 @@ return (
                   <ListItemText primary={"Home Page"} />
                 </ListItemButton>
               </ListItem>
-              
+
               <ListItemButton
                 className="account-menu-list"
                 onClick={() => {
@@ -247,14 +262,16 @@ return (
               </ListItemButton>
               <Collapse in={openList} timeout="auto" unmountOnExit>
                 <List>
-                  
-                  { subjectlinks.map(({ title, path, icon }) => {
+                  {subjectlinks.map(({ title, path, icon }, index: number) => {
                     return (
                       <ListItem
+                        onClick={() => {
+                          handleDrawerClose();
+                        }}
                         component={NavLink}
-                       
                         to={path}
-                        key={path}
+                        state={title}
+                        key={index}
                         sx={{
                           color: "inherit",
                           typography: "body1",
@@ -293,7 +310,7 @@ return (
                 </List>
               </Collapse>
               <ListItem disablePadding>
-                <ListItemButton 
+                <ListItemButton
                   onClick={() => {
                     navigate("/assignments");
                     handleDrawerClose();
@@ -311,16 +328,15 @@ return (
                   <ListItemText primary={"Back"} />
                 </ListItemButton>
               </ListItem>
-              </List>
-              </Drawer>
-              </>
-              {/* <Main open={open}> */}
-        <Box component="main"  sx={{ flexGrow: 1, p: 3 }}>
+            </List>
+          </Drawer>
+        </>
+        {/* <Main open={open}> */}
+        <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
           <DrawerHeader />
         </Box>
         {/* </Main> */}
       </Box>
-      
     </>
   );
 };

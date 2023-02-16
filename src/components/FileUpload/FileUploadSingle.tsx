@@ -1,5 +1,6 @@
 import { ChangeEvent, useState } from "react";
 import { axiosClient, upLoadExcel } from "../../api/apiAgent";
+import SubjectList from "../SubjectExpertDataList/SubjectList";
 
 function FileUploadSingle() {
   const [file, setFile] = useState<File>();
@@ -32,14 +33,16 @@ function FileUploadSingle() {
   };
 
   return (
-    <div>
-      <input type="number" name="set" onChange={handleTextChange} />
-      <input type="text" name="subject" onChange={handleTextChange} />
-      <input type="file" onChange={handleFileChange} accept=".xlsx,.xls" />
-      <button type="submit" onClick={handleUploadClick}>
-        File Upload
-      </button>
-    </div>
+    <>
+      <div>
+        <input type="number" name="set" onChange={handleTextChange} />
+        <input type="text" name="subject" onChange={handleTextChange} />
+        <input type="file" onChange={handleFileChange} accept=".xlsx,.xls" />
+        <button type="submit" onClick={handleUploadClick}>
+          File Upload
+        </button>
+      </div>
+    </>
   );
 }
 

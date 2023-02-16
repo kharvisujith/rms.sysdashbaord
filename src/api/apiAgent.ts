@@ -104,10 +104,7 @@ export const submitCandidateInfo = (
   );
 };
 
-export const createQuiz = (
-  values: any
-  
-) => {
+export const createQuiz = (values: any) => {
   return axiosClient.post(`/quiz/interviewer/createquiz`, values, {
     headers: {
       // "accept": 'application/json',
@@ -115,7 +112,6 @@ export const createQuiz = (
     },
   });
 };
-export const getTotalQuizLinksInfo = ()=>{
+export const getTotalQuizLinksInfo = () => {
   return axiosClient.get(`quiz/interviewer/quizdetails`);
-   
 };

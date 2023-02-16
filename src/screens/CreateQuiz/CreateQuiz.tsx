@@ -56,7 +56,7 @@ const CreateQuiz = () => {
       );
     });
     if (existindex !== -1 && !e.target.checked) {
-      setValues((prev: any) => [
+      setValues((prev: createQuizRequest[]) => [
         ...prev.slice(0, existindex),
         ...prev.slice(existindex + 1),
       ]);
