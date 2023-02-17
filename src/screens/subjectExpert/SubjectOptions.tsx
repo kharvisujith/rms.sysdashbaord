@@ -80,6 +80,7 @@ import Swal from "sweetalert2";
 import SubjectList from "../../components/SubjectExpertDataList/SubjectList";
 import SideBar from "../../components/SideBar/SideBar";
 import NavBar from "../../components/NavBar/NavBar";
+import "./SubjectExpert.style.scss";
 
 const SubjectOptions = (props: any) => {
   const navigate = useNavigate();
@@ -208,7 +209,8 @@ const SubjectOptions = (props: any) => {
   return (
     <>
       <NavBar />
-      <SubjectList subjectName={location.state} />
+      <SubjectList />
+
       <Box className="question-upload-buttons">
         <Button variant="contained" onClick={downloadFile}>
           Download Template

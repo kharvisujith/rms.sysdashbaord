@@ -105,9 +105,7 @@ const InterviewerQuizTable = () => {
       })
       .catch((error: any) => console.log("error in total quiz info api"));
   };
-  useEffect(() => {
-    totalQuizurlInfo();
-  }, []);
+
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
   };
@@ -121,6 +119,10 @@ const InterviewerQuizTable = () => {
   const copyCodeToClipboard = (data: any) => {
     navigator.clipboard.writeText(data);
   };
+
+  useEffect(() => {
+    totalQuizurlInfo();
+  }, []);
   return totalQuizInfo.length > 0 ? (
     <Paper className={classes.root}>
       <TableContainer className={classes.container}>
@@ -145,10 +147,10 @@ const InterviewerQuizTable = () => {
                 console.log("test data", totalQuizInfo);
                 return (
                   <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
-                    {columns.map((column) => {
+                    {columns.map((column, index) => {
                       const value = row[column.id];
                       return (
-                        <TableCell key={column.id} align={column.align}>
+                        <TableCell key={index} align={column.align}>
                           {/* {column.format && typeof value === 'number' ? column.format(value) : value} */}
                           {column.format && typeof value === "number"
                             ? column.id == "url"
