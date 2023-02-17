@@ -191,7 +191,14 @@ return (
             </Toolbar>
           </AppBar>
           {/* <ThemeProvider theme={darkTheme}> */}
-          <Drawer variant="persistent" open={open}>
+          <Drawer variant="persistent" open={open} sx={{
+          width: drawerWidth,
+          flexShrink: 0,
+          '& .MuiDrawer-paper': {
+            width: drawerWidth,
+            boxSizing: 'border-box',
+          },
+        }}  anchor="left">
             <DrawerHeader>
               <IconButton onClick={handleDrawerClose}>
                 {theme.direction === "rtl" ? (
@@ -214,7 +221,7 @@ return (
                     sx={{
                       minWidth: -0.5,
                       mr: open ? 3 : "auto",
-                      justifyContent: "center",
+                      justifyContent: "right",
                     }}
                   >
                     <SvgIcon component={HomeIcon} inheritViewBox />
@@ -235,12 +242,12 @@ return (
                     sx={{
                       minWidth: -0.5,
                       mr: open ? 3 : "auto",
-                      justifyContent: "center",
+                      justifyContent: "right",
                     }}
                   >
                     <SvgIcon component={HomeIcon} inheritViewBox />
                   </ListItemIcon>
-                  <ListItemText primary={"Home Page"} />
+                  <ListItemText primary={" SubjectExpert Home Page"} />
                 </ListItemButton>
               </ListItem>
               
@@ -254,7 +261,7 @@ return (
                   sx={{
                     minWidth: -0.5,
                     mr: open ? 3 : "auto",
-                    justifyContent: "center",
+                    justifyContent: "right",
                   }}
                 >
                   <Icon component={ArticleIcon} />
@@ -289,15 +296,15 @@ return (
                         <ListItemButton
                           sx={{
                             minHeight: 48,
-                            justifyContent: open ? "initial" : "center",
+                            justifyContent: open ? "initial" : "right",
                             px: 2.5,
                           }}
                         >
                           <ListItemIcon
                             sx={{
-                              minWidth: 0,
+                              minWidth: -0.5,
                               mr: open ? 3 : "auto",
-                              justifyContent: "center",
+                              justifyContent: "right",
                             }}
                           >
                             {icon}

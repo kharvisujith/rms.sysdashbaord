@@ -154,7 +154,8 @@ const CreateQuiz = () => {
           Available Question Sets
         </Typography>
       </Box>
-      <TableContainer component={Paper} sx={{ marginTop: 4 }} className={classes.container}>
+      <Paper className={classes.root}>
+      <TableContainer  sx={{ marginTop: 4 }} className={classes.container}>
         <Table 
           aria-label="simple table"
 
@@ -203,6 +204,7 @@ const CreateQuiz = () => {
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
+      </Paper>
 
       <Button 
         variant="contained"
