@@ -94,15 +94,20 @@
     .popup-left-table{
       table {
         border: 2px solid grey;
-        width: 400px;
+        width: 800px;
         height: 50px auto;
+        //padding-left: 4rem;
+        //padding-right: 4rem;
+        //padding-top: 0.8rem;
+        //padding-bottom: 0.8rem;
       }
     }
     .popup-right-table{
       table {
-        border: 2px solid grey;
-        width: 400px;
-        height: 50px auto;
+        border: 2px solid forestgreen;
+        width: 600px;
+        height: 20px auto;
+        justify-content: right;
       }
     }
   // .table {

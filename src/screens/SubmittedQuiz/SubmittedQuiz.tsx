@@ -71,7 +71,7 @@ const SubmittedQuiz=(props:any)=> {
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [totalSubmittedQuizInfoList, setTotalSubmittedQuizInfoList] = useState<submittedQuizResponse[]>([]);
   const [detailedSubmittedQuizInfoList, setDetailedSubmittedQuizInfoList] = useState<submittedQuizAnswersResponse[]>([]);
-  const [individualQuizDetailedInfo, setIndividualQuizDetailedInfo] = useState<submittedQuizDetailedInfoResponse|{}>({});
+  const [individualQuizDetailedInfo, setIndividualQuizDetailedInfo] = useState<submittedQuizDetailedInfoResponse[]>([]);
   const [OpenTestModal, setOpenTestModal] = useState<boolean>(false);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   //const [text, setText] = useState('');

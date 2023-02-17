@@ -21,11 +21,12 @@ import {
   TableCell,
   TableRow,
   TableBody,
+  TableFooter,
   makeStyles,
   LinearProgress
 } from "@mui/material";
 import "./AllSubmittedQuestionsAnswers.style.scss";
-import { createQuizRequest } from '../../Interface/QuizDetails';
+import { submittedQuizDetailedInfoResponse } from '../../Interface/QuizDetails';
 const AllSubmittedQuestionsAnswers = (props: any) => {
   const { openDialog, handleClose, setOpenDialog, quizSubjectInfo,totalQuizDetailedInfo} = props;
   const [selectedAnswers, setSelectedAnswers] = useState<any>([]);
@@ -48,18 +49,36 @@ const AllSubmittedQuestionsAnswers = (props: any) => {
               <TableCell >Subject Name</TableCell>
               <TableCell >Set Number</TableCell>
               <TableCell >Total Questions</TableCell>
+              <TableCell >Answered</TableCell>
+              <TableCell >NotAnswered</TableCell>
+              <TableCell >Correct</TableCell>
+              <TableCell >Incorrect</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {totalQuizDetailedInfo?.quizSets &&
-              totalQuizDetailedInfo?.quizSets?.map((row:createQuizRequest,index:number) => (
+            {totalQuizDetailedInfo &&
+              totalQuizDetailedInfo?.map((row:submittedQuizDetailedInfoResponse,index:number) => (
                 <TableRow key={index}>
                   <TableCell align="center">{row.subjectName}</TableCell>
                   <TableCell align="center">{row.setNumber}</TableCell>
-                  <TableCell align="center">{row.totalQuestionsCount}</TableCell>
+                  <TableCell align="center">{row.totalQuestions}</TableCell>
+                  <TableCell align="center">{row.answeredQuestions}</TableCell>
+                  <TableCell align="center">{row.notAnsweredQuestions}</TableCell>
+                  <TableCell align="center">{row.correctAnswers}</TableCell>
+                  <TableCell align="center">{row.inCorrectAnswers}</TableCell>
                 </TableRow>
               ))}
           </TableBody>
+          <TableFooter style={{backgroundColor:'aliceblue', color: 'white',}}>
+           <TableRow>
+              <TableCell ><b>Grand Total</b></TableCell>
+              <TableCell >{`${totalQuizDetailedInfo?.map((datum:submittedQuizDetailedInfoResponse)=> datum.totalQuestions).reduce((a:number, b:number) => a + b)}`}</TableCell>
+              <TableCell >{`${totalQuizDetailedInfo?.map((datum:submittedQuizDetailedInfoResponse)=> datum.answeredQuestions).reduce((a:number, b:number) => a + b)}`}</TableCell>
+              <TableCell >{`${totalQuizDetailedInfo?.map((datum:submittedQuizDetailedInfoResponse)=> datum.notAnsweredQuestions).reduce((a:number, b:number) => a + b)}`}</TableCell>
+              <TableCell >{`${totalQuizDetailedInfo?.map((datum:submittedQuizDetailedInfoResponse)=> datum.correctAnswers).reduce((a:number, b:number) => a + b)}`}</TableCell>
+              <TableCell >{`${totalQuizDetailedInfo?.map((datum:submittedQuizDetailedInfoResponse)=> datum.inCorrectAnswers).reduce((a:number, b:number) => a + b)}`}</TableCell>
+            </TableRow>
+          </TableFooter>
         </Table>
       </TableContainer>
         <LinearProgress

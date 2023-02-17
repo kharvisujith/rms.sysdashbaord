@@ -87,7 +87,8 @@ export interface submittedQuizResponse {
 }
 export interface submittedQuizDetailedInfoResponse {
   questionId: number;
-  quizSets:createQuizRequest[];
+  subjectName: string;
+  setNumber: number;
   totalQuestions: number;
   answeredQuestions: number;
   notAnsweredQuestions: number;
