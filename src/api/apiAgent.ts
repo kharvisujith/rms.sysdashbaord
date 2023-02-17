@@ -116,3 +116,8 @@ export const createQuiz = (values: any) => {
 export const getTotalQuizLinksInfo = () => {
   return axiosClient.get(`quiz/interviewer/quizdetails`);
 };
+
+export const dummycheck = (id: number) => {
+  // quiz/interviewer/submitquizdetails/1
+  return axiosClient.get(`quiz/interviewer/submitquizdetails/${id}`);
+};

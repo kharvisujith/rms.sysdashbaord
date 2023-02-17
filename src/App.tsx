@@ -3,16 +3,13 @@ import { useNavigate } from "react-router-dom";
 import { Routes, Route } from "react-router-dom";
 import StartQuiz from "./screens/StartQuiz/StartQuiz";
 import RmsHome from "./screens/Home/RmsHome";
-import SubjectExpert from "./screens/subjectExpert/SubjectExpert";
 import Interviewer from "./screens/Interviewer/Interviewer";
 import PageNotFound from "./screens/PageNotFound/PageNotFound";
 import TestCompleted from "./screens/TestCompleted/TestCompleted";
-import NavBar from "./screens/subjectExpert/SubjectOptions";
-import SubjectOptions from "./screens/subjectExpert/SubjectOptions";
+import NavBar from "./screens/subjectExpert/SubjectExpert";
+import SubjectOptions from "./screens/subjectExpert/SubjectExpert";
 import CandidateInfo from "./screens/Candidate/CandidateInfo";
 import CreateQuiz from "./screens/CreateQuiz/CreateQuiz";
-
-let testAllreadyCompleted = false;
 const App = () => {
   return (
     <>

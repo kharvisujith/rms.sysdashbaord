@@ -2,11 +2,22 @@ import { useNavigate } from "react-router-dom";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
-import { Typography } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import SideBar from "../../components/TopNavBar/TopNavBar";
+import { dummycheck } from "../../api/apiAgent";
 
 const RmsHome = (props: any) => {
   const navigate = useNavigate();
+
+  const getData = () => {
+    console.log("get dta calledd");
+    dummycheck(1)
+      .then((res: any) => {
+        console.log("response is", res);
+        console.log("response.data is", res.data);
+      })
+      .catch((error: any) => console.log("error in dumy api"));
+  };
 
   return (
     <>
@@ -49,6 +60,7 @@ const RmsHome = (props: any) => {
           &nbsp;&nbsp;&nbsp;
         </p>
       </div>
+      <Button onClick={getData}>Check</Button>
     </>
   );
 };
