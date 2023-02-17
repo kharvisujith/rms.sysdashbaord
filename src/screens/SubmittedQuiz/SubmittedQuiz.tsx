@@ -71,7 +71,7 @@ const SubmittedQuiz=(props:any)=> {
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [totalSubmittedQuizInfoList, setTotalSubmittedQuizInfoList] = useState<submittedQuizResponse[]>([]);
   const [detailedSubmittedQuizInfoList, setDetailedSubmittedQuizInfoList] = useState<submittedQuizAnswersResponse[]>([]);
-  const [individualQuizDetailedInfo, setIndividualQuizDetailedInfo] = useState<submittedQuizDetailedInfoResponse>();
+  const [individualQuizDetailedInfo, setIndividualQuizDetailedInfo] = useState<submittedQuizDetailedInfoResponse|{}>({});
   const [OpenTestModal, setOpenTestModal] = useState<boolean>(false);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   //const [text, setText] = useState('');
@@ -105,13 +105,28 @@ const StartTestViewButtonHandler = (e: any) => {
       setDetailedSubmittedQuizInfoList(response.data);
     })
     .catch((error: any) => console.log("error in detailed Subject Answer answersapi"));
+    
+    // getSubmittedQuizDetailedInfo(e)
+    // .then((response:any) => {
+    //   // let obj: submittedQuizDetailedInfoResponse = JSON.parse('{ "myString": "string", "myNumber": 4 }');
+    //   // setIndividualQuizDetailedInfo(JSON.parse(JSON.stringify(response.data)));
+    //   // console.log("Result Set Detailed Info 1-"+JSON.stringify(response.data));
+    //   //const testData: submittedQuizDetailedInfoResponse = JSON.parse(response.data);
+    //   console.log("Result Set Detailed Info 1-"+response.data);
+    //   setIndividualQuizDetailedInfo(response.data);
+      
+    // })
+    // .catch((error: any) => console.log("error in detailed Subject Answer answersapi"));
     getSubmittedQuizDetailedInfo(e)
-    .then((response) => {
-      setIndividualQuizDetailedInfo(response.data);
-    })
-    .catch((error: any) => console.log("error in detailed Subject Answer answersapi"));
+    .then((res: any) => {
+      console.log("response is", res);
+      console.log("response.data is", res.data);
+      setIndividualQuizDetailedInfo(res.data);
+    }).catch((error: any) => console.log("error in detailed Subject Answer answersapi"));
+
   setOpenTestModal(true);
 };
+console.log("Detailed Info"+individualQuizDetailedInfo);
   return (totalSubmittedQuizInfoList.length>0?
     <>
     <Paper className={classes.root}>
@@ -119,7 +134,7 @@ const StartTestViewButtonHandler = (e: any) => {
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
             <TableRow>
-              {columns.map((column) => (
+              {columns.map((column:any) => (
                 <TableCell
                   key={column.id}
                   align={column.align}
@@ -173,6 +188,7 @@ const StartTestViewButtonHandler = (e: any) => {
                 setOpenDialog={setOpenDialog}
                 quizSubjectInfo={detailedSubmittedQuizInfoList}
                 totalQuizDetailedInfo={individualQuizDetailedInfo}
+               
               />
               <Box style={{ display: "flex", justifyContent: "center" }}>
                 <Button

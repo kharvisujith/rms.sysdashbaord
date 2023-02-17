@@ -27,7 +27,7 @@ import {
 import "./AllSubmittedQuestionsAnswers.style.scss";
 import { createQuizRequest } from '../../Interface/QuizDetails';
 const AllSubmittedQuestionsAnswers = (props: any) => {
-  const { openDialog, handleClose, setOpenDialog, quizSubjectInfo,individualQuizDetailedInfo} = props;
+  const { openDialog, handleClose, setOpenDialog, quizSubjectInfo,totalQuizDetailedInfo} = props;
   const [selectedAnswers, setSelectedAnswers] = useState<any>([]);
   const [progressStatus, setProgressStatus] = useState<number>(0);
   const [answeredQuestions, setAnsweredQuestions] = useState<number>(0);
@@ -35,13 +35,15 @@ const AllSubmittedQuestionsAnswers = (props: any) => {
   const endTestButtonHandler = () => {
     setOpenTestModal(false);
   };
-  console.log("Check Quiz Sets"+individualQuizDetailedInfo);
+  console.log("Check Quiz Sets 1-"+totalQuizDetailedInfo);
+  console.log("Check Quiz Sets 2-"+totalQuizDetailedInfo.quizSets);
+  console.log("Check Quiz Sets 3-"+totalQuizDetailedInfo.quizId);
   return (
     <>
       <Box className="progress-box">
-      {/* <TableContainer className="popup-table">
+      <TableContainer className="popup-left-table">
         <Table >
-          <TableHead>
+          <TableHead style={{backgroundColor:'burlywood', color: 'white',}}>
             <TableRow>
               <TableCell >Subject Name</TableCell>
               <TableCell >Set Number</TableCell>
@@ -49,47 +51,17 @@ const AllSubmittedQuestionsAnswers = (props: any) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {individualQuizDetailedInfo?.quizSets &&
-              individualQuizDetailedInfo?.quizSets?.map((row:createQuizRequest ) => (
-                <TableRow>
-                  <TableCell align="center">{row.setNumber}</TableCell>
+            {totalQuizDetailedInfo?.quizSets &&
+              totalQuizDetailedInfo?.quizSets?.map((row:createQuizRequest,index:number) => (
+                <TableRow key={index}>
                   <TableCell align="center">{row.subjectName}</TableCell>
+                  <TableCell align="center">{row.setNumber}</TableCell>
                   <TableCell align="center">{row.totalQuestionsCount}</TableCell>
                 </TableRow>
               ))}
           </TableBody>
         </Table>
-      </TableContainer> */}
-      <Typography style={{ padding: 20, textAlign: "right" }}>
-          <strong>{"SubjectName:"}&ensp;</strong>
-          {`${quizSubjectInfo[0]?.subjectName.toString()}`}&emsp;
-          <strong>{"SetNumber:"}&ensp;</strong>
-          {`${quizSubjectInfo[0]?.setNumber}`}&emsp;
-          <strong>{"TotalQuestions:"}&ensp;</strong>
-          {`${quizSubjectInfo.length}`}
-        </Typography>
-      {/* <div className="popup-table">
-      <table>
-        <thead>
-          <tr>
-            <th><b>Subject Name</b></th>
-            <th><b>Set Number</b></th>
-            <th><b>Total Questions</b></th>
-          </tr>
-        </thead>
-        <tbody>
-        {quizSubjectInfo.quizSets &&
-              quizSubjectInfo.quizSets?.map((row: any) => (
-                //console.log("Check set Results"+quizSubjectInfo.quizSets)
-          <tr>
-            <td>{row.subjectName} </td>
-            <td>{row.setNumber }</td>
-            <td>{row.totalQuestionsCount} </td>
-          </tr>
-          ))}
-        </tbody>
-      </table>
-      </div> */}
+      </TableContainer>
         <LinearProgress
           value={progressStatus}
           variant={"determinate"}
