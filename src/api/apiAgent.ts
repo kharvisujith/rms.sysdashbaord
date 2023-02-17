@@ -51,6 +51,7 @@ export const upLoadExcel = (
   subject: string,
   formData: FormData
 ) => {
+  console.log("value of subject upload api is", subject);
   return axiosClient.post(
     `/quiz/import?setNumber=${set}&SubjectName=${subject}`,
     formData,

@@ -95,23 +95,31 @@ const columns: Column[] = [
   },
 ];
 
-const SubjectList = () => {
-  const [subjectList, setSubjectList] = useState<subjectWiseQuizListResponse[]>(
-    []
-  );
+const SubjectList = (props: any) => {
+  const {
+    subject,
+    setSubject,
+    subjectList,
+    isQuizSetExists,
+    subjectwiseQuizDetails,
+  } = props;
+  // const [subjectList, setSubjectList] = useState<subjectWiseQuizListResponse[]>(
+  //   []
+  // );
   const [OpenTestModal, setOpenTestModal] = useState<boolean>(false);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [subjectAnswersList, setSubjectAnswerList] = useState<
     subjectwiseQuizAnswersResponse[]
   >([]);
-  const [isQuizSetExists, setIsQuizSetExists] = useState<boolean>(true);
+  //const [isQuizSetExists, setIsQuizSetExists] = useState<boolean>(true);
   const handleClose = () => {
     setOpenDialog(false);
   };
 
-  const [subject, setSubject] = useState("ALL");
+  //const [subject, setSubject] = useState("ALL");
 
   const handleSubjectChange = (event: SelectChangeEvent) => {
+    console.log("select value is", event.target.value);
     setSubject(event.target.value);
   };
 
@@ -131,20 +139,20 @@ const SubjectList = () => {
   const handleCloseFromModal = () => {
     setOpenTestModal(false);
   };
-  const subjectwiseQuizDetails = async (subject: string) => {
-    console.log("subjectwise quize details is calledd", subject);
+  // const subjectwiseQuizDetails = async (subject: string) => {
+  //   console.log("subjectwise quize details is calledd", subject);
 
-    getSubjectwiseQuiz(subject === "ALL" ? "" : subject)
-      .then((response) => {
-        if (response.status === 204) {
-          setIsQuizSetExists(false);
-        } else {
-          setSubjectList(response.data);
-          setIsQuizSetExists(true);
-        }
-      })
-      .catch((error: any) => console.log("error in subjwiseapi"));
-  };
+  //   //   getSubjectwiseQuiz(subject === "ALL" ? "" : subject)
+  //   //     .then((response) => {
+  //   //       if (response.status === 204) {
+  //   //         setIsQuizSetExists(false);
+  //   //       } else {
+  //   //         setSubjectList(response.data);
+  //   //         setIsQuizSetExists(true);
+  //   //       }
+  //   //     })
+  //   //     .catch((error: any) => console.log("error in subjwiseapi"));
+  // };
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -160,11 +168,7 @@ const SubjectList = () => {
     setPage(0);
   };
 
-  useEffect(() => {
-    subjectwiseQuizDetails(subject);
-  }, [subject]);
   const viewButton = (row: any) => {
-    console.log("value of row is", row);
     return (
       <Button
         onClick={() => StartTestViewButtonHandler(row)}
@@ -174,6 +178,10 @@ const SubjectList = () => {
       </Button>
     );
   };
+
+  useEffect(() => {
+    subjectwiseQuizDetails(subject);
+  }, [subject]);
 
   return (
     <>

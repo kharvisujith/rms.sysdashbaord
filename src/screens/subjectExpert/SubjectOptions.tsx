@@ -75,12 +75,17 @@ import HomeIcon from "@mui/icons-material/Home";
 import { ExpandLess, ExpandMore, StarBorder } from "@material-ui/icons";
 import SubjectIcon from "@mui/icons-material/Subject";
 import ArticleIcon from "@mui/icons-material/Article";
-import { downnLoadExcel, upLoadExcel } from "../../api/apiAgent";
+import {
+  downnLoadExcel,
+  getSubjectwiseQuiz,
+  upLoadExcel,
+} from "../../api/apiAgent";
 import Swal from "sweetalert2";
 import SubjectList from "../../components/SubjectExpertDataList/SubjectList";
 import SideBar from "../../components/TopNavBar/TopNavBar";
 import NavBar from "../../components/NavBar/NavBar";
 import "./SubjectExpert.style.scss";
+import { subjectWiseQuizListResponse } from "../../Interface/QuizDetails";
 
 const SubjectOptions = (props: any) => {
   const navigate = useNavigate();
@@ -100,14 +105,11 @@ const SubjectOptions = (props: any) => {
   const [openList, setOpenList] = useState(false);
   const theme = useTheme();
   const [open, setOpen] = useState(false);
-
-  // const handleDrawerOpen = () => {
-  //   setReOpen(true);
-  // };
-
-  // const handleDrawerClose = () => {
-  //   setReOpen(false);
-  // };
+  const [subject, setSubject] = useState<string>("ALL");
+  const [subjectList, setSubjectList] = useState<subjectWiseQuizListResponse[]>(
+    []
+  );
+  const [isQuizSetExists, setIsQuizSetExists] = useState<boolean>(true);
 
   const handleOpen = () => {
     setOpen(true);
@@ -123,7 +125,22 @@ const SubjectOptions = (props: any) => {
       marginRight: theme.spacing(2),
     },
   }));
-  const classes = useStyles();
+
+  const subjectwiseQuizDetails = async (subject: string) => {
+    console.log("subjectwise quize details is calledd", subject);
+
+    getSubjectwiseQuiz(subject === "ALL" ? "" : subject)
+      .then((response) => {
+        if (response.status === 204) {
+          setIsQuizSetExists(false);
+        } else {
+          setSubjectList(response.data);
+          setIsQuizSetExists(true);
+        }
+      })
+      .catch((error: any) => console.log("error in subjwiseapi"));
+  };
+
   const downloadFile = () => {
     downnLoadExcel()
       .then((response) => {
@@ -159,6 +176,24 @@ const SubjectOptions = (props: any) => {
       setFile(e.target.files[0]);
     }
   };
+  const handleTextChange = (e: any) => {
+    // if (e.target.name === "set") {
+    //   const value = parseInt(e.target.value);
+    // }
+    console.log("value of subject in handle Texchange is", subject);
+    setFormError({ ...formError, [e?.target.name]: false });
+    const name = e.target.name;
+    const value = e.target.value;
+    // if (data.subject ) {
+    console.log("inside if part", e.target.name);
+    // setData({ ...data, [name]: value, subject: subject });
+    setData({ [name]: value, subject: subject });
+    // } else {
+    //   console.log("inside else part", e.target.name);
+    //   setData({ ...data, [name]: value });
+    // }
+  };
+
   const handleUploadClick = () => {
     if (file && data.set && data.subject) {
       const formData = new FormData();
@@ -168,6 +203,7 @@ const SubjectOptions = (props: any) => {
         .then((res) => res.data)
         .then((res) => {
           setOpen(false);
+          subjectwiseQuizDetails(subject);
           Swal.fire({
             title: "Success",
             text: "Question Set Uploaded Succesfully",
@@ -192,24 +228,18 @@ const SubjectOptions = (props: any) => {
     }
   };
 
-  const handleTextChange = (e: any) => {
-    if (e.target.name === "set") {
-      const value = parseInt(e.target.value);
-    }
-    setFormError({ ...formError, [e?.target.name]: false });
-    const name = e.target.name;
-    const value = e.target.value;
-    if (!data.subject) {
-      setData({ ...data, [name]: value, subject: location.state });
-    } else {
-      setData({ ...data, [name]: value });
-    }
-  };
-
+  console.log("value of subject in suboption is", subject);
+  console.log("value of form usestate in subotption is", data);
   return (
     <>
       <NavBar />
-      <SubjectList />
+      <SubjectList
+        subject={subject}
+        setSubject={setSubject}
+        subjectList={subjectList}
+        isQuizSetExists={isQuizSetExists}
+        subjectwiseQuizDetails={subjectwiseQuizDetails}
+      />
 
       <Box className="question-upload-buttons">
         <Button variant="contained" onClick={downloadFile}>
@@ -241,7 +271,7 @@ const SubjectOptions = (props: any) => {
               variant="standard"
               type="text"
               className="items"
-              value={location.state}
+              value={subject}
               onChange={handleTextChange}
               disabled
             />
