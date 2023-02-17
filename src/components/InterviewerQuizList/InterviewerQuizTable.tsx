@@ -117,7 +117,7 @@ const copyCodeToClipboard=(data:any)=>{
     <>
     {/* <NavBarInterviewer /> */}
      {/* totalQuizInfo.length>0? */}
-    {/* <Paper className={classes.root}> */}
+    <Paper >
       <TableContainer className={classes.container}>
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
@@ -164,7 +164,7 @@ const copyCodeToClipboard=(data:any)=>{
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
-     {/* </Paper> */}
+     </Paper>
       {/* :<span><h5>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;No Quiz results</h5></span> */}
     </>   
      :<span><h5>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;No Quiz results</h5></span> 
