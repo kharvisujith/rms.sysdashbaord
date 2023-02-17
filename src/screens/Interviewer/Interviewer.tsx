@@ -23,23 +23,7 @@ import {
   useTheme,
 } from "@mui/material";
 //import { AuthContext } from "../../context/AuthContectProvider";
-import {
-  Collapse,
-  CSSObject,
-  Divider,
-  Drawer,
-  Icon,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  styled,
-  SvgIcon,
-  Theme,
-  Typography,
-  useTheme,
-} from "@mui/material";
+
 import Menu from "@material-ui/icons/Menu";
 import SideBar from "../../components/TopNavBar/TopNavBar";
 import { useState } from "react";
@@ -162,30 +146,8 @@ const links = [
 //   // { title: "FileUpload", path: "/", icon: <UploadFileIcon /> },
 // ];
 
-const Interviewer = (props: any) => {
-  const navigate = useNavigate();
-  const theme = useTheme();
-  const [open, setOpen] = useState<boolean>(false);
-  const [openList, setOpenList] = useState<boolean>(false);
-  const [open, setOpen] = useState(false);
-  const [openList, setOpenList] = useState(false);
-  const useStyles = makeStyles((theme) => ({
-    root: {
-      flexGrow: 1,
-    },
-    menuButton: {
-      marginRight: theme.spacing(2),
-    },
-  }));
-  const classes = useStyles();
-
-  const handleDrawerOpen = () => {
-    setOpen(true);
-  };
-
-  const handleDrawerClose = () => {
-    setOpen(false);
-  };
+const Interviewer = () => {
+  
 
   return (
     <>

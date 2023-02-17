@@ -324,7 +324,7 @@ const NavBar = (props: any) => {
                   })}
                 </List>
               </Collapse>
-              {/* <ListItem disablePadding>
+              {/* /* <ListItem disablePadding>
                 <ListItemButton 
                   onClick={() => {
                     navigate("/assignments");
@@ -342,7 +342,7 @@ const NavBar = (props: any) => {
                   </ListItemIcon>
                   <ListItemText primary={"Back"} />
                 </ListItemButton>
-              </ListItem>
+              </ListItem> */}
             </List>
           </Drawer>
         </>

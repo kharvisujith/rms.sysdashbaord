@@ -17,6 +17,7 @@ import CandidateDetails from "../../Interface/CandidateDetails";
 import { useParams } from "react-router-dom";
 import CandidateNavBar from "../../components/TopNavBar/CandidateNavBar";
 import "./CandidateInfo.style.scss";
+import { AxiosResponse } from "axios";
 
 const CandidateInfo = (props: any) => {
   const { id, key } = useParams();
