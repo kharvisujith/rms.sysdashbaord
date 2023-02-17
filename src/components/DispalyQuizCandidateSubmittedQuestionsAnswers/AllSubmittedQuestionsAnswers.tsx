@@ -37,8 +37,6 @@ const AllSubmittedQuestionsAnswers = (props: any) => {
     setOpenTestModal(false);
   };
   console.log("Check Quiz Sets 1-"+totalQuizDetailedInfo);
-  console.log("Check Quiz Sets 2-"+totalQuizDetailedInfo.quizSets);
-  console.log("Check Quiz Sets 3-"+totalQuizDetailedInfo.quizId);
   return (
     <>
       <Box className="progress-box">
@@ -71,12 +69,12 @@ const AllSubmittedQuestionsAnswers = (props: any) => {
           </TableBody>
           <TableFooter style={{backgroundColor:'aliceblue', color: 'white',}}>
            <TableRow>
-              <TableCell ><b>Grand Total</b></TableCell>
-              <TableCell >{`${totalQuizDetailedInfo?.map((datum:submittedQuizDetailedInfoResponse)=> datum.totalQuestions).reduce((a:number, b:number) => a + b)}`}</TableCell>
-              <TableCell >{`${totalQuizDetailedInfo?.map((datum:submittedQuizDetailedInfoResponse)=> datum.answeredQuestions).reduce((a:number, b:number) => a + b)}`}</TableCell>
-              <TableCell >{`${totalQuizDetailedInfo?.map((datum:submittedQuizDetailedInfoResponse)=> datum.notAnsweredQuestions).reduce((a:number, b:number) => a + b)}`}</TableCell>
-              <TableCell >{`${totalQuizDetailedInfo?.map((datum:submittedQuizDetailedInfoResponse)=> datum.correctAnswers).reduce((a:number, b:number) => a + b)}`}</TableCell>
-              <TableCell >{`${totalQuizDetailedInfo?.map((datum:submittedQuizDetailedInfoResponse)=> datum.inCorrectAnswers).reduce((a:number, b:number) => a + b)}`}</TableCell>
+              <TableCell colSpan={2} align="right"><b>Grand Total</b></TableCell>
+              <TableCell align="center">{`${totalQuizDetailedInfo?.map((datum:submittedQuizDetailedInfoResponse)=> datum?.totalQuestions).reduce((a:number, b:number) => a + b)}`}</TableCell>
+              <TableCell align="center">{`${totalQuizDetailedInfo?.map((datum:submittedQuizDetailedInfoResponse)=> datum?.answeredQuestions).reduce((a:number, b:number) => a + b)}`}</TableCell>
+              <TableCell align="center">{`${totalQuizDetailedInfo?.map((datum:submittedQuizDetailedInfoResponse)=> datum?.notAnsweredQuestions).reduce((a:number, b:number) => a + b)}`}</TableCell>
+              <TableCell align="center">{`${totalQuizDetailedInfo?.map((datum:submittedQuizDetailedInfoResponse)=> datum?.correctAnswers).reduce((a:number, b:number) => a + b)}`}</TableCell>
+              <TableCell align="center">{`${totalQuizDetailedInfo?.map((datum:submittedQuizDetailedInfoResponse)=> datum?.inCorrectAnswers).reduce((a:number, b:number) => a + b)}`}</TableCell>
             </TableRow>
           </TableFooter>
         </Table>
