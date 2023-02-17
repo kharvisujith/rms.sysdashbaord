@@ -1,26 +1,15 @@
-import {
-  Box,
-  Toolbar,
-  IconButton,
-  Typography,
-  Divider,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  SvgIcon,
-  ListItemText,
-  Theme,
-  CSSObject,
-  makeStyles,
-  styled,
-  useTheme,
-  Collapse,
-  Icon,
-  Drawer,
-} from "@mui/material";
-import { useEffect, useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Toolbar from "@mui/material/Toolbar";
+import IconButton from "@mui/material/IconButton";
+import { makeStyles } from "@material-ui/core/styles";
+import MenuItem from "@material-ui/core/MenuItem";
+//import { AuthContext } from "../../context/AuthContectProvider";
+import { Collapse, CSSObject, Divider, Drawer, Icon, List, ListItem, ListItemButton, ListItemIcon, ListItemText, styled, SvgIcon, Theme, Typography, useTheme } from "@mui/material";
+import Menu from "@material-ui/icons/Menu";
+import SideBar from "../TopNavBar/TopNavBar";
+import { useState } from "react";
 import HomeIcon from "@mui/icons-material/Home";
 import { ExpandLess, ExpandMore, StarBorder } from "@material-ui/icons";
 import SubjectIcon from "@mui/icons-material/Subject";
@@ -30,29 +19,33 @@ import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import MuiDrawer from "@mui/material/Drawer";
-import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
+import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
+import QuizIcon from '@mui/icons-material/Quiz';
+import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
+import InterviewerQuizTable from "../../components/InterviewerQuizList/InterviewerQuizTable";
+
+
 
 const drawerWidth = 240;
 
-const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
+const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
   open?: boolean;
 }>(({ theme, open }) => ({
   flexGrow: 1,
   padding: theme.spacing(3),
-  transition: theme.transitions.create("margin", {
+  transition: theme.transitions.create('margin', {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
   marginLeft: `-${drawerWidth}px`,
   ...(open && {
-    transition: theme.transitions.create("margin", {
+    transition: theme.transitions.create('margin', {
       easing: theme.transitions.easing.easeOut,
       duration: theme.transitions.duration.enteringScreen,
     }),
     marginLeft: 0,
   }),
 }));
-
 // const openedMixin = (theme: Theme): CSSObject => ({
 //   width: drawerWidth,
 //   transition: theme.transitions.create("width", {
@@ -124,24 +117,23 @@ const AppBar = styled(MuiAppBar, {
 
 const links = [
   { title: "HomePage", path: "/", icon: <HomeIcon /> },
-  { title: "Back", path: "/assignments", icon: <HomeIcon /> },
-  //{ title: "C#", path: "/Subjects", icon: <UploadFileIcon /> },
-  // { title: "FileUpload", path: "/", icon: <UploadFileIcon /> },
 ];
 
-const subjectlinks = [
-  { title: "React", path: "/subjects", icon: <SubjectIcon /> },
-  { title: "C#", path: "/subjects", icon: <SubjectIcon /> },
-  { title: "CosmosDb", path: "/subjects", icon: <SubjectIcon /> },
-  { title: "JavaScript", path: "/subjects", icon: <SubjectIcon /> },
-  // { title: "FileUpload", path: "/", icon: <UploadFileIcon /> },
-];
 
-const NavBar = (props: any) => {
+const NavBarInterviewer = (props: any) => {
   const navigate = useNavigate();
   const theme = useTheme();
-  const [open, setOpen] = useState<boolean>(false);
-  const [openList, setOpenList] = useState<boolean>(false);
+  const [open, setOpen] = useState(false);
+    const [openList, setOpenList] = useState(false);
+  const useStyles = makeStyles((theme) => ({
+    root: {
+      flexGrow: 1,
+    },
+    menuButton: {
+      marginRight: theme.spacing(2),
+    },
+  }));
+  const classes = useStyles();
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -151,15 +143,6 @@ const NavBar = (props: any) => {
     setOpen(false);
   };
 
-  // const useStyles = makeStyles((theme) => ({
-  //     root: {
-  //       flexGrow: 1,
-  //     },
-  //     menuButton: {
-  //       marginRight: theme.spacing(2),
-  //     },
-  //   }));
-  //   const classes = useStyles();
 
   return (
     <>
@@ -175,26 +158,22 @@ const NavBar = (props: any) => {
                 id="menu-button"
                 className={open ? "menu-icon-open" : "menu-icon-close"}
                 sx={{
-                  marginRight: 5,
+                   marginRight: 5,
                   ...(open && { display: "none" }),
                 }}
               >
                 <MenuIcon />
               </IconButton>
               <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                Augmento Labs
+                Augmento Labs 
               </Typography>
               <Typography variant="h6" component="div" sx={{ flexGrow: 0.02 }}>
-                {/* <Button color="inherit" onClick={authContext.logout}> */}
                 Log out
               </Typography>
-              {/* </Button> */}
-              {/* LOG OUT */}
-              {/* </Typography> */}
             </Toolbar>
           </AppBar>
           {/* <ThemeProvider theme={darkTheme}> */}
-          <Drawer variant="persistent" open={open} sx={{
+          <Drawer variant="persistent" open={open}  sx={{
           width: drawerWidth,
           flexShrink: 0,
           '& .MuiDrawer-paper': {
@@ -212,6 +191,7 @@ const NavBar = (props: any) => {
               </IconButton>
             </DrawerHeader>
             <Divider />
+
             <List className="account-menu-list">
             <ListItem disablePadding>
                 <ListItemButton 
@@ -233,11 +213,10 @@ const NavBar = (props: any) => {
                 </ListItemButton>
               </ListItem> 
 
-            
               <ListItem disablePadding>
                 <ListItemButton 
                   onClick={() => {
-                    navigate("/assignments");
+                    navigate("/reviewer");
                     handleDrawerClose();
                   }}
                 >
@@ -250,84 +229,52 @@ const NavBar = (props: any) => {
                   >
                     <SvgIcon component={HomeIcon} inheritViewBox />
                   </ListItemIcon>
-                  <ListItemText primary={" SubjectExpert Home Page"} />
+                  <ListItemText primary={"Interviewer Home Page"} />
                 </ListItemButton>
               </ListItem>
-
-              <ListItemButton
-                className="account-menu-list"
-                onClick={() => {
-                  setOpenList(!openList);
-                }}
-              >
-                <ListItemIcon
-                  sx={{
-                    minWidth: -0.5,
-                    mr: open ? 3 : "auto",
-                    justifyContent: "right",
+              
+              <ListItem disablePadding>
+                <ListItemButton 
+                  onClick={() => {
+                    navigate("/createquiz");
+                    handleDrawerClose();
                   }}
                 >
-                  <Icon component={ArticleIcon} />
-                </ListItemIcon>
-                <ListItemText
-                  primary="Subjects"
-                  sx={{ opacity: open ? 1 : 0 }}
-                />
-                {openList ? <ExpandLess /> : <ExpandMore />}
-              </ListItemButton>
-              <Collapse in={openList} timeout="auto" unmountOnExit>
-                <List>
-                  {subjectlinks.map(({ title, path, icon }, index: number) => {
-                    return (
-                      <ListItem
-                        onClick={() => {
-                          handleDrawerClose();
-                        }}
-                        component={NavLink}
-                        to={path}
-                        state={title}
-                        key={index}
-                        sx={{
-                          color: "inherit",
-                          typography: "body1",
-                          "&:hover": {
-                            color: "grey.500",
-                          },
-                          "&.active": {
-                            color: "text.secondary",
-                          },
-                        }}
-                      >
-                        <ListItemButton
-                          sx={{
-                            minHeight: 48,
-                            justifyContent: open ? "initial" : "right",
-                            px: 2.5,
-                          }}
-                        >
-                          <ListItemIcon
-                            sx={{
-                              minWidth: -0.5,
-                              mr: open ? 3 : "auto",
-                              justifyContent: "right",
-                            }}
-                          >
-                            {icon}
-                          </ListItemIcon>
-                          <ListItemText
-                            primary={title}
-                            sx={{ opacity: open ? 1 : 0 }}
-                          />
-                        </ListItemButton>
-                      </ListItem>
-                    );
-                  })}
-                </List>
-              </Collapse>
+                  <ListItemIcon
+                    sx={{
+                      minWidth: -0.5,
+                      mr: open ? 3 : "auto",
+                      justifyContent: "right",
+                    }}
+                  >
+                    <SvgIcon component={QuizIcon} inheritViewBox />
+                  </ListItemIcon>
+                  <ListItemText primary={"Create Quiz"} />
+                </ListItemButton>
+              </ListItem>
+              <ListItem disablePadding>
+                <ListItemButton 
+                  onClick={() => {
+                    navigate("/reviewer");
+                    handleDrawerClose();
+                  }}
+                >
+                  <ListItemIcon
+                    sx={{
+                      minWidth: -0.5,
+                      mr: open ? 3 : "auto",
+                      justifyContent: "right",
+                    }}
+                  >
+                    <SvgIcon component={AssignmentTurnedInIcon} inheritViewBox />
+                  </ListItemIcon>
+                  <ListItemText primary={"Submit Quiz"} />
+                </ListItemButton>
+              </ListItem>
               {/* <ListItem disablePadding>
                 <ListItemButton 
                   onClick={() => {
-                    navigate("/assignments");
+                    navigate("/reviewer");
                     handleDrawerClose();
                   }}
                 >
@@ -342,17 +289,56 @@ const NavBar = (props: any) => {
                   </ListItemIcon>
                   <ListItemText primary={"Back"} />
                 </ListItemButton>
-              </ListItem>
-            </List>
-          </Drawer>
-        </>
-        {/* <Main open={open}> */}
+              </ListItem> */}
+              
+              </List>
+              </Drawer>
+              </>
         <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
           <DrawerHeader />
         </Box>
-        {/* </Main> */}
       </Box>
+      {/* <InterviewerQuizTable></InterviewerQuizTable> */}
+      
     </>
+    // <>
+    // < SideBar />
+    /* <Box className="main-layout-wrap"> */
+      /* <AppBar position="static">
+        <Toolbar>
+          <IconButton
+            edge="start"
+            className={classes.menuButton}
+            color="inherit"
+            aria-label="menu"
+          >
+            <Menu>
+              <MenuItem>Profile</MenuItem>
+              <MenuItem>My account</MenuItem>
+              <MenuItem>Logout</MenuItem>
+            </Menu>
+          </IconButton>
+          <Typography
+            variant="h6"
+            component="div"
+            sx={{ flexGrow: 1 }}
+            onClick={() => navigate(-1)}
+          >
+            Augmento labs RMS
+          </Typography>
+          <Button color="inherit">Log out</Button>
+        </Toolbar>
+      </AppBar>
+      <hr /> */
+      /* <p>
+        <h1>Interviewer Page Development in progrss</h1>
+        <br />
+        <button onClick={() => navigate(-1)}>Home</button>
+      </p> */
+    /* </Box> */
+    /* </> */
+    
   );
 };
-export default NavBar;
+
+export default NavBarInterviewer;

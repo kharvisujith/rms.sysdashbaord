@@ -10,14 +10,15 @@ import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import Swal from "sweetalert2";
 import "./TestCompleted.style.scss";
-import SideBar from "../../components/SideBar/SideBar";
+import SideBar from "../../components/TopNavBar/TopNavBar";
+import CandidateNavBar from "../../components/TopNavBar/CandidateNavBar";
 
 const TestCompleted = (props: any) => {
   const location = useLocation();
 
   return (
     <>
-      <SideBar />
+      <CandidateNavBar />
       <Box className="test-submitted-box">
         <Box className="test-summary">
           <Card className="summary-card">

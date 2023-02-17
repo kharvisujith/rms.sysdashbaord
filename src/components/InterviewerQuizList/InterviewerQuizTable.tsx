@@ -10,6 +10,7 @@ import TablePagination from "@material-ui/core/TablePagination";
 import { TableRow } from "@material-ui/core";
 import { useEffect, useState } from "react";
 import { getTotalQuizLinksInfo } from "../../api/apiAgent";
+import NavBarInterviewer from "../NavBar/NavBarInterviewer";
 
 interface Column {
   id:
@@ -119,74 +120,82 @@ const InterviewerQuizTable = () => {
   const copyCodeToClipboard = (data: any) => {
     navigator.clipboard.writeText(data);
   };
-
-  useEffect(() => {
-    totalQuizurlInfo();
-  }, []);
   return totalQuizInfo.length > 0 ? (
-    <Paper className={classes.root}>
-      <TableContainer className={classes.container}>
-        <Table stickyHeader aria-label="sticky table">
-          <TableHead>
-            <TableRow>
-              {columns.map((column) => (
-                <TableCell
-                  key={column.id}
-                  align={column.align}
-                  style={{ minWidth: column.minWidth }}
-                >
-                  {column.label}
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {totalQuizInfo
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((row: any) => {
-                console.log("test data", totalQuizInfo);
-                return (
-                  <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
-                    {columns.map((column, index) => {
-                      const value = row[column.id];
-                      return (
-                        <TableCell key={index} align={column.align}>
-                          {/* {column.format && typeof value === 'number' ? column.format(value) : value} */}
-                          {column.format && typeof value === "number"
-                            ? column.id == "url"
-                              ? column.format(value)
-                              : value
-                            : column.id == "url"
-                            ? value.slice(value.length - 12)
-                            : value}
-                          {column.id === "url" &&
-                          (row["quizCodeExpirationAt"] == null ||
-                            row["quizSubmittedAt"] == null) ? (
-                            <button onClick={() => copyCodeToClipboard(value)}>
-                              Copy
-                            </button>
-                          ) : (
-                            ""
-                          )}
-                        </TableCell>
-                      );
-                    })}
-                  </TableRow>
-                );
-              })}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <TablePagination
-        rowsPerPageOptions={[10, 25, 100]}
-        component="div"
-        count={totalQuizInfo.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
-    </Paper>
+    <>
+      {/* <NavBarInterviewer /> */}
+      {/* totalQuizInfo.length>0? */}
+      <Paper>
+        <TableContainer className={classes.container}>
+          <Table stickyHeader aria-label="sticky table">
+            <TableHead>
+              <TableRow>
+                {columns.map((column) => (
+                  <TableCell
+                    key={column.id}
+                    align={column.align}
+                    style={{ minWidth: column.minWidth }}
+                  >
+                    {column.label}
+                  </TableCell>
+                ))}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {totalQuizInfo
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((row: any) => {
+                  console.log("test data", totalQuizInfo);
+                  return (
+                    <TableRow
+                      hover
+                      role="checkbox"
+                      tabIndex={-1}
+                      key={row.code}
+                    >
+                      {columns.map((column) => {
+                        const value = row[column.id];
+                        return (
+                          <TableCell key={column.id} align={column.align}>
+                            {/* {column.format && typeof value === 'number' ? column.format(value) : value} */}
+                            {column.format && typeof value === "number"
+                              ? column.id == "url"
+                                ? column.format(value)
+                                : value
+                              : column.id == "url"
+                              ? value.slice(value.length - 12)
+                              : value}
+                            {column.id === "url" &&
+                            (row["quizCodeExpirationAt"] == null ||
+                              row["quizSubmittedAt"] == null) ? (
+                              <button
+                                onClick={() => copyCodeToClipboard(value)}
+                              >
+                                Copy
+                              </button>
+                            ) : (
+                              ""
+                            )}
+                          </TableCell>
+                        );
+                      })}
+                    </TableRow>
+                  );
+                })}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <TablePagination
+          rowsPerPageOptions={[10, 25, 100]}
+          component="div"
+          count={totalQuizInfo.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
+      </Paper>
+      {/* :<span><h5>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;No Quiz results</h5></span> */}
+    </>
   ) : (
     <span>
       <h5>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;No Quiz results</h5>

@@ -16,7 +16,7 @@ import {
   TableCell,
   TableRow,
   TableBody,
-  makeStyles,
+  TablePagination,
 } from "@mui/material";
 import { AxiosResponse } from "axios";
 import { any } from "prop-types";
@@ -26,18 +26,29 @@ import Swal from "sweetalert2";
 import { ImportsNotUsedAsValues } from "typescript";
 import { setEnvironmentData } from "worker_threads";
 import { createQuiz, getSubjectwiseQuiz } from "../../api/apiAgent";
-import SideBar from "../../components/SideBar/SideBar";
+import { makeStyles } from '@material-ui/core/styles';
 import {
   createQuizRequest,
   createQuizResponse,
   subjectWiseQuizListResponse,
 } from "../../Interface/QuizDetails";
 import "./CreateQuiz.style.scss";
-import "./CreateQuiz.style.scss";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
-import Interviewer from "../Interviewer/Interviewer";
+import NavBarInterviewer from "../../components/NavBar/NavBarInterviewer";
+import TopNavBar from "../../components/TopNavBar/TopNavBar";
+
+const useStyles = makeStyles({
+  root: {
+    width: '100%',
+  },
+  container: {
+    maxHeight: 430,
+  },
+});
+
 
 const CreateQuiz = () => {
+  const classes = useStyles();
   const [subjectList, setSubjectList] = useState<subjectWiseQuizListResponse[]>(
     []
   );
@@ -45,6 +56,19 @@ const CreateQuiz = () => {
   const [values, setValues] = useState<createQuizRequest[]>([]);
   const [newquiz, setNewQuiz] = useState<createQuizResponse | {}>({});
   const [quizLink, setQuizLink] = useState<string>();
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+
+
+  
+  const handleChangePage = (event: unknown, newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setRowsPerPage(+event.target.value);
+    setPage(0);
+  };
 
   const handleCheckboxChange = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -121,22 +145,23 @@ const CreateQuiz = () => {
     subjectwiseQuizDetails();
   }, []);
 
-  return (
+  return (subjectList.length>0? 
     <>
-      {/* <Interviewer /> */}
-      <SideBar />
+      <NavBarInterviewer />
+      
       <Box
-        sx={{
-          marginTop: -1,
-          marginLeft: 10,
-        }}
-      >
+      //   sx={{
+      //     marginTop: -1,
+      //     marginLeft: 10,
+      //   }}
+       >
         <Typography variant="h5" align="center">
           Available Question Sets
         </Typography>
       </Box>
-      <TableContainer component={Paper} sx={{ marginTop: 4 }}>
-        <Table
+      <Paper className={classes.root}>
+      <TableContainer  sx={{ marginTop: 4 }} className={classes.container}>
+        <Table 
           aria-label="simple table"
 
           // sx={{tableLayout: "auto",
@@ -149,14 +174,14 @@ const CreateQuiz = () => {
               <TableCell align="center">Set Number</TableCell>
               <TableCell align="center">Subject Name</TableCell>
               <TableCell align="center">Total Questions</TableCell>
-              <TableCell align="center">Check Box</TableCell>
+              <TableCell align="center">Select</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {subjectList &&
+            {subjectList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) &&
               subjectList.map((row: any) => (
-                <TableRow
-                  key={row.id}
+                <TableRow hover role="checkbox" tabIndex={-1} 
+                  key={row.code}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
                   <TableCell align="center">{row.setNumber}</TableCell>
@@ -175,12 +200,22 @@ const CreateQuiz = () => {
           </TableBody>
         </Table>
       </TableContainer>
+      <TablePagination
+        rowsPerPageOptions={[10, 25, 100]}
+        component="div"
+        count={subjectList.length}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+      />
+      </Paper>
 
-      <Button
+      <Button 
         variant="contained"
         type="submit"
         sx={{
-          marginTop: 5,
+          marginTop: 1,
           marginLeft: 90,
           // display: "flex",
           // flexDirection: "column",
@@ -205,8 +240,8 @@ const CreateQuiz = () => {
               variant="outlined"
               onClick={() => copyToClipboard(quizLink)}
             >
-              <SvgIcon
-                sx={{ marginLeft: -1 }}
+              <SvgIcon className="icon"
+                // sx={{ marginLeft: -1 }}
                 component={ContentCopyIcon}
                 inheritViewBox
               />
@@ -216,6 +251,10 @@ const CreateQuiz = () => {
         </Box>
       )}
     </>
+     :<>
+     <NavBarInterviewer />
+     <span><h5>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;No  results</h5></span>
+     </>
   );
 };
 
