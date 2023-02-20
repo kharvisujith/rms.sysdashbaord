@@ -213,9 +213,10 @@ import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
-import { TableRow } from "@material-ui/core";
+import { Box, TableRow } from "@material-ui/core";
 import { useEffect, useState } from "react";
 import { getTotalQuizLinksInfo } from "../../api/apiAgent";
+import "./InterviewerQuizTable.style.scss";
 
 interface Column {
   id:
@@ -294,7 +295,7 @@ const useStyles = makeStyles({
     width: "100%",
   },
   container: {
-    maxHeight: 440,
+    maxHeight: 435,
   },
 });
 
@@ -329,8 +330,10 @@ const InterviewerQuizTable = () => {
   useEffect(() => {
     totalQuizurlInfo();
   }, []);
-  return totalQuizInfo.length > 0 ? (
-    <Paper className={classes.root}>
+  return ( totalQuizInfo.length > 0 ? 
+    <>
+    <Box className="quiztable-box">
+    <Paper>
       <TableContainer className={classes.container}>
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
@@ -393,7 +396,9 @@ const InterviewerQuizTable = () => {
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
     </Paper>
-  ) : (
+    </Box>
+     </>
+   : 
     <span>
       <h5>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;No Quiz results</h5>
     </span>

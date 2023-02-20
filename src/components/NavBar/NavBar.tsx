@@ -29,6 +29,7 @@ import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import "./Navbar.style.scss";
 import MuiDrawer from "@mui/material/Drawer";
 import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
 
@@ -78,9 +79,9 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
   alignItems: "center",
   justifyContent: "flex-end",
-  padding: theme.spacing(0, 1),
+   padding: theme.spacing(0, 1),
   // necessary for content to be below app bar
-  ...theme.mixins.toolbar,
+   ...theme.mixins.toolbar,
 }));
 
 interface AppBarProps extends MuiAppBarProps {
@@ -165,15 +166,15 @@ const NavBar = (props: any) => {
     <>
       <Box sx={{ display: "flex" }}>
         <>
-          <AppBar className="Appbar" position="fixed" open={open}>
+          <AppBar className="appbar" position="fixed" open={open}>
             <Toolbar >
               <IconButton
                 color="inherit"
                 aria-label="open drawer"
                 onClick={handleDrawerOpen}
                 edge="start"
-                id="menu-button"
-                className={open ? "menu-icon-open" : "menu-icon-close"}
+              
+                // className={open ? "menu-icon-open" : "menu-icon-close"}
                 sx={{
                   marginRight: 5,
                   ...(open && { display: "none" }),
@@ -185,12 +186,9 @@ const NavBar = (props: any) => {
                 Augmento Labs
               </Typography>
               <Typography variant="h6" component="div" sx={{ flexGrow: 0.02 }}>
-                {/* <Button color="inherit" onClick={authContext.logout}> */}
-                Log out
+                Log Out
               </Typography>
-              {/* </Button> */}
-              {/* LOG OUT */}
-              {/* </Typography> */}
+              
             </Toolbar>
           </AppBar>
           {/* <ThemeProvider theme={darkTheme}> */}
@@ -254,7 +252,7 @@ const NavBar = (props: any) => {
                 </ListItemButton>
               </ListItem>
 
-              <ListItemButton
+              {/* <ListItemButton
                 className="account-menu-list"
                 onClick={() => {
                   setOpenList(!openList);
@@ -321,9 +319,9 @@ const NavBar = (props: any) => {
                         </ListItemButton>
                       </ListItem>
                     );
-                  })}
-                </List>
-              </Collapse>
+                  })} */}
+                {/* </List> */}
+              {/* </Collapse> */}
               {/* /* <ListItem disablePadding>
                 <ListItemButton 
                   onClick={() => {
