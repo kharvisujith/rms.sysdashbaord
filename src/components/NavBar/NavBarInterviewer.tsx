@@ -23,8 +23,7 @@ import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import QuizIcon from '@mui/icons-material/Quiz';
 import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
 import InterviewerQuizTable from "../../components/InterviewerQuizList/InterviewerQuizTable";
-
-
+import SubmittedQuiz from "../../screens/SubmittedQuiz/SubmittedQuiz";
 
 const drawerWidth = 240;
 
@@ -255,7 +254,7 @@ const NavBarInterviewer = (props: any) => {
               <ListItem disablePadding>
                 <ListItemButton 
                   onClick={() => {
-                    navigate("/reviewer");
+                    navigate("/SubmittedQuiz");
                     handleDrawerClose();
                   }}
                 >
