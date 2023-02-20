@@ -166,7 +166,7 @@ const NavBar = (props: any) => {
       <Box sx={{ display: "flex" }}>
         <>
           <AppBar className="Appbar" position="fixed" open={open}>
-            <Toolbar >
+            <Toolbar>
               <IconButton
                 color="inherit"
                 aria-label="open drawer"
@@ -194,14 +194,19 @@ const NavBar = (props: any) => {
             </Toolbar>
           </AppBar>
           {/* <ThemeProvider theme={darkTheme}> */}
-          <Drawer variant="persistent" open={open} sx={{
-          width: drawerWidth,
-          flexShrink: 0,
-          '& .MuiDrawer-paper': {
-            width: drawerWidth,
-            boxSizing: 'border-box',
-          },
-        }}  anchor="left">
+          <Drawer
+            variant="persistent"
+            open={open}
+            sx={{
+              width: drawerWidth,
+              flexShrink: 0,
+              "& .MuiDrawer-paper": {
+                width: drawerWidth,
+                boxSizing: "border-box",
+              },
+            }}
+            anchor="left"
+          >
             <DrawerHeader>
               <IconButton onClick={handleDrawerClose}>
                 {theme.direction === "rtl" ? (
@@ -213,8 +218,8 @@ const NavBar = (props: any) => {
             </DrawerHeader>
             <Divider />
             <List className="account-menu-list">
-            <ListItem disablePadding>
-                <ListItemButton 
+              <ListItem disablePadding>
+                <ListItemButton
                   onClick={() => {
                     navigate("/");
                     handleDrawerClose();
@@ -231,11 +236,10 @@ const NavBar = (props: any) => {
                   </ListItemIcon>
                   <ListItemText primary={"Main Page"} />
                 </ListItemButton>
-              </ListItem> 
+              </ListItem>
 
-            
               <ListItem disablePadding>
-                <ListItemButton 
+                <ListItemButton
                   onClick={() => {
                     navigate("/assignments");
                     handleDrawerClose();

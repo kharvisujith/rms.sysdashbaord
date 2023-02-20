@@ -58,7 +58,6 @@ const SubjectList = (props: any) => {
   };
 
   const handleSubjectChange = (event: SelectChangeEvent) => {
-    console.log("select value is", event.target.value);
     setSubject(event.target.value);
   };
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -71,7 +70,11 @@ const SubjectList = (props: any) => {
     setFormError({ ...formError, [e?.target.name]: false });
     const name = e.target.name;
     const value = e.target.value;
-    setUploadData({ [name]: value, subject: subject });
+    if (subject === "ALL") {
+      setUploadData((prev: any) => ({ ...prev, [name]: value }));
+    } else {
+      setUploadData({ [name]: value, subject: subject });
+    }
   };
 
   const downloadFile = () => {
@@ -113,6 +116,7 @@ const SubjectList = (props: any) => {
         .then((res) => {
           setOpenFileUpload(false);
           subjectwiseQuizDetails(subject);
+          setUploadData({ set: "", subject: "" });
           Swal.fire({
             title: "Success",
             text: "Question Set Uploaded Succesfully",
@@ -220,11 +224,7 @@ const SubjectList = (props: any) => {
               minWidth: 100,
             }}
           >
-            <InputLabel
-            //  sx={{ backgroundColor: "white" }}
-            >
-              Subject
-            </InputLabel>
+            <InputLabel>Subject</InputLabel>
             <Select
               value={subject}
               onChange={handleSubjectChange}
@@ -236,7 +236,7 @@ const SubjectList = (props: any) => {
               </MenuItem>
               <MenuItem value={"REACT"}>REACT</MenuItem>
               <MenuItem value={"JAVASCRIPT"}>JAVASCRIPT</MenuItem>
-              <MenuItem value={"CSharp"}>C#</MenuItem>
+              <MenuItem value={"CSHARP"}>C#</MenuItem>
             </Select>
           </FormControl>
           <Box className="question-upload-buttons">
@@ -258,11 +258,7 @@ const SubjectList = (props: any) => {
         </Box>
 
         <Paper className="paper">
-          <Typography
-            variant="h5"
-            className="table-title"
-            // sx={{ marginLeft: 5 }}
-          >
+          <Typography variant="h5" className="table-title">
             Available Question Sets
           </Typography>
           <TableContainer className="table-container">
@@ -385,7 +381,37 @@ const SubjectList = (props: any) => {
             <Typography className="error">Please Enter Set Number</Typography>
           )}
 
-          <TextField
+          <FormControl
+            variant="standard"
+            className="items"
+
+            //  sx={{ m: 1, minWidth: 120 }}
+          >
+            <InputLabel id="demo-simple-select-standard-label">
+              Subject
+            </InputLabel>
+            <Select
+              //labelId="demo-simple-select-standard-label"
+              //  id="demo-simple-select-standard"
+              name="subject"
+              label="Subject Name"
+              // type="text"
+              //   value={age}
+              //  onChange={handleChange}
+              value={subject === "ALL" ? uploadData.subject : subject}
+              onChange={handleTextChange}
+              disabled={subject === "ALL" ? false : true}
+            >
+              <MenuItem value="">
+                <em>None</em>
+              </MenuItem>
+              <MenuItem value={"REACT"}>REACT</MenuItem>
+              <MenuItem value={"JAVASCRIPT"}>JAVASCRIPT</MenuItem>
+              <MenuItem value={"CSHARP"}>C#</MenuItem>
+            </Select>
+          </FormControl>
+
+          {/* <TextField
             name="subject"
             label="Subject Name"
             variant="standard"
@@ -394,7 +420,7 @@ const SubjectList = (props: any) => {
             value={subject}
             onChange={handleTextChange}
             disabled
-          />
+          /> */}
           {formError.subject && (
             <Typography className="error">Please Enter Subject Name</Typography>
           )}
