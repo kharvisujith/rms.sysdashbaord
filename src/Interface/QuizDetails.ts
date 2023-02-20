@@ -60,6 +60,43 @@ export interface subjectwiseQuizAnswersResponse {
   questionAnswersIds: string[];
 }
 
+export interface submittedQuizAnswersResponse {
+  questionId: number;
+  setNumber: number;
+  subjectName: string;
+  question: string;
+  questionType: string;
+  questionOptions: string[];
+  submittedAnswers: string[];
+  submittedAnswersIds: string[];
+  masterQuestionAnswers: string[];
+  masterQuestionAnswersIds: string[];
+  isCorrect:boolean;
+}
+export interface submittedQuizResponse {
+  questionId: number;
+  candidateId: string;
+  totalQuestions: number;
+  answeredQuestions: number;
+  notAnsweredQuestions: number;
+  correctAnswers: number;
+  inCorrectAnswers:number;
+  interviewLevel:number;
+  createdBy:string;
+  createdDate:string;
+}
+export interface submittedQuizDetailedInfoResponse {
+  questionId: number;
+  subjectName: string;
+  setNumber: number;
+  totalQuestions: number;
+  answeredQuestions: number;
+  notAnsweredQuestions: number;
+  correctAnswers: number;
+  inCorrectAnswers:number;
+}
+
+
 //   openDialog:boolean,
 //    handleClose:boolean,
 //   setOpenDialog:boolean,
