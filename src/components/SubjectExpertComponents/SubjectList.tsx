@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  CircularProgress,
   Dialog,
   DialogContent,
   DialogTitle,
@@ -39,6 +40,7 @@ import { columns } from "./QuestionSetsTableColumn";
 
 const SubjectList = (props: any) => {
   // file upload part
+  const [loader, setLoader] = useState<boolean>(false);
   const [file, setFile] = useState<File>();
   const [uploadData, setUploadData] = useState<any>({
     set: "",
@@ -58,6 +60,7 @@ const SubjectList = (props: any) => {
   };
 
   const handleSubjectChange = (event: SelectChangeEvent) => {
+    console.log("handle subject changee is calledddd");
     setSubject(event.target.value);
   };
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -108,12 +111,14 @@ const SubjectList = (props: any) => {
 
   const handleUploadClick = () => {
     if (file && uploadData.set && uploadData.subject) {
+      setLoader(true);
       const formData = new FormData();
       formData.append("formFile", file);
 
       upLoadExcel(uploadData.set, uploadData.subject, formData)
         .then((res) => res.data)
         .then((res) => {
+          setLoader(false);
           setOpenFileUpload(false);
           subjectwiseQuizDetails(subject);
           setUploadData({ set: "", subject: "" });
@@ -125,6 +130,7 @@ const SubjectList = (props: any) => {
           });
         })
         .catch((error: any) => {
+          setLoader(false);
           Swal.fire({
             title: "Failed",
             text: "Failed to Upload Question Set",
@@ -142,8 +148,12 @@ const SubjectList = (props: any) => {
   };
 
   const subjectwiseQuizDetails = async (subject: string) => {
+    console.log("subject wise quiz iss calllledddd");
+    setLoader(true);
     getSubjectwiseQuiz(subject === "ALL" ? "" : subject)
       .then((response) => {
+        console.log("get then succes part where loader set is false");
+        setLoader(false);
         if (response.status === 204) {
           setIsQuizSetExists(false);
         } else {
@@ -151,7 +161,10 @@ const SubjectList = (props: any) => {
           setIsQuizSetExists(true);
         }
       })
-      .catch((error: any) => console.log("error in subjwiseapi"));
+      .catch((error: any) => {
+        console.log("error in subjwiseapi");
+        setLoader(false);
+      });
   };
 
   // for table
@@ -190,15 +203,21 @@ const SubjectList = (props: any) => {
     subjectwiseQuizAnswersResponse[]
   >([]);
   const StartTestViewButtonHandler = (row: any) => {
+    setOpenTestModal(true);
+    setLoader(true);
     getSubjectwiseQuizAnswers(row.setNumber, row.subjectName)
       .then((response) => {
         setSubjectAnswerList(response.data);
-        setOpenTestModal(true);
+        setLoader(false);
       })
-      .catch((error: any) => console.log("error in subjwise answersapi"));
+      .catch((error: any) => {
+        setLoader(false);
+        console.log("error in subjwise answersapi");
+      });
   };
   const endTestButtonHandler = () => {
     setOpenTestModal(false);
+    setLoader(false);
   };
 
   const handleClose = () => {
@@ -276,41 +295,55 @@ const SubjectList = (props: any) => {
                   ))}
                 </TableRow>
               </TableHead>
-
-              <TableBody>
-                {isQuizSetExists &&
-                  subjectList
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((row: any, index: number) => {
-                      return (
-                        <TableRow
-                          hover
-                          role="checkbox"
-                          tabIndex={-1}
-                          key={index}
-                        >
-                          {columns.map((column, index) => {
-                            const value = row[column.id];
-                            return (
-                              <TableCell key={index} align={column.align}>
-                                {column.id === "view"
-                                  ? viewButton(row)
-                                  : column.id.includes("Date")
-                                  ? value?.substring(0, 10)
-                                  : value
-                                  ? value
-                                  : column.id.includes("Date")
-                                  ? "dummy-date"
-                                  : "Test-user"}
-                              </TableCell>
-                            );
-                          })}
-                        </TableRow>
-                      );
-                    })}
-              </TableBody>
+              {!loader ? (
+                <TableBody>
+                  {isQuizSetExists &&
+                    subjectList
+                      .slice(
+                        page * rowsPerPage,
+                        page * rowsPerPage + rowsPerPage
+                      )
+                      .map((row: any, index: number) => {
+                        return (
+                          <TableRow
+                            hover
+                            role="checkbox"
+                            tabIndex={-1}
+                            key={index}
+                          >
+                            {columns.map((column, index) => {
+                              const value = row[column.id];
+                              return (
+                                <TableCell key={index} align={column.align}>
+                                  {column.id === "view"
+                                    ? viewButton(row)
+                                    : column.id.includes("Date")
+                                    ? value?.substring(0, 10)
+                                    : value
+                                    ? value
+                                    : column.id.includes("Date")
+                                    ? "dummy-date"
+                                    : "Test-user"}
+                                </TableCell>
+                              );
+                            })}
+                          </TableRow>
+                        );
+                      })}
+                </TableBody>
+              ) : null}
             </Table>
           </TableContainer>
+          {loader ? (
+            <Box className="table-loader">
+              <CircularProgress />
+            </Box>
+          ) : null}
+          {!isQuizSetExists && (
+            <Box className="table-loader">
+              <Typography>No Data Available</Typography>
+            </Box>
+          )}
           {isQuizSetExists && (
             <TablePagination
               rowsPerPageOptions={[10, 25, 100]}
@@ -323,20 +356,6 @@ const SubjectList = (props: any) => {
             />
           )}
         </Paper>
-        {!isQuizSetExists && (
-          <Typography
-            align="center"
-            variant="h5"
-            sx={{
-              marginLeft: "auto",
-              marginRight: "auto",
-              width: "100%",
-              textAlign: "center",
-            }}
-          >
-            No Data Available
-          </Typography>
-        )}
       </Box>
 
       <div className="quiz-start-btn-wrap">
@@ -347,12 +366,19 @@ const SubjectList = (props: any) => {
           style={customStyles}
         >
           <>
-            <AllQuestionsAnswers
-              openDialog={openDialog}
-              handleClose={handleClose}
-              setOpenDialog={setOpenDialog}
-              quizSubjectInfo={subjectAnswersList}
-            />
+            {loader ? (
+              <Box className="modal-loader">
+                <CircularProgress />
+              </Box>
+            ) : (
+              <AllQuestionsAnswers
+                openDialog={openDialog}
+                handleClose={handleClose}
+                setOpenDialog={setOpenDialog}
+                quizSubjectInfo={subjectAnswersList}
+              />
+            )}
+
             <Box style={{ display: "flex", justifyContent: "center" }}>
               <Button
                 variant="contained"
@@ -410,17 +436,6 @@ const SubjectList = (props: any) => {
               <MenuItem value={"CSHARP"}>C#</MenuItem>
             </Select>
           </FormControl>
-
-          {/* <TextField
-            name="subject"
-            label="Subject Name"
-            variant="standard"
-            type="text"
-            className="items"
-            value={subject}
-            onChange={handleTextChange}
-            disabled
-          /> */}
           {formError.subject && (
             <Typography className="error">Please Enter Subject Name</Typography>
           )}
@@ -435,21 +450,30 @@ const SubjectList = (props: any) => {
           {formError.file && (
             <Typography className="error">Please Choose excel file</Typography>
           )}
-          <Box>
-            <Button
-              className="button"
-              variant="contained"
-              onClick={handleUploadClick}
-            >
-              Submit
-            </Button>
-            <Button
-              className="button"
-              variant="contained"
-              onClick={() => setOpenFileUpload(false)}
-            >
-              Cancel
-            </Button>
+          <Box className="buttons-box">
+            {loader ? (
+              <Box className="button-loader">
+                <CircularProgress />
+              </Box>
+            ) : (
+              <>
+                <Button
+                  className="button"
+                  variant="contained"
+                  onClick={handleUploadClick}
+                >
+                  Submit
+                </Button>
+
+                <Button
+                  className="button"
+                  variant="contained"
+                  onClick={() => setOpenFileUpload(false)}
+                >
+                  Cancel
+                </Button>
+              </>
+            )}
           </Box>
         </DialogContent>
       </Dialog>

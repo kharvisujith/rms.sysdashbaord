@@ -258,7 +258,7 @@ const NavBar = (props: any) => {
                 </ListItemButton>
               </ListItem>
 
-              <ListItemButton
+              {/* <ListItemButton
                 className="account-menu-list"
                 onClick={() => {
                   setOpenList(!openList);
@@ -327,7 +327,7 @@ const NavBar = (props: any) => {
                     );
                   })}
                 </List>
-              </Collapse>
+              </Collapse> */}
               {/* /* <ListItem disablePadding>
                 <ListItemButton 
                   onClick={() => {
