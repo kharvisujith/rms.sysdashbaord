@@ -42,9 +42,39 @@ const useStyles = makeStyles({
     width: '100%',
   },
   container: {
-    maxHeight: 430,
+    maxHeight: 440,
   },
 });
+
+// interface Column {
+//   id:
+//     | "setNumber"
+//     | "subjectName"
+//     | "totalQuestionsCount"
+//     | "select";
+//   label: string;
+//   minWidth?: number;
+//   align?: "right";
+//   format?: (value: number) => string;
+// }
+
+// const columns: Column[] = [
+//   {
+//     id: "setNumber",
+//     label: "set Number",
+//     minWidth: 100,
+//      //align: 'right',
+//   },
+//   { id: "subjectName", label: "Subject Name", minWidth: 100 },
+//   { id: "totalQuestionsCount", label: "Total Questions", minWidth: 100 },
+//   {
+//     id: "select",
+//     label: "Select",
+//     minWidth: 100,
+//     //align: 'right',
+//     //format: (value: number) => value.toLocaleString('en-US'),
+//   },
+// ];
 
 
 const CreateQuiz = () => {
@@ -149,47 +179,93 @@ const CreateQuiz = () => {
     <>
       <NavBarInterviewer />
       
-      <Box
+      <Box className="subjectlist-box"
       //   sx={{
       //     marginTop: -1,
       //     marginLeft: 10,
       //   }}
        >
-        <Typography variant="h5" align="center">
+         <Paper className="paper">
+        <Typography variant="h5" className="table-title" >
           Available Question Sets
         </Typography>
-      </Box>
-      <Paper className={classes.root}>
-      <TableContainer  sx={{ marginTop: 4 }} className={classes.container}>
-        <Table 
-          aria-label="simple table"
+      {/* </Box> */}
+      {/* <Paper className={classes.root}>
+          <TableContainer className={classes.container}>
+            <Table stickyHeader aria-label="sticky table">
+              <TableHead>
+                <TableRow>
+                  {columns.map((column) => (
+                    <TableCell
+                      key={column.id}
+                      align={column.align}
+                      style={{ minWidth: column.minWidth }}
+                    >
+                      {column.label}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              </TableHead>
 
-          // sx={{tableLayout: "auto",
-          // width: "max-content",
-          // height: "max-content"
-          //   }}
-        >
+              <TableBody>
+                {subjectList &&
+                  subjectList
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((row: any, index: number) => {
+                      return (
+                        <TableRow
+                          hover
+                          role="checkbox"
+                          tabIndex={-1}
+                          key={index}
+                        >
+                          {columns.map((column, index) => {
+                            const value = row[column.id];
+                            return (
+                              <TableCell key={index} align={column.align}>
+                                {column.id === "select"
+                                  ? <Checkbox
+                                  name="checkbox-1"
+                                  onChange={(e: any) => handleCheckboxChange(e, row)}
+                                />
+                                  : value
+                                  
+                                  }
+                              </TableCell>
+                            );
+                          })}
+                        </TableRow>
+                      );
+                    })}
+              </TableBody>
+            </Table>
+          </TableContainer> */}
+     
+      <TableContainer className="table-container">
+        <Table 
+          aria-label="simple table" stickyHeader>
           <TableHead>
             <TableRow>
-              <TableCell align="center">Set Number</TableCell>
-              <TableCell align="center">Subject Name</TableCell>
-              <TableCell align="center">Total Questions</TableCell>
-              <TableCell align="center">Select</TableCell>
+              <TableCell align="left">Set Number</TableCell>
+              <TableCell align="left">Subject Name</TableCell>
+              <TableCell align="left">Total Questions</TableCell>
+              <TableCell align="left">Select</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {subjectList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) &&
               subjectList.map((row: any) => (
-                <TableRow hover role="checkbox" tabIndex={-1} 
-                  key={row.code}
-                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                <TableRow  hover role="checkbox" tabIndex={-1} 
+                  key={row.code} 
+                  
+                  
                 >
-                  <TableCell align="center">{row.setNumber}</TableCell>
-                  <TableCell align="center">{row.subjectName}</TableCell>
-                  <TableCell align="center">
+                  <TableCell size="small" align="left">{row.setNumber}</TableCell>
+                  <TableCell  size="small" align="left">{row.subjectName}</TableCell>
+                  <TableCell size="small" align="left">
                     {row.totalQuestionsCount}
                   </TableCell>
-                  <TableCell align="center">
+                  <TableCell  size="small" align="left">
                     <Checkbox
                       name="checkbox-1"
                       onChange={(e: any) => handleCheckboxChange(e, row)}
@@ -210,8 +286,9 @@ const CreateQuiz = () => {
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
       </Paper>
+      </Box>
 
-      <Button 
+      <Button   className="button-create"
         variant="contained"
         type="submit"
         sx={{
@@ -227,16 +304,18 @@ const CreateQuiz = () => {
       </Button>
 
       {quizLink && (
-        <Box sx={{ marginTop: 5 }}>
-          {/* <Typography> */}
-          {/* {`Test Link :`} */}
-          {/* </Typography> */}
+        <Box className="box-link"
+        sx={{ marginTop: 4}}
+        >
+          <Typography > 
+           {`Test Link :`} 
+           </Typography>
           <Box className="test-link">
-            <Typography>
+            <Typography > 
               {quizLink}
               {/* {`http://localhost:3000/rms-aug/test/${newquiz?.quizId}/${newquiz?.quizLink}`} */}
             </Typography>
-            <Button
+            <Button className="copy"
               variant="outlined"
               onClick={() => copyToClipboard(quizLink)}
             >

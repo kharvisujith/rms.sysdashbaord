@@ -34,7 +34,7 @@ const CandidateInfo = (props: any) => {
     firstName: false,
     lastName: false,
     email: false,
-    phone: false,
+    phone: false
   });
   const [quizQuestions, setQuizQuestions] = useState<any>([]);
   const [isKeyValid, setIsKeyValid] = useState<boolean>(false);
@@ -42,6 +42,8 @@ const CandidateInfo = (props: any) => {
 
   const regex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
 
+  const phone_regex = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
+  // /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
   const handleChange = (e: any) => {
     setFormError({ ...formError, [e?.target.name]: false });
     const name = e.target.name;
@@ -53,7 +55,11 @@ const CandidateInfo = (props: any) => {
     if (!user) {
       return;
     }
-    if (user.email && user.firstName && user.lastName && user.phone) {
+    if (user.email && user.firstName && user.phone && user.lastName) {
+      console.log('inside if');
+      //  if (!user.phone === phone_regex.test(user.phone)) {
+      //   setFormError({ ...formError, phone: true });
+      // }
       submitCandidateInfo(parseInt(id!), key!, user)
         .then((res: any) => {
           setQuizQuestions(res.data);
@@ -80,11 +86,15 @@ const CandidateInfo = (props: any) => {
       setFormError({ ...formError, email: true });
     } else if (!user.firstName) {
       setFormError({ ...formError, firstName: true });
-    } else if (!user.lastName) {
-      setFormError({ ...formError, lastName: true });
-    } else if (!user.phone) {
+    } else if (!phone_regex.test(user.phone)) {
       setFormError({ ...formError, phone: true });
-    }
+    // } else if (!user.phone) {
+    //   setFormError({ ...formError, phone: true });
+    // } else if (!phone_regex.test(user.phone)) {
+    //   setFormError({ ...formError, phone: true });
+     } else if (!user.lastName) {
+      setFormError({ ...formError, lastName: true });
+     }
   };
 
   useEffect(() => {
@@ -134,7 +144,7 @@ const CandidateInfo = (props: any) => {
             alignItems: "center",
           }}
         >
-          <Box
+          <Box 
             //  onSubmit={handleSubmit}
             //noValidate
             sx={{ mt: 1 }}
@@ -148,6 +158,7 @@ const CandidateInfo = (props: any) => {
               type="text"
               label="Candidate Email Address"
               name="email"
+              
             />
             {formError.email && (
               <Typography className="error">
@@ -170,7 +181,6 @@ const CandidateInfo = (props: any) => {
 
             <TextField
               margin="normal"
-              required
               fullWidth
               type="text"
               onChange={handleChange}
@@ -204,9 +214,7 @@ const CandidateInfo = (props: any) => {
               name="phone"
             />
             {formError.phone && (
-              <Typography className="error">
-                Please Enter Phone Number
-              </Typography>
+              <Typography className="error"> Please Enter Valid Phone Number</Typography>
             )}
 
             <Box>

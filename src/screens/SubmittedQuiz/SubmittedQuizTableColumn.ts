@@ -1,4 +1,4 @@
-import { SubmittedQuesitonSetsTableColumns } from "../../Interface/SubmittedQuizTable";
+ import { SubmittedQuesitonSetsTableColumns } from "../../Interface/SubmittedQuizTable";
 
 export const columns: SubmittedQuesitonSetsTableColumns[] = [
     //{ id: 'quizId', label: 'QuizId', minWidth: 30 },

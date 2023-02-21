@@ -10,6 +10,7 @@ import NavBar from "./screens/subjectExpert/SubjectExpert";
 import SubjectOptions from "./screens/subjectExpert/SubjectExpert";
 import CandidateInfo from "./screens/Candidate/CandidateInfo";
 import CreateQuiz from "./screens/CreateQuiz/CreateQuiz";
+// import SubmitQuiz from "./screens/SubmitQuiz/SubmitQuiz";
 import SubmittedQuiz from "./screens/SubmittedQuiz/SubmittedQuiz";
 
 

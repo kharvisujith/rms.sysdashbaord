@@ -22,8 +22,7 @@ import MuiDrawer from "@mui/material/Drawer";
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import QuizIcon from '@mui/icons-material/Quiz';
 import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
-import InterviewerQuizTable from "../../components/InterviewerQuizList/InterviewerQuizTable";
-import SubmittedQuiz from "../../screens/SubmittedQuiz/SubmittedQuiz";
+// import SubmittedQuiz from "../../screens/SubmittedQuiz/SubmittedQuiz";
 
 const drawerWidth = 240;
 
@@ -147,7 +146,7 @@ const NavBarInterviewer = (props: any) => {
     <>
       <Box sx={{ display: "flex" }}>
         <>
-          <AppBar className="Appbar" position="fixed" open={open}>
+          <AppBar  position="fixed" open={open}>
             <Toolbar >
               <IconButton
                 color="inherit"
@@ -155,7 +154,7 @@ const NavBarInterviewer = (props: any) => {
                 onClick={handleDrawerOpen}
                 edge="start"
                 id="menu-button"
-                className={open ? "menu-icon-open" : "menu-icon-close"}
+
                 sx={{
                    marginRight: 5,
                   ...(open && { display: "none" }),
