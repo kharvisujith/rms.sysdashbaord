@@ -18,6 +18,8 @@ import { useParams } from "react-router-dom";
 import CandidateNavBar from "../../components/TopNavBar/CandidateNavBar";
 import "./CandidateInfo.style.scss";
 import { AxiosResponse } from "axios";
+import { logDOM } from "@testing-library/react";
+import { CircularProgress } from "@material-ui/core";
 
 const CandidateInfo = (props: any) => {
   const { id, key } = useParams();
@@ -39,6 +41,10 @@ const CandidateInfo = (props: any) => {
   const [quizQuestions, setQuizQuestions] = useState<any>([]);
   const [isKeyValid, setIsKeyValid] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<any>();
+  const [loader, setLoader] = useState<any>({
+    pageLoader: false,
+    buttonLoader: false,
+  });
 
   const regex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
 
@@ -55,14 +61,12 @@ const CandidateInfo = (props: any) => {
     if (!user) {
       return;
     }
-    if (user.email && user.firstName && user.phone && user.lastName) {
-      console.log('inside if');
-      //  if (!user.phone === phone_regex.test(user.phone)) {
-      //   setFormError({ ...formError, phone: true });
-      // }
+    if (user.email && user.firstName && user.lastName && user.phone) {
+      setLoader({ ...loader, buttonLoader: true });
       submitCandidateInfo(parseInt(id!), key!, user)
         .then((res: any) => {
           setQuizQuestions(res.data);
+          setLoader({ ...loader, buttonLoader: false });
           console.log(res.data, "response is");
           return res.data;
 
@@ -78,6 +82,7 @@ const CandidateInfo = (props: any) => {
           });
         })
         .catch((error: any) => {
+          setLoader({ ...loader, buttonLoader: false });
           setErrorMessage(error.response.data);
         });
     } else if (!user.email) {
@@ -103,11 +108,14 @@ const CandidateInfo = (props: any) => {
       console.log("invalidd not foundddd");
       navigate("/notfound");
     } else {
+      setLoader({ ...loader, pageLoader: true });
       verifyCandidate(parseInt(id!), key!)
         .then((res: AxiosResponse) => {
+          setLoader({ ...loader, pageLoader: false });
           setIsKeyValid(true);
         })
         .catch((error: any) => {
+          setLoader({ ...loader, pageLoader: false });
           if (error.response.status === 400) {
             if (error.response.data) {
               setErrorMessage(error.response.data);
@@ -118,7 +126,7 @@ const CandidateInfo = (props: any) => {
     //console.log("value of id", k, typeof k);
   }, [key, id, navigate]);
 
-  if (!isKeyValid) {
+  if (!isKeyValid && !loader.pageLoader) {
     return (
       <>
         <Box className="error-box">
@@ -132,104 +140,120 @@ const CandidateInfo = (props: any) => {
   return (
     <>
       <CandidateNavBar />
-      <Typography variant="h4" sx={{ mt: 5, textAlign: "center" }}>
-        Enter Details
-      </Typography>
-      <Container component="main" maxWidth="xs">
-        <Box
-          sx={{
-            marginTop: 2,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-          }}
-        >
-          <Box 
-            //  onSubmit={handleSubmit}
-            //noValidate
-            sx={{ mt: 1 }}
-          >
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              onChange={handleChange}
-              value={user.email}
-              type="text"
-              label="Candidate Email Address"
-              name="email"
-              
-            />
-            {formError.email && (
-              <Typography className="error">
-                Please include @ and enter valid email
-              </Typography>
-            )}
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              type="text"
-              onChange={handleChange}
-              value={user.firstName}
-              label="FirstName"
-              name="firstName"
-            />
-            {formError.firstName && (
-              <Typography className="error">Please Enter First Name</Typography>
-            )}
-
-            <TextField
-              margin="normal"
-              fullWidth
-              type="text"
-              onChange={handleChange}
-              value={user.middleName}
-              label="MiddleName"
-              name="middleName"
-            />
-
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              type="text"
-              onChange={handleChange}
-              value={user.lastName}
-              label="LastName"
-              name="lastName"
-            />
-            {formError.lastName && (
-              <Typography className="error">Please Enter Last Name</Typography>
-            )}
-
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              type="text"
-              onChange={handleChange}
-              value={user.phone}
-              label="PhoneNumber"
-              name="phone"
-            />
-            {formError.phone && (
-              <Typography className="error"> Please Enter Valid Phone Number</Typography>
-            )}
-
-            <Box>
-              <Button
-                type="submit"
-                variant="contained"
-                sx={{ mt: 3, mb: 2, ml: 20 }}
-                onClick={handleSubmit}
-              >
-                Submit
-              </Button>
-            </Box>
-          </Box>
+      {loader.pageLoader ? (
+        <Box className="page-loader">
+          <CircularProgress />
         </Box>
-      </Container>
+      ) : (
+        <>
+          <Typography variant="h4" sx={{ mt: 5, textAlign: "center" }}>
+            Enter Details
+          </Typography>
+          <Container component="main" maxWidth="xs">
+            <Box
+              sx={{
+                marginTop: 2,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
+            >
+              <Box sx={{ mt: 1 }}>
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  onChange={handleChange}
+                  value={user.email}
+                  type="text"
+                  label="Candidate Email Address"
+                  name="email"
+                />
+                {formError.email && (
+                  <Typography className="error">
+                    Please include @ and enter valid email
+                  </Typography>
+                )}
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  type="text"
+                  onChange={handleChange}
+                  value={user.firstName}
+                  label="FirstName"
+                  name="firstName"
+                />
+                {formError.firstName && (
+                  <Typography className="error">
+                    Please Enter First Name
+                  </Typography>
+                )}
+
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  type="text"
+                  onChange={handleChange}
+                  value={user.middleName}
+                  label="MiddleName"
+                  name="middleName"
+                />
+
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  type="text"
+                  onChange={handleChange}
+                  value={user.lastName}
+                  label="LastName"
+                  name="lastName"
+                />
+                {formError.lastName && (
+                  <Typography className="error">
+                    Please Enter Last Name
+                  </Typography>
+                )}
+
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  type="text"
+                  onChange={handleChange}
+                  value={user.phone}
+                  label="PhoneNumber"
+                  name="phone"
+                />
+                {formError.phone && (
+                  <Typography className="error">
+                    Please Enter Phone Number
+                  </Typography>
+                )}
+
+                <Box className="button-box">
+                  {loader.buttonLoader ? (
+                    <Box className="button-loader">
+                      <CircularProgress />
+                    </Box>
+                  ) : (
+                    <Button
+                      type="submit"
+                      variant="contained"
+                      onClick={handleSubmit}
+                      sx={{ margin: 2 }}
+                    >
+                      Submit
+                    </Button>
+                  )}
+                </Box>
+              </Box>
+            </Box>
+          </Container>
+        </>
+      )}
     </>
   );
 };

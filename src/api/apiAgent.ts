@@ -88,7 +88,6 @@ export const submitQuiz = (quizAnswers: any) => {
 };
 
 export const verifyCandidate = (qId: number, confirmcode: string) => {
-  "https://localhost:5001/api/Rms/1/quiz/candidate/checkquizid?quizId=1&confirmationCode=sdfdsfsd";
   return axiosClient.get(
     `quiz/candidate/checkquizid?quizId=${qId}&confirmationCode=${confirmcode}`
   );
@@ -113,20 +112,15 @@ export const createQuiz = (values: any) => {
     },
   });
 };
-export const getTotalQuizLinksInfo = ()=>{
-  return axiosClient.get(`quiz/interviewer/quizdetails`); 
+export const getTotalQuizLinksInfo = () => {
+  return axiosClient.get(`quiz/interviewer/quizdetails`);
 };
-export const getTotalSubmittedQuizInfo = ()=>{
-  return axiosClient.get(`quiz/interviewer/submitquiz`); 
+export const getTotalSubmittedQuizInfo = () => {
+  return axiosClient.get(`quiz/interviewer/submitquiz`);
 };
-export const getSubmittedQuizInfo = (qId: number,)=>{
-  return axiosClient.get(`quiz/interviewer/submitquiz/${qId}`); 
+export const getSubmittedQuizInfo = (qId: number) => {
+  return axiosClient.get(`quiz/interviewer/submitquiz/${qId}`);
 };
-export const getSubmittedQuizDetailedInfo = (qId: number,)=>{
-  return axiosClient.get(`quiz/interviewer/submitquizdetails/${qId}`); 
-};
-
-export const dummycheck = (id: number) => {
-  // quiz/interviewer/submitquizdetails/1
-  return axiosClient.get(`quiz/interviewer/submitquizdetails/${id}`);
+export const getSubmittedQuizDetailedInfo = (qId: number) => {
+  return axiosClient.get(`quiz/interviewer/submitquizdetails/${qId}`);
 };

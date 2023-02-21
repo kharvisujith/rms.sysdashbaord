@@ -43,15 +43,33 @@
   .file {
     margin-top: 1.5rem;
   }
-  .button {
-    margin: 1rem;
+  .buttons-box {
+    display: flex;
+
+    .button {
+      margin: 1rem;
+    }
   }
+
   .error {
     color: red;
     font-size: 0.8rem;
   }
 }
 
-.modal-react {
-  z-index: -1 !important;
-}
+// .table-loader {
+//   width: 100%;
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+//   margin-top: 2rem;
+//   margin-bottom: 2rem;
+// }
+
+// .modal-loader {
+//   width: 100%;
+//   height: 80%;
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+// }

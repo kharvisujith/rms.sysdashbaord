@@ -192,14 +192,19 @@ const NavBar = (props: any) => {
             </Toolbar>
           </AppBar>
           {/* <ThemeProvider theme={darkTheme}> */}
-          <Drawer variant="persistent" open={open} sx={{
-          width: drawerWidth,
-          flexShrink: 0,
-          '& .MuiDrawer-paper': {
-            width: drawerWidth,
-            boxSizing: 'border-box',
-          },
-        }}  anchor="left">
+          <Drawer
+            variant="persistent"
+            open={open}
+            sx={{
+              width: drawerWidth,
+              flexShrink: 0,
+              "& .MuiDrawer-paper": {
+                width: drawerWidth,
+                boxSizing: "border-box",
+              },
+            }}
+            anchor="left"
+          >
             <DrawerHeader>
               <IconButton onClick={handleDrawerClose}>
                 {theme.direction === "rtl" ? (
@@ -211,8 +216,8 @@ const NavBar = (props: any) => {
             </DrawerHeader>
             <Divider />
             <List className="account-menu-list">
-            <ListItem disablePadding>
-                <ListItemButton 
+              <ListItem disablePadding>
+                <ListItemButton
                   onClick={() => {
                     navigate("/");
                     handleDrawerClose();
@@ -252,6 +257,7 @@ const NavBar = (props: any) => {
                 </ListItemButton>
               </ListItem> */}
 
+              {/* <ListItemButton
               {/* <ListItemButton
                 className="account-menu-list"
                 onClick={() => {

@@ -1,20 +1,12 @@
-//import { AuthContext } from "../../context/AuthContectProvider";
 
-import NavBarInterviewer from "../../components/NavBar/NavBarInterviewer";
 import InterviewerQuizTable from "../../components/InterviewQuizList/InterviewerQuizTable";
-
-
-
-
+import NavBarInterviewer from "../../components/NavBar/NavBarInterviewer";
 const Interviewer = () => {
-  
-
   return (
     <>
       <NavBarInterviewer />
       <InterviewerQuizTable />
     </>
-  
   );
 };
 
