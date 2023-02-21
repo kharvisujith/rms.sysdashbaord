@@ -18,6 +18,7 @@ import {
   TableHead,
   TablePagination,
   TableRow,
+  TableSortLabel,
   TextField,
   Typography,
 } from "@mui/material";
@@ -37,6 +38,14 @@ import {
 } from "../../Interface/QuizDetails";
 import Swal from "sweetalert2";
 import { columns } from "./QuestionSetsTableColumn";
+import { visuallyHidden } from "@mui/utils";
+
+type Order = "asc" | "desc";
+// interface Data {
+//   subjectName: string;
+//   setNumber: number;
+//   totalQuestionsCount: number;
+// }
 
 const SubjectList = (props: any) => {
   // file upload part
@@ -174,6 +183,9 @@ const SubjectList = (props: any) => {
     []
   );
   const [isQuizSetExists, setIsQuizSetExists] = useState<boolean>(true);
+  const [order, setOrder] = useState<Order>("asc");
+  //const [orderBy, setOrderBy] = useState<keyof Data>("setNumber");
+  const [orderBy, setOrderBy] = useState<any>("setNumber");
 
   const viewButton = (row: any) => {
     return (
@@ -194,6 +206,38 @@ const SubjectList = (props: any) => {
   ) => {
     setRowsPerPage(+event.target.value);
     setPage(0);
+  };
+
+  const createSortHandler =
+    (property: string) => (event: React.MouseEvent<unknown>) => {
+      handleRequestSort(event, property);
+    };
+
+  const handleRequestSort = (
+    event: React.MouseEvent<unknown>,
+    property: string
+  ) => {
+    const isAsc = orderBy === property && order === "asc";
+    setOrder(isAsc ? "desc" : "asc");
+    setOrderBy(property);
+  };
+
+  const getComparator = (order: string, orderBy: string) => {
+    return order === "desc"
+      ? (a: subjectWiseQuizListResponse, b: subjectWiseQuizListResponse) =>
+          descendingComparator(a, b, orderBy)
+      : (a: subjectWiseQuizListResponse, b: subjectWiseQuizListResponse) =>
+          -descendingComparator(a, b, orderBy);
+  };
+
+  const descendingComparator = (a: any, b: any, orderBy: any) => {
+    if (b[orderBy] < a[orderBy]) {
+      return -1;
+    }
+    if (b[orderBy] > a[orderBy]) {
+      return 1;
+    }
+    return 0;
   };
 
   /// for viewClick modal
@@ -289,8 +333,22 @@ const SubjectList = (props: any) => {
                       key={column.id}
                       align={column.align}
                       style={{ minWidth: column.minWidth }}
+                      sortDirection={orderBy === column.id ? order : false}
                     >
-                      {column.label}
+                      <TableSortLabel
+                        active={orderBy === column.id}
+                        direction={orderBy === column.id ? order : "asc"}
+                        onClick={createSortHandler(column.id)}
+                      >
+                        {column.label}
+                        {orderBy === column.id ? (
+                          <Box component="span" sx={visuallyHidden}>
+                            {order === "desc"
+                              ? "sorted descending"
+                              : "sorted ascending"}
+                          </Box>
+                        ) : null}
+                      </TableSortLabel>
                     </TableCell>
                   ))}
                 </TableRow>
@@ -299,6 +357,8 @@ const SubjectList = (props: any) => {
                 <TableBody>
                   {isQuizSetExists &&
                     subjectList
+                      .slice()
+                      .sort(getComparator(order, orderBy))
                       .slice(
                         page * rowsPerPage,
                         page * rowsPerPage + rowsPerPage
