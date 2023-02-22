@@ -17,6 +17,8 @@ import {
   TableRow,
   TableBody,
   TablePagination,
+  InputAdornment,
+  OutlinedInput,
 } from "@mui/material";
 import { AxiosResponse } from "axios";
 import { any } from "prop-types";
@@ -35,7 +37,9 @@ import {
 import "./CreateQuiz.style.scss";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import NavBarInterviewer from "../../components/NavBar/NavBarInterviewer";
+import SearchIcon from "@mui/icons-material/Search";
 import TopNavBar from "../../components/TopNavBar/TopNavBar";
+import SearchBar, { SearchBarProps } from "material-ui-search-bar";
 
 const useStyles = makeStyles({
   root: {
@@ -46,35 +50,35 @@ const useStyles = makeStyles({
   },
 });
 
-// interface Column {
-//   id:
-//     | "setNumber"
-//     | "subjectName"
-//     | "totalQuestionsCount"
-//     | "select";
-//   label: string;
-//   minWidth?: number;
-//   align?: "right";
-//   format?: (value: number) => string;
-// }
+interface Column {
+  id:
+    | "setNumber"
+    | "subjectName"
+    | "totalQuestionsCount"
+    | "select";
+  label: string;
+  minWidth?: number;
+  align?: "right";
+  format?: (value: number) => string;
+}
 
-// const columns: Column[] = [
-//   {
-//     id: "setNumber",
-//     label: "set Number",
-//     minWidth: 100,
-//      //align: 'right',
-//   },
-//   { id: "subjectName", label: "Subject Name", minWidth: 100 },
-//   { id: "totalQuestionsCount", label: "Total Questions", minWidth: 100 },
-//   {
-//     id: "select",
-//     label: "Select",
-//     minWidth: 100,
-//     //align: 'right',
-//     //format: (value: number) => value.toLocaleString('en-US'),
-//   },
-// ];
+const columns: Column[] = [
+  {
+    id: "setNumber",
+    label: "set Number",
+    minWidth: 100,
+     //align: 'right',
+  },
+  { id: "subjectName", label: "Subject Name", minWidth: 100 },
+  { id: "totalQuestionsCount", label: "Total Questions", minWidth: 100 },
+  {
+    id: "select",
+    label: "Select",
+    minWidth: 100,
+    //align: 'right',
+    //format: (value: number) => value.toLocaleString('en-US'),
+  },
+];
 
 
 const CreateQuiz = () => {
@@ -88,6 +92,36 @@ const CreateQuiz = () => {
   const [quizLink, setQuizLink] = useState<string>();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [name, setName] = useState<string>("");
+  const [rows, setRows] = useState(subjectList);
+  
+
+  // const dataSearch = columns.filter((search: any) => {
+  //   return search.subjectName.toLowerCase().includes(name.toLowerCase());
+  // });
+  const keys = ["setNumber", "subjectName", "totalQuestionsCount"]
+  console.log(subjectList, 'value of column');
+
+  const handleSearch = (searchedVal: string) => {
+    const filteredRows = subjectList.filter((row) => {
+      return (
+         row.subjectName.toLowerCase().includes(searchedVal.toLowerCase()) || row.setNumber.toString().toLowerCase().includes(searchedVal.toString().toLowerCase()) || row.totalQuestionsCount.toString().toLowerCase().includes(searchedVal.toString().toLowerCase()));
+    });
+      setRows(filteredRows);
+    console.log(filteredRows, 'row value');
+  };
+
+  // const cancelSearch = () => {
+  //   setName("");
+  //   handleSearch(name);
+  // };
+  // const handleSearch = (e: any) => {
+  //   setName(e.target.value);
+  //   const dataSearch = columns.filter((search: any) => {
+  //     return search.subjectName.toLowerCase().includes(name.toLowerCase());
+  //   });
+  // }
+  
 
 
   
@@ -156,6 +190,7 @@ const CreateQuiz = () => {
     getSubjectwiseQuiz("")
       .then((response: AxiosResponse) => {
         setSubjectList(response.data);
+        
       })
       .catch((error: any) => console.log("error in subjwiseapi"));
   };
@@ -179,19 +214,42 @@ const CreateQuiz = () => {
     <>
       <NavBarInterviewer />
       
-      <Box className="subjectlist-box"
-      //   sx={{
-      //     marginTop: -1,
-      //     marginLeft: 10,
-      //   }}
-       >
+      <Box className="subjectlist-box">
+
+      {/* <SearchBar
+          value={name}
+          onChange={(searchVal : any) => handleSearch(searchVal)}
+          onCancelSearch={() => cancelSearch()}
+        /> */}
+        <Box className="table-header">
+         <OutlinedInput className="search-input"
+        sx={{
+           
+          borderRadius: "0.3rem",
+          height: 30,
+          minWidth: 10,
+          border: "0.1px solid #000",
+        }}
+        id="outlined-adornment-weight"
+        value={name}
+        onChange={(e: any) => setName(e.target.value)}
+        placeholder="Search"
+        endAdornment={
+          <InputAdornment position="end">
+            <SearchIcon />
+          </InputAdornment>
+        }
+        aria-describedby="outlined-weight-helper-text"
+      />
+      </Box>
+        
          <Paper className="paper">
         <Typography variant="h5" className="table-title" >
           Available Question Sets
         </Typography>
       {/* </Box> */}
-      {/* <Paper className={classes.root}>
-          <TableContainer className={classes.container}>
+     
+          <TableContainer className="table-container">
             <Table stickyHeader aria-label="sticky table">
               <TableHead>
                 <TableRow>
@@ -210,7 +268,11 @@ const CreateQuiz = () => {
               <TableBody>
                 {subjectList &&
                   subjectList
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) &&
+                    subjectList.filter((row) => !name.length || row.subjectName.toLowerCase().includes(name.toLowerCase()) || 
+                    row.setNumber.toString().toLowerCase().includes(name.toString().toLowerCase()) || 
+                     row.totalQuestionsCount.toString().toLowerCase().includes(name.toString().toLowerCase()))
+                    
                     .map((row: any, index: number) => {
                       return (
                         <TableRow
@@ -222,7 +284,7 @@ const CreateQuiz = () => {
                           {columns.map((column, index) => {
                             const value = row[column.id];
                             return (
-                              <TableCell key={index} align={column.align}>
+                              <TableCell key={index} align={column.align} size="small" >
                                 {column.id === "select"
                                   ? <Checkbox
                                   name="checkbox-1"
@@ -239,9 +301,9 @@ const CreateQuiz = () => {
                     })}
               </TableBody>
             </Table>
-          </TableContainer> */}
+          </TableContainer>
      
-      <TableContainer className="table-container">
+      {/* <TableContainer className="table-container">
         <Table 
           aria-label="simple table" stickyHeader>
           <TableHead>
@@ -275,7 +337,7 @@ const CreateQuiz = () => {
               ))}
           </TableBody>
         </Table>
-      </TableContainer>
+      </TableContainer> */}
       <TablePagination
         rowsPerPageOptions={[10, 25, 100]}
         component="div"
@@ -293,7 +355,7 @@ const CreateQuiz = () => {
         type="submit"
         sx={{
           marginTop: 1,
-          marginLeft: 90,
+          marginLeft: 83,
           // display: "flex",
           // flexDirection: "column",
           alignItems: "center",

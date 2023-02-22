@@ -237,7 +237,7 @@ const NavBar = (props: any) => {
               </ListItem> 
 
             
-              {/* <ListItem disablePadding>
+              <ListItem disablePadding>
                 <ListItemButton 
                   onClick={() => {
                     navigate("/assignments");
@@ -255,7 +255,7 @@ const NavBar = (props: any) => {
                   </ListItemIcon>
                   <ListItemText primary={" SubjectExpert Home Page"} />
                 </ListItemButton>
-              </ListItem> */}
+              </ListItem>
 
               {/* <ListItemButton
               {/* <ListItemButton
