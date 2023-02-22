@@ -17,6 +17,12 @@ import {
   TableRow,
   TableBody,
   TablePagination,
+  TableSortLabel,
+  InputLabel,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+  CircularProgress,
 } from "@mui/material";
 import { AxiosResponse } from "axios";
 import { any } from "prop-types";
@@ -26,76 +32,75 @@ import Swal from "sweetalert2";
 import { ImportsNotUsedAsValues } from "typescript";
 import { setEnvironmentData } from "worker_threads";
 import { createQuiz, getSubjectwiseQuiz } from "../../api/apiAgent";
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from "@material-ui/core/styles";
 import {
   createQuizRequest,
   createQuizResponse,
+  Order,
   subjectWiseQuizListResponse,
 } from "../../Interface/QuizDetails";
 import "./CreateQuiz.style.scss";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import NavBarInterviewer from "../../components/NavBar/NavBarInterviewer";
 import TopNavBar from "../../components/TopNavBar/TopNavBar";
+import creatQuizTableColumns from "./createQuizTableColumns";
+import { visuallyHidden } from "@mui/utils";
+import { getComparator } from "../../utils/TableSortFunctions";
 
 const useStyles = makeStyles({
   root: {
-    width: '100%',
+    width: "100%",
   },
   container: {
     maxHeight: 440,
   },
 });
 
-// interface Column {
-//   id:
-//     | "setNumber"
-//     | "subjectName"
-//     | "totalQuestionsCount"
-//     | "select";
-//   label: string;
-//   minWidth?: number;
-//   align?: "right";
-//   format?: (value: number) => string;
-// }
-
-// const columns: Column[] = [
-//   {
-//     id: "setNumber",
-//     label: "set Number",
-//     minWidth: 100,
-//      //align: 'right',
-//   },
-//   { id: "subjectName", label: "Subject Name", minWidth: 100 },
-//   { id: "totalQuestionsCount", label: "Total Questions", minWidth: 100 },
-//   {
-//     id: "select",
-//     label: "Select",
-//     minWidth: 100,
-//     //align: 'right',
-//     //format: (value: number) => value.toLocaleString('en-US'),
-//   },
-// ];
-
-
 const CreateQuiz = () => {
-  const classes = useStyles();
   const [subjectList, setSubjectList] = useState<subjectWiseQuizListResponse[]>(
     []
   );
-  // const [checked, setChecked] = useState<boolean>(false);
+
   const [values, setValues] = useState<createQuizRequest[]>([]);
   const [newquiz, setNewQuiz] = useState<createQuizResponse | {}>({});
   const [quizLink, setQuizLink] = useState<string>();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [subject, setSubject] = useState<string>("ALL");
 
+  const [order, setOrder] = useState<Order>("asc");
+  //const [orderBy, setOrderBy] = useState<keyof Data>("setNumber");
+  const [orderBy, setOrderBy] = useState<any>("setNumber");
+  const [loader, setLoader] = useState<any>({
+    tableLoader: "",
+    buttonLoader: "",
+  });
 
-  
+  const handleSubjectChange = (event: SelectChangeEvent) => {
+    console.log("handle subject changee is calledddd");
+    setSubject(event.target.value);
+  };
+  const createSortHandler =
+    (property: string) => (event: React.MouseEvent<unknown>) => {
+      handleRequestSort(event, property);
+    };
+
+  const handleRequestSort = (
+    event: React.MouseEvent<unknown>,
+    property: string
+  ) => {
+    const isAsc = orderBy === property && order === "asc";
+    setOrder(isAsc ? "desc" : "asc");
+    setOrderBy(property);
+  };
+
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
   };
 
-  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
@@ -128,9 +133,11 @@ const CreateQuiz = () => {
   };
 
   const handleSubmit = () => {
+    setLoader({ ...loader, buttonLoader: true });
     createQuiz(values)
       .then((res: AxiosResponse) => {
         setNewQuiz(res.data);
+        setLoader({ ...loader, buttonLoader: false });
         Swal.fire({
           title: "Success",
           text: "Quiz created Succesfully",
@@ -143,6 +150,7 @@ const CreateQuiz = () => {
         return res.data;
       })
       .catch((error: any) => {
+        setLoader({ ...loader, buttonLoader: false });
         Swal.fire({
           title: "error",
           text: "Failed to create quiz! please retry",
@@ -152,12 +160,17 @@ const CreateQuiz = () => {
       });
   };
 
-  const subjectwiseQuizDetails = async () => {
-    getSubjectwiseQuiz("")
+  const subjectwiseQuizDetails = async (subject: string) => {
+    setLoader({ ...loader, tableLoader: true });
+    getSubjectwiseQuiz(subject === "ALL" ? "" : subject)
       .then((response: AxiosResponse) => {
         setSubjectList(response.data);
+        setLoader({ ...loader, tableLoader: false });
       })
-      .catch((error: any) => console.log("error in subjwiseapi"));
+      .catch((error: any) => {
+        setLoader({ ...loader, tableLoader: false });
+        console.log("error in subjwiseapi");
+      });
   };
 
   const copyToClipboard = (text: string) => {
@@ -172,154 +185,168 @@ const CreateQuiz = () => {
   };
 
   useEffect(() => {
-    subjectwiseQuizDetails();
-  }, []);
+    subjectwiseQuizDetails(subject);
+  }, [subject]);
 
-  return (subjectList.length>0? 
+  return (
     <>
       <NavBarInterviewer />
-      
-      <Box className="subjectlist-box"
-      //   sx={{
-      //     marginTop: -1,
-      //     marginLeft: 10,
-      //   }}
-       >
-         <Paper className="paper">
-        <Typography variant="h5" className="table-title" >
-          Available Question Sets
-        </Typography>
-      {/* </Box> */}
-      {/* <Paper className={classes.root}>
-          <TableContainer className={classes.container}>
-            <Table stickyHeader aria-label="sticky table">
+
+      <Box className="subjectlist-box">
+        <Box className="select-box">
+          <FormControl
+            sx={{
+              minWidth: 100,
+            }}
+          >
+            <InputLabel>Subject</InputLabel>
+            <Select
+              value={subject}
+              onChange={handleSubjectChange}
+              autoWidth
+              label="Subject"
+            >
+              <MenuItem selected value="ALL">
+                All
+              </MenuItem>
+              <MenuItem value={"REACT"}>REACT</MenuItem>
+              <MenuItem value={"JAVASCRIPT"}>JAVASCRIPT</MenuItem>
+              <MenuItem value={"CSHARP"}>C#</MenuItem>
+            </Select>
+          </FormControl>
+        </Box>
+        <Paper className="paper">
+          <Typography variant="h5" className="table-title">
+            Available Question Sets
+          </Typography>
+
+          <TableContainer className="table-container">
+            <Table aria-label="simple table" stickyHeader>
               <TableHead>
                 <TableRow>
-                  {columns.map((column) => (
+                  {creatQuizTableColumns.map((column: any) => (
                     <TableCell
                       key={column.id}
                       align={column.align}
                       style={{ minWidth: column.minWidth }}
+                      sortDirection={orderBy === column.id ? order : false}
                     >
-                      {column.label}
+                      {/* {column.label} */}
+                      <TableSortLabel
+                        active={orderBy === column.id}
+                        direction={orderBy === column.id ? order : "asc"}
+                        onClick={createSortHandler(column.id)}
+                      >
+                        {column.label}
+                        {orderBy === column.id ? (
+                          <Box component="span" sx={visuallyHidden}>
+                            {order === "desc"
+                              ? "sorted descending"
+                              : "sorted ascending"}
+                          </Box>
+                        ) : null}
+                      </TableSortLabel>
                     </TableCell>
                   ))}
                 </TableRow>
               </TableHead>
-
-              <TableBody>
-                {subjectList &&
-                  subjectList
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((row: any, index: number) => {
-                      return (
+              {!loader.tableLoader ? (
+                <TableBody>
+                  {subjectList &&
+                    subjectList
+                      .slice()
+                      .sort(getComparator(order, orderBy))
+                      .slice(
+                        page * rowsPerPage,
+                        page * rowsPerPage + rowsPerPage
+                      )
+                      .map((row: any, index: number) => (
                         <TableRow
                           hover
                           role="checkbox"
                           tabIndex={-1}
                           key={index}
                         >
-                          {columns.map((column, index) => {
-                            const value = row[column.id];
-                            return (
-                              <TableCell key={index} align={column.align}>
-                                {column.id === "select"
-                                  ? <Checkbox
-                                  name="checkbox-1"
-                                  onChange={(e: any) => handleCheckboxChange(e, row)}
-                                />
-                                  : value
-                                  
-                                  }
-                              </TableCell>
-                            );
-                          })}
+                          <TableCell size="small" align="left">
+                            {row.setNumber}
+                          </TableCell>
+                          <TableCell size="small" align="left">
+                            {row.subjectName}
+                          </TableCell>
+                          <TableCell size="small" align="left">
+                            {row.totalQuestionsCount}
+                          </TableCell>
+                          <TableCell size="small" align="left">
+                            <Checkbox
+                              name="checkbox-1"
+                              onChange={(e: any) =>
+                                handleCheckboxChange(e, row)
+                              }
+                            />
+                          </TableCell>
                         </TableRow>
-                      );
-                    })}
-              </TableBody>
+                      ))}
+                </TableBody>
+              ) : null}
             </Table>
-          </TableContainer> */}
-     
-      <TableContainer className="table-container">
-        <Table 
-          aria-label="simple table" stickyHeader>
-          <TableHead>
-            <TableRow>
-              <TableCell align="left">Set Number</TableCell>
-              <TableCell align="left">Subject Name</TableCell>
-              <TableCell align="left">Total Questions</TableCell>
-              <TableCell align="left">Select</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {subjectList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) &&
-              subjectList.map((row: any) => (
-                <TableRow  hover role="checkbox" tabIndex={-1} 
-                  key={row.code} 
-                  
-                  
-                >
-                  <TableCell size="small" align="left">{row.setNumber}</TableCell>
-                  <TableCell  size="small" align="left">{row.subjectName}</TableCell>
-                  <TableCell size="small" align="left">
-                    {row.totalQuestionsCount}
-                  </TableCell>
-                  <TableCell  size="small" align="left">
-                    <Checkbox
-                      name="checkbox-1"
-                      onChange={(e: any) => handleCheckboxChange(e, row)}
-                    />
-                  </TableCell>
-                </TableRow>
-              ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <TablePagination
-        rowsPerPageOptions={[10, 25, 100]}
-        component="div"
-        count={subjectList.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
-      </Paper>
+          </TableContainer>
+
+          {loader.tableLoader ? (
+            <Box className="table-loader">
+              <CircularProgress />
+            </Box>
+          ) : null}
+
+          {subjectList.length < 1 && !loader.tableLoader && (
+            <Box className="table-loader">
+              <Typography>No Data Available</Typography>
+            </Box>
+          )}
+          {loader.tableLoader || subjectList.length > 0 ? (
+            <TablePagination
+              rowsPerPageOptions={[10, 25, 100]}
+              component="div"
+              count={subjectList.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+          ) : null}
+        </Paper>
+      </Box>
+      <Box className="create-btn-box">
+        {loader.buttonLoader ? (
+          <Box className="button-loader">
+            <CircularProgress />
+          </Box>
+        ) : (
+          <Button
+            className="button-create"
+            variant="contained"
+            type="submit"
+            onClick={handleSubmit}
+          >
+            Create Quiz Link
+          </Button>
+        )}
       </Box>
 
-      <Button   className="button-create"
-        variant="contained"
-        type="submit"
-        sx={{
-          marginTop: 1,
-          marginLeft: 90,
-          // display: "flex",
-          // flexDirection: "column",
-          alignItems: "center",
-        }}
-        onClick={handleSubmit}
-      >
-        Create
-      </Button>
-
       {quizLink && (
-        <Box className="box-link"
-        sx={{ marginTop: 4}}
-        >
-          <Typography > 
-           {`Test Link :`} 
-           </Typography>
+        <Box className="box-link" sx={{ marginTop: 4 }}>
+          <Typography>{`Test Link :`}</Typography>
           <Box className="test-link">
-            <Typography > 
+            <Typography>
               {quizLink}
               {/* {`http://localhost:3000/rms-aug/test/${newquiz?.quizId}/${newquiz?.quizLink}`} */}
             </Typography>
-            <Button className="copy"
+            <Button
+              className="copy"
               variant="outlined"
               onClick={() => copyToClipboard(quizLink)}
             >
-              <SvgIcon className="icon"
+              <SvgIcon
+                className="icon"
                 // sx={{ marginLeft: -1 }}
                 component={ContentCopyIcon}
                 inheritViewBox
@@ -330,10 +357,6 @@ const CreateQuiz = () => {
         </Box>
       )}
     </>
-     :<>
-     <NavBarInterviewer />
-     <span><h5>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;No  results</h5></span>
-     </>
   );
 };
 

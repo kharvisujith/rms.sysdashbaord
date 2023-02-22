@@ -33,14 +33,15 @@ import AllQuestionsAnswers from "../DispalyQuizQuestionsAnswers/AllQuestionsAnsw
 import ReactModal from "react-modal";
 import "./SubjectList.style.scss";
 import {
+  Order,
   subjectwiseQuizAnswersResponse,
   subjectWiseQuizListResponse,
 } from "../../Interface/QuizDetails";
 import Swal from "sweetalert2";
 import { columns } from "./QuestionSetsTableColumn";
 import { visuallyHidden } from "@mui/utils";
+import { getComparator } from "../../utils/TableSortFunctions";
 
-type Order = "asc" | "desc";
 // interface Data {
 //   subjectName: string;
 //   setNumber: number;
@@ -222,24 +223,6 @@ const SubjectList = (props: any) => {
     setOrderBy(property);
   };
 
-  const getComparator = (order: string, orderBy: string) => {
-    return order === "desc"
-      ? (a: subjectWiseQuizListResponse, b: subjectWiseQuizListResponse) =>
-          descendingComparator(a, b, orderBy)
-      : (a: subjectWiseQuizListResponse, b: subjectWiseQuizListResponse) =>
-          -descendingComparator(a, b, orderBy);
-  };
-
-  const descendingComparator = (a: any, b: any, orderBy: any) => {
-    if (b[orderBy] < a[orderBy]) {
-      return -1;
-    }
-    if (b[orderBy] > a[orderBy]) {
-      return 1;
-    }
-    return 0;
-  };
-
   /// for viewClick modal
   const [OpenTestModal, setOpenTestModal] = useState<boolean>(false);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
@@ -371,7 +354,7 @@ const SubjectList = (props: any) => {
                             tabIndex={-1}
                             key={index}
                           >
-                            {columns.map((column, index) => {
+                            {columns.map((column: any, index: number) => {
                               const value = row[column.id];
                               return (
                                 <TableCell key={index} align={column.align}>

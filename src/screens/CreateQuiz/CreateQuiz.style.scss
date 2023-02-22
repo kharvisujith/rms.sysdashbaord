@@ -10,26 +10,20 @@
 .box-link {
   margin-left: 2rem;
   margin-right: 2rem;
-   margin-bottom: -1.5rem;
-   margin-top: -1rem;
+  margin-bottom: -1.5rem;
+  margin-top: -1rem;
 }
-
-
 
 .icon {
   margin-left: -0.5rem;
 }
 
+.select-box {
+  margin-bottom: 0.5rem;
+}
 .subjectlist-box {
   margin-left: 5%;
   margin-right: 5%;
-}
-
-.button-create {
-  max-width: 100px;
-  max-height: 100px;
-  min-width: 80px;
-  min-height: 50px;
 }
 
 // .test-name {
@@ -42,12 +36,13 @@
 .table-container {
   max-height: 19rem;
 }
-// .heading {
-//   margin-top: 10rem;
-// }
+.create-btn-box {
+  display: flex;
+  justify-content: center;
+  margin: 1rem;
 
-// .button {
-//   margin-top: 2rem;
-//   margin-left: 50rem;
-//   padding-left: 2rem;
-// }
+  .button-create {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}

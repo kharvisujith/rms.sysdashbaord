@@ -71,7 +71,7 @@ export interface submittedQuizAnswersResponse {
   submittedAnswersIds: string[];
   masterQuestionAnswers: string[];
   masterQuestionAnswersIds: string[];
-  isCorrect:boolean;
+  isCorrect: boolean;
 }
 export interface submittedQuizResponse {
   questionId: number;
@@ -80,10 +80,10 @@ export interface submittedQuizResponse {
   answeredQuestions: number;
   notAnsweredQuestions: number;
   correctAnswers: number;
-  inCorrectAnswers:number;
-  interviewLevel:number;
-  createdBy:string;
-  createdDate:string;
+  inCorrectAnswers: number;
+  interviewLevel: number;
+  createdBy: string;
+  createdDate: string;
 }
 export interface submittedQuizDetailedInfoResponse {
   questionId: number;
@@ -93,13 +93,29 @@ export interface submittedQuizDetailedInfoResponse {
   answeredQuestions: number;
   notAnsweredQuestions: number;
   correctAnswers: number;
-  inCorrectAnswers:number;
+  inCorrectAnswers: number;
 }
 
+export interface createQuizTableColumns {
+  id: "setNumber" | "subjectName" | "totalQuestionsCount" | "select";
+  label: string;
+  minWidth?: number;
+  align?: string;
+}
 
-//   openDialog:boolean,
-//    handleClose:boolean,
-//   setOpenDialog:boolean,
-//    quizQuestions:,
-//    quizId : string
-// }
+export type Order = "asc" | "desc";
+
+export interface createdQuizTableColumns {
+  id:
+    | "quizId"
+    | "candidateId"
+    | "quizCodeExpirationAt"
+    | "quizSubmittedAt"
+    | "lastLoggedIn"
+    | "loginAttempts"
+    | "url";
+  label: string;
+  minWidth?: number;
+  align?: "right";
+  format?: (value: number) => string;
+}
