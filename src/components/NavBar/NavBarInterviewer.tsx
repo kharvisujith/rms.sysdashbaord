@@ -35,10 +35,9 @@ import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import MuiDrawer from "@mui/material/Drawer";
-import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
-import QuizIcon from '@mui/icons-material/Quiz';
-import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
-// import SubmittedQuiz from "../../screens/SubmittedQuiz/SubmittedQuiz";
+import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
+import QuizIcon from "@mui/icons-material/Quiz";
+import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
 
 const drawerWidth = 240;
 
@@ -158,15 +157,14 @@ const NavBarInterviewer = (props: any) => {
     <>
       <Box sx={{ display: "flex" }}>
         <>
-          <AppBar  position="fixed" open={open}>
-            <Toolbar >
+          <AppBar position="fixed" open={open}>
+            <Toolbar>
               <IconButton
                 color="inherit"
                 aria-label="open drawer"
                 onClick={handleDrawerOpen}
                 edge="start"
                 id="menu-button"
-
                 sx={{
                   marginRight: 5,
                   ...(open && { display: "none" }),
@@ -270,7 +268,7 @@ const NavBarInterviewer = (props: any) => {
               <ListItem disablePadding>
                 <ListItemButton
                   onClick={() => {
-                    navigate("/SubmittedQuiz");
+                    navigate("/submitted-quiz");
                     handleDrawerClose();
                   }}
                 >

@@ -18,6 +18,7 @@ import {
   TableHead,
   TablePagination,
   TableRow,
+  TableSortLabel,
   TextField,
   Typography,
 } from "@mui/material";
@@ -32,11 +33,20 @@ import AllQuestionsAnswers from "../DispalyQuizQuestionsAnswers/AllQuestionsAnsw
 import ReactModal from "react-modal";
 import "./SubjectList.style.scss";
 import {
+  Order,
   subjectwiseQuizAnswersResponse,
   subjectWiseQuizListResponse,
 } from "../../Interface/QuizDetails";
 import Swal from "sweetalert2";
 import { columns } from "./QuestionSetsTableColumn";
+import { visuallyHidden } from "@mui/utils";
+import { getComparator } from "../../utils/TableSortFunctions";
+
+// interface Data {
+//   subjectName: string;
+//   setNumber: number;
+//   totalQuestionsCount: number;
+// }
 
 const SubjectList = (props: any) => {
   // file upload part
@@ -174,6 +184,9 @@ const SubjectList = (props: any) => {
     []
   );
   const [isQuizSetExists, setIsQuizSetExists] = useState<boolean>(true);
+  const [order, setOrder] = useState<Order>("asc");
+  //const [orderBy, setOrderBy] = useState<keyof Data>("setNumber");
+  const [orderBy, setOrderBy] = useState<any>("setNumber");
 
   const viewButton = (row: any) => {
     return (
@@ -194,6 +207,20 @@ const SubjectList = (props: any) => {
   ) => {
     setRowsPerPage(+event.target.value);
     setPage(0);
+  };
+
+  const createSortHandler =
+    (property: string) => (event: React.MouseEvent<unknown>) => {
+      handleRequestSort(event, property);
+    };
+
+  const handleRequestSort = (
+    event: React.MouseEvent<unknown>,
+    property: string
+  ) => {
+    const isAsc = orderBy === property && order === "asc";
+    setOrder(isAsc ? "desc" : "asc");
+    setOrderBy(property);
   };
 
   /// for viewClick modal
@@ -289,8 +316,22 @@ const SubjectList = (props: any) => {
                       key={column.id}
                       align={column.align}
                       style={{ minWidth: column.minWidth }}
+                      sortDirection={orderBy === column.id ? order : false}
                     >
-                      {column.label}
+                      <TableSortLabel
+                        active={orderBy === column.id}
+                        direction={orderBy === column.id ? order : "asc"}
+                        onClick={createSortHandler(column.id)}
+                      >
+                        {column.label}
+                        {orderBy === column.id ? (
+                          <Box component="span" sx={visuallyHidden}>
+                            {order === "desc"
+                              ? "sorted descending"
+                              : "sorted ascending"}
+                          </Box>
+                        ) : null}
+                      </TableSortLabel>
                     </TableCell>
                   ))}
                 </TableRow>
@@ -299,6 +340,8 @@ const SubjectList = (props: any) => {
                 <TableBody>
                   {isQuizSetExists &&
                     subjectList
+                      .slice()
+                      .sort(getComparator(order, orderBy))
                       .slice(
                         page * rowsPerPage,
                         page * rowsPerPage + rowsPerPage
@@ -311,7 +354,7 @@ const SubjectList = (props: any) => {
                             tabIndex={-1}
                             key={index}
                           >
-                            {columns.map((column, index) => {
+                            {columns.map((column: any, index: number) => {
                               const value = row[column.id];
                               return (
                                 <TableCell key={index} align={column.align}>

@@ -6,6 +6,7 @@ import {
   DialogContentText,
   DialogActions,
   Button,
+  CircularProgress,
 } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { useEffect, useState } from "react";
@@ -27,9 +28,11 @@ const EndTestDialog = (props: any) => {
   } = props;
   const navigate = useNavigate();
   const [totalAnswerdQuestions, setTotalAnsweredQuestion] = useState<number>(0);
+  const [loader, setLoader] = useState<boolean>(false);
 
   const endTest = () => {
-    setOpenEndDialog(false);
+    // setOpenEndDialog(false);
+    setLoader(true);
     const quizAnswerModel = {
       quizId: parseInt(quizId),
       totalQuestions: totalNumberOfQuestions,
@@ -45,6 +48,8 @@ const EndTestDialog = (props: any) => {
           icon: "success",
           confirmButtonText: "Okay",
         });
+        setLoader(false);
+        setOpenEndDialog(false);
         setOpenDialog(false);
         clearInterval(Ref.current);
         navigate("/test_submitted", {
@@ -71,12 +76,8 @@ const EndTestDialog = (props: any) => {
 
   return (
     <>
-      <Box sx={{ marginTop: 5, marginLeft: 10 }}>
-        <Dialog
-          open={openDialog}
-          onClose={handleClose}
-          style={{ width: "100%", border: "2px solid red" }}
-        >
+      <Box>
+        <Dialog open={openDialog} onClose={handleClose}>
           <DialogTitle>{"Do want to End the Test? "}</DialogTitle>
           <DialogContent>
             <DialogContentText>
@@ -88,17 +89,29 @@ const EndTestDialog = (props: any) => {
             </DialogContentText>
           </DialogContent>
           <DialogActions className="actions">
-            <Button onClick={handleClose} color="primary" variant="contained">
-              Cancel
-            </Button>
-            <Button
-              onClick={endTest}
-              autoFocus
-              variant="contained"
-              color="error"
-            >
-              Submit and End Test
-            </Button>
+            {loader ? (
+              <Box className="button-loader loader">
+                <CircularProgress />
+              </Box>
+            ) : (
+              <>
+                <Button
+                  onClick={handleClose}
+                  color="primary"
+                  variant="contained"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={endTest}
+                  autoFocus
+                  variant="contained"
+                  color="error"
+                >
+                  Submit and End Test
+                </Button>
+              </>
+            )}
           </DialogActions>
         </Dialog>
       </Box>

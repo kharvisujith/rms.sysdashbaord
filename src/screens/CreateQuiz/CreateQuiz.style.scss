@@ -32,6 +32,9 @@
   margin-left: -0.5rem;
 }
 
+.select-box {
+  margin-bottom: 0.5rem;
+}
 .subjectlist-box {
   margin-left: 5%;
   margin-right: 5%;
@@ -64,12 +67,13 @@
 .table-container {
   max-height: 19rem;
 }
-// .heading {
-//   margin-top: 10rem;
-// }
+.create-btn-box {
+  display: flex;
+  justify-content: center;
+  margin: 1rem;
 
-// .button {
-//   margin-top: 2rem;
-//   margin-left: 50rem;
-//   padding-left: 2rem;
-// }
+  .button-create {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}

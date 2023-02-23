@@ -107,7 +107,6 @@ export const submitCandidateInfo = (
 export const createQuiz = (values: any) => {
   return axiosClient.post(`/quiz/interviewer/createquiz`, values, {
     headers: {
-      // "accept": 'application/json',
       "Content-Type": "application/json",
     },
   });
