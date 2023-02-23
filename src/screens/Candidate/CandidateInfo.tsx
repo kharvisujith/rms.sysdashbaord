@@ -49,6 +49,7 @@ const CandidateInfo = (props: any) => {
   const regex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
 
   const phone_regex = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
+  const phone_regex = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
   // /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
   const handleChange = (e: any) => {
     setFormError({ ...formError, [e?.target.name]: false });
@@ -58,6 +59,7 @@ const CandidateInfo = (props: any) => {
   };
 
   const handleSubmit = (e: any) => {
+    console.log(user.phone, 'phone value');
     if (!user) {
       return;
     }
