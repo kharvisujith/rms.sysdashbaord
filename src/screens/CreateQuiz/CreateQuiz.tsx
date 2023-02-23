@@ -93,23 +93,22 @@ const CreateQuiz = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [name, setName] = useState<string>("");
-  const [rows, setRows] = useState(subjectList);
+
   
 
   // const dataSearch = columns.filter((search: any) => {
   //   return search.subjectName.toLowerCase().includes(name.toLowerCase());
   // });
-  const keys = ["setNumber", "subjectName", "totalQuestionsCount"]
-  console.log(subjectList, 'value of column');
+ 
 
-  const handleSearch = (searchedVal: string) => {
-    const filteredRows = subjectList.filter((row) => {
-      return (
-         row.subjectName.toLowerCase().includes(searchedVal.toLowerCase()) || row.setNumber.toString().toLowerCase().includes(searchedVal.toString().toLowerCase()) || row.totalQuestionsCount.toString().toLowerCase().includes(searchedVal.toString().toLowerCase()));
-    });
-      setRows(filteredRows);
-    console.log(filteredRows, 'row value');
-  };
+  // const handleSearch = (searchedVal: string) => {
+  //   const filteredRows = subjectList.filter((row) => {
+  //     return (
+  //        row.subjectName.toLowerCase().includes(searchedVal.toLowerCase()) || row.setNumber.toString().toLowerCase().includes(searchedVal.toString().toLowerCase()) || row.totalQuestionsCount.toString().toLowerCase().includes(searchedVal.toString().toLowerCase()));
+  //   });
+  //     setRows(filteredRows);
+  //   console.log(filteredRows, 'row value');
+  // };
 
   // const cancelSearch = () => {
   //   setName("");
@@ -268,11 +267,10 @@ const CreateQuiz = () => {
               <TableBody>
                 {subjectList &&
                   subjectList
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) &&
-                    subjectList.filter((row) => !name.length || row.subjectName.toLowerCase().includes(name.toLowerCase()) || 
-                    row.setNumber.toString().toLowerCase().includes(name.toString().toLowerCase()) || 
-                     row.totalQuestionsCount.toString().toLowerCase().includes(name.toString().toLowerCase()))
-                    
+                  .filter((row) => !name.length || row.subjectName.toLowerCase().includes(name.toLowerCase()) || 
+                  row.setNumber.toString().toLowerCase().includes(name.toString().toLowerCase()) || 
+                   row.totalQuestionsCount.toString().toLowerCase().includes(name.toString().toLowerCase()))
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row: any, index: number) => {
                       return (
                         <TableRow
@@ -355,7 +353,8 @@ const CreateQuiz = () => {
         type="submit"
         sx={{
           marginTop: 1,
-          marginLeft: 83,
+          marginLeft: 80,
+          marginRight:80,
           // display: "flex",
           // flexDirection: "column",
           alignItems: "center",
