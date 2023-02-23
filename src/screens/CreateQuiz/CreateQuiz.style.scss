@@ -17,7 +17,7 @@
 }
 
 .search-input {
-  margin-left: 70rem;
+  margin-left: 60rem;
 }
 
 .table-header {
@@ -26,26 +26,38 @@
   margin-bottom: 0.5rem;
 }
 
-
-
 .icon {
   margin-left: -0.5rem;
 }
 
+// .select-box {
+//   margin-bottom: 0.5rem;
+// }
 .subjectlist-box {
   margin-left: 5%;
   margin-right: 5%;
+  .select-box {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 0.5rem;
+    // .table-header {
+    //   width: 100%;
+    //   display: flex;
+    //   justify-content: flex-start;
+    //   margin-left: 5%;
+    // }
+  }
 }
 
-.button-create {
-  // max-width: 100px;
-  // max-height: 100px;
-  // min-width: 80px;
-  // min-height: 50px;
-  width: 145px;
-  height: 40px;
+// .button-create {
+//   // max-width: 100px;
+//   // max-height: 100px;
+//   // min-width: 80px;
+//   // min-height: 50px;
+//   width: 160px;
+//   // height: 40px;
   
-}
+// }
 
 .copy {
   display: flex;
@@ -64,12 +76,13 @@
 .table-container {
   max-height: 19rem;
 }
-// .heading {
-//   margin-top: 10rem;
-// }
+.create-btn-box {
+  display: flex;
+  justify-content: center;
+  margin: 1rem;
 
-// .button {
-//   margin-top: 2rem;
-//   margin-left: 50rem;
-//   padding-left: 2rem;
-// }
+  .button-create {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
