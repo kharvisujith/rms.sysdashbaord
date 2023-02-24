@@ -1,9 +1,9 @@
 import { Box, Button, LinearProgress, Typography } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
-import EndTestDialog from "../EndTest/EndTestDialog";
-import CheckboxComponent from "../QuizTestComponents/CheckboxComponent";
-import CodingComponent from "../QuizTestComponents/CodingComponent";
-import RadioComponent from "../QuizTestComponents/RadioComponent";
+import EndTestDialog from "../../components/EndTest/EndTestDialog";
+import CheckboxComponent from "../../components/QuizTestComponents/CheckboxComponent";
+import CodingComponent from "../../components/QuizTestComponents/CodingComponent";
+import RadioComponent from "../../components/QuizTestComponents/RadioComponent";
 import "./SingleQuestion.style.scss";
 import { clear } from "console";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -17,14 +17,14 @@ import Swal from "sweetalert2";
 import { QuestionAnswer } from "@material-ui/icons";
 
 const SingleQuestion = (props: any) => {
-  const { openDialog, handleClose, setOpenDialog, quizQuestions, quizId } =
-    props;
+  const { quizQuestions, quizId } = props;
 
   const [currentQuestion, setCurrentQuestion] = useState<number>(1);
   const [selectedAnswers, setSelectedAnswers] = useState<any>([]);
   const [progressStatus, setProgressStatus] = useState<number>(0);
   const [answeredQuestions, setAnsweredQuestions] = useState<number>(0);
-  const [timer, setTimer] = useState("00:00:00");
+  // const [timer, setTimer] = useState<any>("00:00:00");
+  const [timer, setTimer] = useState<any>();
   const [openEndDialog, setOpenEndDialog] = useState<boolean>(false);
   const [timeCompletd, setTimeCompleted] = useState<boolean>(false);
 
@@ -207,9 +207,9 @@ const SingleQuestion = (props: any) => {
     }
   };
 
-  const getTimeRemaining = (e: any) => {
+  const getTimeRemaining = (time: any) => {
     const total =
-      Date.parse(e.toISOString()) - Date.parse(new Date().toISOString());
+      Date.parse(time.toISOString()) - Date.parse(new Date().toISOString());
     const seconds = Math.floor((total / 1000) % 60);
     const minutes = Math.floor((total / 1000 / 60) % 60);
     const hours = Math.floor((total / 1000 / 60 / 60) % 24);
@@ -256,8 +256,8 @@ const SingleQuestion = (props: any) => {
       });
   }
 
-  const startTimer = (e: any) => {
-    let { total, hours, minutes, seconds } = getTimeRemaining(e);
+  const startTimer = (time: any) => {
+    let { total, hours, minutes, seconds } = getTimeRemaining(time);
     if (total >= 0) {
       setTimer(
         (hours > 9 ? hours : "0" + hours) +
@@ -272,23 +272,134 @@ const SingleQuestion = (props: any) => {
     }
   };
 
-  const clearTimer = (e: any) => {
+  const clearTimer = (time: any) => {
+    console.log("value of time in clearTimer is", time);
     const id = setInterval(() => {
-      startTimer(e);
+      startTimer(time);
     }, 1000);
     Ref.current = id;
   };
 
-  const getDeadTime = () => {
-    let deadline = new Date();
-
-    deadline.setSeconds(deadline.getSeconds() + 10);
-    deadline.setMinutes(deadline.getMinutes() + 10);
-    return deadline;
+  const getDeadTime = (remainingTime?: any) => {
+    // let deadline = new Date();
+    console.log("value of remaining time in getDeadTime is", remainingTime);
+    if (remainingTime) {
+      let deadline = new Date();
+      const hour = remainingTime.substring(0, 2);
+      const min = remainingTime.substring(3, 5);
+      const sec = remainingTime.substring(6, 8);
+      deadline.setHours(deadline.getHours() + parseInt(hour));
+      deadline.setMinutes(deadline.getMinutes() + parseInt(min));
+      deadline.setSeconds(deadline.getSeconds() + parseInt(sec));
+      return deadline;
+    } else {
+      let deadline = new Date();
+      deadline.setSeconds(deadline.getSeconds() + parseInt("09"));
+      deadline.setMinutes(deadline.getMinutes() + parseInt("09"));
+      return deadline;
+    }
   };
 
+  window.addEventListener("beforeunload", (event) => {
+    // localStorage.setItem("testStarted", testStarted.toString());
+    event.preventDefault();
+    //  localStorage.setItem("beforeunload", "true");
+    //  localStorage.setItem("timer", timer);
+    event.returnValue = "";
+  });
+
+  window.addEventListener("unload", (event) => {
+    localStorage.setItem("unload", "trueee");
+    localStorage.setItem("timer", timer);
+    // setTimer(localStorage.getItem("timer"));
+  });
+
+  const alertUser = (e: any) => {
+    e.preventDefault();
+    e.returnValue = "";
+    localStorage.setItem("timer", timer);
+    // return "";
+    console.log("inside alert user");
+  };
+
+  const handleRefresh = () => {
+    //   console.log("inside handleRefresh");
+    //    localStorage.setItem("timeradeeddd", "true");
+    //  console.log("value of timer in side handlerefresh is", timer);
+    //  localStorage.setItem("timer", timer);
+
+    if (!localStorage.getItem("timer")) {
+      console.log("insdied if part in hr");
+      clearTimer(getDeadTime());
+    } else {
+      console.log("inside else part in  hr");
+      clearTimer(getDeadTime(localStorage.getItem("timer")));
+    }
+    // if (localStorage.getItem("timer") === "undefined") {
+    //   clearTimer(getDeadTime());
+    // } else {
+    // if (localStorage.getItem("timer") !== "undefined")
+    //   clearTimer(getDeadTime(localStorage.getItem("timer")));
+  };
+  // await fetcher({
+  //   url: endConcert(concert.id),
+  //   method: 'PUT'
+  // })
+  // };
+
+  // useEffect(() => {
+  //   console.log("useEffect 1 is called");
+  //   if (
+  //     !localStorage.getItem("timer")
+  //     // ||
+  //     // localStorage.getItem("timer") === "undefined"
+  //   ) {
+  //     console.log("useEffect  in startign if part setting");
+  //     clearTimer(getDeadTime());
+  //   }
+  // }, []);
+
+  // useEffect(() => {
+  //   console.log("useEffect 2 is called in single question");
+  //   window.addEventListener("beforeunload", alertUser);
+  //   window.addEventListener("unload", handleRefresh);
+  //   // if (!localStorage.getItem("timer")) {
+  //   //   console.log("insdied if part in useEffect 2");
+  //   //   clearTimer(getDeadTime());
+  //   // } else {
+  //   //   console.log("inside else part in useEffect 2");
+  //   //   clearTimer(getDeadTime(localStorage.getItem("timer")));
+  //   // }
+  //   return () => {
+  //     // window.removeEventListener("beforeunload", alertUser);
+  //     // window.removeEventListener("unload", handleRefresh);
+  //     // handleEndConcert();
+  //   };
+  // }, []);
+
+  // useEffect(() => {
+  //   console.log("useEffect 2 is called");
+  //   if (!localStorage.getItem("timer")) {
+  //     console.log("insdied if part in useEffect 2");
+  //     clearTimer(getDeadTime());
+  //   } else {
+  //     console.log("inside else part in useEffect 2");
+  //     clearTimer(getDeadTime(localStorage.getItem("timer")));
+  //   }
+  // }, []);
+
   useEffect(() => {
-    clearTimer(getDeadTime());
+    // var timeRemaining = localStorage.getItem("timer");
+    //  console.log("value of timeRemaning in useEff is", timeRemaining);
+    // timeRemaining === null ? console.log("yes") : console.log("no");
+    if (
+      localStorage.getItem("timer") === "undefined" ||
+      !localStorage.getItem("timer")
+    ) {
+      clearTimer(getDeadTime());
+    } else {
+      clearTimer(getDeadTime(localStorage.getItem("timer")));
+    }
   }, []);
 
   return (
@@ -296,7 +407,9 @@ const SingleQuestion = (props: any) => {
       <Box className="progress-box">
         <Box className="progress-data">
           <Typography variant="body1">{`Answered ${answeredQuestions} out of ${quizQuestions.data?.length}`}</Typography>
-          <Typography variant="body1">{`Time Remaining - ${timer}`}</Typography>
+          {timer && (
+            <Typography variant="body1">{`Time Remaining - ${timer}`}</Typography>
+          )}
         </Box>
         <LinearProgress
           value={progressStatus}
@@ -371,7 +484,7 @@ const SingleQuestion = (props: any) => {
           variant="contained"
           onClick={() => {
             setOpenEndDialog(true);
-            setOpenDialog(true);
+            //  setOpenDialog(true);
           }}
           className="end-test-btn"
         >
@@ -380,14 +493,15 @@ const SingleQuestion = (props: any) => {
       </Box>
       {openEndDialog && (
         <EndTestDialog
-          openDialog={openDialog}
-          handleClose={handleClose}
-          setOpenDialog={setOpenDialog}
+          //  openDialog={openDialog}
+          // handleClose={handleClose}
+          //   setOpenDialog={setOpenDialog}
           selectedAnswers={selectedAnswers}
           totalNumberOfQuestions={quizQuestions.data.length}
           Ref={Ref}
           quizId={quizQuestions.quizId}
-          setOpenEndDialog={setOpenDialog}
+          openEndDialog={openEndDialog}
+          setOpenEndDialog={setOpenEndDialog}
         />
       )}
     </>

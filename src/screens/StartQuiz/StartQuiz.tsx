@@ -5,7 +5,7 @@ import Button from "@mui/material/Button";
 import Toolbar from "@mui/material/Toolbar";
 import ReactModal from "react-modal";
 import "./StartQuiz.style.scss";
-import SingleQuestion from "../../components/DispalyQuizQuestions/SingleQuestion";
+import SingleQuestion from "../DispalyQuizQuestions/SingleQuestion";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { verifyCandidate } from "../../api/apiAgent";
@@ -15,17 +15,24 @@ const StartQuiz = () => {
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [isKeyValid, setIsKeyValid] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>();
+  const [testStarted, setTestStarted] = useState<boolean>(false);
 
-  const navigate = useNavigate();
   const location = useLocation();
 
-  const handleClose = () => {
-    setOpenDialog(false);
+  const startTestButtonHandler = () => {
+    setTestStarted(true);
+    // navigate("")
+    // setOpenTestModal(true);
   };
 
-  const startTestButtonHandler = () => {
-    setOpenTestModal(true);
-  };
+  window.addEventListener("beforeunload", (event) => {
+    localStorage.setItem("testStarted", testStarted.toString());
+    // localStorage.setItem("beforeunload", "true");
+  });
+
+  // window.addEventListener("unload", (event) => {
+  //   localStorage.setItem("unload", "trueee");
+  // });
 
   useEffect(() => {
     verifyCandidate(
@@ -34,6 +41,7 @@ const StartQuiz = () => {
     )
       .then((res: AxiosResponse) => {
         setIsKeyValid(true);
+        setTestStarted(ts === "true");
       })
       .catch((error: any) => {
         if (error.response.status === 400) {
@@ -42,6 +50,7 @@ const StartQuiz = () => {
           }
         }
       });
+    const ts = localStorage.getItem("testStarted");
   }, [location.state.verifyCredentials]);
 
   if (!isKeyValid) {
@@ -71,30 +80,39 @@ const StartQuiz = () => {
         </Toolbar>
       </AppBar>
 
-      <Box className="info-box">
-        <Typography variant="h5">Test Informations : </Typography>
-        <Box className="info-details">
-          <Typography>{`* Includes Multiple Choice questions and Coding questions`}</Typography>
-          <Typography>{`* Total Time given for the test is ${60} minutes`}</Typography>
-          <Typography>{`* After the completion of the given time the test is autosubmitted`}</Typography>
-          <Typography>{`* Do not switch the tabs once test is started`}</Typography>
-        </Box>
-      </Box>
+      {!testStarted ? (
+        <>
+          <Box className="info-box">
+            <Typography variant="h5">Test Informations : </Typography>
+            <Box className="info-details">
+              <Typography>{`* Includes Multiple Choice questions and Coding questions`}</Typography>
+              <Typography>{`* Total Time given for the test is ${60} minutes`}</Typography>
+              <Typography>{`* After the completion of the given time the test is autosubmitted`}</Typography>
+              <Typography>{`* Do not switch the tabs once test is started`}</Typography>
+            </Box>
+          </Box>
 
-      <Box className="start-test-box">
-        <Button
-          className="start-test-btn"
-          variant="contained"
-          color="error"
-          onClick={() => {
-            startTestButtonHandler();
-          }}
-        >
-          Start Test
-        </Button>
-      </Box>
+          <Box className="start-test-box">
+            <Button
+              className="start-test-btn"
+              variant="contained"
+              color="error"
+              onClick={() => {
+                startTestButtonHandler();
+              }}
+            >
+              Start Test
+            </Button>
+          </Box>
+        </>
+      ) : (
+        <SingleQuestion
+          quizQuestions={location.state}
+          quizId={location.state.verifyCredentials.id}
+        />
+      )}
 
-      <Box className="quiz-start-btn-wrap">
+      {/* <Box className="quiz-start-btn-wrap">
         <ReactModal
           isOpen={OpenTestModal}
           contentLabel="Minimal Modal Example"
@@ -108,7 +126,7 @@ const StartQuiz = () => {
             quizId={location.state.verifyCredentials.id}
           />
         </ReactModal>
-      </Box>
+      </Box> */}
     </Box>
   );
 };

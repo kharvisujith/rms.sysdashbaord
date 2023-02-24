@@ -17,13 +17,14 @@ import { CaluclateTotalNumberOfAnswers } from "../../utils/Utils";
 import "./EndTestDialog.style.scss";
 const EndTestDialog = (props: any) => {
   const {
-    openDialog,
-    handleClose,
-    setOpenDialog,
+    // openDialog,
+    // handleClose,
+    // setOpenDialog,
     selectedAnswers,
     totalNumberOfQuestions,
     Ref,
     quizId,
+    openEndDialog,
     setOpenEndDialog,
   } = props;
   const navigate = useNavigate();
@@ -50,7 +51,7 @@ const EndTestDialog = (props: any) => {
         });
         setLoader(false);
         setOpenEndDialog(false);
-        setOpenDialog(false);
+        //  setOpenDialog(false);
         clearInterval(Ref.current);
         navigate("/test_submitted", {
           state: {
@@ -77,7 +78,7 @@ const EndTestDialog = (props: any) => {
   return (
     <>
       <Box>
-        <Dialog open={openDialog} onClose={handleClose}>
+        <Dialog open={openEndDialog} onClose={() => setOpenEndDialog(false)}>
           <DialogTitle>{"Do want to End the Test? "}</DialogTitle>
           <DialogContent>
             <DialogContentText>
@@ -96,7 +97,7 @@ const EndTestDialog = (props: any) => {
             ) : (
               <>
                 <Button
-                  onClick={handleClose}
+                  onClick={() => setOpenEndDialog(false)}
                   color="primary"
                   variant="contained"
                 >
