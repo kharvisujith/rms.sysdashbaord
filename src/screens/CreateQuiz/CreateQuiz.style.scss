@@ -3,8 +3,8 @@
   justify-content: space-around;
   margin-left: 2rem;
   margin-right: 2rem;
-  margin-top: -1.5rem;
-  margin-bottom: -1rem;
+  // margin-top: -1.5rem;
+  // margin-bottom: -1rem;
 }
 
 .box-link {
@@ -18,17 +18,21 @@
   margin-left: -0.5rem;
 }
 
-.select-box {
-  margin-bottom: 0.5rem;
-}
 .subjectlist-box {
   margin-left: 5%;
   margin-right: 5%;
-}
+  .table-options-box {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
 
-// .test-name {
-//   margin-left: 1rem !important;
-// }
+    .search-input {
+      height: 2rem;
+      min-width: 3rem;
+      margin-top: 1.5rem;
+    }
+  }
+}
 
 .table-title {
   margin-left: 1rem !important;
@@ -40,7 +44,16 @@
   display: flex;
   justify-content: center;
   margin: 1rem;
+  .create-btn-box {
+    display: flex;
+    justify-content: center;
+    margin: 1rem;
 
+    .button-create {
+      padding-left: 2rem;
+      padding-right: 2rem;
+    }
+  }
   .button-create {
     padding-left: 2rem;
     padding-right: 2rem;

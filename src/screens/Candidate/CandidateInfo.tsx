@@ -36,7 +36,7 @@ const CandidateInfo = (props: any) => {
     firstName: false,
     lastName: false,
     email: false,
-    phone: false
+    phone: false,
   });
   const [quizQuestions, setQuizQuestions] = useState<any>([]);
   const [isKeyValid, setIsKeyValid] = useState<boolean>(false);
@@ -58,6 +58,7 @@ const CandidateInfo = (props: any) => {
   };
 
   const handleSubmit = (e: any) => {
+    console.log(user.phone, "phone value");
     if (!user) {
       return;
     }
@@ -93,13 +94,13 @@ const CandidateInfo = (props: any) => {
       setFormError({ ...formError, firstName: true });
     } else if (!phone_regex.test(user.phone)) {
       setFormError({ ...formError, phone: true });
-    // } else if (!user.phone) {
-    //   setFormError({ ...formError, phone: true });
-    // } else if (!phone_regex.test(user.phone)) {
-    //   setFormError({ ...formError, phone: true });
-     } else if (!user.lastName) {
+      // } else if (!user.phone) {
+      //   setFormError({ ...formError, phone: true });
+      // } else if (!phone_regex.test(user.phone)) {
+      //   setFormError({ ...formError, phone: true });
+    } else if (!user.lastName) {
       setFormError({ ...formError, lastName: true });
-     }
+    }
   };
 
   useEffect(() => {
@@ -111,16 +112,18 @@ const CandidateInfo = (props: any) => {
       setLoader({ ...loader, pageLoader: true });
       verifyCandidate(parseInt(id!), key!)
         .then((res: AxiosResponse) => {
-          setLoader({ ...loader, pageLoader: false });
           setIsKeyValid(true);
+          setLoader({ ...loader, pageLoader: false });
         })
         .catch((error: any) => {
-          setLoader({ ...loader, pageLoader: false });
           if (error.response.status === 400) {
             if (error.response.data) {
               setErrorMessage(error.response.data);
+            } else {
+              setErrorMessage("somethng wrong");
             }
           }
+          setLoader({ ...loader, pageLoader: false });
         });
     }
     //console.log("value of id", k, typeof k);
@@ -130,7 +133,9 @@ const CandidateInfo = (props: any) => {
     return (
       <>
         <Box className="error-box">
-          <Typography variant="h4">{`${errorMessage}`}</Typography>
+          {errorMessage ? (
+            <Typography variant="h4">{`${errorMessage}`}</Typography>
+          ) : null}
         </Box>
         <Divider className="divider" />
       </>

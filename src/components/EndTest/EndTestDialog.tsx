@@ -30,9 +30,10 @@ const EndTestDialog = (props: any) => {
   const navigate = useNavigate();
   const [totalAnswerdQuestions, setTotalAnsweredQuestion] = useState<number>(0);
   const [loader, setLoader] = useState<boolean>(false);
+  // const [loader, setLoader] = useState<boolean>(false);
 
   const endTest = () => {
-    // setOpenEndDialog(false);
+    setLoader(true);
     setLoader(true);
     const quizAnswerModel = {
       quizId: parseInt(quizId),
@@ -51,8 +52,8 @@ const EndTestDialog = (props: any) => {
         });
         setLoader(false);
         setOpenEndDialog(false);
-        //  setOpenDialog(false);
         clearInterval(Ref.current);
+        localStorage.clear();
         navigate("/test_submitted", {
           state: {
             totalNumberOfQuestions: totalNumberOfQuestions,

@@ -17,13 +17,12 @@ import Swal from "sweetalert2";
 import { QuestionAnswer } from "@material-ui/icons";
 
 const SingleQuestion = (props: any) => {
-  const { quizQuestions, quizId, isKeyValid } = props;
+  const { quizQuestions, quizId } = props;
 
   const [currentQuestion, setCurrentQuestion] = useState<number>(1);
   const [selectedAnswers, setSelectedAnswers] = useState<any>([]);
   const [progressStatus, setProgressStatus] = useState<number>(0);
   const [answeredQuestions, setAnsweredQuestions] = useState<number>(0);
-  // const [timer, setTimer] = useState<any>("00:00:00");
   const [timer, setTimer] = useState<any>();
   const [openEndDialog, setOpenEndDialog] = useState<boolean>(false);
   const [timeCompletd, setTimeCompleted] = useState<boolean>(false);
@@ -138,15 +137,6 @@ const SingleQuestion = (props: any) => {
       );
     }
 
-    // const existingIdIndex = selectedAnswers.findIndex(
-    //   (cur: any) =>
-    //     cur.subjectName === questionData.subjectName &&
-    //     cur.setNumber === questionData.setNumber &&
-    //     cur.quizAnswers.find((elem: any) => {
-    //       return elem.questionId === questionData.questionId;
-    //     })
-    // );
-
     if (indexOFExistingSetAndSubject !== -1) {
       if (quizAnswerIndex !== -1 && !event.target.checked) {
         const newArr = [...selectedAnswers];
@@ -228,6 +218,7 @@ const SingleQuestion = (props: any) => {
     };
     submitQuiz(submitQuizData)
       .then((response: any) => {
+        localStorage.clear();
         Swal.fire({
           title: "Success",
           text: "Test Submitted Succesfully",
@@ -281,8 +272,6 @@ const SingleQuestion = (props: any) => {
   };
 
   const getDeadTime = (remainingTime?: any) => {
-    // let deadline = new Date();
-    console.log("value of remaining time in getDeadTime is", remainingTime);
     if (remainingTime) {
       let deadline = new Date();
       const hour = remainingTime.substring(0, 2);
@@ -294,97 +283,22 @@ const SingleQuestion = (props: any) => {
       return deadline;
     } else {
       let deadline = new Date();
-      deadline.setSeconds(deadline.getSeconds() + parseInt("09"));
-      deadline.setMinutes(deadline.getMinutes() + parseInt("09"));
+      deadline.setMinutes(deadline.getMinutes() + 70);
       return deadline;
     }
   };
 
-  // this is working
-  window.addEventListener("beforeunload", (event) => {
-    event.preventDefault();
-    event.returnValue = "";
-  });
-
-  window.addEventListener("unload", (event) => {
-    localStorage.setItem("timer", timer);
-  });
-
-  //
-
-  // const alertUser = (e: any) => {
-  //   e.preventDefault();
-  //   e.returnValue = "";
-  //   localStorage.setItem("timer", timer);
-  //   // return "";
-  //   console.log("inside alert user");
-  // };
-
-  const handleRefresh = () => {
-    //   console.log("inside handleRefresh");
-    //    localStorage.setItem("timeradeeddd", "true");
-    //  console.log("value of timer in side handlerefresh is", timer);
-    //  localStorage.setItem("timer", timer);
-
-    if (!localStorage.getItem("timer")) {
-      console.log("insdied if part in hr");
-      clearTimer(getDeadTime());
-    } else {
-      console.log("inside else part in  hr");
-      clearTimer(getDeadTime(localStorage.getItem("timer")));
-    }
-    // if (localStorage.getItem("timer") === "undefined") {
-    //   clearTimer(getDeadTime());
-    // } else {
-    // if (localStorage.getItem("timer") !== "undefined")
-    //   clearTimer(getDeadTime(localStorage.getItem("timer")));
+  const alertUser = (e: any) => {
+    e.preventDefault();
+    e.returnValue = "";
   };
-  // await fetcher({
-  //   url: endConcert(concert.id),
-  //   method: 'PUT'
-  // })
-  // };
 
-  // useEffect(() => {
-  //   console.log("useEffect 1 is called");
-  //   if (
-  //     !localStorage.getItem("timer")
-  //     // ||
-  //     // localStorage.getItem("timer") === "undefined"
-  //   ) {
-  //     console.log("useEffect  in startign if part setting");
-  //     clearTimer(getDeadTime());
-  //   }
-  // }, []);
-
-  // useEffect(() => {
-  //   console.log("useEffect 2 is called in single question");
-  //   window.addEventListener("beforeunload", alertUser);
-  //   window.addEventListener("unload", handleRefresh);
-  //   // if (!localStorage.getItem("timer")) {
-  //   //   console.log("insdied if part in useEffect 2");
-  //   //   clearTimer(getDeadTime());
-  //   // } else {
-  //   //   console.log("inside else part in useEffect 2");
-  //   //   clearTimer(getDeadTime(localStorage.getItem("timer")));
-  //   // }
-  //   return () => {
-  //     // window.removeEventListener("beforeunload", alertUser);
-  //     // window.removeEventListener("unload", handleRefresh);
-  //     // handleEndConcert();
-  //   };
-  // }, []);
-
-  // useEffect(() => {
-  //   console.log("useEffect 2 is called");
-  //   if (!localStorage.getItem("timer")) {
-  //     console.log("insdied if part in useEffect 2");
-  //     clearTimer(getDeadTime());
-  //   } else {
-  //     console.log("inside else part in useEffect 2");
-  //     clearTimer(getDeadTime(localStorage.getItem("timer")));
-  //   }
-  // }, []);
+  useEffect(() => {
+    window.addEventListener("beforeunload", alertUser);
+    return () => {
+      window.removeEventListener("beforeunload", alertUser);
+    };
+  }, []);
 
   useEffect(() => {
     if (
@@ -397,108 +311,108 @@ const SingleQuestion = (props: any) => {
     }
   }, []);
 
+  useEffect(() => {
+    if (timer) {
+      localStorage.setItem("timer", timer);
+    }
+  }, [timer]);
+
   return (
     <>
-      <Box className="progress-box">
-        <Box className="progress-data">
-          <Typography variant="body1">{`Answered ${answeredQuestions} out of ${quizQuestions.data?.length}`}</Typography>
-          {timer && (
-            <Typography variant="body1">{`Time Remaining - ${timer}`}</Typography>
+      <Box className="question-container">
+        <Box className="progress-box">
+          <Box className="progress-data">
+            <Typography variant="body1">{`Answered ${answeredQuestions} out of ${quizQuestions.data?.length}`}</Typography>
+            {timer && (
+              <Typography variant="body1">{`Time Remaining - ${timer}`}</Typography>
+            )}
+          </Box>
+          <LinearProgress
+            value={progressStatus}
+            variant={"determinate"}
+            color={"primary"}
+          />
+        </Box>
+        <Box className="questions">
+          {quizQuestions &&
+            quizQuestions.data?.map((question: any, index: any) => {
+              if (index + 1 === currentQuestion) {
+                switch (question.questionType) {
+                  case "SINGLECHOICE":
+                    return (
+                      <RadioComponent
+                        key={index}
+                        questionInfo={{
+                          questionNumber: index + 1,
+                          questionData: question,
+                        }}
+                        handleAnswerChange={handleRadioAnswerChange}
+                        selectedAnswers={selectedAnswers}
+                      />
+                    );
+                  case "MULTIPLECHOICE":
+                    return (
+                      <CheckboxComponent
+                        key={index}
+                        questionInfo={{
+                          questionNumber: index + 1,
+                          questionData: question,
+                        }}
+                        handleCheckboxAnswerChange={handleCheckboxAnswerChange}
+                        selectedAnswers={selectedAnswers}
+                      />
+                    );
+                  case "PROGRAM":
+                    return <CodingComponent key={index} question={question} />;
+                  default:
+                    return null;
+                }
+              }
+            })}
+        </Box>
+        <Box className="test-buttons-box">
+          {currentQuestion <= quizQuestions.data.length && currentQuestion > 1 && (
+            <Button
+              variant="outlined"
+              onClick={moveToPreviousQuestion}
+              className="test-button"
+            >
+              Previous
+            </Button>
+          )}
+          {currentQuestion < quizQuestions.data.length && (
+            <Button
+              variant="contained"
+              onClick={moveToNextQuestion}
+              className="test-button"
+            >
+              Next
+            </Button>
           )}
         </Box>
-        <LinearProgress
-          value={progressStatus}
-          variant={"determinate"}
-          color={"primary"}
-        />
-      </Box>
-
-      {/* <Box>
-        {quizQuestions.data &&
-          quizQuestions.data.map((question: any, index: any) => { */}
-      <Box>
-        {quizQuestions &&
-          quizQuestions.data?.map((question: any, index: any) => {
-            if (index + 1 === currentQuestion) {
-              switch (question.questionType) {
-                case "SINGLECHOICE":
-                  return (
-                    <RadioComponent
-                      key={index}
-                      questionInfo={{
-                        questionNumber: index + 1,
-                        questionData: question,
-                      }}
-                      handleAnswerChange={handleRadioAnswerChange}
-                      selectedAnswers={selectedAnswers}
-                    />
-                  );
-                case "MULTIPLECHOICE":
-                  return (
-                    <CheckboxComponent
-                      key={index}
-                      questionInfo={{
-                        questionNumber: index + 1,
-                        questionData: question,
-                      }}
-                      handleCheckboxAnswerChange={handleCheckboxAnswerChange}
-                      selectedAnswers={selectedAnswers}
-                    />
-                  );
-                case "PROGRAM":
-                  return <CodingComponent key={index} question={question} />;
-                default:
-                  return null;
-              }
-            }
-          })}
-      </Box>
-      <Box className="test-buttons-box">
-        {currentQuestion <= quizQuestions.data.length && currentQuestion > 1 && (
+        <Box className="end-test-box">
           <Button
-            variant="outlined"
-            onClick={moveToPreviousQuestion}
-            className="test-button"
-          >
-            Previous
-          </Button>
-        )}
-        {currentQuestion < quizQuestions.data.length && (
-          <Button
+            color="error"
             variant="contained"
-            onClick={moveToNextQuestion}
-            className="test-button"
+            onClick={() => {
+              setOpenEndDialog(true);
+            }}
+            className="end-test-btn"
           >
-            Next
+            Submit Test
           </Button>
+        </Box>
+        {openEndDialog && (
+          <EndTestDialog
+            selectedAnswers={selectedAnswers}
+            totalNumberOfQuestions={quizQuestions.data.length}
+            Ref={Ref}
+            quizId={quizQuestions.quizId}
+            openEndDialog={openEndDialog}
+            setOpenEndDialog={setOpenEndDialog}
+          />
         )}
       </Box>
-      <Box className="end-test-box">
-        <Button
-          color="error"
-          variant="contained"
-          onClick={() => {
-            setOpenEndDialog(true);
-            //  setOpenDialog(true);
-          }}
-          className="end-test-btn"
-        >
-          Submit Test
-        </Button>
-      </Box>
-      {openEndDialog && (
-        <EndTestDialog
-          //  openDialog={openDialog}
-          // handleClose={handleClose}
-          //   setOpenDialog={setOpenDialog}
-          selectedAnswers={selectedAnswers}
-          totalNumberOfQuestions={quizQuestions.data.length}
-          Ref={Ref}
-          quizId={quizQuestions.quizId}
-          openEndDialog={openEndDialog}
-          setOpenEndDialog={setOpenEndDialog}
-        />
-      )}
     </>
   );
 };

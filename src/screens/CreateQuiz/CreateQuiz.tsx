@@ -23,6 +23,8 @@ import {
   Select,
   SelectChangeEvent,
   CircularProgress,
+  OutlinedInput,
+  InputAdornment,
 } from "@mui/material";
 import { AxiosResponse } from "axios";
 import { any } from "prop-types";
@@ -42,6 +44,7 @@ import {
 import "./CreateQuiz.style.scss";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import NavBarInterviewer from "../../components/NavBar/NavBarInterviewer";
+import SearchIcon from "@mui/icons-material/Search";
 import TopNavBar from "../../components/TopNavBar/TopNavBar";
 import creatQuizTableColumns from "./createQuizTableColumns";
 import { visuallyHidden } from "@mui/utils";
@@ -66,6 +69,7 @@ const CreateQuiz = () => {
   const [quizLink, setQuizLink] = useState<string>();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [name, setName] = useState<string>("");
   const [subject, setSubject] = useState<string>("ALL");
 
   const [order, setOrder] = useState<Order>("asc");
@@ -193,27 +197,54 @@ const CreateQuiz = () => {
       <NavBarInterviewer />
 
       <Box className="subjectlist-box">
-        <Box className="select-box">
-          <FormControl
-            sx={{
-              minWidth: 100,
-            }}
-          >
-            <InputLabel>Subject</InputLabel>
-            <Select
-              value={subject}
-              onChange={handleSubjectChange}
-              autoWidth
-              label="Subject"
+        <Box className="table-options-box ">
+          <Box>
+            <FormControl
+              sx={{
+                minWidth: 100,
+              }}
             >
-              <MenuItem selected value="ALL">
-                All
-              </MenuItem>
-              <MenuItem value={"REACT"}>REACT</MenuItem>
-              <MenuItem value={"JAVASCRIPT"}>JAVASCRIPT</MenuItem>
-              <MenuItem value={"CSHARP"}>C#</MenuItem>
-            </Select>
-          </FormControl>
+              <InputLabel>Subject</InputLabel>
+              <Select
+                value={subject}
+                onChange={handleSubjectChange}
+                autoWidth
+                label="Subject"
+              >
+                <MenuItem selected value="ALL">
+                  All
+                </MenuItem>
+                <MenuItem value={"REACT"}>REACT</MenuItem>
+                <MenuItem value={"JAVASCRIPT"}>JAVASCRIPT</MenuItem>
+                <MenuItem value={"CSHARP"}>C#</MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
+          <Box>
+            <OutlinedInput
+              className="search-input"
+              // sx={{
+              //   borderRadius: "0.3rem",
+              //   height: 30,
+              //   minWidth: 10,
+              //   border: "0.1px solid #000",
+              // }}
+              id="outlined-adornment-weight"
+              value={name}
+              onChange={(e: any) => setName(e.target.value)}
+              placeholder="Search"
+              endAdornment={
+                <InputAdornment position="end">
+                  <SearchIcon />
+                </InputAdornment>
+              }
+              aria-describedby="outlined-weight-helper-text"
+            />
+          </Box>
+
+          {/* <Box className="table-header"> */}
+
+          {/* </Box> */}
         </Box>
         <Paper className="paper">
           <Typography variant="h5" className="table-title">
@@ -256,36 +287,59 @@ const CreateQuiz = () => {
                     subjectList
                       .slice()
                       .sort(getComparator(order, orderBy))
+                      .filter(
+                        (row) =>
+                          !name.length ||
+                          row.subjectName
+                            .toLowerCase()
+                            .includes(name.toLowerCase()) ||
+                          row.setNumber
+                            .toString()
+                            .toLowerCase()
+                            .includes(name.toString().toLowerCase()) ||
+                          row.totalQuestionsCount
+                            .toString()
+                            .toLowerCase()
+                            .includes(name.toString().toLowerCase())
+                      )
                       .slice(
                         page * rowsPerPage,
                         page * rowsPerPage + rowsPerPage
                       )
-                      .map((row: any, index: number) => (
-                        <TableRow
-                          hover
-                          role="checkbox"
-                          tabIndex={-1}
-                          key={index}
-                        >
-                          <TableCell size="small" align="left">
-                            {row.setNumber}
-                          </TableCell>
-                          <TableCell size="small" align="left">
-                            {row.subjectName}
-                          </TableCell>
-                          <TableCell size="small" align="left">
-                            {row.totalQuestionsCount}
-                          </TableCell>
-                          <TableCell size="small" align="left">
-                            <Checkbox
-                              name="checkbox-1"
-                              onChange={(e: any) =>
-                                handleCheckboxChange(e, row)
+                      .map((row: any, index: number) => {
+                        return (
+                          <TableRow
+                            hover
+                            role="checkbox"
+                            tabIndex={-1}
+                            key={index}
+                          >
+                            {creatQuizTableColumns.map(
+                              (column: any, index: any) => {
+                                const value = row[column.id];
+                                return (
+                                  <TableCell
+                                    key={index}
+                                    align={column.align}
+                                    size="small"
+                                  >
+                                    {column.id === "select" ? (
+                                      <Checkbox
+                                        name="checkbox-1"
+                                        onChange={(e: any) =>
+                                          handleCheckboxChange(e, row)
+                                        }
+                                      />
+                                    ) : (
+                                      value
+                                    )}
+                                  </TableCell>
+                                );
                               }
-                            />
-                          </TableCell>
-                        </TableRow>
-                      ))}
+                            )}
+                          </TableRow>
+                        );
+                      })}
                 </TableBody>
               ) : null}
             </Table>
