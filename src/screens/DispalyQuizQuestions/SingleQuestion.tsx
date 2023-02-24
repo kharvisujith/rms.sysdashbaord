@@ -17,7 +17,7 @@ import Swal from "sweetalert2";
 import { QuestionAnswer } from "@material-ui/icons";
 
 const SingleQuestion = (props: any) => {
-  const { quizQuestions, quizId } = props;
+  const { quizQuestions, quizId, isKeyValid } = props;
 
   const [currentQuestion, setCurrentQuestion] = useState<number>(1);
   const [selectedAnswers, setSelectedAnswers] = useState<any>([]);
@@ -300,27 +300,25 @@ const SingleQuestion = (props: any) => {
     }
   };
 
+  // this is working
   window.addEventListener("beforeunload", (event) => {
-    // localStorage.setItem("testStarted", testStarted.toString());
     event.preventDefault();
-    //  localStorage.setItem("beforeunload", "true");
-    //  localStorage.setItem("timer", timer);
     event.returnValue = "";
   });
 
   window.addEventListener("unload", (event) => {
-    localStorage.setItem("unload", "trueee");
     localStorage.setItem("timer", timer);
-    // setTimer(localStorage.getItem("timer"));
   });
 
-  const alertUser = (e: any) => {
-    e.preventDefault();
-    e.returnValue = "";
-    localStorage.setItem("timer", timer);
-    // return "";
-    console.log("inside alert user");
-  };
+  //
+
+  // const alertUser = (e: any) => {
+  //   e.preventDefault();
+  //   e.returnValue = "";
+  //   localStorage.setItem("timer", timer);
+  //   // return "";
+  //   console.log("inside alert user");
+  // };
 
   const handleRefresh = () => {
     //   console.log("inside handleRefresh");
@@ -389,9 +387,6 @@ const SingleQuestion = (props: any) => {
   // }, []);
 
   useEffect(() => {
-    // var timeRemaining = localStorage.getItem("timer");
-    //  console.log("value of timeRemaning in useEff is", timeRemaining);
-    // timeRemaining === null ? console.log("yes") : console.log("no");
     if (
       localStorage.getItem("timer") === "undefined" ||
       !localStorage.getItem("timer")

@@ -25,14 +25,25 @@ const StartQuiz = () => {
     // setOpenTestModal(true);
   };
 
-  window.addEventListener("beforeunload", (event) => {
-    localStorage.setItem("testStarted", testStarted.toString());
-    // localStorage.setItem("beforeunload", "true");
-  });
+  // THis will work
+  // window.addEventListener("beforeunload", (event) => {
+  //   localStorage.setItem("testStarted", testStarted.toString());
+  //   // localStorage.setItem("beforeunload", "true");
+  // });
 
   // window.addEventListener("unload", (event) => {
   //   localStorage.setItem("unload", "trueee");
   // });
+
+  useEffect(() => {
+    if (isKeyValid) {
+      window.addEventListener("beforeunload", (event) => {
+        localStorage.setItem("testStarted", testStarted.toString());
+        // localStorage.setItem("beforeunload", "true");
+      });
+    }
+  }, [testStarted, isKeyValid]);
+  console.log("value of testStarted is", testStarted);
 
   useEffect(() => {
     verifyCandidate(
@@ -109,6 +120,7 @@ const StartQuiz = () => {
         <SingleQuestion
           quizQuestions={location.state}
           quizId={location.state.verifyCredentials.id}
+          isKeyValid={isKeyValid}
         />
       )}
 
