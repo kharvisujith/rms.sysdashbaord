@@ -10,14 +10,17 @@ import {
   TablePagination,
   TableSortLabel,
   CircularProgress,
+  InputAdornment,
+  OutlinedInput,
 } from "@mui/material";
 import { Box } from "@mui/system";
 import { useState, useEffect } from "react";
 import { getTotalQuizLinksInfo } from "../../api/apiAgent";
-import { Order } from "../../Interface/QuizDetails";
+import { createdQuizTableColumns, Order } from "../../Interface/QuizDetails";
 import { getComparator } from "../../utils/TableSortFunctions";
 import "./InterviewerQuizTable.style.scss";
 import { createdQuizColumns } from "./InterviewQuizTableColumns";
+import SearchIcon from "@mui/icons-material/Search";
 
 // interface Column {
 //   id:
@@ -93,7 +96,21 @@ const InterviewQuiz = () => {
   //const [orderBy, setOrderBy] = useState<keyof Data>("setNumber");
   const [orderBy, setOrderBy] = useState<any>("setNumber");
   const [loader, setLoader] = useState<boolean>(false);
+  const [name, setName] = useState<string>("");
+  const [rows, setRows] = useState([]);
+  
   //const [text, setText] = useState('');
+
+  // const handleSearch = (searchedVal: string) => {
+  //     const filteredRows = totalQuizInfo.filter((row: any) => {
+  //       return (
+  //          row.quizCodeExpirationAt.toLowerCase().includes(searchedVal.toLowerCase()));
+  //           // || row.setNumber.toString().toLowerCase().includes(searchedVal.toString().toLowerCase()) 
+  //           // || row.totalQuestionsCount.toString().toLowerCase().includes(searchedVal.toString().toLowerCase()));
+  //     });
+  //       // setRows(filteredRows);
+  //     console.log(filteredRows, 'row value');
+  //   };
 
   const createSortHandler =
     (property: string) => (event: React.MouseEvent<unknown>) => {
@@ -143,6 +160,27 @@ const InterviewQuiz = () => {
   return (
     <>
       <Box className="quiztable-box">
+        <Box>
+      <OutlinedInput className="search-input"
+          sx={{
+           
+           borderRadius: "0.3rem",
+           height: 30,
+           minWidth: 10,
+           border: "0.1px solid #000",
+         }}
+         id="outlined-adornment-weight"
+         value={name}
+         onChange={(e: any) => setName(e.target.value)}
+         placeholder="Search"
+         endAdornment={
+           <InputAdornment position="end">
+             <SearchIcon />
+           </InputAdornment>
+         }
+         aria-describedby="outlined-weight-helper-text"
+       />
+       </Box>
         <Paper className="paper">
           <Typography variant="h5" className="table-title">
             Quiz Details
@@ -181,6 +219,9 @@ const InterviewQuiz = () => {
                 {totalQuizInfo
                   .slice()
                   .sort(getComparator(order, orderBy))
+                   .filter((row:any) => !name.length || row.quizId.toString().toLowerCase().includes(name.toString().toLowerCase()) ||
+                    row.loginAttempts.toString().toLowerCase().includes(name.toString().toLowerCase()) || 
+                    row.quizCodeExpirationAt.toLowerCase().includes(name.toLowerCase()))
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row: any) => {
                     return (

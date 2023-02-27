@@ -17,7 +17,7 @@
 }
 
 .search-input {
-  margin-left: 60rem;
+  margin-left: 64rem;
 }
 
 .table-header {
@@ -39,13 +39,20 @@
   .select-box {
     display: flex;
     justify-content: flex-start;
-    margin-bottom: 0.5rem;
-    // .table-header {
-    //   width: 100%;
-    //   display: flex;
-    //   justify-content: flex-start;
-    //   margin-left: 5%;
-    // }
+    //  margin-bottom: 0.5rem;
+    // 
+    .table-header {
+      width: 100%;
+      display: flex;
+      justify-content: flex-start;
+      margin-left: 5%;
+      // .search-input {
+      //   margin-right: 2rem;
+      //   height: 2rem !important;
+      //   margin-top: 1rem;
+      //   }
+    }
+
   }
 }
 

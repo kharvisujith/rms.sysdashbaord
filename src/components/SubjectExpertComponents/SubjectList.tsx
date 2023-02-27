@@ -6,8 +6,10 @@ import {
   DialogContent,
   DialogTitle,
   FormControl,
+  InputAdornment,
   InputLabel,
   MenuItem,
+  OutlinedInput,
   Paper,
   Select,
   SelectChangeEvent,
@@ -41,6 +43,7 @@ import Swal from "sweetalert2";
 import { columns } from "./QuestionSetsTableColumn";
 import { visuallyHidden } from "@mui/utils";
 import { getComparator } from "../../utils/TableSortFunctions";
+import SearchIcon from "@mui/icons-material/Search";
 
 // interface Data {
 //   subjectName: string;
@@ -62,6 +65,7 @@ const SubjectList = (props: any) => {
     file: false,
   });
   const [openFileUpload, setOpenFileUpload] = useState(false);
+  const [name, setName] = useState<string>("");
 
   const [subject, setSubject] = useState<string>("ALL");
 
@@ -285,6 +289,7 @@ const SubjectList = (props: any) => {
               <MenuItem value={"CSHARP"}>C#</MenuItem>
             </Select>
           </FormControl>
+          
           <Box className="question-upload-buttons">
             <Button
               variant="contained"
@@ -300,8 +305,35 @@ const SubjectList = (props: any) => {
             >
               Upload Question Set
             </Button>
+           
           </Box>
+          {/* <Box className="search"> */}
+          
+          {/* </Box> */}
         </Box>
+        <Box className="search">
+        <OutlinedInput className="search-input"
+          sx={{
+           
+           borderRadius: "0.3rem",
+           height: 30,
+           minWidth: 10,
+           border: "0.1px solid #000",
+         }}
+         id="outlined-adornment-weight"
+         value={name}
+         onChange={(e: any) => setName(e.target.value)}
+         placeholder="Search"
+         endAdornment={
+           <InputAdornment position="end">
+             <SearchIcon />
+           </InputAdornment>
+         }
+         aria-describedby="outlined-weight-helper-text"
+       />
+       </Box> 
+        
+     
 
         <Paper className="paper">
           <Typography variant="h5" className="table-title">
@@ -342,6 +374,10 @@ const SubjectList = (props: any) => {
                     subjectList
                       .slice()
                       .sort(getComparator(order, orderBy))
+                      .filter((row) => !name.length || row.subjectName.toLowerCase().includes(name.toLowerCase()) || 
+                      row.setNumber.toString().toLowerCase().includes(name.toString().toLowerCase()) || 
+                      row.totalQuestionsCount.toString().toLowerCase().includes(name.toString().toLowerCase()))
+                      
                       .slice(
                         page * rowsPerPage,
                         page * rowsPerPage + rowsPerPage

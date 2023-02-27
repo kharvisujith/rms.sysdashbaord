@@ -219,13 +219,13 @@ const CreateQuiz = () => {
             </Select>
           </FormControl>
        
-        {/* <Box className="table-header"> */}
+        <Box className="table-header">
          <OutlinedInput className="search-input"
         sx={{
            
           borderRadius: "0.3rem",
-          height: 30,
-          minWidth: 10,
+          // height: 30,
+          // minWidth: 10,
           border: "0.1px solid #000",
         }}
         id="outlined-adornment-weight"
@@ -239,7 +239,7 @@ const CreateQuiz = () => {
         }
         aria-describedby="outlined-weight-helper-text"
       />
-      {/* </Box> */}
+      </Box>
       </Box>
         <Paper className="paper">
           <Typography variant="h5" className="table-title">

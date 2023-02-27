@@ -12,6 +12,8 @@ import {
   Button,
   TableSortLabel,
   CircularProgress,
+  InputAdornment,
+  OutlinedInput,
 } from "@mui/material";
 import { Box } from "@mui/system";
 import React, { useState, useEffect } from "react";
@@ -33,6 +35,7 @@ import { columns } from "./SubmittedQuizTableColumn";
 import "./SubmittedQuiz.style.scss";
 import { visuallyHidden } from "@mui/utils";
 import { getComparator } from "../../utils/TableSortFunctions";
+import SearchIcon from "@mui/icons-material/Search";
 
 const SubmitQuizes = (props: any) => {
   const [page, setPage] = React.useState(0);
@@ -49,6 +52,7 @@ const SubmitQuizes = (props: any) => {
   //const [orderBy, setOrderBy] = useState<keyof Data>("setNumber");
   const [orderBy, setOrderBy] = useState<any>("correctAnswers");
   const [loader, setLoader] = useState<boolean>(false);
+  const [name, setName] = useState<string>("");
 
   const createSortHandler =
     (property: string) => (event: React.MouseEvent<unknown>) => {
@@ -132,6 +136,25 @@ const SubmitQuizes = (props: any) => {
     <>
       <NavBarInterviewer />
       <Box className="subjectlist-box">
+      <OutlinedInput className="search-input"
+          sx={{
+           
+           borderRadius: "0.3rem",
+           height: 30,
+           minWidth: 10,
+           border: "0.1px solid #000",
+         }}
+         id="outlined-adornment-weight"
+         value={name}
+         onChange={(e: any) => setName(e.target.value)}
+         placeholder="Search"
+         endAdornment={
+           <InputAdornment position="end">
+             <SearchIcon />
+           </InputAdornment>
+         }
+         aria-describedby="outlined-weight-helper-text"
+       />
         <Paper>
           <Typography variant="h5" className="table-title">
             Submitted Quiz Results
@@ -170,6 +193,14 @@ const SubmitQuizes = (props: any) => {
                 {totalSubmittedQuizInfoList
                   .slice()
                   .sort(getComparator(order, orderBy))
+                  .filter((row) => !name.length || row.candidateId.toLowerCase().includes(name.toLowerCase()) || 
+                   row.createdBy.toLowerCase().includes(name.toLowerCase()) ||
+                   row.interviewLevel.toString().toLowerCase().includes(name.toString().toLowerCase()) ||
+                   row.totalQuestions.toString().toLowerCase().includes(name.toString().toLowerCase()) ||
+                   row.answeredQuestions.toString().toLowerCase().includes(name.toString().toLowerCase()) ||
+                   row.notAnsweredQuestions.toString().toLowerCase().includes(name.toString().toLowerCase()) ||
+                   row.inCorrectAnswers.toString().toLowerCase().includes(name.toString().toLowerCase()) ||
+                   row.correctAnswers.toString().toLowerCase().includes(name.toString().toLowerCase()))
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row: any) => {
                     console.log("test data", totalSubmittedQuizInfoList);
