@@ -36,6 +36,7 @@ import "./SubmittedQuiz.style.scss";
 import { visuallyHidden } from "@mui/utils";
 import { getComparator } from "../../utils/TableSortFunctions";
 import SearchIcon from "@mui/icons-material/Search";
+import TopNavBar from "../../components/TopNavBar/TopNavBar";
 
 const SubmitQuizes = (props: any) => {
   const [page, setPage] = React.useState(0);
@@ -134,7 +135,7 @@ const SubmitQuizes = (props: any) => {
 
   return (
     <>
-      <NavBarInterviewer />
+      <TopNavBar role={props.role} setRole={props.setRole} />
       <Box className="subjectlist-box">
       <Box className="search-box">
       <OutlinedInput className="search-input"

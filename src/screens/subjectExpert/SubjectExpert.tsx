@@ -1,10 +1,10 @@
 import SubjectList from "../../components/SubjectExpertComponents/SubjectList";
-import NavBar from "../../components/NavBar/NavBar";
 import "./SubjectExpert.style.scss";
+import TopNavBar from "../../components/TopNavBar/TopNavBar";
 const SubjectOptions = (props: any) => {
   return (
     <>
-      <NavBar />
+      <TopNavBar role={props.role} setRole={props.setRole} />
       <SubjectList />
     </>
   );

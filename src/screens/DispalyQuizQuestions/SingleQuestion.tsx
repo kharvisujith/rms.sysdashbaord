@@ -283,7 +283,7 @@ const SingleQuestion = (props: any) => {
       return deadline;
     } else {
       let deadline = new Date();
-      deadline.setMinutes(deadline.getMinutes() + 70);
+      deadline.setMinutes(deadline.getMinutes() + quizQuestions.data.length);
       return deadline;
     }
   };
@@ -305,9 +305,9 @@ const SingleQuestion = (props: any) => {
       localStorage.getItem("timer") === "undefined" ||
       !localStorage.getItem("timer")
     ) {
-      clearTimer(getDeadTime());
+      //   clearTimer(getDeadTime());
     } else {
-      clearTimer(getDeadTime(localStorage.getItem("timer")));
+      //   clearTimer(getDeadTime(localStorage.getItem("timer")));
     }
   }, []);
 

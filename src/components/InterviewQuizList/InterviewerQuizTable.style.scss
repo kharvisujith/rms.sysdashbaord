@@ -2,15 +2,17 @@
     margin-left: 5%;
    margin-right: 5%;
 
-   .search-input {
+   .search-box {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
+
+   .search-input {
+    
     height: 2rem;
     min-width: 3rem;
-     margin-top: 0.5rem;
-     margin-left: 72rem;
-     margin-bottom: 0.5rem;
+    margin-bottom: 0.5rem;
   }
+}
 }
 
 .table-title {

@@ -59,7 +59,7 @@ const useStyles = makeStyles({
   },
 });
 
-const CreateQuiz = () => {
+const CreateQuiz = (props: any) => {
   const [subjectList, setSubjectList] = useState<subjectWiseQuizListResponse[]>(
     []
   );
@@ -194,7 +194,7 @@ const CreateQuiz = () => {
 
   return (
     <>
-      <NavBarInterviewer />
+      <TopNavBar role={props.role} setRole={props.setRole} />
 
       <Box className="subjectlist-box">
         <Box className="table-options-box ">

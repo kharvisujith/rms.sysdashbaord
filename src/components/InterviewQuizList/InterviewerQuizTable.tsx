@@ -97,7 +97,7 @@ const InterviewQuiz = () => {
   const [orderBy, setOrderBy] = useState<any>("setNumber");
   const [loader, setLoader] = useState<boolean>(false);
   const [name, setName] = useState<string>("");
-  const [rows, setRows] = useState([]);
+  // const [rows, setRows] = useState([]);
   
   //const [text, setText] = useState('');
 
@@ -160,7 +160,7 @@ const InterviewQuiz = () => {
   return (
     <>
       <Box className="quiztable-box">
-      <Box>
+      <Box className="search-box">
       <OutlinedInput className="search-input"
         //   sx={{
            

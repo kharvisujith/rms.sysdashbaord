@@ -6,7 +6,7 @@ import "./PageNotFound.style.scss";
 const PageNotFound = () => {
   return (
     <>
-      <TopNavBar />
+      {/* <TopNavBar /> */}
       <Box className="error-box">
         <Typography variant="h4">404 Not Found</Typography>
       </Box>

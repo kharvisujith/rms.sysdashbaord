@@ -3,10 +3,10 @@ import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import { Button, Typography } from "@mui/material";
-import SideBar from "../../components/TopNavBar/TopNavBar";
 import { useEffect, useState } from "react";
 
 import { Container } from "@mui/material";
+import TopNavBar from "../../components/TopNavBar/TopNavBar";
 
 const RmsHome = (props: any) => {
   const navigate = useNavigate();
@@ -16,7 +16,7 @@ const RmsHome = (props: any) => {
 
   return (
     <>
-      <SideBar />
+      <TopNavBar />
 
       <div>
         <p style={{ paddingLeft: "190px" }}>
@@ -46,63 +46,3 @@ const RmsHome = (props: any) => {
   );
 };
 export default RmsHome;
-
-// export default function App() {
-//   useEffect(() => {
-//     // const unloadCallback = (event: any) => {
-//     //   event.preventDefault();
-//     //   event.returnValue = "";
-//     //   return "dsfjlkdsjflk";
-//     // };
-//     // window.addEventListener("beforeunload", unloadCallback);
-//     // return () => window.removeEventListener("beforeunload", unloadCallback);
-//   }, []);
-//   window.onbeforeunload = function () {
-//     return "Data will be lost if you leave the page, are you sure?";
-//   };
-
-//   return (
-//     <div>
-//       <h1>Hello CodeSandbox</h1>
-//       <h2>Start editing to see some magic happen!</h2>
-//     </div>
-//   );
-// }
-
-// const App = () => {
-//   const [show, setShow] = useState(false);
-//   useEffect(() => {
-//     window.addEventListener("beforeunload", alertUser);
-//     window.addEventListener("unload", handleEndConcert);
-//     return () => {
-//       window.removeEventListener("beforeunload", alertUser);
-//       window.removeEventListener("unload", handleEndConcert);
-//       handleEndConcert();
-//     };
-//   }, []);
-
-//   const alertUser = (e: any) => {
-//     e.preventDefault();
-//     e.returnValue = "";
-//   };
-
-//   const handleEndConcert = async () => {
-//     localStorage.setItem("timer", "true");
-//     // await fetcher({
-//     //   url: endConcert(concert.id),
-//     //   method: 'PUT'
-//     // })
-//   };
-
-//   return (
-//     <Container>
-//       {/* <Prompt
-//         when={isPrompt()}
-//         message={() => "Are you sure you want to leave this page?"}
-//       /> */}
-//       <h1>keeeek</h1>
-//     </Container>
-//   );
-// };
-
-// export default App;

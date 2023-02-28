@@ -11,14 +11,14 @@ import { useLocation } from "react-router-dom";
 import Swal from "sweetalert2";
 import "./TestCompleted.style.scss";
 import SideBar from "../../components/TopNavBar/TopNavBar";
-import CandidateNavBar from "../../components/TopNavBar/CandidateNavBar";
+import TopNavBarTest from "../../components/TopNavBar/TopNavBarTest";
 
 const TestCompleted = (props: any) => {
   const location = useLocation();
 
   return (
     <>
-      <CandidateNavBar />
+      <TopNavBarTest />
       <Box className="test-submitted-box">
         <Box className="test-summary">
           <Card className="summary-card">
@@ -30,13 +30,13 @@ const TestCompleted = (props: any) => {
                 Status : Completed
               </Typography>
               <Typography color="text.secondary">
-                {`Total Number of Questions - ${location.state.totalNumberOfQuestions}`}
+                {`Total Number of Questions - ${location.state?.totalNumberOfQuestions}`}
               </Typography>
               <Typography color="text.secondary">
-                {`Questions Answered - ${location.state.answered}`}
+                {`Questions Answered - ${location.state?.answered}`}
               </Typography>
               <Typography color="text.secondary">
-                {`Questions Not Answered - ${location.state.notAnswered}`}
+                {`Questions Not Answered - ${location.state?.notAnswered}`}
               </Typography>
             </CardContent>
           </Card>
