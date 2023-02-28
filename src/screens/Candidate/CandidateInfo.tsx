@@ -15,11 +15,10 @@ import {
 } from "../../api/apiAgent";
 import CandidateDetails from "../../Interface/CandidateDetails";
 import { useParams } from "react-router-dom";
-import CandidateNavBar from "../../components/TopNavBar/CandidateNavBar";
 import "./CandidateInfo.style.scss";
 import { AxiosResponse } from "axios";
-import { logDOM } from "@testing-library/react";
 import { CircularProgress } from "@material-ui/core";
+import TopNavBarTest from "../../components/TopNavBar/TopNavBarTest";
 
 const CandidateInfo = (props: any) => {
   const { id, key } = useParams();
@@ -144,7 +143,7 @@ const CandidateInfo = (props: any) => {
 
   return (
     <>
-      <CandidateNavBar />
+      <TopNavBarTest />
       {loader.pageLoader ? (
         <Box className="page-loader">
           <CircularProgress />

@@ -33,6 +33,7 @@ import { columns } from "./SubmittedQuizTableColumn";
 import "./SubmittedQuiz.style.scss";
 import { visuallyHidden } from "@mui/utils";
 import { getComparator } from "../../utils/TableSortFunctions";
+import TopNavBar from "../../components/TopNavBar/TopNavBar";
 
 const SubmitQuizes = (props: any) => {
   const [page, setPage] = React.useState(0);
@@ -130,7 +131,7 @@ const SubmitQuizes = (props: any) => {
 
   return (
     <>
-      <NavBarInterviewer />
+      <TopNavBar role={props.role} setRole={props.setRole} />
       <Box className="subjectlist-box">
         <Paper>
           <Typography variant="h5" className="table-title">

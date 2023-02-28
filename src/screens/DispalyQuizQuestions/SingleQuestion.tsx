@@ -305,9 +305,9 @@ const SingleQuestion = (props: any) => {
       localStorage.getItem("timer") === "undefined" ||
       !localStorage.getItem("timer")
     ) {
-      clearTimer(getDeadTime());
+      //   clearTimer(getDeadTime());
     } else {
-      clearTimer(getDeadTime(localStorage.getItem("timer")));
+      //   clearTimer(getDeadTime(localStorage.getItem("timer")));
     }
   }, []);
 

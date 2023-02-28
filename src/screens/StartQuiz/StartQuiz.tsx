@@ -10,7 +10,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { verifyCandidate } from "../../api/apiAgent";
 import { AxiosError, AxiosResponse } from "axios";
-import CandidateNavBar from "../../components/TopNavBar/CandidateNavBar";
+import TopNavBarTest from "../../components/TopNavBar/TopNavBarTest";
 const StartQuiz = () => {
   const [isKeyValid, setIsKeyValid] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>();
@@ -76,7 +76,7 @@ const StartQuiz = () => {
 
   return (
     <>
-      <CandidateNavBar />
+      <TopNavBarTest />
       <Box className="main-layout-wrap">
         {loader ? (
           <Box className="page-loader">
