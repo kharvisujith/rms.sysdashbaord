@@ -9,17 +9,19 @@
 
   .table-header {
     display: flex;
-    justify-content: flex-start;
+    justify-content: space-between;
     margin-bottom: 0.5rem;
+    
     .question-upload-buttons {
-      width: 100%;
-      display: flex;
-      justify-content: flex-start;
-      margin-left: 5%;
+        // width: 100%;
+        display: flex-start;
+         justify-content: flex-start;
+         margin-left: 5%;
       .button {
         margin-right: 2rem;
         height: 2rem !important;
         margin-top: 1rem;
+        // margin-left: 5%;
         // .search {
         //   width: 100%;
         //   display: flex;
@@ -28,8 +30,23 @@
         
       }
     }
+    .search-box {
+      display: flex;
+        // justify-content:flex-end;
+       margin-left: -10rem;
+     
+    .search-input {
+      height: 2rem;
+      min-width: 3rem;
+      margin-top: -2rem;
+      // margin-bottom: 1rem;
+      
+    }
+    }
+   
   }
 
+  
   
 
   .table-title {

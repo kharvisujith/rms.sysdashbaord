@@ -269,6 +269,7 @@ const SubjectList = (props: any) => {
     <>
       <Box className="subjectlist-box">
         <Box className="table-header">
+          <Box >
           <FormControl
             sx={{
               minWidth: 100,
@@ -289,6 +290,7 @@ const SubjectList = (props: any) => {
               <MenuItem value={"CSHARP"}>C#</MenuItem>
             </Select>
           </FormControl>
+          </Box>
           
           <Box className="question-upload-buttons">
             <Button
@@ -305,21 +307,34 @@ const SubjectList = (props: any) => {
             >
               Upload Question Set
             </Button>
+           <Box className="search-box">
+             <OutlinedInput className="search-input"
+       
+               id="outlined-adornment-weight"
+               value={name}
+               onChange={(e: any) => setName(e.target.value)}
+               placeholder="Search"
+               endAdornment={
+               <InputAdornment position="end">
+               <SearchIcon />
+               </InputAdornment>
+               }
+               aria-describedby="outlined-weight-helper-text"
+             />
+           </Box>
            
           </Box>
-          {/* <Box className="search"> */}
-          
-          {/* </Box> */}
-        </Box>
-        <Box className="search">
-        <OutlinedInput className="search-input"
-          sx={{
+       </Box>
+     
+        
+        {/* <OutlinedInput className="search-input"
+        //   sx={{
            
-           borderRadius: "0.3rem",
-           height: 30,
-           minWidth: 10,
-           border: "0.1px solid #000",
-         }}
+        //    borderRadius: "0.3rem",
+        //    height: 30,
+        //    minWidth: 10,
+        //    border: "0.1px solid #000",
+        //  }}
          id="outlined-adornment-weight"
          value={name}
          onChange={(e: any) => setName(e.target.value)}
@@ -330,9 +345,9 @@ const SubjectList = (props: any) => {
            </InputAdornment>
          }
          aria-describedby="outlined-weight-helper-text"
-       />
-       </Box> 
-        
+       /> */}
+      
+       
      
 
         <Paper className="paper">

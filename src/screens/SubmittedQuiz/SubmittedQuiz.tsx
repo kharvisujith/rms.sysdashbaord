@@ -136,14 +136,15 @@ const SubmitQuizes = (props: any) => {
     <>
       <NavBarInterviewer />
       <Box className="subjectlist-box">
+      <Box className="search-box">
       <OutlinedInput className="search-input"
-          sx={{
+        //   sx={{
            
-           borderRadius: "0.3rem",
-           height: 30,
-           minWidth: 10,
-           border: "0.1px solid #000",
-         }}
+        //    borderRadius: "0.3rem",
+        //    height: 30,
+        //    minWidth: 10,
+        //    border: "0.1px solid #000",
+        //  }}
          id="outlined-adornment-weight"
          value={name}
          onChange={(e: any) => setName(e.target.value)}
@@ -155,6 +156,7 @@ const SubmitQuizes = (props: any) => {
          }
          aria-describedby="outlined-weight-helper-text"
        />
+       </Box>
         <Paper>
           <Typography variant="h5" className="table-title">
             Submitted Quiz Results

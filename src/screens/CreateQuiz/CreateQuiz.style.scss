@@ -1,8 +1,8 @@
 .test-link {
   display: flex;
   justify-content: space-around;
-  margin-left: 2rem;
-  margin-right: 2rem;
+  // margin-left: 2rem;
+  // margin-right: 2rem;
   // margin-top: -1.5rem;
   // margin-bottom: -1rem;
 }
@@ -16,66 +16,62 @@
   //  margin-top: -1rem;
 }
 
-.search-input {
-  margin-left: 64rem;
-}
+// .search-input {
+//   margin-left: 64rem;
+// }
 
-.table-header {
-  display: flex;
-  justify-content: flex-start;
-  margin-bottom: 0.5rem;
-}
+// .table-header {
+//   display: flex;
+//   justify-content: flex-start;
+//   margin-bottom: 0.5rem;
+//   margin-left: 2rem;
+//   margin-right: 2rem;
+//   margin-bottom: -1.5rem;
+//   margin-top: -1rem;
+// }
 
 .icon {
   margin-left: -0.5rem;
 }
 
-// .select-box {
-//   margin-bottom: 0.5rem;
-// }
 .subjectlist-box {
   margin-left: 5%;
   margin-right: 5%;
-  .select-box {
+  .table-options-box {
     display: flex;
-    justify-content: flex-start;
+    // justify-content: flex-start;
     //  margin-bottom: 0.5rem;
     // 
-    .table-header {
-      width: 100%;
-      display: flex;
-      justify-content: flex-start;
-      margin-left: 5%;
-      // .search-input {
-      //   margin-right: 2rem;
-      //   height: 2rem !important;
-      //   margin-top: 1rem;
-      //   }
-    }
+    // .table-header {
+    //   width: 100%;
+    //   display: flex;
+    //   justify-content: flex-start;
+    //   margin-left: 5%;
+    //   // .search-input {
+    //   //   margin-right: 2rem;
+    //   //   height: 2rem !important;
+    //   //   margin-top: 1rem;
+    //   //   }
+    // }
 
-  }
-}
-
-// .button-create {
-//   // max-width: 100px;
-//   // max-height: 100px;
-//   // min-width: 80px;
-//   // min-height: 50px;
-//   width: 160px;
-//   // height: 40px;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+    
+   
   
-// }
 
-.copy {
-  display: flex;
-  margin-left: 7rem !important;
-}
+    .search-input {
+      // justify-content: flex-end;
+      height: 2rem;
+      min-width: 3rem;
+      margin-top: 1.5rem;
+      margin-left: -10rem;
+      
+      
+    }
+  }
+  }
 
-
-
-// .test-name {
-//   margin-left: 1rem !important;
-// }
 
 .table-title {
   margin-left: 1rem !important;
@@ -86,10 +82,10 @@
 .create-btn-box {
   display: flex;
   justify-content: center;
-  margin: 1rem;
-
+  margin: 1rem;  
   .button-create {
     padding-left: 2rem;
     padding-right: 2rem;
   }
 }
+

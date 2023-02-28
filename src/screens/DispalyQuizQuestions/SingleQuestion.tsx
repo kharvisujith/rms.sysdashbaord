@@ -1,9 +1,9 @@
 import { Box, Button, LinearProgress, Typography } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
-import EndTestDialog from "../EndTest/EndTestDialog";
-import CheckboxComponent from "../QuizTestComponents/CheckboxComponent";
-import CodingComponent from "../QuizTestComponents/CodingComponent";
-import RadioComponent from "../QuizTestComponents/RadioComponent";
+import EndTestDialog from "../../components/EndTest/EndTestDialog";
+import CheckboxComponent from "../../components/QuizTestComponents/CheckboxComponent";
+import CodingComponent from "../../components/QuizTestComponents/CodingComponent";
+import RadioComponent from "../../components/QuizTestComponents/RadioComponent";
 import "./SingleQuestion.style.scss";
 import { clear } from "console";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -17,14 +17,13 @@ import Swal from "sweetalert2";
 import { QuestionAnswer } from "@material-ui/icons";
 
 const SingleQuestion = (props: any) => {
-  const { openDialog, handleClose, setOpenDialog, quizQuestions, quizId } =
-    props;
+  const { quizQuestions, quizId } = props;
 
   const [currentQuestion, setCurrentQuestion] = useState<number>(1);
   const [selectedAnswers, setSelectedAnswers] = useState<any>([]);
   const [progressStatus, setProgressStatus] = useState<number>(0);
   const [answeredQuestions, setAnsweredQuestions] = useState<number>(0);
-  const [timer, setTimer] = useState("00:00:00");
+  const [timer, setTimer] = useState<any>();
   const [openEndDialog, setOpenEndDialog] = useState<boolean>(false);
   const [timeCompletd, setTimeCompleted] = useState<boolean>(false);
 
@@ -138,15 +137,6 @@ const SingleQuestion = (props: any) => {
       );
     }
 
-    // const existingIdIndex = selectedAnswers.findIndex(
-    //   (cur: any) =>
-    //     cur.subjectName === questionData.subjectName &&
-    //     cur.setNumber === questionData.setNumber &&
-    //     cur.quizAnswers.find((elem: any) => {
-    //       return elem.questionId === questionData.questionId;
-    //     })
-    // );
-
     if (indexOFExistingSetAndSubject !== -1) {
       if (quizAnswerIndex !== -1 && !event.target.checked) {
         const newArr = [...selectedAnswers];
@@ -207,9 +197,9 @@ const SingleQuestion = (props: any) => {
     }
   };
 
-  const getTimeRemaining = (e: any) => {
+  const getTimeRemaining = (time: any) => {
     const total =
-      Date.parse(e.toISOString()) - Date.parse(new Date().toISOString());
+      Date.parse(time.toISOString()) - Date.parse(new Date().toISOString());
     const seconds = Math.floor((total / 1000) % 60);
     const minutes = Math.floor((total / 1000 / 60) % 60);
     const hours = Math.floor((total / 1000 / 60 / 60) % 24);
@@ -228,6 +218,7 @@ const SingleQuestion = (props: any) => {
     };
     submitQuiz(submitQuizData)
       .then((response: any) => {
+        localStorage.clear();
         Swal.fire({
           title: "Success",
           text: "Test Submitted Succesfully",
@@ -256,8 +247,8 @@ const SingleQuestion = (props: any) => {
       });
   }
 
-  const startTimer = (e: any) => {
-    let { total, hours, minutes, seconds } = getTimeRemaining(e);
+  const startTimer = (time: any) => {
+    let { total, hours, minutes, seconds } = getTimeRemaining(time);
     if (total >= 0) {
       setTimer(
         (hours > 9 ? hours : "0" + hours) +
@@ -272,124 +263,156 @@ const SingleQuestion = (props: any) => {
     }
   };
 
-  const clearTimer = (e: any) => {
+  const clearTimer = (time: any) => {
+    console.log("value of time in clearTimer is", time);
     const id = setInterval(() => {
-      startTimer(e);
+      startTimer(time);
     }, 1000);
     Ref.current = id;
   };
 
-  const getDeadTime = () => {
-    let deadline = new Date();
+  const getDeadTime = (remainingTime?: any) => {
+    if (remainingTime) {
+      let deadline = new Date();
+      const hour = remainingTime.substring(0, 2);
+      const min = remainingTime.substring(3, 5);
+      const sec = remainingTime.substring(6, 8);
+      deadline.setHours(deadline.getHours() + parseInt(hour));
+      deadline.setMinutes(deadline.getMinutes() + parseInt(min));
+      deadline.setSeconds(deadline.getSeconds() + parseInt(sec));
+      return deadline;
+    } else {
+      let deadline = new Date();
+      deadline.setMinutes(deadline.getMinutes() + 70);
+      return deadline;
+    }
+  };
 
-    deadline.setSeconds(deadline.getSeconds() + 10);
-    deadline.setMinutes(deadline.getMinutes() + 10);
-    return deadline;
+  const alertUser = (e: any) => {
+    e.preventDefault();
+    e.returnValue = "";
   };
 
   useEffect(() => {
-    clearTimer(getDeadTime());
+    window.addEventListener("beforeunload", alertUser);
+    return () => {
+      window.removeEventListener("beforeunload", alertUser);
+    };
   }, []);
+
+  useEffect(() => {
+    if (
+      localStorage.getItem("timer") === "undefined" ||
+      !localStorage.getItem("timer")
+    ) {
+      clearTimer(getDeadTime());
+    } else {
+      clearTimer(getDeadTime(localStorage.getItem("timer")));
+    }
+  }, []);
+
+  useEffect(() => {
+    if (timer) {
+      localStorage.setItem("timer", timer);
+    }
+  }, [timer]);
 
   return (
     <>
-      <Box className="progress-box">
-        <Box className="progress-data">
-          <Typography variant="body1">{`Answered ${answeredQuestions} out of ${quizQuestions.data?.length}`}</Typography>
-          <Typography variant="body1">{`Time Remaining - ${timer}`}</Typography>
+      <Box className="question-container">
+        <Box className="progress-box">
+          <Box className="progress-data">
+            <Typography variant="body1">{`Answered ${answeredQuestions} out of ${quizQuestions.data?.length}`}</Typography>
+            {timer && (
+              <Typography variant="body1">{`Time Remaining - ${timer}`}</Typography>
+            )}
+          </Box>
+          <LinearProgress
+            value={progressStatus}
+            variant={"determinate"}
+            color={"primary"}
+          />
         </Box>
-        <LinearProgress
-          value={progressStatus}
-          variant={"determinate"}
-          color={"primary"}
-        />
-      </Box>
-
-      {/* <Box>
-        {quizQuestions.data &&
-          quizQuestions.data.map((question: any, index: any) => { */}
-      <Box>
-        {quizQuestions &&
-          quizQuestions.data?.map((question: any, index: any) => {
-            if (index + 1 === currentQuestion) {
-              switch (question.questionType) {
-                case "SINGLECHOICE":
-                  return (
-                    <RadioComponent
-                      key={index}
-                      questionInfo={{
-                        questionNumber: index + 1,
-                        questionData: question,
-                      }}
-                      handleAnswerChange={handleRadioAnswerChange}
-                      selectedAnswers={selectedAnswers}
-                    />
-                  );
-                case "MULTIPLECHOICE":
-                  return (
-                    <CheckboxComponent
-                      key={index}
-                      questionInfo={{
-                        questionNumber: index + 1,
-                        questionData: question,
-                      }}
-                      handleCheckboxAnswerChange={handleCheckboxAnswerChange}
-                      selectedAnswers={selectedAnswers}
-                    />
-                  );
-                case "PROGRAM":
-                  return <CodingComponent key={index} question={question} />;
-                default:
-                  return null;
+        <Box className="questions">
+          {quizQuestions &&
+            quizQuestions.data?.map((question: any, index: any) => {
+              if (index + 1 === currentQuestion) {
+                switch (question.questionType) {
+                  case "SINGLECHOICE":
+                    return (
+                      <RadioComponent
+                        key={index}
+                        questionInfo={{
+                          questionNumber: index + 1,
+                          questionData: question,
+                        }}
+                        handleAnswerChange={handleRadioAnswerChange}
+                        selectedAnswers={selectedAnswers}
+                      />
+                    );
+                  case "MULTIPLECHOICE":
+                    return (
+                      <CheckboxComponent
+                        key={index}
+                        questionInfo={{
+                          questionNumber: index + 1,
+                          questionData: question,
+                        }}
+                        handleCheckboxAnswerChange={handleCheckboxAnswerChange}
+                        selectedAnswers={selectedAnswers}
+                      />
+                    );
+                  case "PROGRAM":
+                    return <CodingComponent key={index} question={question} />;
+                  default:
+                    return null;
+                }
               }
-            }
-          })}
-      </Box>
-      <Box className="test-buttons-box">
-        {currentQuestion <= quizQuestions.data.length && currentQuestion > 1 && (
+            })}
+        </Box>
+        <Box className="test-buttons-box">
+          {currentQuestion <= quizQuestions.data.length && currentQuestion > 1 && (
+            <Button
+              variant="outlined"
+              onClick={moveToPreviousQuestion}
+              className="test-button"
+            >
+              Previous
+            </Button>
+          )}
+          {currentQuestion < quizQuestions.data.length && (
+            <Button
+              variant="contained"
+              onClick={moveToNextQuestion}
+              className="test-button"
+            >
+              Next
+            </Button>
+          )}
+        </Box>
+        <Box className="end-test-box">
           <Button
-            variant="outlined"
-            onClick={moveToPreviousQuestion}
-            className="test-button"
-          >
-            Previous
-          </Button>
-        )}
-        {currentQuestion < quizQuestions.data.length && (
-          <Button
+            color="error"
             variant="contained"
-            onClick={moveToNextQuestion}
-            className="test-button"
+            onClick={() => {
+              setOpenEndDialog(true);
+            }}
+            className="end-test-btn"
           >
-            Next
+            Submit Test
           </Button>
+        </Box>
+        {openEndDialog && (
+          <EndTestDialog
+            selectedAnswers={selectedAnswers}
+            totalNumberOfQuestions={quizQuestions.data.length}
+            Ref={Ref}
+            quizId={quizQuestions.quizId}
+            openEndDialog={openEndDialog}
+            setOpenEndDialog={setOpenEndDialog}
+          />
         )}
       </Box>
-      <Box className="end-test-box">
-        <Button
-          color="error"
-          variant="contained"
-          onClick={() => {
-            setOpenEndDialog(true);
-            setOpenDialog(true);
-          }}
-          className="end-test-btn"
-        >
-          Submit Test
-        </Button>
-      </Box>
-      {openEndDialog && (
-        <EndTestDialog
-          openDialog={openDialog}
-          handleClose={handleClose}
-          setOpenDialog={setOpenDialog}
-          selectedAnswers={selectedAnswers}
-          totalNumberOfQuestions={quizQuestions.data.length}
-          Ref={Ref}
-          quizId={quizQuestions.quizId}
-          setOpenEndDialog={setOpenDialog}
-        />
-      )}
     </>
   );
 };

@@ -17,21 +17,23 @@ import { CaluclateTotalNumberOfAnswers } from "../../utils/Utils";
 import "./EndTestDialog.style.scss";
 const EndTestDialog = (props: any) => {
   const {
-    openDialog,
-    handleClose,
-    setOpenDialog,
+    // openDialog,
+    // handleClose,
+    // setOpenDialog,
     selectedAnswers,
     totalNumberOfQuestions,
     Ref,
     quizId,
+    openEndDialog,
     setOpenEndDialog,
   } = props;
   const navigate = useNavigate();
   const [totalAnswerdQuestions, setTotalAnsweredQuestion] = useState<number>(0);
   const [loader, setLoader] = useState<boolean>(false);
+  // const [loader, setLoader] = useState<boolean>(false);
 
   const endTest = () => {
-    // setOpenEndDialog(false);
+    setLoader(true);
     setLoader(true);
     const quizAnswerModel = {
       quizId: parseInt(quizId),
@@ -50,8 +52,8 @@ const EndTestDialog = (props: any) => {
         });
         setLoader(false);
         setOpenEndDialog(false);
-        setOpenDialog(false);
         clearInterval(Ref.current);
+        localStorage.clear();
         navigate("/test_submitted", {
           state: {
             totalNumberOfQuestions: totalNumberOfQuestions,
@@ -77,7 +79,7 @@ const EndTestDialog = (props: any) => {
   return (
     <>
       <Box>
-        <Dialog open={openDialog} onClose={handleClose}>
+        <Dialog open={openEndDialog} onClose={() => setOpenEndDialog(false)}>
           <DialogTitle>{"Do want to End the Test? "}</DialogTitle>
           <DialogContent>
             <DialogContentText>
@@ -96,7 +98,7 @@ const EndTestDialog = (props: any) => {
             ) : (
               <>
                 <Button
-                  onClick={handleClose}
+                  onClick={() => setOpenEndDialog(false)}
                   color="primary"
                   variant="contained"
                 >
