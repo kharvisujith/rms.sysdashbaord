@@ -280,7 +280,7 @@ const SubjectList = (props: any) => {
     <>
       <Box className="subjectlist-box">
         <Box className="table-header">
-          <Box >
+          <Box>
           <FormControl
             sx={{
               minWidth: 100,

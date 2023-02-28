@@ -57,11 +57,11 @@ const CandidateInfo = (props: any) => {
   };
 
   const handleSubmit = (e: any) => {
-    console.log(user.phone, "phone value");
     if (!user) {
       return;
     }
-    if (user.email && user.firstName && user.lastName && user.phone) {
+    if (user.email && user.firstName && user.lastName &&  (phone_regex.test(user.phone))) {
+      
       setLoader({ ...loader, buttonLoader: true });
       submitCandidateInfo(parseInt(id!), key!, user)
         .then((res: any) => {
@@ -91,15 +91,11 @@ const CandidateInfo = (props: any) => {
       setFormError({ ...formError, email: true });
     } else if (!user.firstName) {
       setFormError({ ...formError, firstName: true });
-    } else if (!phone_regex.test(user.phone)) {
-      setFormError({ ...formError, phone: true });
-      // } else if (!user.phone) {
-      //   setFormError({ ...formError, phone: true });
-      // } else if (!phone_regex.test(user.phone)) {
-      //   setFormError({ ...formError, phone: true });
     } else if (!user.lastName) {
       setFormError({ ...formError, lastName: true });
-    }
+    } else if (!phone_regex.test(user.phone)) {
+      setFormError({ ...formError, phone: true });
+     }
   };
 
   useEffect(() => {
@@ -196,7 +192,6 @@ const CandidateInfo = (props: any) => {
 
                 <TextField
                   margin="normal"
-                  required
                   fullWidth
                   type="text"
                   onChange={handleChange}
