@@ -66,8 +66,19 @@ const SubjectList = (props: any) => {
   });
   const [openFileUpload, setOpenFileUpload] = useState(false);
   const [name, setName] = useState<string>("");
+  // const [rows, setRows] = useState();
 
   const [subject, setSubject] = useState<string>("ALL");
+  // const handleSearch = (searchedVal: string) => {
+  //       const filteredRows = subjectList.filter((row) => {
+  //         return (
+  //            row.createdBy?.toString().toLowerCase().includes(searchedVal.toString().toLowerCase()));
+  //             // || row.setNumber.toString().toLowerCase().includes(searchedVal.toString().toLowerCase()) 
+  //             // || row.totalQuestionsCount.toString().toLowerCase().includes(searchedVal.toString().toLowerCase()));
+  //       });
+  //          setRows(filteredRows);
+  //       console.log(filteredRows, 'row value');
+  //      };
 
   const handleUploadFileOpen = () => {
     setOpenFileUpload(true);
@@ -391,13 +402,15 @@ const SubjectList = (props: any) => {
                       .sort(getComparator(order, orderBy))
                       .filter((row) => !name.length || row.subjectName.toLowerCase().includes(name.toLowerCase()) || 
                       row.setNumber.toString().toLowerCase().includes(name.toString().toLowerCase()) || 
-                      row.totalQuestionsCount.toString().toLowerCase().includes(name.toString().toLowerCase()))
+                      row.totalQuestionsCount.toString().toLowerCase().includes(name.toString().toLowerCase()) ||
+                      row.createdDate?.toLowerCase().includes(name.toLowerCase()))
                       
                       .slice(
                         page * rowsPerPage,
                         page * rowsPerPage + rowsPerPage
                       )
                       .map((row: any, index: number) => {
+                        console.log("test data", subjectList);
                         return (
                           <TableRow
                             hover

@@ -101,16 +101,16 @@ const InterviewQuiz = () => {
   
   //const [text, setText] = useState('');
 
-  const handleSearch = (searchedVal: string) => {
-      const filteredRows = totalQuizInfo.filter((row: any) => {
-        return (
-           row.quizId.toString().toLowerCase().includes(searchedVal.toString().toLowerCase()));
-            // || row.setNumber.toString().toLowerCase().includes(searchedVal.toString().toLowerCase()) 
-            // || row.totalQuestionsCount.toString().toLowerCase().includes(searchedVal.toString().toLowerCase()));
-      });
-        setRows(filteredRows);
-      console.log(filteredRows, 'row value');
-    };
+  // const handleSearch = (searchedVal: string) => {
+  //     const filteredRows = totalQuizInfo.filter((row: any) => {
+  //       return (
+  //          row.quizId.toString().toLowerCase().includes(searchedVal.toString().toLowerCase()));
+  //           // || row.setNumber.toString().toLowerCase().includes(searchedVal.toString().toLowerCase()) 
+  //           // || row.totalQuestionsCount.toString().toLowerCase().includes(searchedVal.toString().toLowerCase()));
+  //     });
+  //       setRows(filteredRows);
+  //     console.log(filteredRows, 'row value');
+  //   };
 
   const createSortHandler =
     (property: string) => (event: React.MouseEvent<unknown>) => {
@@ -171,7 +171,7 @@ const InterviewQuiz = () => {
         //  }}
          id="outlined-adornment-weight"
          value={name}
-         onChange={(e: any) => handleSearch(e.target.value)}
+         onChange={(e: any) => setName(e.target.value)}
          placeholder="Search"
          endAdornment={
            <InputAdornment position="end">
@@ -220,17 +220,19 @@ const InterviewQuiz = () => {
                   .slice()
                   .sort(getComparator(order, orderBy))
                   
-                  //  .filter((row:any) => !name.length || row.quizId.toString().toLowerCase().includes(name.toString().toLowerCase()) ||
-                  //   row.loginAttempts.toString().toLowerCase().includes(name.toString().toLowerCase()) || 
-                  //   row.quizCodeExpirationAt.toLowerCase().includes(name.toLowerCase()))
+                   .filter((row:any) => !name.length || row.quizId.toString().toLowerCase().includes(name.toString().toLowerCase()) ||
+                     row.candidateId?.toLowerCase().includes(name.toLowerCase()) || row.quizSubmittedAt?.toLowerCase().includes(name.toLowerCase()) ||
+                     row.loginAttempts.toString().toLowerCase().includes(name.toString().toLowerCase()) ||
+                     row.lastLoggedIn?.toLowerCase().includes(name.toLowerCase()) ||
+                      row.quizCodeExpirationAt.toLowerCase().includes(name.toLowerCase()))
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row: any) => {
+                  .map((row: any, index: number) => {
                     return (
                       <TableRow
                         hover
                         role="checkbox"
                         tabIndex={-1}
-                        key={row.code}
+                        key={index}
                       >
                         {createdQuizColumns.map((column: any, index: any) => {
                           const value = row[column.id];
