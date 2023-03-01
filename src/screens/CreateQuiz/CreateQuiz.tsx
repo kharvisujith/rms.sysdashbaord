@@ -50,15 +50,6 @@ import creatQuizTableColumns from "./createQuizTableColumns";
 import { visuallyHidden } from "@mui/utils";
 import { getComparator } from "../../utils/TableSortFunctions";
 
-const useStyles = makeStyles({
-  root: {
-    width: "100%",
-  },
-  container: {
-    maxHeight: 440,
-  },
-});
-
 const CreateQuiz = (props: any) => {
   const [subjectList, setSubjectList] = useState<subjectWiseQuizListResponse[]>(
     []
@@ -220,15 +211,9 @@ const CreateQuiz = (props: any) => {
               </Select>
             </FormControl>
           </Box>
-          <Box >
+          <Box>
             <OutlinedInput
               className="search-input"
-              // sx={{
-              //   borderRadius: "0.3rem",
-              //   height: 30,
-              //   minWidth: 10,
-              //   border: "0.1px solid #000",
-              // }}
               id="outlined-adornment-weight"
               value={name}
               onChange={(e: any) => setName(e.target.value)}
@@ -241,17 +226,13 @@ const CreateQuiz = (props: any) => {
               aria-describedby="outlined-weight-helper-text"
             />
           </Box>
-
-          {/* <Box className="table-header"> */}
-
-          {/* </Box> */}
         </Box>
         <Paper className="paper">
           <Typography variant="h5" className="table-title">
             Available Question Sets
           </Typography>
 
-          <TableContainer className="table-container">
+          <TableContainer className="table-container-create-quiz">
             <Table aria-label="simple table" stickyHeader>
               <TableHead>
                 <TableRow>
@@ -262,7 +243,6 @@ const CreateQuiz = (props: any) => {
                       style={{ minWidth: column.minWidth }}
                       sortDirection={orderBy === column.id ? order : false}
                     >
-                      {/* {column.label} */}
                       <TableSortLabel
                         active={orderBy === column.id}
                         direction={orderBy === column.id ? order : "asc"}
@@ -387,13 +367,10 @@ const CreateQuiz = (props: any) => {
       </Box>
 
       {quizLink && (
-        <Box className="box-link" sx={{ marginTop: 4 }}>
+        <Box className="box-link">
           <Typography>{`Test Link :`}</Typography>
           <Box className="test-link">
-            <Typography>
-              {quizLink}
-              {/* {`http://localhost:3000/rms-aug/test/${newquiz?.quizId}/${newquiz?.quizLink}`} */}
-            </Typography>
+            <Typography>{quizLink}</Typography>
             <Button
               className="copy"
               variant="outlined"
