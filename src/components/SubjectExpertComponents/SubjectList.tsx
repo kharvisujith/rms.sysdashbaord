@@ -58,10 +58,12 @@ const SubjectList = (props: any) => {
   const [uploadData, setUploadData] = useState<any>({
     set: "",
     subject: "",
+    tags: "",
   });
   const [formError, setFormError] = useState<any>({
     set: false,
     subject: false,
+    tags: false,
     file: false,
   });
   const [openFileUpload, setOpenFileUpload] = useState(false);
@@ -135,18 +137,18 @@ const SubjectList = (props: any) => {
   };
 
   const handleUploadClick = () => {
-    if (file && uploadData.set && uploadData.subject) {
+    if (file && uploadData.set && uploadData.subject && uploadData.tags) {
       setLoader(true);
       const formData = new FormData();
       formData.append("formFile", file);
 
-      upLoadExcel(uploadData.set, uploadData.subject, formData)
+      upLoadExcel(uploadData.set, uploadData.subject, uploadData.tags, formData)
         .then((res) => res.data)
         .then((res) => {
           setLoader(false);
           setOpenFileUpload(false);
           subjectwiseQuizDetails(subject);
-          setUploadData({ set: "", subject: "" });
+          setUploadData({ set: "", subject: "", tags: "" });
           Swal.fire({
             title: "Success",
             text: "Question Set Uploaded Succesfully",
@@ -167,6 +169,8 @@ const SubjectList = (props: any) => {
       setFormError({ ...formError, set: true });
     } else if (!uploadData.subject) {
       setFormError({ ...formError, subject: true });
+    } else if (!uploadData.tags) {
+      setFormError({ ...formError, tags: true });
     } else if (!file) {
       setFormError({ ...formError, file: true });
     }
@@ -545,6 +549,17 @@ const SubjectList = (props: any) => {
           </FormControl>
           {formError.subject && (
             <Typography className="error">Please Enter Subject Name</Typography>
+          )}
+          <TextField
+            name="tags"
+            label="Tags"
+            variant="standard"
+            type="text"
+            className="items"
+            onChange={handleTextChange}
+          />
+           {formError.tags && (
+            <Typography className="error">Please Enter Tags</Typography>
           )}
           <TextField
             name="file"

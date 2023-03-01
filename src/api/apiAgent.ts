@@ -49,6 +49,7 @@ export const downnLoadExcel = () => {
 export const upLoadExcel = (
   set: number,
   subject: string,
+  tags: string,
   formData: FormData
 ) => {
   console.log("value of subject upload api is", subject);
