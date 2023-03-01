@@ -403,6 +403,7 @@ const SubjectList = (props: any) => {
                       .filter((row) => !name.length || row.subjectName.toLowerCase().includes(name.toLowerCase()) || 
                       row.setNumber.toString().toLowerCase().includes(name.toString().toLowerCase()) || 
                       row.totalQuestionsCount.toString().toLowerCase().includes(name.toString().toLowerCase()) ||
+                      row.createdBy?.toLowerCase().includes(name.toLowerCase()) || row.updatedBy?.toLowerCase().includes(name.toLowerCase()) ||
                       row.createdDate?.toLowerCase().includes(name.toLowerCase()))
                       
                       .slice(

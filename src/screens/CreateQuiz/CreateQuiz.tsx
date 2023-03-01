@@ -50,14 +50,14 @@ import creatQuizTableColumns from "./createQuizTableColumns";
 import { visuallyHidden } from "@mui/utils";
 import { getComparator } from "../../utils/TableSortFunctions";
 
-const useStyles = makeStyles({
-  root: {
-    width: "100%",
-  },
-  container: {
-    maxHeight: 440,
-  },
-});
+// const useStyles = makeStyles({
+//   root: {
+//     width: "100%",
+//   },
+//   container: {
+//     maxHeight: 440,
+//   },
+// });
 
 const CreateQuiz = (props: any) => {
   const [subjectList, setSubjectList] = useState<subjectWiseQuizListResponse[]>(
@@ -318,7 +318,7 @@ const CreateQuiz = (props: any) => {
                               (column: any, index: any) => {
                                 const value = row[column.id];
                                 return (
-                                  <TableCell
+                                  <TableCell className="table-cell"
                                     key={index}
                                     align={column.align}
                                     size="small"
