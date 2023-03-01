@@ -1,29 +1,61 @@
 import { RadioGroup, FormControlLabel, Radio } from "@mui/material";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { optionIds } from "../../utils/Utils";
 
 const RadioComponent = (props: any) => {
-  const { question, handleAnswerChange } = props;
+  const { questionInfo, handleAnswerChange, selectedAnswers } = props;
 
-  // question={{
-  //   questionNumber: index + 1,
-  //   questionData: question,
-  //   console.log("value of props in radio is", props);
+  const [value, setValue] = useState<any[]>([]);
 
-  const [value, setValue] = useState({});
+  const getSelectedValue = useCallback(
+    (questionData: any) => {
+      const result = selectedAnswers.filter((cur: any) => {
+        return (
+          cur.subjectName === questionData.subjectName &&
+          cur.setNumber === questionData.setNumber &&
+          cur.quizAnswers.find((elem: any) => {
+            return elem.questionId === questionData.questionId;
+          })
+        );
+      });
+
+      if (result[0]) {
+        const ansIndex = result[0].quizAnswers.findIndex(
+          (obj: any) => obj.questionId === questionData.questionId
+        );
+        setValue(result[0].quizAnswers[ansIndex].questionAnswers);
+      }
+    },
+    [selectedAnswers]
+  );
+
+  useEffect(() => {
+    getSelectedValue(questionInfo.questionData);
+  }, [questionInfo.questionData, getSelectedValue, questionInfo]);
   return (
     <>
       <Box>
-        <Typography>{`${question.questionNumber}. ${question.questionData.question}`}</Typography>
+        <Typography>{`${questionInfo.questionNumber}. ${questionInfo.questionData.question}`}</Typography>
         <RadioGroup
           value={value}
           onChange={(event) => {
-            setValue((event.target as HTMLInputElement).value);
-            handleAnswerChange(event, question.questionData.questionId);
+            const selectedIndex =
+              questionInfo.questionData.questionOptions.findIndex(
+                (option: any) =>
+                  option === (event.target as HTMLInputElement).value
+              );
+            let questionAnswerIds = [optionIds[selectedIndex]];
+            handleAnswerChange(
+              event,
+              questionInfo.questionData,
+              questionAnswerIds
+            );
+            getSelectedValue(questionInfo.questionData);
           }}
         >
-          {question.questionData.questionOptions.map(
+          {questionInfo.questionData.questionOptions.map(
             (option: any, index: any) => {
               return (
                 <FormControlLabel

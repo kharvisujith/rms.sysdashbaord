@@ -1,0 +1,126 @@
+.progress-box {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.answer-box {
+  margin-left: 1rem;
+}
+
+.test-buttons-box {
+  display: flex;
+  width: 30%;
+  margin-top: 2rem;
+  margin-left: 0.5rem;
+
+  .test-button {
+    margin-right: 1rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+.end-test-box {
+  display: flex;
+  justify-content: center;
+  margin-top: 5rem;
+
+  .end-test-btn {
+    font-size: 1rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    padding-top: 0.8rem;
+    padding-bottom: 0.8rem;
+  }
+}
+
+.poup-table {
+  min-width: 450;
+  // display: "flex";
+}
+.Poup-tableHead {
+  display: "flex";
+  flex-direction: "column";
+}
+.Poup-tableBody {
+  display: "flex";
+}
+.Poup-tableRow {
+  display: "flex";
+  flex-direction: "column";
+}
+//  .viewTable-App {
+//   width: 100%;
+//   height: 100vh;
+//   // display: flex;
+//   // justify-content: center;
+//   // align-items: center;
+// }
+// .popup-table{
+//   table {
+//     border: 2px solid forestgreen;
+//     width: 400px;
+//     height: 100px;
+//   }
+
+//   table thead tr th{
+
+//       border-bottom: 2px solid forestgreen;
+//     }
+//     table tbody tr td {
+//       border-width: 1px;
+//       border-style: solid;
+//       border-color: black;
+//     }
+// }
+// .popup-table{
+//   table {
+//     border: 2px solid forestgreen;
+//     width: 400px;
+//     height: 50px;
+//   }
+
+//   tablehead {
+
+//       border-bottom: 2px solid forestgreen;
+//     }
+//     table tablebody tablerow tablecell {
+//       border-width: 1px;
+//       border-style: solid;
+//       border-color: black;
+//     }
+// }
+.popup-left-table {
+  table {
+    //   border: 2px solid grey;
+    width: 800px;
+    height: 50px auto;
+    margin-left: auto;
+    margin-right: auto;
+    //padding-left: 4rem;
+    //padding-right: 4rem;
+    //padding-top: 0.8rem;
+    //padding-bottom: 0.8rem;
+  }
+}
+.popup-right-table {
+  table {
+    border: 2px solid forestgreen;
+    width: 600px;
+    height: 20px auto;
+    justify-content: right;
+  }
+}
+// .table {
+//   border: 2px solid forestgreen;
+//   width: 400px;
+//   height: 100px;
+// }
+//   .th {
+//     border-bottom: 1px solid black;
+//   }
+
+//   .td {
+//     text-align: center;
+//   }
+// }

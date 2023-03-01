@@ -5,80 +5,67 @@ import {
   FormGroup,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 const CheckboxComponent = (props: any) => {
-  const { question, handleCheckboxAnswerChange } = props;
-  // const [state, setState] = useState<any>([]);
+  const { questionInfo, handleCheckboxAnswerChange, selectedAnswers } = props;
 
-  // const handleChange = (
-  //   event: React.ChangeEvent<HTMLInputElement>,
-  //   id: any
-  // ) => {
-  //   console.log(event.target.name, event.target.checked, id);
-  //   // setState((prev:any)=>{
-  //   //     [...prev, {a:"keek"}]
-  //   // })
+  const [value, setValue] = useState<any[]>([]);
 
-  //   const existingId = state.find((e: any) => e.id === id);
-  //   console.log("exisidis", existingId);
-  //   if (existingId) {
-  //     console.log("inded if existingID");
-  //     const valExist = existingId.choosenAnswer.find(
-  //       (e: any) => e === event.target.name
-  //     );
-  //     console.log("value of valExist is", valExist);
+  const getSelectedValue = useCallback(
+    (questionData: any) => {
+      const result = selectedAnswers.filter((cur: any) => {
+        return (
+          cur.subjectName === questionData.subjectName &&
+          cur.setNumber === questionData.setNumber &&
+          cur.quizAnswers.find((elem: any) => {
+            return elem.questionId === questionData.questionId;
+          })
+        );
+      });
 
-  //     //   if (valExist && event.target.checked) {
-  //     //     console.log("inside valExist and event.target.checkd");
-  //     //     existingId.choosenAnswer?.push(event.target.name);
-  //     //   }
-  //     //else
-  //     if (valExist && !event.target.checked) {
-  //       console.log("inded valExist and !event.target.checked");
-  //       // const newData = valExist.choosenAnswer?.filter((e: any) => {
-  //       //   return e !== event.target.name;
-  //       // });
-  //       var index = existingId.choosenAnswer.indexOf(event.target.name);
-  //       if (index !== -1) {
-  //         existingId.choosenAnswer.splice(index, 1);
-  //       }
-  //     } else {
-  //       console.log("in else part of valexist false");
-  //       existingId.choosenAnswer.push(event.target.name);
-  //     }
-  //   } else {
-  //     console.log("inside main else part");
-  //     setState((prev: any) => [
-  //       ...prev,
-  //       { id: id, choosenAnswer: [event.target.name] },
-  //     ]);
-  //   }
+      if (result[0]) {
+        const ansIndex = result[0].quizAnswers.findIndex(
+          (obj: any) => obj.questionId === questionData.questionId
+        );
+        setValue(result[0].quizAnswers[ansIndex].questionAnswers);
+      }
+    },
+    [selectedAnswers]
+  );
 
-  //   console.log("value of state is", state);
-
-  //   //   ...state,
-  //   //   [event.target.name]: event.target.checked,
-  // };
+  useEffect(() => {
+    getSelectedValue(questionInfo.questionData);
+  }, [questionInfo.questionData, getSelectedValue]);
 
   return (
     <>
       <Box>
-        <Typography>{`${question.questionNumber}. ${question.questionData.question}`}</Typography>
+        <Typography>{`${questionInfo.questionNumber}. ${questionInfo.questionData.question}`}</Typography>
         <FormGroup>
-          {question.questionData.questionOptions.map(
+          {questionInfo.questionData.questionOptions.map(
             (option: any, index: any) => {
-              console.log("value of option in map is", option);
               return (
                 <FormControlLabel
                   control={
                     <Checkbox
-                      onChange={(event) =>
+                      // checked={value.includes(option) ? true : false}
+                      checked={value.indexOf(option) !== -1}
+                      onChange={(event) => {
+                        const selectedIndex =
+                          questionInfo.questionData.questionOptions.findIndex(
+                            (option: any) =>
+                              option === (event.target as HTMLInputElement).name
+                          );
+                        getSelectedValue(questionInfo.questionData);
                         handleCheckboxAnswerChange(
                           event,
-                          question.questionData.questionId
-                        )
-                      }
+                          questionInfo.questionData,
+                          // questionInfo.questionData.questionId,
+                          // questionInfo.questionData.questionType,
+                          selectedIndex
+                        );
+                      }}
                       name={option}
                     />
                   }

@@ -1,157 +1,121 @@
-import {
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Typography,
-} from "@mui/material";
+import { CircularProgress, Divider, Typography } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Toolbar from "@mui/material/Toolbar";
 import ReactModal from "react-modal";
-import { useEffect, useState } from "react";
 import "./StartQuiz.style.scss";
-import AllQuestions from "../../components/DispalyQuizQuestions/AllQuestions";
-import SingleQuestion from "../../components/DispalyQuizQuestions/SingleQuestion";
-import { useNavigate } from "react-router-dom";
-import { getQuizQuestions } from "../../api/apiAgent";
+import SingleQuestion from "../DispalyQuizQuestions/SingleQuestion";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { verifyCandidate } from "../../api/apiAgent";
+import { AxiosError, AxiosResponse } from "axios";
+import TopNavBarTest from "../../components/TopNavBar/TopNavBarTest";
 const StartQuiz = () => {
-  const navigate = useNavigate();
-  const [OpenTestModal, setOpenTestModal] = useState(false);
-  const [modalContent, setModalContent] = useState("");
-  const [openDialog, setOpenDialog] = useState<boolean>(false);
-  const [quizQuestions, setQuizQuestions] = useState<any>();
-  //const [numberOfQuestions, setNumberOfQuestions] = useState<number>();
+  const [isKeyValid, setIsKeyValid] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string>();
+  const [testStarted, setTestStarted] = useState<boolean>(false);
+  const [loader, setLoader] = useState<boolean>(false);
 
-  const handleClose = () => {
-    setOpenDialog(false);
+  const location = useLocation();
+
+  const startTestButtonHandler = () => {
+    setTestStarted(true);
+    // navigate("")
+    // setOpenTestModal(true);
   };
-
-  const startTestButtonHandler = (viewToRender: "listView" | "slideView") => {
-    setModalContent(viewToRender);
-    setOpenTestModal(true);
-  };
-  const endTestButtonHandler = () => {
-    setOpenTestModal(false);
-  };
-
-  const handleCloseFromModal = () => {
-    setOpenTestModal(false);
-  };
-
-  function createData(name: string, calories: number) {
-    return { name, calories };
-  }
-
-  const rows = [
-    createData("Total no of Questions", 5),
-    createData("Question Answered", 0),
-    createData("Question Not Answered", 0),
-  ];
 
   useEffect(() => {
-    console.log("ueEffect is called");
-    getQuizQuestions(1, "javascript")
-      .then((res) => {
-        setQuizQuestions(res.data);
-        return res.data;
-      })
-      .then((resp) => {
-        console.log("value of ress is", resp);
-        console.log(resp.length);
-      })
-      .catch((error) => console.log("error is get question", error));
-  }, []);
+    if (isKeyValid) {
+      window.addEventListener("beforeunload", (event) => {
+        localStorage.setItem("testStarted", testStarted.toString());
+      });
+    }
+    return () => {
+      window.removeEventListener("beforeunload", (event) => {});
+      window.removeEventListener("unload", (event) => {});
+    };
+  }, [testStarted, isKeyValid]);
+  console.log("value of testStarted is", testStarted);
 
-  console.log("value of quizquestion is", quizQuestions);
+  useEffect(() => {
+    setLoader(true);
+    verifyCandidate(
+      parseInt(location.state.verifyCredentials.id!),
+      location.state.verifyCredentials.key!
+    )
+      .then((res: AxiosResponse) => {
+        setIsKeyValid(true);
+        setTestStarted(localStorage.getItem("testStarted") === "true");
+        setLoader(false);
+      })
+      .catch((error: any) => {
+        if (error.response.status === 400) {
+          if (error.response.data) {
+            setErrorMessage(error.response.data);
+          } else {
+            setErrorMessage("something wrong");
+          }
+        }
+        setLoader(false);
+      });
+  }, [location.state.verifyCredentials]);
+
+  if (!isKeyValid && !loader) {
+    return (
+      <>
+        <Box className="error-box">
+          {errorMessage ? (
+            <Typography variant="h4">{`${errorMessage}`}</Typography>
+          ) : null}
+        </Box>
+        <Divider className="divider" />
+      </>
+    );
+  }
 
   return (
-    <Box className="main-layout-wrap">
-      <AppBar position="static">
-        <Toolbar>
-          <Typography
-            variant="h6"
-            component="div"
-            sx={{ flexGrow: 1 }}
-            onClick={() => navigate(-1)}
-          >
-            Quiz App
-          </Typography>
-          <Button color="inherit">Log out</Button>
-        </Toolbar>
-      </AppBar>
-      <div className="quiz-start-btn-wrap">
-        <ReactModal
-          isOpen={OpenTestModal}
-          contentLabel="Minimal Modal Example"
-          ariaHideApp={false}
-        >
-          {modalContent && modalContent === "slideView" ? (
-            <SingleQuestion
-              openDialog={openDialog}
-              handleClose={handleClose}
-              setOpenDialog={setOpenDialog}
-              quizQuestions={quizQuestions}
-            />
-          ) : null}
-          {modalContent && modalContent === "listView" ? (
-            <AllQuestions
-              openDialog={openDialog}
-              handleClose={handleClose}
-              setOpenDialog={setOpenDialog}
-              quizQuestions={quizQuestions}
-            />
-          ) : null}
-        </ReactModal>
-        <div className="quiz-info-wrapper">
-          <span className="quiz-information">
-            <TableContainer component={Paper}>
-              <Table sx={{ minWidth: 150 }} aria-label="simple table">
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Test Information (Demo Data rendered)</TableCell>
-                    <TableCell align="right">Values</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {rows.map((row) => (
-                    <TableRow
-                      key={row.name}
-                      sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                    >
-                      <TableCell component="th" scope="row">
-                        {row.name}
-                      </TableCell>
-                      <TableCell align="right">{row.calories}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </span>
-          <Button
-            className="quiz-start-btn"
-            variant="contained"
-            color="success"
-            onClick={() => startTestButtonHandler("slideView")}
-          >
-            Start Slide View Test
-          </Button>
-          <Button
-            className="quiz-start-btn"
-            variant="contained"
-            color="success"
-            onClick={() => startTestButtonHandler("listView")}
-          >
-            Start in List View Test
-          </Button>
-        </div>
-      </div>
-    </Box>
+    <>
+      <TopNavBarTest />
+      <Box className="main-layout-wrap">
+        {loader ? (
+          <Box className="page-loader">
+            <CircularProgress />
+          </Box>
+        ) : !testStarted ? (
+          <>
+            <Box className="info-box">
+              <Typography variant="h5">Test Informations : </Typography>
+              <Box className="info-details">
+                <Typography>{`* Includes Multiple Choice questions and Coding questions`}</Typography>
+                <Typography>{`* Total Time given for the test is ${60} minutes`}</Typography>
+                <Typography>{`* After the completion of the given time the test is autosubmitted`}</Typography>
+                <Typography>{`* Do not switch the tabs once test is started`}</Typography>
+              </Box>
+            </Box>
+
+            <Box className="start-test-box">
+              <Button
+                className="start-test-btn"
+                variant="contained"
+                color="error"
+                onClick={() => {
+                  startTestButtonHandler();
+                }}
+              >
+                Start Test
+              </Button>
+            </Box>
+          </>
+        ) : (
+          <SingleQuestion
+            quizQuestions={location.state}
+            quizId={location.state.verifyCredentials.id}
+            // isKeyValid={isKeyValid}
+          />
+        )}
+      </Box>
+    </>
   );
 };
 
