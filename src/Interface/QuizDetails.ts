@@ -28,7 +28,7 @@ export interface quizSubmitRequest {
 
 //export default QuizDetails;
 export interface createQuizRequest {
-  setNumber: number;
+  version: string;
   subjectName: string;
   totalQuestionsCount: number;
 }
@@ -41,7 +41,7 @@ export interface createQuizResponse {
 
 export interface subjectWiseQuizListResponse {
   subjectName: string;
-  setNumber: number;
+  version: string;
   totalQuestionsCount: number;
   createdBy?: string;
   updatedBy?: string;
@@ -51,7 +51,7 @@ export interface subjectWiseQuizListResponse {
 
 export interface subjectwiseQuizAnswersResponse {
   questionId: number;
-  setNumber: number;
+  version: string;
   subjectName: string;
   question: string;
   questionType: string;
@@ -62,7 +62,7 @@ export interface subjectwiseQuizAnswersResponse {
 
 export interface submittedQuizAnswersResponse {
   questionId: number;
-  setNumber: number;
+  version: string;
   subjectName: string;
   question: string;
   questionType: string;
@@ -88,7 +88,7 @@ export interface submittedQuizResponse {
 export interface submittedQuizDetailedInfoResponse {
   questionId: number;
   subjectName: string;
-  setNumber: number;
+  version: string;
   totalQuestions: number;
   answeredQuestions: number;
   notAnsweredQuestions: number;
@@ -97,7 +97,7 @@ export interface submittedQuizDetailedInfoResponse {
 }
 
 export interface createQuizTableColumns {
-  id: "setNumber" | "subjectName" | "totalQuestionsCount" | "select";
+  id: "version" | "subjectName" | "totalQuestionsCount" | "select";
   label: string;
   minWidth?: number;
   align?: string;

@@ -24,7 +24,7 @@ const AllQuestionsAnswers = (props: any) => {
           <strong>{"SubjectName:"}&ensp;</strong>
           {`${quizSubjectInfo[0]?.subjectName.toString()}`}&emsp;
           <strong>{"SetNumber:"}&ensp;</strong>
-          {`${quizSubjectInfo[0]?.setNumber}`}&emsp;
+          {`${quizSubjectInfo[0]?.version}`}&emsp;
           <strong>{"TotalQuestions:"}&ensp;</strong>
           {`${quizSubjectInfo.length}`}
         </Typography>

@@ -1,6 +1,6 @@
 export interface SubjectwiseDetails {
   subjectName: string;
-  setNumber: number;
+  version: string;
   totalQuestionsCount: number;
   createdBy?: string;
   updatedBy?: string;
@@ -12,7 +12,7 @@ export interface QuesitonSetsTableColumns {
   id:
     | "subjectName"
     | "totalQuestionsCount"
-    | "setNumber"
+    | "version"
     | "createdBy"
     | "updatedBy"
     | "createdDate"

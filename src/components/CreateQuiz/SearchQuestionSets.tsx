@@ -70,7 +70,7 @@ const SearchQuestionSets = () => {
     const findIndex = newCreateQuizBody.findIndex(
       (obj: any) =>
         obj.subjectName === subjectDetails.subjectName &&
-        obj.setNumber === subjectDetails.setNumber
+        obj.version === subjectDetails.version
     );
     if (findIndex !== -1) {
       return true;
@@ -108,7 +108,7 @@ const SearchQuestionSets = () => {
     setNewCreateQuizBody((prev) => [
       ...prev,
       {
-        setNumber: subjectDetails.setNumber,
+        version: subjectDetails.version,
         subjectName: subjectDetails.subjectName,
         totalQuestionsCount: subjectDetails.totalQuestionsCount,
       },
@@ -120,7 +120,7 @@ const SearchQuestionSets = () => {
     const existingIndex = newCreateQuizBody.findIndex(
       (obj: any) =>
         obj.subjectName === subjectDetails.subjectName &&
-        obj.setNumber === subjectDetails.setNumber
+        obj.version === subjectDetails.version
     );
     const newArr = [...newCreateQuizBody];
     newArr.splice(existingIndex, 1);
@@ -131,7 +131,7 @@ const SearchQuestionSets = () => {
     subjectDetails: subjectWiseQuizListResponse
   ) => {
     getSubjectwiseQuizAnswers(
-      subjectDetails.setNumber,
+      subjectDetails.version,
       subjectDetails.subjectName
     )
       .then((response: any) => {

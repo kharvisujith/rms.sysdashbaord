@@ -47,14 +47,14 @@ export const downnLoadExcel = () => {
 };
 
 export const upLoadExcel = (
-  set: number,
+  version: string,
   subject: string,
   tags: string,
   formData: FormData
 ) => {
   console.log("value of subject upload api is", subject);
   return axiosClient.post(
-    `/quiz/import?setNumber=${set}&SubjectName=${subject}`,
+    `/quiz/import?version=${version}&SubjectName=${subject}&tag=${tags}`,
     formData,
     {
       headers: {
@@ -64,9 +64,9 @@ export const upLoadExcel = (
   );
 };
 
-export const getQuizQuestions = (set: number, subject: string) => {
+export const getQuizQuestions = (version: string, subject: string) => {
   return axiosClient.get(
-    `quiz/candidate/questions?set=${set}&subject=${subject}`
+    `quiz/candidate/questions?version=${version}&subject=${subject}`
   );
 };
 
@@ -75,9 +75,9 @@ export const getSubjectwiseQuiz = (subject: string) => {
     params: { subject: subject },
   });
 };
-export const getSubjectwiseQuizAnswers = (set: any, subject: any) => {
+export const getSubjectwiseQuizAnswers = (version: any, subject: any) => {
   return axiosClient.get(
-    `quiz/SubjectExpert/questions?set=${set}&subject=${subject}`
+    `quiz/SubjectExpert/questions?version=${version}&subject=${subject}`
   );
 };
 export const submitQuiz = (quizAnswers: any) => {

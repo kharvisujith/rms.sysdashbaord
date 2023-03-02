@@ -3,8 +3,8 @@ import { QuesitonSetsTableColumns } from "../../Interface/SubjectExpert";
 export const columns: QuesitonSetsTableColumns[] = [
   { id: "subjectName", label: "Subject Name", minWidth: 70 },
   {
-    id: "setNumber",
-    label: "Set Number",
+    id: "version",
+    label: "Version Number",
     minWidth: 70,
     //align: 'right',
     // format: (value: number) => value.toLocaleString('en-US'),

@@ -54,7 +54,7 @@ const AllSubmittedQuestionsAnswers = (props: any) => {
                   (row: submittedQuizDetailedInfoResponse, index: number) => (
                     <TableRow key={index}>
                       <TableCell align="center">{row.subjectName}</TableCell>
-                      <TableCell align="center">{row.setNumber}</TableCell>
+                      <TableCell align="center">{row.version}</TableCell>
                       <TableCell align="center">{row.totalQuestions}</TableCell>
                       <TableCell align="center">
                         {row.answeredQuestions}

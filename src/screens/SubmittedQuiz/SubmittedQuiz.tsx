@@ -197,7 +197,8 @@ const SubmitQuizes = (props: any) => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {totalSubmittedQuizInfoList
+                {totalSubmittedQuizInfoList.length>0 &&
+                 totalSubmittedQuizInfoList
                   .slice()
                   .sort(getComparator(order, orderBy))
                   .filter(
