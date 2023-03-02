@@ -12,10 +12,11 @@ import {
   TableSortLabel,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   getSubmittedQuizDetailedInfo,
   getSubmittedQuizInfo,
+  getTotalSubmittedQuizInfo,
 } from "../../api/apiAgent";
 import {
   Order,
@@ -27,7 +28,7 @@ import { getComparator } from "../../utils/TableSortFunctions";
 import ReviewAnswersModal from "./ReviewAnswersModal";
 
 const PastEvaluationsTable = (props: any) => {
-  const { pastEvaluationsData } = props;
+  const { pastEvaluationsData, setpastEvaluationsData } = props;
 
   const [order, setOrder] = useState<Order>("asc");
   const [orderBy, setOrderBy] = useState<any>("correctAnswers");
@@ -91,6 +92,19 @@ const PastEvaluationsTable = (props: any) => {
         console.log("error in detailed Subject Answer answersapi");
       });
   };
+
+  useEffect(() => {
+    getTotalSubmittedQuizInfo()
+      .then((response: any) => {
+        //// setTotalSubmittedQuizInfoList(response.data);
+        // setLoader(false);
+        setpastEvaluationsData(response.data);
+      })
+      .catch((error: any) => {
+        // setLoader(false);
+        console.log("error in total quiz info api");
+      });
+  }, []);
 
   return (
     <>

@@ -88,10 +88,10 @@ const SearchQuestionSets = () => {
   const getQuestionIdFromNewCreateQuizBody = (
     questionDeatils: subjectwiseQuizAnswersResponse
   ) => {
-    console.log(
-      "valaue of questionDeatails.questinid is ",
-      questionDeatils.questionId
-    );
+    // console.log(
+    //   "valaue of questionDeatails.questinid is ",
+    //   questionDeatils.questionId
+    // );
     const findIndex = createQuizSetWiseInfo.findIndex(
       (obj: any) =>
         obj.subjectName === questionDeatils.subjectName &&
@@ -194,13 +194,16 @@ const SearchQuestionSets = () => {
 
   const handleCheckBoxChange = (event: any, questionDeatils: any) => {
     try {
+      console.log(
+        "question details in check box is",
+        questionDeatils,
+        questionDeatils.questionId
+      );
       const existingIndex = createQuizSetWiseInfo.findIndex(
         (obj: any) =>
           obj.subjectName === questionDeatils.subjectName &&
           obj.version === questionDeatils.version
       );
-      console.log("value of existingid in check box chcange is", existingIndex);
-      console.log("value of check box is", event.target.checked);
       if (event.target.checked) {
         if (existingIndex === -1) {
           setCreateQuizSetWiseInfo((prev: any) => [
@@ -217,11 +220,13 @@ const SearchQuestionSets = () => {
           setCreateQuizSetWiseInfo(newArray);
         }
       } else {
+        console.log("inside else part of check false");
         if (existingIndex !== -1) {
           const newArray = [...createQuizSetWiseInfo];
-          const indexOfQuestionId = newArray.indexOf(
+          const indexOfQuestionId = newArray[existingIndex].questionIds.indexOf(
             questionDeatils.questionId
           );
+
           newArray[existingIndex].questionIds.splice(indexOfQuestionId, 1);
           if (newArray[existingIndex].questionIds.length < 1) {
             newArray.splice(existingIndex, 1);
@@ -236,7 +241,6 @@ const SearchQuestionSets = () => {
   console.log("new create body is", createQuizSetWiseInfo);
 
   const createQuizfromBody = () => {
-    console.log("body of create on submit is", createQuizSetWiseInfo);
     const totalQuestions = createQuizSetWiseInfo.reduce(
       (numOfElement: number, obj: any) => numOfElement + obj.questionIds.length,
       0
@@ -317,6 +321,7 @@ const SearchQuestionSets = () => {
                           subjectDetails.subjectName
                         } `}
                       </Typography>
+                      {/* <Typography>Select</Typography> */}
                     </Box>
                   </AccordionSummary>
                   <AccordionDetails>
@@ -336,9 +341,10 @@ const SearchQuestionSets = () => {
                                 handleCheckBoxChange(event, obj)
                               }
                               inputProps={{ "aria-label": "controlled" }}
+                              className="select-check-box"
                             />
 
-                            <Box className="options-container">
+                            {/* <Box className="options-container">
                               <Typography>Options : </Typography>
                               <Box className="options-box">
                                 {obj.questionOptions.map(
@@ -350,9 +356,9 @@ const SearchQuestionSets = () => {
                                   )
                                 )}
                               </Box>
-                            </Box>
+                            </Box> */}
 
-                            <Box className="options-container">
+                            {/* <Box className="options-container">
                               <Typography>Answer</Typography>
                               <Box className="options-box">
                                 {obj.questionAnswers.map(
@@ -364,7 +370,7 @@ const SearchQuestionSets = () => {
                                   )
                                 )}
                               </Box>
-                            </Box>
+                            </Box> */}
                           </Box>
                         )
                       )}
@@ -447,14 +453,24 @@ const SearchQuestionSets = () => {
           </Box>
         )}
 
-        <Box>
-          <Button variant="contained">Preview</Button>
-        </Box>
-        <Box>
-          <Button variant="contained" onClick={createQuizfromBody}>
-            Creat Quiz
-          </Button>
-        </Box>
+        {subjectwiseDetails?.length > 0 && (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "flex-start",
+              marginTop: 5,
+              marginBottom: 5,
+            }}
+          >
+            <Button variant="contained" sx={{ marginRight: 5 }}>
+              Preview
+            </Button>
+
+            <Button variant="contained" onClick={createQuizfromBody}>
+              Creat Quiz
+            </Button>
+          </Box>
+        )}
 
         {quizLink && (
           <Box className="box-link">

@@ -17,6 +17,7 @@
         text-align: center;
         //  border: 2px solid yellow;
         width: 100%;
+        margin-right: 13%;
       }
     }
 
@@ -34,7 +35,14 @@
     }
 
     .questions-container {
-      margin-bottom: 2rem;
+      //  margin-bottom: 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .select-check-box {
+        margin-right: 15%;
+      }
       .options-container {
         margin-left: 2rem;
         display: flex;
