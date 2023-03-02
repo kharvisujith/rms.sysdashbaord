@@ -12,6 +12,9 @@ import {
   CircularProgress,
   InputAdornment,
   OutlinedInput,
+  Input,
+  TextField,
+  IconButton,
 } from "@mui/material";
 import { Box } from "@mui/system";
 import { useState, useEffect } from "react";
@@ -162,6 +165,7 @@ const InterviewQuiz = () => {
       <Box className="quiztable-box">
       <Box className="search-box">
       <OutlinedInput className="search-input"
+      //  size="small"
         //   sx={{
            
         //    borderRadius: "0.3rem",
@@ -169,10 +173,18 @@ const InterviewQuiz = () => {
         //    minWidth: 10,
         //    border: "0.1px solid #000",
         //  }}
-         id="outlined-adornment-weight"
+          id="outlined-adornment-weight"
          value={name}
          onChange={(e: any) => setName(e.target.value)}
          placeholder="Search"
+        //  InputProps={{
+        //   endAdornment: (
+        //     <InputAdornment position="end">
+        //       <SearchIcon />
+        //     </InputAdornment>
+        //   ),
+        // }}
+        // variant="standard"
          endAdornment={
            <InputAdornment position="end">
              <SearchIcon />

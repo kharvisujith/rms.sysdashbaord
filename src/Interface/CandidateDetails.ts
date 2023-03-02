@@ -1,7 +1,7 @@
 interface CandidateDetails {
-  firstName: string;
-  middleName?: string;
-  lastName: string;
+  candidateName: string;
+  // middleName?: string;
+  // lastName: string;
   email: string;
   phone: string;
 }

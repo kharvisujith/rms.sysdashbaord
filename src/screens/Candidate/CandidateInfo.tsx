@@ -25,15 +25,15 @@ const CandidateInfo = (props: any) => {
   const navigate = useNavigate();
 
   const [user, setUser] = useState<CandidateDetails>({
-    firstName: "",
-    middleName: "",
-    lastName: "",
+    candidateName: "",
+    // middleName: "",
+    // lastName: "",
     email: "",
     phone: "",
   });
   const [formError, setFormError] = useState<any>({
-    firstName: false,
-    lastName: false,
+    candidateName: false,
+    // lastName: false,
     email: false,
     phone: false,
   });
@@ -60,7 +60,7 @@ const CandidateInfo = (props: any) => {
     if (!user) {
       return;
     }
-    if (user.email && user.firstName && user.lastName &&  (phone_regex.test(user.phone))) {
+    if (user.email && user.candidateName &&  (phone_regex.test(user.phone))) {
       
       setLoader({ ...loader, buttonLoader: true });
       submitCandidateInfo(parseInt(id!), key!, user)
@@ -89,10 +89,8 @@ const CandidateInfo = (props: any) => {
       setFormError({ ...formError, email: true });
     } else if (!regex.test(user.email)) {
       setFormError({ ...formError, email: true });
-    } else if (!user.firstName) {
-      setFormError({ ...formError, firstName: true });
-    } else if (!user.lastName) {
-      setFormError({ ...formError, lastName: true });
+    } else if (!user.candidateName) {
+      setFormError({ ...formError, name: true });
     } else if (!phone_regex.test(user.phone)) {
       setFormError({ ...formError, phone: true });
      }
@@ -180,17 +178,17 @@ const CandidateInfo = (props: any) => {
                   fullWidth
                   type="text"
                   onChange={handleChange}
-                  value={user.firstName}
-                  label="FirstName"
-                  name="firstName"
+                  value={user.candidateName}
+                  label="CandidateName"
+                  name="candidateName"
                 />
-                {formError.firstName && (
+                {formError.candidateName && (
                   <Typography className="error">
-                    Please Enter First Name
+                    Please Enter Name
                   </Typography>
                 )}
 
-                <TextField
+                {/* <TextField
                   margin="normal"
                   fullWidth
                   type="text"
@@ -214,7 +212,7 @@ const CandidateInfo = (props: any) => {
                   <Typography className="error">
                     Please Enter Last Name
                   </Typography>
-                )}
+                )} */}
 
                 <TextField
                   margin="normal"
