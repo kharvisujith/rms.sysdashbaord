@@ -12,10 +12,11 @@ import {
   TableSortLabel,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   getSubmittedQuizDetailedInfo,
   getSubmittedQuizInfo,
+  getTotalSubmittedQuizInfo,
 } from "../../api/apiAgent";
 import {
   Order,
@@ -27,7 +28,7 @@ import { getComparator } from "../../utils/TableSortFunctions";
 import ReviewAnswersModal from "./ReviewAnswersModal";
 
 const PastEvaluationsTable = (props: any) => {
-  const { pastEvaluationsData } = props;
+  const { pastEvaluationsData, setpastEvaluationsData } = props;
 
   const [order, setOrder] = useState<Order>("asc");
   const [orderBy, setOrderBy] = useState<any>("correctAnswers");
@@ -92,6 +93,19 @@ const PastEvaluationsTable = (props: any) => {
       });
   };
 
+  useEffect(() => {
+    getTotalSubmittedQuizInfo()
+      .then((response: any) => {
+        //// setTotalSubmittedQuizInfoList(response.data);
+        // setLoader(false);
+        setpastEvaluationsData(response.data);
+      })
+      .catch((error: any) => {
+        // setLoader(false);
+        console.log("error in total quiz info api");
+      });
+  }, []);
+
   return (
     <>
       <Box>
@@ -132,37 +146,44 @@ const PastEvaluationsTable = (props: any) => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {pastEvaluationsData
-                  .slice()
-                  .sort(getComparator(order, orderBy))
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row: any, index: number) => {
-                    return (
-                      <TableRow hover role="checkbox" tabIndex={-1} key={index}>
-                        {submittedQuizTableColumns.map((column) => {
-                          const value = row[column.id];
-                          return (
-                            <TableCell key={column.id} align={column.align}>
-                              {column.id === "quizId" ? (
-                                <Button
-                                  variant="contained"
-                                  onClick={() =>
-                                    StartTestViewButtonHandler(value)
-                                  }
-                                >
-                                  Review
-                                </Button>
-                              ) : column.format && typeof value === "number" ? (
-                                column.format(value)
-                              ) : (
-                                value
-                              )}
-                            </TableCell>
-                          );
-                        })}
-                      </TableRow>
-                    );
-                  })}
+                {pastEvaluationsData.length > 0 &&
+                  pastEvaluationsData
+                    .slice()
+                    .sort(getComparator(order, orderBy))
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((row: any, index: number) => {
+                      return (
+                        <TableRow
+                          hover
+                          role="checkbox"
+                          tabIndex={-1}
+                          key={index}
+                        >
+                          {submittedQuizTableColumns.map((column) => {
+                            const value = row[column.id];
+                            return (
+                              <TableCell key={column.id} align={column.align}>
+                                {column.id === "quizId" ? (
+                                  <Button
+                                    variant="contained"
+                                    onClick={() =>
+                                      StartTestViewButtonHandler(value)
+                                    }
+                                  >
+                                    Review
+                                  </Button>
+                                ) : column.format &&
+                                  typeof value === "number" ? (
+                                  column.format(value)
+                                ) : (
+                                  value
+                                )}
+                              </TableCell>
+                            );
+                          })}
+                        </TableRow>
+                      );
+                    })}
               </TableBody>
             </Table>
           </TableContainer>

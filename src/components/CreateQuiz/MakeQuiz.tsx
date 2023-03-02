@@ -85,7 +85,10 @@ const MakeQuiz = () => {
             </Grid>
           </Grid>
         </Box>
-        <PastEvaluationsTable pastEvaluationsData={pastEvaluationsData} />
+        <PastEvaluationsTable
+          pastEvaluationsData={pastEvaluationsData}
+          setpastEvaluationsData={setpastEvaluationsData}
+        />
 
         <SearchQuestionSets />
       </Box>

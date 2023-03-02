@@ -9,10 +9,13 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
+  Checkbox,
+  SvgIcon,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { useState } from "react";
 import {
+  createQuiz,
   getSubjectwiseQuiz,
   getSubjectwiseQuizAnswers,
 } from "../../api/apiAgent";
@@ -29,6 +32,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { optionIds } from "../../utils/Utils";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 
 const SearchQuestionSets = () => {
   const [searchText, setSearchText] = useState<string>();
@@ -43,6 +47,8 @@ const SearchQuestionSets = () => {
   const [subjectSetQuestions, setSubjecSetQuestions] = useState<
     subjectwiseQuizAnswersResponse[]
   >([]);
+
+  const [quizLink, setQuizLink] = useState<string>();
 
   const handleSearchInputChange = (event: any) => {
     console.log("event is", event.target.value);
@@ -67,7 +73,7 @@ const SearchQuestionSets = () => {
   const getIndexFromNewCreateQuizBody = (
     subjectDetails: subjectWiseQuizListResponse
   ) => {
-    const findIndex = newCreateQuizBody.findIndex(
+    const findIndex = createQuizSetWiseInfo.findIndex(
       (obj: any) =>
         obj.subjectName === subjectDetails.subjectName &&
         obj.version === subjectDetails.version
@@ -79,52 +85,95 @@ const SearchQuestionSets = () => {
     }
   };
 
-  //   const checkAddDisabled = (subjectDetails: subjectWiseQuizListResponse) => {
-  //     const findIndex = newCreateQuizBody.findIndex(
-  //       (obj: any) =>
-  //         obj.subjectName === subjectDetails.subjectName &&
-  //         obj.setNumber === subjectDetails.setNumber
-  //     );
-  //     if (findIndex !== -1) {
-  //       return true;
-  //     } else {
-  //       return false;
-  //     }
-  //   };
+  const getQuestionIdFromNewCreateQuizBody = (
+    questionDeatils: subjectwiseQuizAnswersResponse
+  ) => {
+    // console.log(
+    //   "valaue of questionDeatails.questinid is ",
+    //   questionDeatils.questionId
+    // );
+    const findIndex = createQuizSetWiseInfo.findIndex(
+      (obj: any) =>
+        obj.subjectName === questionDeatils.subjectName &&
+        obj.version === questionDeatils.version
+    );
+    if (findIndex !== -1) {
+      const newArr = [...createQuizSetWiseInfo];
+      const isIdPresent = newArr[findIndex].questionIds.includes(
+        questionDeatils.questionId
+      );
+      if (isIdPresent) return true;
+      else return false;
+    } else {
+      return false;
+    }
+  };
 
-  //   const checkDeleteDisabled = (subjectDetails: subjectWiseQuizListResponse) => {
-  //     const findIndex = newCreateQuizBody.findIndex(
-  //       (obj: any) =>
-  //         obj.subjectName === subjectDetails.subjectName &&
-  //         obj.setNumber === subjectDetails.setNumber
-  //     );
-  //     if (findIndex !== -1) {
-  //     }
-  //   };
-
-  const handleAddQuestionSet = (
+  const [createQuizSetWiseInfo, setCreateQuizSetWiseInfo] = useState<any>([]);
+  const handleAddQuestionSet = async (
     subjectDetails: subjectWiseQuizListResponse
   ) => {
-    setNewCreateQuizBody((prev) => [
-      ...prev,
-      {
-        version: subjectDetails.version,
-        subjectName: subjectDetails.subjectName,
-        totalQuestionsCount: subjectDetails.totalQuestionsCount,
-      },
-    ]);
+    try {
+      const existingIndex = createQuizSetWiseInfo.findIndex(
+        (obj: any) =>
+          obj.subjectName === subjectDetails.subjectName &&
+          obj.version === subjectDetails.version
+      );
+      // get all the question ids for particualr set and subjetname - api needed to get only question-ids for set and subject
+      const response = await getSubjectwiseQuizAnswers(
+        subjectDetails.version,
+        subjectDetails.subjectName
+      );
+
+      if (response.data.length > 0) {
+        var questionIdsArray = response.data.map((obj: any) => obj.questionId);
+
+        console.log("ids is", questionIdsArray);
+
+        if (existingIndex === -1) {
+          setCreateQuizSetWiseInfo((prev: any) => [
+            ...prev,
+            {
+              version: subjectDetails.version,
+              subjectName: subjectDetails.subjectName,
+              questionIds: questionIdsArray,
+            },
+          ]);
+        }
+      }
+    } catch (error: any) {
+      console.log("Error in get question ids", error);
+    }
   };
+
   const handleDeletQuestionSet = (
     subjectDetails: subjectWiseQuizListResponse
   ) => {
-    const existingIndex = newCreateQuizBody.findIndex(
-      (obj: any) =>
-        obj.subjectName === subjectDetails.subjectName &&
-        obj.version === subjectDetails.version
-    );
-    const newArr = [...newCreateQuizBody];
-    newArr.splice(existingIndex, 1);
-    setNewCreateQuizBody(newArr);
+    try {
+      // const existingIndexforold = newCreateQuizBody.findIndex(
+      //   (obj: any) =>
+      //     obj.subjectName === subjectDetails.subjectName &&
+      //     obj.version === subjectDetails.version
+      // );
+      // if (existingIndexforold !== -1) {
+      //   const newArr = [...newCreateQuizBody];
+      //   newArr.splice(existingIndexforold, 1);
+      //   setNewCreateQuizBody(newArr);
+
+      // for new creatquiz body
+      const existingIndex = createQuizSetWiseInfo.findIndex(
+        (obj: any) =>
+          obj.subjectName === subjectDetails.subjectName &&
+          obj.version === subjectDetails.version
+      );
+      if (existingIndex !== -1) {
+        const newCreatQuizArr = [...createQuizSetWiseInfo];
+        newCreatQuizArr.splice(existingIndex, 1);
+        setCreateQuizSetWiseInfo(newCreatQuizArr);
+      }
+    } catch (error: any) {
+      console.log("Error in get question ans ids", error);
+    }
   };
 
   const fetchQuestionsForSetAndSubject = (
@@ -135,17 +184,97 @@ const SearchQuestionSets = () => {
       subjectDetails.subjectName
     )
       .then((response: any) => {
-        console.log("response in accordion is", response.data);
         setSubjecSetQuestions(response.data);
-        // setSubjectAnswerList(response.data);
-        // setLoader(false);
       })
       .catch((error: any) => {
         // setLoader(false);
         console.log("error in subjwise answersapi");
       });
   };
-  console.log("value of new creae quiz body is", newCreateQuizBody);
+
+  const handleCheckBoxChange = (event: any, questionDeatils: any) => {
+    try {
+      console.log(
+        "question details in check box is",
+        questionDeatils,
+        questionDeatils.questionId
+      );
+      const existingIndex = createQuizSetWiseInfo.findIndex(
+        (obj: any) =>
+          obj.subjectName === questionDeatils.subjectName &&
+          obj.version === questionDeatils.version
+      );
+      if (event.target.checked) {
+        if (existingIndex === -1) {
+          setCreateQuizSetWiseInfo((prev: any) => [
+            ...prev,
+            {
+              version: questionDeatils.version,
+              subjectName: questionDeatils.subjectName,
+              questionIds: [questionDeatils.questionId],
+            },
+          ]);
+        } else {
+          const newArray = [...createQuizSetWiseInfo];
+          newArray[existingIndex].questionIds.push(questionDeatils.questionId);
+          setCreateQuizSetWiseInfo(newArray);
+        }
+      } else {
+        console.log("inside else part of check false");
+        if (existingIndex !== -1) {
+          const newArray = [...createQuizSetWiseInfo];
+          const indexOfQuestionId = newArray[existingIndex].questionIds.indexOf(
+            questionDeatils.questionId
+          );
+
+          newArray[existingIndex].questionIds.splice(indexOfQuestionId, 1);
+          if (newArray[existingIndex].questionIds.length < 1) {
+            newArray.splice(existingIndex, 1);
+          }
+          setCreateQuizSetWiseInfo(newArray);
+        }
+      }
+    } catch (error: any) {
+      console.log("Error in add question to createquiz body", error);
+    }
+  };
+  console.log("new create body is", createQuizSetWiseInfo);
+
+  const createQuizfromBody = () => {
+    const totalQuestions = createQuizSetWiseInfo.reduce(
+      (numOfElement: number, obj: any) => numOfElement + obj.questionIds.length,
+      0
+    );
+    console.log("total questions is", totalQuestions);
+    const createQuizBody = {
+      quizTopic: "react-mid",
+      totalQuestions: totalQuestions,
+      quizTimeInMinutes: 60,
+      quizLinkExpireInHours: 3,
+      quizSetWiseInfo: createQuizSetWiseInfo,
+    };
+
+    createQuiz(createQuizBody)
+      .then((response: any) => {
+        console.log("creat quiz response is", response.data);
+        setQuizLink(
+          `http://localhost:3000/rms-aug/test/${response.data?.quizId}/${response.data?.quizLink}`
+        );
+      })
+      .catch((error: any) => console.log("Error in create quiz", error));
+  };
+
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text).then(
+      function () {
+        // setCopied(true);
+      },
+      function (err) {
+        console.error("Could not copy text: ", err);
+      }
+    );
+  };
+
   return (
     <>
       <Box>
@@ -192,6 +321,7 @@ const SearchQuestionSets = () => {
                           subjectDetails.subjectName
                         } `}
                       </Typography>
+                      {/* <Typography>Select</Typography> */}
                     </Box>
                   </AccordionSummary>
                   <AccordionDetails>
@@ -205,7 +335,16 @@ const SearchQuestionSets = () => {
                             <Typography>{`${index + 1}.  ${
                               obj.question
                             }`}</Typography>
-                            <Box className="options-container">
+                            <Checkbox
+                              checked={getQuestionIdFromNewCreateQuizBody(obj)}
+                              onChange={(event: any) =>
+                                handleCheckBoxChange(event, obj)
+                              }
+                              inputProps={{ "aria-label": "controlled" }}
+                              className="select-check-box"
+                            />
+
+                            {/* <Box className="options-container">
                               <Typography>Options : </Typography>
                               <Box className="options-box">
                                 {obj.questionOptions.map(
@@ -217,18 +356,21 @@ const SearchQuestionSets = () => {
                                   )
                                 )}
                               </Box>
-                            </Box>
+                            </Box> */}
 
-                            <Box className="options-container">
+                            {/* <Box className="options-container">
                               <Typography>Answer</Typography>
                               <Box className="options-box">
                                 {obj.questionAnswers.map(
                                   (cur: any, index: number) => (
-                                    <Typography className="option">{` ${optionIds[index]}.${cur} `}</Typography>
+                                    <Typography
+                                      className="option"
+                                      key={index}
+                                    >{` ${optionIds[index]}.${cur} `}</Typography>
                                   )
                                 )}
                               </Box>
-                            </Box>
+                            </Box> */}
                           </Box>
                         )
                       )}
@@ -304,16 +446,53 @@ const SearchQuestionSets = () => {
           <Box>
             <Typography>Selected Sets</Typography>
             {newCreateQuizBody.map((obj: createQuizRequest, index: number) => (
-              <Typography>{`${index + 1}. ${obj.subjectName} - ${
+              <Typography key={index}>{`${index + 1}. ${obj.subjectName} - ${
                 obj.totalQuestionsCount
               } Questions`}</Typography>
             ))}
           </Box>
         )}
 
-        <Box>
-          <Button variant="contained">Preview</Button>
-        </Box>
+        {subjectwiseDetails?.length > 0 && (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "flex-start",
+              marginTop: 5,
+              marginBottom: 5,
+            }}
+          >
+            <Button variant="contained" sx={{ marginRight: 5 }}>
+              Preview
+            </Button>
+
+            <Button variant="contained" onClick={createQuizfromBody}>
+              Creat Quiz
+            </Button>
+          </Box>
+        )}
+
+        {quizLink && (
+          <Box className="box-link">
+            <Typography>{`Test Link :`}</Typography>
+            <Box className="test-link">
+              <Typography>{quizLink}</Typography>
+              <Button
+                className="copy"
+                variant="outlined"
+                onClick={() => copyToClipboard(quizLink)}
+              >
+                <SvgIcon
+                  className="icon"
+                  // sx={{ marginLeft: -1 }}
+                  component={ContentCopyIcon}
+                  inheritViewBox
+                />
+                Copy
+              </Button>
+            </Box>
+          </Box>
+        )}
       </Box>
     </>
   );
