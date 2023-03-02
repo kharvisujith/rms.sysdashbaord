@@ -75,7 +75,7 @@ const SubjectList = (props: any) => {
   //       const filteredRows = subjectList.filter((row) => {
   //         return (
   //            row.createdBy?.toString().toLowerCase().includes(searchedVal.toString().toLowerCase()));
-  //             // || row.setNumber.toString().toLowerCase().includes(searchedVal.toString().toLowerCase()) 
+  //             // || row.setNumber.toString().toLowerCase().includes(searchedVal.toString().toLowerCase())
   //             // || row.totalQuestionsCount.toString().toLowerCase().includes(searchedVal.toString().toLowerCase()));
   //       });
   //          setRows(filteredRows);
@@ -252,7 +252,7 @@ const SubjectList = (props: any) => {
     setOpenTestModal(true);
     setLoader(true);
     getSubjectwiseQuizAnswers(row.setNumber, row.subjectName)
-      .then((response) => {
+      .then((response: any) => {
         setSubjectAnswerList(response.data);
         setLoader(false);
       })
@@ -285,28 +285,28 @@ const SubjectList = (props: any) => {
       <Box className="subjectlist-box">
         <Box className="table-header">
           <Box>
-          <FormControl
-            sx={{
-              minWidth: 100,
-            }}
-          >
-            <InputLabel>Subject</InputLabel>
-            <Select
-              value={subject}
-              onChange={handleSubjectChange}
-              autoWidth
-              label="Subject"
+            <FormControl
+              sx={{
+                minWidth: 100,
+              }}
             >
-              <MenuItem selected value="ALL">
-                All
-              </MenuItem>
-              <MenuItem value={"REACT"}>REACT</MenuItem>
-              <MenuItem value={"JAVASCRIPT"}>JAVASCRIPT</MenuItem>
-              <MenuItem value={"CSHARP"}>C#</MenuItem>
-            </Select>
-          </FormControl>
+              <InputLabel>Subject</InputLabel>
+              <Select
+                value={subject}
+                onChange={handleSubjectChange}
+                autoWidth
+                label="Subject"
+              >
+                <MenuItem selected value="ALL">
+                  All
+                </MenuItem>
+                <MenuItem value={"REACT"}>REACT</MenuItem>
+                <MenuItem value={"JAVASCRIPT"}>JAVASCRIPT</MenuItem>
+                <MenuItem value={"CSHARP"}>C#</MenuItem>
+              </Select>
+            </FormControl>
           </Box>
-          
+
           <Box className="question-upload-buttons">
             <Button
               variant="contained"
@@ -322,26 +322,24 @@ const SubjectList = (props: any) => {
             >
               Upload Question Set
             </Button>
-           <Box className="search-box">
-             <OutlinedInput className="search-input"
-       
-               id="outlined-adornment-weight"
-               value={name}
-               onChange={(e: any) => setName(e.target.value)}
-               placeholder="Search"
-               endAdornment={
-               <InputAdornment position="end">
-               <SearchIcon />
-               </InputAdornment>
-               }
-               aria-describedby="outlined-weight-helper-text"
-             />
-           </Box>
-           
+            <Box className="search-box">
+              <OutlinedInput
+                className="search-input"
+                id="outlined-adornment-weight"
+                value={name}
+                onChange={(e: any) => setName(e.target.value)}
+                placeholder="Search"
+                endAdornment={
+                  <InputAdornment position="end">
+                    <SearchIcon />
+                  </InputAdornment>
+                }
+                aria-describedby="outlined-weight-helper-text"
+              />
+            </Box>
           </Box>
-       </Box>
-     
-        
+        </Box>
+
         {/* <OutlinedInput className="search-input"
         //   sx={{
            
@@ -361,9 +359,6 @@ const SubjectList = (props: any) => {
          }
          aria-describedby="outlined-weight-helper-text"
        /> */}
-      
-       
-     
 
         <Paper className="paper">
           <Typography variant="h5" className="table-title">
@@ -404,11 +399,25 @@ const SubjectList = (props: any) => {
                     subjectList
                       .slice()
                       .sort(getComparator(order, orderBy))
-                      .filter((row) => !name.length || row.subjectName.toLowerCase().includes(name.toLowerCase()) || 
-                      row.setNumber.toString().toLowerCase().includes(name.toString().toLowerCase()) || 
-                      row.totalQuestionsCount.toString().toLowerCase().includes(name.toString().toLowerCase()) ||
-                      row.createdDate?.toLowerCase().includes(name.toLowerCase()))
-                      
+                      .filter(
+                        (row) =>
+                          !name.length ||
+                          row.subjectName
+                            .toLowerCase()
+                            .includes(name.toLowerCase()) ||
+                          row.setNumber
+                            .toString()
+                            .toLowerCase()
+                            .includes(name.toString().toLowerCase()) ||
+                          row.totalQuestionsCount
+                            .toString()
+                            .toLowerCase()
+                            .includes(name.toString().toLowerCase()) ||
+                          row.createdDate
+                            ?.toLowerCase()
+                            .includes(name.toLowerCase())
+                      )
+
                       .slice(
                         page * rowsPerPage,
                         page * rowsPerPage + rowsPerPage

@@ -163,8 +163,8 @@ const TopNavBar = (props: any) => {
                   </Box>
                 ))
               : role === "Interviewer"
-              ? InterviewerPages.map((page: any) => (
-                  <Box className="pages">
+              ? InterviewerPages.map((page: any, index: any) => (
+                  <Box className="pages" key={index}>
                     <NavLink
                       to={page.route}
                       className={({ isActive }) =>
