@@ -31,12 +31,17 @@ import {
   submittedQuizDetailedInfoResponse,
   Order,
 } from "../../Interface/QuizDetails";
-import { columns } from "./SubmittedQuizTableColumn";
+
 import "./SubmittedQuiz.style.scss";
 import { visuallyHidden } from "@mui/utils";
 import { getComparator } from "../../utils/TableSortFunctions";
 import SearchIcon from "@mui/icons-material/Search";
 import TopNavBar from "../../components/TopNavBar/TopNavBar";
+import { submittedQuizTableColumns } from "./SubmittedQuizTableColumn";
+
+export const customStylesModal = {
+  overlay: { zIndex: 1000 },
+};
 
 const SubmitQuizes = (props: any) => {
   const [page, setPage] = React.useState(0);
@@ -101,9 +106,7 @@ const SubmitQuizes = (props: any) => {
   const endTestButtonHandler = () => {
     setOpenTestModal(false);
   };
-  const customStyles = {
-    overlay: { zIndex: 1000 },
-  };
+
   const StartTestViewButtonHandler = (e: any) => {
     setLoader(true);
     getSubmittedQuizInfo(e)
@@ -137,27 +140,28 @@ const SubmitQuizes = (props: any) => {
     <>
       <TopNavBar role={props.role} setRole={props.setRole} />
       <Box className="subjectlist-box">
-      <Box className="search-box">
-      <OutlinedInput className="search-input"
-        //   sx={{
-           
-        //    borderRadius: "0.3rem",
-        //    height: 30,
-        //    minWidth: 10,
-        //    border: "0.1px solid #000",
-        //  }}
-         id="outlined-adornment-weight"
-         value={name}
-         onChange={(e: any) => setName(e.target.value)}
-         placeholder="Search"
-         endAdornment={
-           <InputAdornment position="end">
-             <SearchIcon />
-           </InputAdornment>
-         }
-         aria-describedby="outlined-weight-helper-text"
-       />
-       </Box>
+        <Box className="search-box">
+          <OutlinedInput
+            className="search-input"
+            //   sx={{
+
+            //    borderRadius: "0.3rem",
+            //    height: 30,
+            //    minWidth: 10,
+            //    border: "0.1px solid #000",
+            //  }}
+            id="outlined-adornment-weight"
+            value={name}
+            onChange={(e: any) => setName(e.target.value)}
+            placeholder="Search"
+            endAdornment={
+              <InputAdornment position="end">
+                <SearchIcon />
+              </InputAdornment>
+            }
+            aria-describedby="outlined-weight-helper-text"
+          />
+        </Box>
         <Paper>
           <Typography variant="h5" className="table-title">
             Submitted Quiz Results
@@ -167,7 +171,7 @@ const SubmitQuizes = (props: any) => {
             <Table stickyHeader>
               <TableHead>
                 <TableRow>
-                  {columns.map((column: any) => (
+                  {submittedQuizTableColumns.map((column: any) => (
                     <TableCell
                       key={column.id}
                       align={column.align}
@@ -196,14 +200,40 @@ const SubmitQuizes = (props: any) => {
                 {totalSubmittedQuizInfoList
                   .slice()
                   .sort(getComparator(order, orderBy))
-                  .filter((row) => !name.length || row.candidateId.toLowerCase().includes(name.toLowerCase()) || 
-                   row.createdBy.toLowerCase().includes(name.toLowerCase()) ||
-                   row.interviewLevel.toString().toLowerCase().includes(name.toString().toLowerCase()) ||
-                   row.totalQuestions.toString().toLowerCase().includes(name.toString().toLowerCase()) ||
-                   row.answeredQuestions.toString().toLowerCase().includes(name.toString().toLowerCase()) ||
-                   row.notAnsweredQuestions.toString().toLowerCase().includes(name.toString().toLowerCase()) ||
-                   row.inCorrectAnswers.toString().toLowerCase().includes(name.toString().toLowerCase()) ||
-                   row.correctAnswers.toString().toLowerCase().includes(name.toString().toLowerCase()))
+                  .filter(
+                    (row) =>
+                      !name.length ||
+                      row.candidateId
+                        .toLowerCase()
+                        .includes(name.toLowerCase()) ||
+                      row.createdBy
+                        .toLowerCase()
+                        .includes(name.toLowerCase()) ||
+                      row.interviewLevel
+                        .toString()
+                        .toLowerCase()
+                        .includes(name.toString().toLowerCase()) ||
+                      row.totalQuestions
+                        .toString()
+                        .toLowerCase()
+                        .includes(name.toString().toLowerCase()) ||
+                      row.answeredQuestions
+                        .toString()
+                        .toLowerCase()
+                        .includes(name.toString().toLowerCase()) ||
+                      row.notAnsweredQuestions
+                        .toString()
+                        .toLowerCase()
+                        .includes(name.toString().toLowerCase()) ||
+                      row.inCorrectAnswers
+                        .toString()
+                        .toLowerCase()
+                        .includes(name.toString().toLowerCase()) ||
+                      row.correctAnswers
+                        .toString()
+                        .toLowerCase()
+                        .includes(name.toString().toLowerCase())
+                  )
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row: any) => {
                     console.log("test data", totalSubmittedQuizInfoList);
@@ -214,7 +244,7 @@ const SubmitQuizes = (props: any) => {
                         tabIndex={-1}
                         key={row.code}
                       >
-                        {columns.map((column) => {
+                        {submittedQuizTableColumns.map((column) => {
                           const value = row[column.id];
                           return (
                             <TableCell key={column.id} align={column.align}>
@@ -270,7 +300,7 @@ const SubmitQuizes = (props: any) => {
           isOpen={OpenTestModal}
           contentLabel="Minimal Modal Example"
           ariaHideApp={false}
-          style={customStyles}
+          style={customStylesModal}
         >
           <>
             {loader ? (
@@ -279,9 +309,9 @@ const SubmitQuizes = (props: any) => {
               </Box>
             ) : (
               <AllSubmittedQuestionsAnswers
-                openDialog={openDialog}
-                handleClose={handleClose}
-                setOpenDialog={setOpenDialog}
+                // openDialog={openDialog}
+                // handleClose={handleClose}
+                // setOpenDialog={setOpenDialog}
                 quizSubjectInfo={detailedSubmittedQuizInfoList}
                 totalQuizDetailedInfo={individualQuizDetailedInfo}
               />
