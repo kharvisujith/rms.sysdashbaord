@@ -97,7 +97,7 @@ const InterviewQuiz = () => {
   const [totalQuizInfo, setTotalQuizInfo] = useState<any>([]);
   const [order, setOrder] = useState<Order>("asc");
   //const [orderBy, setOrderBy] = useState<keyof Data>("setNumber");
-  const [orderBy, setOrderBy] = useState<any>("setNumber");
+  const [orderBy, setOrderBy] = useState<any>("version");
   const [loader, setLoader] = useState<boolean>(false);
   const [name, setName] = useState<string>("");
   // const [rows, setRows] = useState([]);
@@ -228,7 +228,8 @@ const InterviewQuiz = () => {
               </TableHead>
 
               <TableBody>
-                {totalQuizInfo
+                {totalQuizInfo.length>0 &&
+                totalQuizInfo
                   .slice()
                   .sort(getComparator(order, orderBy))
                   

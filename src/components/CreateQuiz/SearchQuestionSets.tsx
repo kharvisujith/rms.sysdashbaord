@@ -71,7 +71,7 @@ const SearchQuestionSets = () => {
     const findIndex = createQuizSetWiseInfo.findIndex(
       (obj: any) =>
         obj.subjectName === subjectDetails.subjectName &&
-        obj.setNumber === subjectDetails.setNumber
+        obj.version === subjectDetails.version
     );
     if (findIndex !== -1) {
       return true;
@@ -175,7 +175,7 @@ const SearchQuestionSets = () => {
     subjectDetails: subjectWiseQuizListResponse
   ) => {
     getSubjectwiseQuizAnswers(
-      subjectDetails.setNumber,
+      subjectDetails.version,
       subjectDetails.subjectName
     )
       .then((response: any) => {

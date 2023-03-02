@@ -56,12 +56,12 @@ const SubjectList = (props: any) => {
   const [loader, setLoader] = useState<boolean>(false);
   const [file, setFile] = useState<File>();
   const [uploadData, setUploadData] = useState<any>({
-    set: "",
+    version: "",
     subject: "",
     tags: "",
   });
   const [formError, setFormError] = useState<any>({
-    set: false,
+    version: false,
     subject: false,
     tags: false,
     file: false,
@@ -137,18 +137,18 @@ const SubjectList = (props: any) => {
   };
 
   const handleUploadClick = () => {
-    if (file && uploadData.set && uploadData.subject && uploadData.tags) {
+    if (file && uploadData.version && uploadData.subject && uploadData.tags) {
       setLoader(true);
       const formData = new FormData();
       formData.append("formFile", file);
 
-      upLoadExcel(uploadData.set, uploadData.subject, uploadData.tags, formData)
+      upLoadExcel(uploadData.version, uploadData.subject, uploadData.tags, formData)
         .then((res) => res.data)
         .then((res) => {
           setLoader(false);
           setOpenFileUpload(false);
           subjectwiseQuizDetails(subject);
-          setUploadData({ set: "", subject: "", tags: "" });
+          setUploadData({ version: "", subject: "", tags: "" });
           Swal.fire({
             title: "Success",
             text: "Question Set Uploaded Succesfully",
@@ -165,8 +165,8 @@ const SubjectList = (props: any) => {
             confirmButtonText: "Okay",
           });
         });
-    } else if (!uploadData.set) {
-      setFormError({ ...formError, set: true });
+    } else if (!uploadData.version) {
+      setFormError({ ...formError, version: true });
     } else if (!uploadData.subject) {
       setFormError({ ...formError, subject: true });
     } else if (!uploadData.tags) {
@@ -205,7 +205,7 @@ const SubjectList = (props: any) => {
   const [isQuizSetExists, setIsQuizSetExists] = useState<boolean>(true);
   const [order, setOrder] = useState<Order>("asc");
   //const [orderBy, setOrderBy] = useState<keyof Data>("setNumber");
-  const [orderBy, setOrderBy] = useState<any>("setNumber");
+  const [orderBy, setOrderBy] = useState<any>("version");
 
   const viewButton = (row: any) => {
     return (
@@ -251,7 +251,7 @@ const SubjectList = (props: any) => {
   const StartTestViewButtonHandler = (row: any) => {
     setOpenTestModal(true);
     setLoader(true);
-    getSubjectwiseQuizAnswers(row.setNumber, row.subjectName)
+    getSubjectwiseQuizAnswers(row.version, row.subjectName)
       .then((response: any) => {
         setSubjectAnswerList(response.data);
         setLoader(false);
@@ -405,7 +405,7 @@ const SubjectList = (props: any) => {
                           row.subjectName
                             .toLowerCase()
                             .includes(name.toLowerCase()) ||
-                          row.setNumber
+                          row.version
                             .toString()
                             .toLowerCase()
                             .includes(name.toString().toLowerCase()) ||
@@ -516,15 +516,15 @@ const SubjectList = (props: any) => {
         <DialogTitle>Upload Questions Set</DialogTitle>
         <DialogContent className="Dialog-Container">
           <TextField
-            name="set"
-            label="Set Number"
+            name="version"
+            label="version Number"
             variant="standard"
-            type="number"
+            type="text"
             className="items"
             onChange={handleTextChange}
           />
-          {formError.set && (
-            <Typography className="error">Please Enter Set Number</Typography>
+          {formError.version && (
+            <Typography className="error">Please Enter Version Number</Typography>
           )}
 
           <FormControl
