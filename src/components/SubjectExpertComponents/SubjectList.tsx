@@ -139,7 +139,8 @@ const SubjectList = (props: any) => {
   };
 
   const handleUploadClick = () => {
-    if (file && uploadData.version && uploadData.tags && uploadData.subject ) {
+    if (file && uploadData.version && uploadData.subject && uploadData.tags) {
+      console.log('inside if');
       setLoader(true);
       const formData = new FormData();
       formData.append("formFile", file);
@@ -151,7 +152,7 @@ const SubjectList = (props: any) => {
           setOpenFileUpload(false);
           subjectwiseQuizDetails(subject);
           console.log(subject, 'subj data');
-          setUploadData({ version: "", subject: "", tags: "" });
+          setUploadData({ version: "", subject: "", tags: ""});
           Swal.fire({
             title: "Success",
             text: "Question Set Uploaded Succesfully",
@@ -169,6 +170,7 @@ const SubjectList = (props: any) => {
           });
         });
     } else if (!uploadData.version) {
+      console.log('else if');
       setFormError({ ...formError, version: true });
     } else if (!uploadData.subject) {
       setFormError({ ...formError, subject: true });
@@ -176,8 +178,10 @@ const SubjectList = (props: any) => {
       setFormError({ ...formError, tags: true });
     } else if (!file) {
       setFormError({ ...formError, file: true });
+   
     }
   };
+
 
   const subjectwiseQuizDetails = async (subject: string) => {
     console.log("subject wise quiz iss calllledddd");
@@ -426,7 +430,7 @@ const SubjectList = (props: any) => {
                         page * rowsPerPage + rowsPerPage
                       )
                       .map((row: any, index: number) => {
-                        console.log("test data", subjectList);
+                        // console.log("test data", subjectList);
                         return (
                           <TableRow
                             hover
