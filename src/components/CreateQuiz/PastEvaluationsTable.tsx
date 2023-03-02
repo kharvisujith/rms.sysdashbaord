@@ -132,37 +132,44 @@ const PastEvaluationsTable = (props: any) => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {pastEvaluationsData
-                  .slice()
-                  .sort(getComparator(order, orderBy))
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row: any, index: number) => {
-                    return (
-                      <TableRow hover role="checkbox" tabIndex={-1} key={index}>
-                        {submittedQuizTableColumns.map((column) => {
-                          const value = row[column.id];
-                          return (
-                            <TableCell key={column.id} align={column.align}>
-                              {column.id === "quizId" ? (
-                                <Button
-                                  variant="contained"
-                                  onClick={() =>
-                                    StartTestViewButtonHandler(value)
-                                  }
-                                >
-                                  Review
-                                </Button>
-                              ) : column.format && typeof value === "number" ? (
-                                column.format(value)
-                              ) : (
-                                value
-                              )}
-                            </TableCell>
-                          );
-                        })}
-                      </TableRow>
-                    );
-                  })}
+                {pastEvaluationsData.length > 0 &&
+                  pastEvaluationsData
+                    .slice()
+                    .sort(getComparator(order, orderBy))
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((row: any, index: number) => {
+                      return (
+                        <TableRow
+                          hover
+                          role="checkbox"
+                          tabIndex={-1}
+                          key={index}
+                        >
+                          {submittedQuizTableColumns.map((column) => {
+                            const value = row[column.id];
+                            return (
+                              <TableCell key={column.id} align={column.align}>
+                                {column.id === "quizId" ? (
+                                  <Button
+                                    variant="contained"
+                                    onClick={() =>
+                                      StartTestViewButtonHandler(value)
+                                    }
+                                  >
+                                    Review
+                                  </Button>
+                                ) : column.format &&
+                                  typeof value === "number" ? (
+                                  column.format(value)
+                                ) : (
+                                  value
+                                )}
+                              </TableCell>
+                            );
+                          })}
+                        </TableRow>
+                      );
+                    })}
               </TableBody>
             </Table>
           </TableContainer>

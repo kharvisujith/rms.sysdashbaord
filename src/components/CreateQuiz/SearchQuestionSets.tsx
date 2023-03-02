@@ -90,7 +90,7 @@ const SearchQuestionSets = () => {
     const findIndex = createQuizSetWiseInfo.findIndex(
       (obj: any) =>
         obj.subjectName === questionDeatils.subjectName &&
-        obj.setNumber === questionDeatils.setNumber
+        obj.version === questionDeatils.version
     );
     if (findIndex !== -1) {
       const newArr = [...createQuizSetWiseInfo];
@@ -112,11 +112,11 @@ const SearchQuestionSets = () => {
       const existingIndex = createQuizSetWiseInfo.findIndex(
         (obj: any) =>
           obj.subjectName === subjectDetails.subjectName &&
-          obj.setNumber === subjectDetails.setNumber
+          obj.version === subjectDetails.version
       );
       // get all the question ids for particualr set and subjetname - api needed to get only question-ids for set and subject
       const response = await getSubjectwiseQuizAnswers(
-        subjectDetails.setNumber,
+        subjectDetails.version,
         subjectDetails.subjectName
       );
 
@@ -129,7 +129,7 @@ const SearchQuestionSets = () => {
           setCreateQuizSetWiseInfo((prev: any) => [
             ...prev,
             {
-              setNumber: subjectDetails.setNumber,
+              version: subjectDetails.version,
               subjectName: subjectDetails.subjectName,
               questionIds: questionIdsArray,
             },
@@ -148,7 +148,7 @@ const SearchQuestionSets = () => {
       // const existingIndexforold = newCreateQuizBody.findIndex(
       //   (obj: any) =>
       //     obj.subjectName === subjectDetails.subjectName &&
-      //     obj.setNumber === subjectDetails.setNumber
+      //     obj.version === subjectDetails.version
       // );
       // if (existingIndexforold !== -1) {
       //   const newArr = [...newCreateQuizBody];
@@ -159,7 +159,7 @@ const SearchQuestionSets = () => {
       const existingIndex = createQuizSetWiseInfo.findIndex(
         (obj: any) =>
           obj.subjectName === subjectDetails.subjectName &&
-          obj.setNumber === subjectDetails.setNumber
+          obj.version === subjectDetails.version
       );
       if (existingIndex !== -1) {
         const newCreatQuizArr = [...createQuizSetWiseInfo];
@@ -192,14 +192,14 @@ const SearchQuestionSets = () => {
       const existingIndex = createQuizSetWiseInfo.findIndex(
         (obj: any) =>
           obj.subjectName === questionDeatils.subjectName &&
-          obj.setNumber === questionDeatils.setNumber
+          obj.version === questionDeatils.version
       );
       if (event.target.checked) {
         if (existingIndex === -1) {
           setCreateQuizSetWiseInfo((prev: any) => [
             ...prev,
             {
-              setNumber: questionDeatils.setNumber,
+              version: questionDeatils.version,
               subjectName: questionDeatils.subjectName,
               questionIds: [questionDeatils.questionId],
             },
