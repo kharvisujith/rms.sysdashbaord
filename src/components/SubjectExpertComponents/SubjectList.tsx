@@ -148,6 +148,7 @@ const SubjectList = (props: any) => {
           setLoader(false);
           setOpenFileUpload(false);
           subjectwiseQuizDetails(subject);
+          console.log(subject, 'subj data');
           setUploadData({ version: "", subject: "", tags: "" });
           Swal.fire({
             title: "Success",
@@ -517,7 +518,7 @@ const SubjectList = (props: any) => {
         <DialogContent className="Dialog-Container">
           <TextField
             name="version"
-            label="version Number"
+            label="Version Number"
             variant="standard"
             type="text"
             className="items"
