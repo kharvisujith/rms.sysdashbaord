@@ -51,3 +51,15 @@
     }
   }
 }
+
+.box-link {
+  margin-left: 5%;
+  margin-right: 5%;
+  margin-bottom: 2rem;
+
+  .test-link {
+    display: flex;
+    justify-content: space-around;
+    margin-left: 2rem;
+  }
+}

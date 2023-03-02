@@ -10,10 +10,12 @@ import {
   AccordionDetails,
   AccordionSummary,
   Checkbox,
+  SvgIcon,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { useState } from "react";
 import {
+  createQuiz,
   getSubjectwiseQuiz,
   getSubjectwiseQuizAnswers,
 } from "../../api/apiAgent";
@@ -30,6 +32,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { optionIds } from "../../utils/Utils";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 
 const SearchQuestionSets = () => {
   const [searchText, setSearchText] = useState<string>();
@@ -44,6 +47,8 @@ const SearchQuestionSets = () => {
   const [subjectSetQuestions, setSubjecSetQuestions] = useState<
     subjectwiseQuizAnswersResponse[]
   >([]);
+
+  const [quizLink, setQuizLink] = useState<string>();
 
   const handleSearchInputChange = (event: any) => {
     console.log("event is", event.target.value);
@@ -194,6 +199,8 @@ const SearchQuestionSets = () => {
           obj.subjectName === questionDeatils.subjectName &&
           obj.version === questionDeatils.version
       );
+      console.log("value of existingid in check box chcange is", existingIndex);
+      console.log("value of check box is", event.target.checked);
       if (event.target.checked) {
         if (existingIndex === -1) {
           setCreateQuizSetWiseInfo((prev: any) => [
@@ -207,6 +214,7 @@ const SearchQuestionSets = () => {
         } else {
           const newArray = [...createQuizSetWiseInfo];
           newArray[existingIndex].questionIds.push(questionDeatils.questionId);
+          setCreateQuizSetWiseInfo(newArray);
         }
       } else {
         if (existingIndex !== -1) {
@@ -226,6 +234,42 @@ const SearchQuestionSets = () => {
     }
   };
   console.log("new create body is", createQuizSetWiseInfo);
+
+  const createQuizfromBody = () => {
+    console.log("body of create on submit is", createQuizSetWiseInfo);
+    const totalQuestions = createQuizSetWiseInfo.reduce(
+      (numOfElement: number, obj: any) => numOfElement + obj.questionIds.length,
+      0
+    );
+    console.log("total questions is", totalQuestions);
+    const createQuizBody = {
+      quizTopic: "react-mid",
+      totalQuestions: totalQuestions,
+      quizTimeInMinutes: 60,
+      quizLinkExpireInHours: 3,
+      quizSetWiseInfo: createQuizSetWiseInfo,
+    };
+
+    createQuiz(createQuizBody)
+      .then((response: any) => {
+        console.log("creat quiz response is", response.data);
+        setQuizLink(
+          `http://localhost:3000/rms-aug/test/${response.data?.quizId}/${response.data?.quizLink}`
+        );
+      })
+      .catch((error: any) => console.log("Error in create quiz", error));
+  };
+
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text).then(
+      function () {
+        // setCopied(true);
+      },
+      function (err) {
+        console.error("Could not copy text: ", err);
+      }
+    );
+  };
 
   return (
     <>
@@ -406,6 +450,33 @@ const SearchQuestionSets = () => {
         <Box>
           <Button variant="contained">Preview</Button>
         </Box>
+        <Box>
+          <Button variant="contained" onClick={createQuizfromBody}>
+            Creat Quiz
+          </Button>
+        </Box>
+
+        {quizLink && (
+          <Box className="box-link">
+            <Typography>{`Test Link :`}</Typography>
+            <Box className="test-link">
+              <Typography>{quizLink}</Typography>
+              <Button
+                className="copy"
+                variant="outlined"
+                onClick={() => copyToClipboard(quizLink)}
+              >
+                <SvgIcon
+                  className="icon"
+                  // sx={{ marginLeft: -1 }}
+                  component={ContentCopyIcon}
+                  inheritViewBox
+                />
+                Copy
+              </Button>
+            </Box>
+          </Box>
+        )}
       </Box>
     </>
   );
