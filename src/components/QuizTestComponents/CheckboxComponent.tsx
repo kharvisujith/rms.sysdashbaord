@@ -17,7 +17,7 @@ const CheckboxComponent = (props: any) => {
       const result = selectedAnswers.filter((cur: any) => {
         return (
           cur.subjectName === questionData.subjectName &&
-          cur.setNumber === questionData.setNumber &&
+          cur.version === questionData.version &&
           cur.quizAnswers.find((elem: any) => {
             return elem.questionId === questionData.questionId;
           })

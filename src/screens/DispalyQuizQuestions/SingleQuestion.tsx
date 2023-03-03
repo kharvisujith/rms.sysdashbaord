@@ -47,7 +47,7 @@ const SingleQuestion = (props: any) => {
     const existingId = selectedAnswers.filter((cur: any) => {
       return (
         cur.subjectName === questionData.subjectName &&
-        cur.setNumber === questionData.setNumber &&
+        cur.version === questionData.version &&
         cur.quizAnswers.find((elem: any) => {
           return elem.questionId === questionData.questionId;
         })
@@ -56,13 +56,13 @@ const SingleQuestion = (props: any) => {
     const existingSetAndSubject = selectedAnswers.filter((cur: any) => {
       return (
         cur.subjectName === questionData.subjectName &&
-        cur.setNumber === questionData.setNumber
+        cur.version === questionData.version
       );
     });
     const indexOFExistingSetAndSubject = selectedAnswers.findIndex(
       (obj: any) =>
         obj.subjectName === questionData.subjectName &&
-        obj.setNumber === questionData.setNumber
+        obj.version === questionData.version
     );
     if (indexOFExistingSetAndSubject !== -1) {
       var quizAnswerIndex = selectedAnswers[
@@ -96,7 +96,7 @@ const SingleQuestion = (props: any) => {
         ...prev,
         {
           subjectName: questionData.subjectName,
-          setNumber: questionData.setNumber,
+          version: questionData.version,
           quizAnswers: [
             {
               questionId: questionData.questionId,
@@ -126,7 +126,7 @@ const SingleQuestion = (props: any) => {
     const indexOFExistingSetAndSubject = selectedAnswers.findIndex(
       (obj: any) =>
         obj.subjectName === questionData.subjectName &&
-        obj.setNumber === questionData.setNumber
+        obj.version === questionData.version
     );
     let quizAnswerIndex;
     if (indexOFExistingSetAndSubject !== -1) {
@@ -182,7 +182,7 @@ const SingleQuestion = (props: any) => {
         ...prev,
         {
           subjectName: questionData.subjectName,
-          setNumber: questionData.setNumber,
+          version: questionData.version,
           quizAnswers: [
             {
               questionId: questionData.questionId,

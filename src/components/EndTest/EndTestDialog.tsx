@@ -34,7 +34,7 @@ const EndTestDialog = (props: any) => {
 
   const endTest = () => {
     setLoader(true);
-    setLoader(true);
+    // setLoader(true);
     const quizAnswerModel = {
       quizId: parseInt(quizId),
       totalQuestions: totalNumberOfQuestions,
@@ -44,6 +44,7 @@ const EndTestDialog = (props: any) => {
     };
     submitQuiz(quizAnswerModel)
       .then((response) => {
+        console.log(response.data,'submit quiz');
         Swal.fire({
           title: "Success",
           text: "Test Submitted Succesfully",
@@ -63,6 +64,9 @@ const EndTestDialog = (props: any) => {
         });
       })
       .catch((error) => {
+        setLoader(false);
+        setOpenEndDialog(false);
+        console.log('inside catch');
         Swal.fire({
           title: "error",
           text: "Failed to Submitt Test, Please Retry",

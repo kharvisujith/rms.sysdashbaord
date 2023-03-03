@@ -40,7 +40,7 @@ const AllSubmittedQuestionsAnswers = (props: any) => {
             <TableHead style={{ backgroundColor: "burlywood", color: "white" }}>
               <TableRow>
                 <TableCell>Subject Name</TableCell>
-                <TableCell>Set Number</TableCell>
+                <TableCell>Version Number</TableCell>
                 <TableCell>Total Questions</TableCell>
                 <TableCell>Answered</TableCell>
                 <TableCell>NotAnswered</TableCell>
