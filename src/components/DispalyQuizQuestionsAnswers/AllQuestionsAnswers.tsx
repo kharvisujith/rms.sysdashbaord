@@ -23,7 +23,7 @@ const AllQuestionsAnswers = (props: any) => {
         <Typography style={{ padding: 20, textAlign: "center" }}>
           <strong>{"SubjectName:"}&ensp;</strong>
           {`${quizSubjectInfo[0]?.subjectName.toString()}`}&emsp;
-          <strong>{"version:"}&ensp;</strong>
+          <strong>{"Version:"}&ensp;</strong>
           {`${quizSubjectInfo[0]?.version}`}&emsp;
           <strong>{"TotalQuestions:"}&ensp;</strong>
           {`${quizSubjectInfo.length}`}

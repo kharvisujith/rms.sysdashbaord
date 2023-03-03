@@ -98,14 +98,14 @@ const SubjectList = (props: any) => {
   };
   const handleTextChange = (e: any) => {
     setFormError({ ...formError, [e?.target.name]: false });
-    console.log('formerror');
+    console.log(formError,'formerror');
     const name = e.target.name;
     const value = e.target.value;
     if (subject === "ALL") {
       setUploadData((prev: any) => ({ ...prev, [name]: value }));
     } else {
       setUploadData({ [name]: value, subject: subject });
-      console.log(subject, 'data sub');
+      console.log(name, 'data sub');
     }
   };
 
@@ -138,8 +138,10 @@ const SubjectList = (props: any) => {
       });
   };
 
+ 
   const handleUploadClick = () => {
-    if (file && uploadData.version && uploadData.subject && uploadData.tags) {
+    if(uploadData.version && uploadData.subject && uploadData.tags && file) 
+    {
       console.log('inside if');
       setLoader(true);
       const formData = new FormData();
@@ -420,6 +422,12 @@ const SubjectList = (props: any) => {
                             .toString()
                             .toLowerCase()
                             .includes(name.toString().toLowerCase()) ||
+                            row.createdBy
+                            ?.toLowerCase()
+                            .includes(name.toLowerCase())  ||
+                            row.updatedBy
+                            ?.toLowerCase()
+                            .includes(name.toLowerCase()) ||
                           row.createdDate
                             ?.toLowerCase()
                             .includes(name.toLowerCase())
