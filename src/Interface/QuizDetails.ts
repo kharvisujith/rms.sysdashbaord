@@ -47,6 +47,7 @@ export interface subjectWiseQuizListResponse {
   updatedBy?: string;
   createdDate?: string;
   updatedDate?: string;
+  tag?: string;
 }
 
 export interface subjectwiseQuizAnswersResponse {
