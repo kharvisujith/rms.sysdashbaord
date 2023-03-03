@@ -124,3 +124,11 @@ export const getSubmittedQuizInfo = (qId: number) => {
 export const getSubmittedQuizDetailedInfo = (qId: number) => {
   return axiosClient.get(`quiz/interviewer/submitquizdetails/${qId}`);
 };
+
+export const getPreviewQuestionsForCreateQuiz = (requestBody: any) => {
+  return axiosClient.put(`quiz/SubjectExpert/questions/fetch`, requestBody, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+};

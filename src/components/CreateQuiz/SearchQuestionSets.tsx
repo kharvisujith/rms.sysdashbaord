@@ -11,11 +11,13 @@ import {
   AccordionSummary,
   Checkbox,
   SvgIcon,
+  Paper,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { useState } from "react";
 import {
   createQuiz,
+  getPreviewQuestionsForCreateQuiz,
   getSubjectwiseQuiz,
   getSubjectwiseQuizAnswers,
 } from "../../api/apiAgent";
@@ -33,6 +35,8 @@ import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { optionIds } from "../../utils/Utils";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import SelectQuestionsModal from "./SelectQuestionsModal";
+import PreviewQuestionsModal from "./PreviewQuestionsModal";
 
 const SearchQuestionSets = () => {
   const [searchText, setSearchText] = useState<string>();
@@ -40,15 +44,16 @@ const SearchQuestionSets = () => {
     subjectWiseQuizListResponse[]
   >([]);
 
-  const [newCreateQuizBody, setNewCreateQuizBody] = useState<
-    createQuizRequest[]
-  >([]);
-
   const [subjectSetQuestions, setSubjecSetQuestions] = useState<
     subjectwiseQuizAnswersResponse[]
   >([]);
 
   const [quizLink, setQuizLink] = useState<string>();
+
+  const [selectQuestionOpen, setSelectQuestionOpen] = useState<boolean>(false);
+  const [previewQuestionOpen, setPreviewQuestionOpen] =
+    useState<boolean>(false);
+  const [previewQuestionsData, setPreviewQuestionsData] = useState<any[]>([]);
 
   const handleSearchInputChange = (event: any) => {
     console.log("event is", event.target.value);
@@ -185,6 +190,7 @@ const SearchQuestionSets = () => {
     )
       .then((response: any) => {
         setSubjecSetQuestions(response.data);
+        console.log("reponse of preview open is", response.data);
       })
       .catch((error: any) => {
         // setLoader(false);
@@ -275,6 +281,28 @@ const SearchQuestionSets = () => {
     );
   };
 
+  const handleSelectQuestionsModalOpen = (
+    subjectDetails: subjectWiseQuizListResponse
+  ) => {
+    setSelectQuestionOpen(true);
+    fetchQuestionsForSetAndSubject(subjectDetails);
+  };
+
+  const handlePreviewQuestionModalOpen = () => {
+    setPreviewQuestionOpen(true);
+    console.log("value of request body is", createQuizSetWiseInfo);
+    getPreviewQuestionsForCreateQuiz(createQuizSetWiseInfo)
+      .then((response: any) => {
+        console.log("reponse in preview is", response.data);
+        setPreviewQuestionsData(response.data);
+      })
+      .catch((error: any) => {
+        console.log("Error in preview quiz", error);
+      });
+  };
+
+  console.log("value of body create quiz is", createQuizSetWiseInfo);
+
   return (
     <>
       <Box>
@@ -287,11 +315,7 @@ const SearchQuestionSets = () => {
               onChange={handleSearchInputChange}
               endAdornment={
                 <InputAdornment position="end">
-                  <IconButton
-                    //  aria-label="toggle password visibility"
-                    onClick={handleSearchQuestionSet}
-                    //  onMouseDown={handleMouseDownPassword}
-                  >
+                  <IconButton onClick={handleSearchQuestionSet}>
                     <SearchIcon />
                   </IconButton>
                 </InputAdornment>
@@ -299,150 +323,51 @@ const SearchQuestionSets = () => {
             />
           </FormControl>
         </Box>
+
         <Box className="search-result-container">
           {subjectwiseDetails.map(
             (subjectDetails: subjectWiseQuizListResponse, index: number) => (
-              <Box key={index} className="search-results">
-                <Accordion
-                  onChange={(e, expanded) => {
-                    if (expanded) {
-                      fetchQuestionsForSetAndSubject(subjectDetails);
-                    }
-                  }}
-                  className="accordion"
-                >
-                  <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                    <Box className="accordion-summary">
-                      <Typography>
-                        {" "}
-                        {`${subjectDetails.subjectName} contains ${
-                          subjectDetails.totalQuestionsCount
-                        } Questions, Created by ${"Test User"}, Tag - ${
-                          subjectDetails.subjectName
-                        } `}
-                      </Typography>
-                      {/* <Typography>Select</Typography> */}
-                    </Box>
-                  </AccordionSummary>
-                  <AccordionDetails>
-                    <Box>
-                      {subjectSetQuestions?.map(
-                        (
-                          obj: subjectwiseQuizAnswersResponse,
-                          index: number
-                        ) => (
-                          <Box key={index} className="questions-container">
-                            <Typography>{`${index + 1}.  ${
-                              obj.question
-                            }`}</Typography>
-                            <Checkbox
-                              checked={getQuestionIdFromNewCreateQuizBody(obj)}
-                              onChange={(event: any) =>
-                                handleCheckBoxChange(event, obj)
-                              }
-                              inputProps={{ "aria-label": "controlled" }}
-                              className="select-check-box"
-                            />
-
-                            {/* <Box className="options-container">
-                              <Typography>Options : </Typography>
-                              <Box className="options-box">
-                                {obj.questionOptions.map(
-                                  (cur: any, index: number) => (
-                                    <Typography
-                                      className="option"
-                                      key={index}
-                                    >{` ${optionIds[index]}.${cur} `}</Typography>
-                                  )
-                                )}
-                              </Box>
-                            </Box> */}
-
-                            {/* <Box className="options-container">
-                              <Typography>Answer</Typography>
-                              <Box className="options-box">
-                                {obj.questionAnswers.map(
-                                  (cur: any, index: number) => (
-                                    <Typography
-                                      className="option"
-                                      key={index}
-                                    >{` ${optionIds[index]}.${cur} `}</Typography>
-                                  )
-                                )}
-                              </Box>
-                            </Box> */}
-                          </Box>
-                        )
-                      )}
-                    </Box>
-                  </AccordionDetails>
-                </Accordion>
+              <Paper>
                 <Box>
-                  {getIndexFromNewCreateQuizBody(subjectDetails) ? (
-                    <IconButton
-                      onClick={() => handleDeletQuestionSet(subjectDetails)}
-                    >
-                      <DeleteIcon />
-                    </IconButton>
-                  ) : (
-                    <IconButton
-                      onClick={() => handleAddQuestionSet(subjectDetails)}
-                    >
-                      <AddIcon />
-                    </IconButton>
-                  )}
-                </Box>
-                {/* <IconButton
-                    onClick={() => handleAddQuestionSet(subjectDetails)}
-                    //  disabled={checkAddDisabled(subjectDetails)}
-                    disabled={addDisabled}
-                  >
-                    <AddIcon />
-                  </IconButton>
-                  <IconButton
-                    onClick={() => handleDeletQuestionSet(subjectDetails)}
-                    // disabled={checkDeleteDisabled(subjectDetails)}
-                    disabled={deleteDisabled}
-                  >
-                    <DeleteIcon />
-                  </IconButton>
-                </Box> */}
-
-                {/* <Box>
-                  <Typography variant="body2">
+                  <Typography>
+                    {" "}
                     {`${subjectDetails.subjectName} contains ${
                       subjectDetails.totalQuestionsCount
                     } Questions, Created by ${"Test User"}, Tag - ${
-                      subjectDetails.subjectName
-                    }`}
+                      subjectDetails.tag
+                    } `}
                   </Typography>
-                </Box>
 
-                <Box
-                  //  sx={{ display: "flex", alignItems: "center" }}
-                  className="button-container"
-                >
-                  <CheckCircleIcon className="tick-icon" />
-                  <Button
-                    variant="contained"
-                    className="add-button"
-                    onClick={() => handleAddQuestionSet(subjectDetails)}
-                  >
-                    Add
-                  </Button>
-                  <Button
-                    variant="contained"
-                    className="add-button"
-                    onClick={() => handleDeletQuestionSet(subjectDetails)}
-                  >
-                    Delete
-                  </Button>
-                </Box> */}
-              </Box>
+                  <Box>
+                    <Button
+                      onClick={() =>
+                        handleSelectQuestionsModalOpen(subjectDetails)
+                      }
+                    >
+                      Select Questions
+                    </Button>
+                    {getIndexFromNewCreateQuizBody(subjectDetails) ? (
+                      <Button
+                        //  variant="contained"
+                        onClick={() => handleDeletQuestionSet(subjectDetails)}
+                      >
+                        Remove ALL
+                      </Button>
+                    ) : (
+                      <Button
+                        // variant="contained"
+                        onClick={() => handleAddQuestionSet(subjectDetails)}
+                      >
+                        Add ALL
+                      </Button>
+                    )}
+                  </Box>
+                </Box>
+              </Paper>
             )
           )}
         </Box>
-        {newCreateQuizBody.length > 0 && (
+        {/* {newCreateQuizBody.length > 0 && (
           <Box>
             <Typography>Selected Sets</Typography>
             {newCreateQuizBody.map((obj: createQuizRequest, index: number) => (
@@ -451,7 +376,7 @@ const SearchQuestionSets = () => {
               } Questions`}</Typography>
             ))}
           </Box>
-        )}
+        )} */}
 
         {subjectwiseDetails?.length > 0 && (
           <Box
@@ -462,13 +387,17 @@ const SearchQuestionSets = () => {
               marginBottom: 5,
             }}
           >
-            <Button variant="contained" sx={{ marginRight: 5 }}>
+            <Button
+              variant="contained"
+              sx={{ marginRight: 5 }}
+              onClick={() => handlePreviewQuestionModalOpen()}
+            >
               Preview
             </Button>
 
-            <Button variant="contained" onClick={createQuizfromBody}>
+            {/* <Button variant="contained" onClick={createQuizfromBody}>
               Creat Quiz
-            </Button>
+            </Button> */}
           </Box>
         )}
 
@@ -484,7 +413,6 @@ const SearchQuestionSets = () => {
               >
                 <SvgIcon
                   className="icon"
-                  // sx={{ marginLeft: -1 }}
                   component={ContentCopyIcon}
                   inheritViewBox
                 />
@@ -493,6 +421,29 @@ const SearchQuestionSets = () => {
             </Box>
           </Box>
         )}
+        <SelectQuestionsModal
+          selectQuestionOpen={selectQuestionOpen}
+          setSelectQuestionOpen={setSelectQuestionOpen}
+          subjectSetQuestions={subjectSetQuestions}
+          handleCheckBoxChange={handleCheckBoxChange}
+          getQuestionIdFromNewCreateQuizBody={
+            getQuestionIdFromNewCreateQuizBody
+          }
+        />
+        <PreviewQuestionsModal
+          previewQuestionOpen={previewQuestionOpen}
+          setPreviewQuestionOpen={setPreviewQuestionOpen}
+          previewQuestionsData={previewQuestionsData}
+          setPreviewQuestionsData={setPreviewQuestionsData}
+          handleCheckBoxChange={handleCheckBoxChange}
+          getQuestionIdFromNewCreateQuizBody={
+            getQuestionIdFromNewCreateQuizBody
+          }
+          createQuizSetWiseInfo={createQuizSetWiseInfo}
+          setCreateQuizSetWiseInfo={setCreateQuizSetWiseInfo}
+          setQuizLink={setQuizLink}
+          setSubjectwiseDeatails={setSubjectwiseDeatails}
+        />
       </Box>
     </>
   );
