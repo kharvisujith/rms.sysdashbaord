@@ -347,16 +347,17 @@ const [name, setName] = useState<any[]>([]);
                         handleSelectQuestionsModalOpen(subjectDetails)
                       }
                     >
-                      Select Questions
+                      Edit
                     </Button>
                     {getIndexFromNewCreateQuizBody(subjectDetails) ? (
                       <Button
                         //  variant="contained"
                         onClick={() => handleDeletQuestionSet(subjectDetails)}
                       >
-                        Remove ALL
+                        Delete
                       </Button>
-                    ) : (
+                    ) 
+                    : (
                       <Button
                         // variant="contained"
                         onClick={() => handleAddQuestionSet(subjectDetails)}
