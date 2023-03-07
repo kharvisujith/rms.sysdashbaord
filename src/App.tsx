@@ -8,6 +8,7 @@ import SubjectOptions from "./screens/subjectExpert/SubjectExpert";
 import CandidateInfo from "./screens/Candidate/CandidateInfo";
 import CreateQuiz from "./screens/CreateQuiz/CreateQuiz";
 import SubmittedQuiz from "./screens/SubmittedQuiz/SubmittedQuiz";
+import SubjectExpertQuestions from "./components/SubjectExpertComponents/SubjectExpertQuestions";
 
 const App = () => {
   const [role, setRole] =
@@ -50,6 +51,10 @@ const App = () => {
           <Routes>
             <Route
               path="/"
+              element={<SubjectExpertQuestions role={role} setRole={setRole} />}
+            />
+            <Route
+              path="/subjectexpert"
               element={<SubjectOptions role={role} setRole={setRole} />}
             />
             <Route path="*" element={<PageNotFound />} />

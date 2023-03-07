@@ -140,7 +140,7 @@ const SubjectList = (props: any) => {
 
  
   const handleUploadClick = () => {
-    if(uploadData.version && uploadData.subject && uploadData.tags && file) 
+    if(uploadData.version && uploadData.subject && file) 
     {
       console.log('inside if');
       setLoader(true);
@@ -150,7 +150,7 @@ const SubjectList = (props: any) => {
       upLoadExcel(uploadData.version, uploadData.subject, uploadData.tags, formData)
         .then((res) => res.data)
         .then((res) => {
-          setLoader(false);
+           setLoader(false);
           setOpenFileUpload(false);
           subjectwiseQuizDetails(subject);
           console.log(subject, 'subj data');
@@ -331,6 +331,7 @@ const SubjectList = (props: any) => {
             >
               Upload Question Set
             </Button>
+            
             <Box className="search-box">
               <OutlinedInput
                 className="search-input"

@@ -18,6 +18,7 @@ import { useState } from "react";
 import {
   createQuiz,
   getPreviewQuestionsForCreateQuiz,
+  getSerchForCreateQuiz,
   getSubjectwiseQuiz,
   getSubjectwiseQuizAnswers,
 } from "../../api/apiAgent";
@@ -37,13 +38,14 @@ import { optionIds } from "../../utils/Utils";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import SelectQuestionsModal from "./SelectQuestionsModal";
 import PreviewQuestionsModal from "./PreviewQuestionsModal";
+import { string } from "prop-types";
 
 const SearchQuestionSets = () => {
   const [searchText, setSearchText] = useState<string>();
   const [subjectwiseDetails, setSubjectwiseDeatails] = useState<
     subjectWiseQuizListResponse[]
   >([]);
-
+const [name, setName] = useState<any[]>([]);
   const [subjectSetQuestions, setSubjecSetQuestions] = useState<
     subjectwiseQuizAnswersResponse[]
   >([]);
@@ -58,6 +60,7 @@ const SearchQuestionSets = () => {
   const handleSearchInputChange = (event: any) => {
     console.log("event is", event.target.value);
     setSearchText(event.target.value);
+    console.log(searchText, 'search');
   };
 
   const handleSearchQuestionSet = () => {
@@ -186,7 +189,7 @@ const SearchQuestionSets = () => {
   ) => {
     getSubjectwiseQuizAnswers(
       subjectDetails.version,
-      subjectDetails.subjectName
+      subjectDetails.subjectName,
     )
       .then((response: any) => {
         setSubjecSetQuestions(response.data);

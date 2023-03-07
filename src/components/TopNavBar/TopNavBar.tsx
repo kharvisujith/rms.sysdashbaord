@@ -245,14 +245,15 @@ const TopNavBar = (props: any) => {
                   </Select>
                 </FormControl>
 
-                {/* {settings.map((setting) => ( */}
+                {settings.map((setting) => (
                   <MenuItem  onClick={handleCloseUserMenu}>
+                  <Typography textAlign="center">{setting}</Typography> 
                   <IconButton>
                     <LogoutIcon />
                   </IconButton>
                     {/* <Typography textAlign="center">{setting}</Typography> */}
                   </MenuItem>
-                {/* ))} */}
+                ))}
                 
               </Menu>
             </Box>
