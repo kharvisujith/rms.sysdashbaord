@@ -392,7 +392,6 @@ const SingleQuestion = (props: any) => {
         </Box>
         <Box className="end-test-box">
           <Button
-            color="error"
             variant="contained"
             onClick={() => {
               setOpenEndDialog(true);

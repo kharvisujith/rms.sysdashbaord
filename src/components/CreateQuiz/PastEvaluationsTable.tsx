@@ -110,7 +110,7 @@ const PastEvaluationsTable = (props: any) => {
     <>
       <Box>
         <Paper>
-          <Typography variant="h5" className="table-title">
+          <Typography variant="h6" className="table-title">
             {`Past Results`}
           </Typography>
 

@@ -12,6 +12,7 @@ import {
   Checkbox,
   SvgIcon,
   Paper,
+  Chip,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { useState } from "react";
@@ -33,6 +34,9 @@ import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import SelectQuestionsModal from "./SelectQuestionsModal";
 import PreviewQuestionsModal from "./PreviewQuestionsModal";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import Card from "@mui/material/Card";
+import CardActions from "@mui/material/CardActions";
+import CardContent from "@mui/material/CardContent";
 
 const SearchQuestionSets = () => {
   const [createQuizSetWiseInfo, setCreateQuizSetWiseInfo] = useState<any>([]);
@@ -324,7 +328,7 @@ const SearchQuestionSets = () => {
 
   return (
     <>
-      <Box>
+      <Box className="search-main-container">
         <Box>
           <FormControl sx={{ m: 1, width: "25ch" }} variant="standard">
             <InputLabel htmlFor="search">Search Question Set For</InputLabel>
@@ -363,12 +367,16 @@ const SearchQuestionSets = () => {
                       {checkForSubjectAndVersion(
                         subjectDetails.subjectName,
                         subjectDetails.version
-                      ) && <CheckCircleIcon sx={{ color: "green" }} />}
+                      ) && (
+                        <IconButton size="small">
+                          <CheckCircleIcon className="icon" fontSize="small" />
+                        </IconButton>
+                      )}
                     </Box>
 
                     <Box className="search-buttons">
                       <Button
-                        variant="contained"
+                        variant="outlined"
                         onClick={() =>
                           handleSelectQuestionsModalOpen(subjectDetails)
                         }
@@ -377,14 +385,14 @@ const SearchQuestionSets = () => {
                       </Button>
                       {getIndexFromNewCreateQuizBody(subjectDetails) ? (
                         <Button
-                          variant="contained"
+                          variant="outlined"
                           onClick={() => handleDeletQuestionSet(subjectDetails)}
                         >
                           Remove ALL
                         </Button>
                       ) : (
                         <Button
-                          variant="contained"
+                          variant="outlined"
                           onClick={() => handleAddQuestionSet(subjectDetails)}
                         >
                           Add ALL
@@ -397,32 +405,57 @@ const SearchQuestionSets = () => {
             )}
         </Box>
         {createQuizSetWiseInfo.length > 0 && (
-          <Box>
-            <Typography>Selected Sets</Typography>
-            {createQuizSetWiseInfo.map((obj: any, index: number) => (
-              <Typography key={index}>{`${index + 1}. ${obj.subjectName} - ${
-                obj.questionIds.length
-              } Questions`}</Typography>
-            ))}
+          <Box
+          // sx={{
+          //   display: "flex",
+          //   justifyContent: "center",
+          //   width: "100%",
+          //   // border: "2px solid red",
+          // }}
+          >
+            <Box
+              // sx={{
+              //   display: "flex",
+              //   flexDirection: "column",
+              //   justifyContent: "center",
+              //   alignItems: "center",
+              // }}
+              className="selected-sets-box"
+            >
+              <Typography variant="h6">Selected Question Sets</Typography>
+              <Box className="selected-sets">
+                <Paper className="selected-tags-container">
+                  {createQuizSetWiseInfo.map((obj: any, index: number) => (
+                    <Chip
+                      label={`${obj.subjectName} - ${obj.questionIds.length} Questions`}
+                      key={index}
+                      size="small"
+                      className="tagname"
+                      // onClick={() => handleTagsClick("react")}
+                    />
+                  ))}
+                </Paper>
+              </Box>
+            </Box>
           </Box>
         )}
 
-        {/* {createQuizSetWiseInfo?.length > 0 && ( */}
-        <Box className="preview-button-contaner">
-          <Button
-            variant="contained"
-            onClick={() => handlePreviewQuestionModalOpen()}
-            disabled={createQuizSetWiseInfo.length > 0 ? false : true}
-            className="button"
-          >
-            Preview
-          </Button>
+        {createQuizSetWiseInfo?.length > 0 && (
+          <Box className="preview-button-contaner">
+            <Button
+              variant="contained"
+              onClick={() => handlePreviewQuestionModalOpen()}
+              disabled={createQuizSetWiseInfo.length > 0 ? false : true}
+              className="preview-button"
+            >
+              Preview
+            </Button>
 
-          {/* <Button variant="contained" onClick={createQuizfromBody}>
+            {/* <Button variant="contained" onClick={createQuizfromBody}>
               Creat Quiz
             </Button> */}
-        </Box>
-        {/* )} */}
+          </Box>
+        )}
 
         {quizLink && (
           <Box className="box-link">

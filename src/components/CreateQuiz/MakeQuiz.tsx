@@ -32,13 +32,7 @@ import InputAdornment from "@mui/material/InputAdornment";
 import { VisibilityOff, Visibility } from "@material-ui/icons";
 import SearchQuestionSets from "./SearchQuestionSets";
 
-const favSub = [
-  "React Beginer",
-  "kek",
-  "peek",
-  "c# Advanced",
-  "javascript medium",
-];
+const favSub = ["React", "javascript", "c#"];
 
 const MakeQuiz = () => {
   const [pastEvaluationsData, setpastEvaluationsData] = useState<
@@ -67,7 +61,7 @@ const MakeQuiz = () => {
         <Box className="favorites-container">
           <Grid container className="tags-box" spacing={2}>
             <Grid item xs={10} md={4}>
-              <Typography>Favorites</Typography>
+              <Typography variant="h6">Favorites</Typography>
               <Paper className="tags-container">
                 {favSub.map((tagname: string, index: number) => (
                   <Chip

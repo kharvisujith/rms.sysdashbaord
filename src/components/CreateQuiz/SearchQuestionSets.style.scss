@@ -1,3 +1,7 @@
+.search-main-container {
+  margin-top: 1rem;
+}
+
 .search-result-container {
   .search-result {
     padding: 0.5rem;
@@ -18,6 +22,10 @@
     }
     .selected-icon {
       min-width: 3rem;
+
+      .icon {
+        color: green;
+      }
     }
     .buttons-container {
       display: flex;
@@ -78,10 +86,26 @@
 .preview-button-contaner {
   display: flex;
   justify-content: center;
-  margin: 1rem;
+  margin: 1.5rem;
 
-  .button {
+  .preview-button {
     width: 20%;
+  }
+}
+
+.selected-sets-box {
+  margin-top: 1rem;
+  .selected-sets {
+    display: flex;
+    width: 100%;
+    .selected-tags-container {
+      min-width: 50% !important;
+      padding: 1rem;
+      .tagname {
+        margin: 0.3rem;
+        text-transform: capitalize;
+      }
+    }
   }
 }
 

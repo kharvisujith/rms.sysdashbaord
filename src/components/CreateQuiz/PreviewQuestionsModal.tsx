@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   Checkbox,
+  IconButton,
   Popover,
   TextField,
   Typography,
@@ -11,6 +12,11 @@ import ReactModal from "react-modal";
 import { createQuiz } from "../../api/apiAgent";
 import { customStylesModal } from "../../screens/SubmittedQuiz/SubmittedQuiz";
 import "./PreviewQuestionsModal.style.scss";
+import EditIcon from "@mui/icons-material/Edit";
+import UpdateIcon from "@mui/icons-material/Update";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import AddIcon from "@mui/icons-material/Add";
+import CloseIcon from "@mui/icons-material/Close";
 
 const PreviewQuestionsModal = (props: any) => {
   const {
@@ -184,10 +190,11 @@ const PreviewQuestionsModal = (props: any) => {
                       />
 
                       <Button
-                        variant="contained"
+                        variant={quizTopic ? "outlined" : "contained"}
                         className="button"
                         onClick={handleAddTopic}
                         disabled={quizTopic ? false : true}
+                        endIcon={addedTopic ? <UpdateIcon /> : <AddIcon />}
                       >
                         {addedTopic ? "Update" : "Add"}
                       </Button>
@@ -211,9 +218,10 @@ const PreviewQuestionsModal = (props: any) => {
                       </Box>
 
                       <Button
-                        variant="contained"
+                        variant="outlined"
                         className="button"
                         onClick={handleEditTestTime}
+                        endIcon={<EditIcon />}
                       >
                         Edit
                       </Button>
@@ -235,7 +243,12 @@ const PreviewQuestionsModal = (props: any) => {
                             value={editTimeChange.quizTime}
                             onChange={handleEditOnChange}
                           />
-                          <Button name="testTime" onClick={handleEditUpdate}>
+                          <Button
+                            name="testTime"
+                            onClick={handleEditUpdate}
+                            // endIcon={<UpdateIcon />}
+                            variant="outlined"
+                          >
                             Update
                           </Button>
                         </Box>
@@ -248,9 +261,10 @@ const PreviewQuestionsModal = (props: any) => {
                       </Box>
 
                       <Button
-                        variant="contained"
+                        variant="outlined"
                         className="button"
                         onClick={handleEditTestExpiry}
+                        endIcon={<EditIcon />}
                       >
                         Edit
                       </Button>
@@ -300,17 +314,19 @@ const PreviewQuestionsModal = (props: any) => {
 
         <Box className="handle-modal">
           <Box>
-            <Button variant="contained" onClick={handlePreviewPageChange}>
+            <Button variant="outlined" onClick={handlePreviewPageChange}>
               {currentPage === 1 ? "Next" : "Back"}
             </Button>
           </Box>
 
           <Button
             variant="contained"
+            className="close-button"
             onClick={() => {
               setPreviewQuestionOpen(false);
               setCurrentPage(1);
             }}
+            endIcon={<CloseIcon />}
           >
             Close
           </Button>
