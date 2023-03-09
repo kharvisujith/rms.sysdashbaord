@@ -1,12 +1,27 @@
 .search-result-container {
-  // min-width: 70%;
-  // border: 2px solid red;
-  //max-height: 20vh;
-  .search-results {
-    width: 100%;
+  .search-result {
+    padding: 0.5rem;
     display: flex;
-    // border: 2px solid green;
-    // align-items: center;
+    justify-content: flex-start;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    //border: 2px solid green;
+
+    .search-text {
+      width: 60%;
+    }
+    .search-buttons {
+      width: 40%;
+      display: flex;
+      justify-content: flex-start;
+      gap: 2rem;
+    }
+    .selected-icon {
+      min-width: 3rem;
+    }
+    .buttons-container {
+      display: flex;
+    }
 
     .accordion {
       width: 90%;
@@ -57,6 +72,16 @@
         }
       }
     }
+  }
+}
+
+.preview-button-contaner {
+  display: flex;
+  justify-content: center;
+  margin: 1rem;
+
+  .button {
+    width: 20%;
   }
 }
 

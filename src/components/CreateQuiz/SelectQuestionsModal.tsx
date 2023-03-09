@@ -27,20 +27,32 @@ const SelectQuestionsModal = (props: any) => {
         style={customStylesModal}
       >
         <Box>
-          {subjectSetQuestions?.map(
-            (obj: subjectwiseQuizAnswersResponse, index: number) => (
-              <Box key={index} className="questions-container">
-                <Typography>{`${index + 1}.  ${obj.question}`}</Typography>
-                <Checkbox
-                  checked={getQuestionIdFromNewCreateQuizBody(obj)}
-                  onChange={(event: any) => handleCheckBoxChange(event, obj)}
-                  inputProps={{ "aria-label": "controlled" }}
-                  className="select-check-box"
-                />
-              </Box>
-            )
-          )}
-          <Button onClick={() => setSelectQuestionOpen(false)}>Close</Button>
+          <Box className="modal-container">
+            {subjectSetQuestions?.map(
+              (obj: subjectwiseQuizAnswersResponse, index: number) => (
+                <Box key={index} className="questions">
+                  <Typography className="text">{`${index + 1}.  ${
+                    obj.question
+                  }`}</Typography>
+                  <Checkbox
+                    checked={getQuestionIdFromNewCreateQuizBody(obj)}
+                    onChange={(event: any) => handleCheckBoxChange(event, obj)}
+                    inputProps={{ "aria-label": "controlled" }}
+                    className="select-check-box"
+                  />
+                </Box>
+              )
+            )}
+          </Box>
+          <Box className="close-modal-button">
+            <Button
+              variant="contained"
+              onClick={() => setSelectQuestionOpen(false)}
+            >
+              {/* Close */}
+              Save
+            </Button>
+          </Box>
         </Box>
       </ReactModal>
       {/* </Modal> */}
