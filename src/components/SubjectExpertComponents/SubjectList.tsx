@@ -140,7 +140,7 @@ const SubjectList = (props: any) => {
 
  
   const handleUploadClick = () => {
-    if(uploadData.version && uploadData.subject && file) 
+    if(uploadData.version && uploadData.subject && uploadData.tags && file) 
     {
       console.log('inside if');
       setLoader(true);

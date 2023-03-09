@@ -18,7 +18,6 @@ import { useState } from "react";
 import {
   createQuiz,
   getPreviewQuestionsForCreateQuiz,
-  getSerchForCreateQuiz,
   getSubjectwiseQuiz,
   getSubjectwiseQuizAnswers,
 } from "../../api/apiAgent";
@@ -38,14 +37,13 @@ import { optionIds } from "../../utils/Utils";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import SelectQuestionsModal from "./SelectQuestionsModal";
 import PreviewQuestionsModal from "./PreviewQuestionsModal";
-import { string } from "prop-types";
 
 const SearchQuestionSets = () => {
   const [searchText, setSearchText] = useState<string>();
   const [subjectwiseDetails, setSubjectwiseDeatails] = useState<
     subjectWiseQuizListResponse[]
   >([]);
-const [name, setName] = useState<any[]>([]);
+
   const [subjectSetQuestions, setSubjecSetQuestions] = useState<
     subjectwiseQuizAnswersResponse[]
   >([]);
@@ -60,7 +58,6 @@ const [name, setName] = useState<any[]>([]);
   const handleSearchInputChange = (event: any) => {
     console.log("event is", event.target.value);
     setSearchText(event.target.value);
-    console.log(searchText, 'search');
   };
 
   const handleSearchQuestionSet = () => {
@@ -189,7 +186,7 @@ const [name, setName] = useState<any[]>([]);
   ) => {
     getSubjectwiseQuizAnswers(
       subjectDetails.version,
-      subjectDetails.subjectName,
+      subjectDetails.subjectName
     )
       .then((response: any) => {
         setSubjecSetQuestions(response.data);
@@ -347,17 +344,16 @@ const [name, setName] = useState<any[]>([]);
                         handleSelectQuestionsModalOpen(subjectDetails)
                       }
                     >
-                      Edit
+                      Select Questions
                     </Button>
                     {getIndexFromNewCreateQuizBody(subjectDetails) ? (
                       <Button
                         //  variant="contained"
                         onClick={() => handleDeletQuestionSet(subjectDetails)}
                       >
-                        Delete
+                        Remove ALL
                       </Button>
-                    ) 
-                    : (
+                    ) : (
                       <Button
                         // variant="contained"
                         onClick={() => handleAddQuestionSet(subjectDetails)}

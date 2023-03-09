@@ -24,19 +24,19 @@ const [loader, setLoader] = useState<boolean>(false);
       );
 
 
-      const StartTestViewButtonHandler = (row: any) => {
-        setOpenTestModal(true);
-        setLoader(true);
-        getSubjectwiseQuizAnswers(row.version, row.subjectName)
-          .then((response: any) => {
-            setSubjectAnswerList(response.data);
-            setLoader(false);
-          })
-          .catch((error: any) => {
-            setLoader(false);
-            console.log("error in subjwise answersapi");
-          });
-      };
+    //   const StartTestViewButtonHandler = (row: any) => {
+    //     setOpenTestModal(true);
+    //     setLoader(true);
+    //     getSubjectwiseQuizAnswers(row.version, row.subjectName)
+    //       .then((response: any) => {
+    //         setSubjectAnswerList(response.data);
+    //         setLoader(false);
+    //       })
+    //       .catch((error: any) => {
+    //         setLoader(false);
+    //         console.log("error in subjwise answersapi");
+    //       });
+    //   };
       const endTestButtonHandler = () => {
         setOpenTestModal(false);
         setLoader(false);

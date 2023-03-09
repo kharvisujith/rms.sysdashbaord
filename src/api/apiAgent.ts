@@ -140,3 +140,11 @@ export const getSerchForCreateQuiz = (requestBody: any) => {
     },
   });
 };
+
+export const deleteSetForSubjectExpert = (version: string, subject: string) => {
+  return axiosClient.delete(`quiz/SubjectExpert?version=${version}&subject=${subject}`);
+};
+
+export const deleteQquestionsForSubjectExpert = (questionId: number, version: string, subject: string) => {
+  return axiosClient.delete(`quiz/SubjectExpert?questionId=${questionId}&version=${version}&subject=${subject}`);
+};
