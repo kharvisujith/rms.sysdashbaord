@@ -10,14 +10,11 @@
   .add-topic-container {
     display: flex;
     justify-content: flex-start;
-    //  border: 2px solid red;
     align-items: flex-end;
 
     .text-field {
       min-width: 21rem !important;
       margin-right: 2rem;
-      // border: 2px solid black;
-      // height: 1rem !important;
     }
   }
 }
@@ -49,23 +46,12 @@
   align-items: center;
 }
 
-// .questions {
-//   display: flex;
-//   align-items: center;
-// }
-// .questions-container {
-//   min-height: 65vh;
-//   // border: 2px solid blue;
-// }
 .generate-link-btn {
   margin-left: 5rem;
 
   .generate-btn {
     width: 20%;
   }
-
-  // display: flex;
-  // justify-content: space-around;
 }
 .modal-navigate-button {
   margin-top: 2rem;
@@ -75,18 +61,6 @@
   }
 }
 
-// .handle-modal-container {
-//   display: flex;
-//   justify-content: flex-start;
-//   margin-top: 1rem;
-
-//   .back-btn {
-//     margin-right: 45%;
-//   }
-//   .next-btn {
-//     margin-left: 90%;
-//   }
-// }
 .handle-modal {
   display: flex;
   justify-content: space-between;

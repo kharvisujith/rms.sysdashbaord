@@ -1,7 +1,7 @@
 import { Modal, Box, Typography, Paper, Checkbox, Button } from "@mui/material";
 import ReactModal from "react-modal";
-import { subjectwiseQuizAnswersResponse } from "../../Interface/QuizDetails";
-import { customStylesModal } from "../../screens/SubmittedQuiz/SubmittedQuiz";
+import { subjectwiseQuizAnswersResponse } from "../../../Interface/QuizDetails";
+import { customStylesModal } from "../../../screens/SubmittedQuiz/SubmittedQuiz";
 import "./SelectQuestionsModal.style.scss";
 
 const SelectQuestionsModal = (props: any) => {
@@ -14,12 +14,6 @@ const SelectQuestionsModal = (props: any) => {
   } = props;
   return (
     <>
-      {/* <Modal
-        open={previewOpen}
-        onClose={() => setPreviewOpen(false)}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      > */}
       <ReactModal
         isOpen={selectQuestionOpen}
         contentLabel="Minimal Modal Example"
@@ -55,7 +49,6 @@ const SelectQuestionsModal = (props: any) => {
           </Box>
         </Box>
       </ReactModal>
-      {/* </Modal> */}
     </>
   );
 };

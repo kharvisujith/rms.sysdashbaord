@@ -17,15 +17,15 @@ import {
   getSubmittedQuizDetailedInfo,
   getSubmittedQuizInfo,
   getTotalSubmittedQuizInfo,
-} from "../../api/apiAgent";
+} from "../../../api/apiAgent";
 import {
   Order,
   submittedQuizAnswersResponse,
   submittedQuizDetailedInfoResponse,
-} from "../../Interface/QuizDetails";
-import { submittedQuizTableColumns } from "../../screens/SubmittedQuiz/SubmittedQuizTableColumn";
-import { getComparator } from "../../utils/TableSortFunctions";
-import ReviewAnswersModal from "./ReviewAnswersModal";
+} from "../../../Interface/QuizDetails";
+import { submittedQuizTableColumns } from "../../../screens/SubmittedQuiz/SubmittedQuizTableColumn";
+import { getComparator } from "../../../utils/TableSortFunctions";
+import ReviewAnswersModal from "../ReviewAnswers/ReviewAnswersModal";
 
 const PastEvaluationsTable = (props: any) => {
   const { pastEvaluationsData, setpastEvaluationsData } = props;
@@ -96,7 +96,6 @@ const PastEvaluationsTable = (props: any) => {
   useEffect(() => {
     getTotalSubmittedQuizInfo()
       .then((response: any) => {
-        //// setTotalSubmittedQuizInfoList(response.data);
         // setLoader(false);
         setpastEvaluationsData(response.data);
       })
@@ -132,13 +131,6 @@ const PastEvaluationsTable = (props: any) => {
                           onClick={createSortHandler(column.id)}
                         >
                           {column.label}
-                          {/* {orderBy === column.id ? (
-                          <Box component="span" sx={visuallyHidden}>
-                            {order === "desc"
-                              ? "sorted descending"
-                              : "sorted ascending"}
-                          </Box>
-                        ) : null} */}
                         </TableSortLabel>
                       </TableCell>
                     )
@@ -196,28 +188,6 @@ const PastEvaluationsTable = (props: any) => {
             onPageChange={handleChangePage}
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
-          {/* {loader ? (
-              <Box className="table-loader">
-                <CircularProgress />
-              </Box>
-            ) : null} */}
-
-          {/* {totalSubmittedQuizInfoList.length < 1 && !loader && (
-              <Box className="table-loader">
-                <Typography>No Data Available</Typography>
-              </Box>
-            )} */}
-          {/* {loader || totalSubmittedQuizInfoList.length > 0 ? ( */}
-          {/* <TablePagination
-                rowsPerPageOptions={[10, 25, 100]}
-                component="div"
-                count={totalSubmittedQuizInfoList.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-              /> */}
-          {/* ) : null} */}
         </Paper>
 
         <ReviewAnswersModal

@@ -1,7 +1,7 @@
-import { Box, CircularProgress, Button } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import ReactModal from "react-modal";
-import { customStylesModal } from "../../screens/SubmittedQuiz/SubmittedQuiz";
-import AllSubmittedQuestionsAnswers from "../DispalyQuizCandidateSubmittedQuestionsAnswers/AllSubmittedQuestionsAnswers";
+import { customStylesModal } from "../../../screens/SubmittedQuiz/SubmittedQuiz";
+import AllSubmittedQuestionsAnswers from "../../DispalyQuizCandidateSubmittedQuestionsAnswers/AllSubmittedQuestionsAnswers";
 
 const ReviewAnswersModal = (props: any) => {
   const {
@@ -19,17 +19,10 @@ const ReviewAnswersModal = (props: any) => {
         style={customStylesModal}
       >
         <>
-          {/* {loader ? (
-              <Box className="modal-loader">
-                <CircularProgress />
-              </Box>
-            ) : ( */}
           <AllSubmittedQuestionsAnswers
             quizSubjectInfo={quizSubjectInfo}
             totalQuizDetailedInfo={totalQuizDetailedInfo}
           />
-          {/* )} */}
-
           <Box style={{ display: "flex", justifyContent: "center" }}>
             <Button
               variant="contained"

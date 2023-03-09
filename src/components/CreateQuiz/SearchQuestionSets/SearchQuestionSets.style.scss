@@ -1,0 +1,126 @@
+.search-main-container {
+  margin-top: 1rem;
+
+  .search-input {
+    min-width: 8rem;
+    margin-bottom: 1rem;
+    margin-top: 1rem;
+  }
+
+  .search-result-container {
+    .search-result {
+      padding: 0.5rem;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      margin-bottom: 0.5rem;
+
+      .search-text {
+        width: 60%;
+      }
+      .search-buttons {
+        width: 40%;
+        display: flex;
+        justify-content: flex-start;
+        gap: 2rem;
+      }
+      .selected-icon {
+        min-width: 3rem;
+
+        .icon {
+          color: green;
+        }
+      }
+      .buttons-container {
+        display: flex;
+      }
+
+      .accordion {
+        width: 90%;
+
+        .accordion-summary {
+          display: flex;
+          justify-content: space-between !important;
+          text-align: center;
+          //  border: 2px solid yellow;
+          width: 100%;
+          margin-right: 13%;
+        }
+      }
+
+      .button-container {
+        display: flex;
+        align-items: center;
+        .tick-icon {
+          color: green !important;
+        }
+        .add-button {
+          padding-left: 2rem;
+          padding-right: 2rem;
+          margin-left: 0.6rem;
+        }
+      }
+
+      .questions-container {
+        //  margin-bottom: 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .select-check-box {
+          margin-right: 15%;
+        }
+        .options-container {
+          margin-left: 2rem;
+          display: flex;
+
+          .options-box {
+            margin-left: 1rem;
+            display: flex;
+            // margin-right: 2rem;
+            .option {
+              margin-right: 2rem;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .preview-button-contaner {
+    display: flex;
+    justify-content: center;
+    margin: 1.5rem;
+
+    .preview-button {
+      width: 20%;
+    }
+  }
+  .selected-sets-box {
+    margin-top: 1rem;
+    .selected-sets {
+      display: flex;
+      width: 100%;
+      .selected-tags-container {
+        min-width: 50% !important;
+        padding: 1rem;
+        .tagname {
+          margin: 0.3rem;
+          text-transform: capitalize;
+        }
+      }
+    }
+  }
+
+  .box-link {
+    margin-left: 5%;
+    margin-right: 5%;
+    margin-bottom: 2rem;
+
+    .test-link {
+      display: flex;
+      justify-content: space-around;
+      margin-left: 2rem;
+    }
+  }
+}

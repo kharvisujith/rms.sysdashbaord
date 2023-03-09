@@ -2,19 +2,17 @@ import {
   Box,
   Button,
   Checkbox,
-  IconButton,
   Popover,
   TextField,
   Typography,
 } from "@mui/material";
 import { useState } from "react";
 import ReactModal from "react-modal";
-import { createQuiz } from "../../api/apiAgent";
-import { customStylesModal } from "../../screens/SubmittedQuiz/SubmittedQuiz";
+import { createQuiz } from "../../../api/apiAgent";
+import { customStylesModal } from "../../../screens/SubmittedQuiz/SubmittedQuiz";
 import "./PreviewQuestionsModal.style.scss";
 import EditIcon from "@mui/icons-material/Edit";
 import UpdateIcon from "@mui/icons-material/Update";
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import AddIcon from "@mui/icons-material/Add";
 import CloseIcon from "@mui/icons-material/Close";
 
@@ -36,10 +34,6 @@ const PreviewQuestionsModal = (props: any) => {
   const [totalQuestionCount, setTotalQuestionCount] = useState<number>();
   const [quizTopic, setQuizTopic] = useState<string>();
   const [addedTopic, setAddedTopic] = useState<string>();
-  // const [assignedTime, setAssignedTime] = useState<any>({
-  //   testTime: 60,
-  //   LinkExpiryTime: 2,
-  // });
   const [assignedTestTime, setAssignedTestTime] = useState<number>(60);
   const [assignedTestExpiry, setAssignedTestExpiry] = useState<number>(2);
 
@@ -161,15 +155,6 @@ const PreviewQuestionsModal = (props: any) => {
                   )
                 )}
               </Box>
-              {/* <Box className="modal-navigate-button">
-                <Button
-                  //   className="button"
-                  variant="contained"
-                  onClick={handlePreviewPageChange}
-                >
-                  Next
-                </Button>
-              </Box> */}
             </>
           ) : (
             <>
@@ -246,7 +231,6 @@ const PreviewQuestionsModal = (props: any) => {
                           <Button
                             name="testTime"
                             onClick={handleEditUpdate}
-                            // endIcon={<UpdateIcon />}
                             variant="outlined"
                           >
                             Update

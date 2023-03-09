@@ -50,7 +50,7 @@
 // import { visuallyHidden } from "@mui/utils";
 // import { getComparator } from "../../utils/TableSortFunctions";
 
-import MakeQuiz from "../../components/CreateQuiz/MakeQuiz";
+import MakeQuiz from "../../components/CreateQuiz/MakeQuiz/MakeQuiz";
 import TopNavBar from "../../components/TopNavBar/TopNavBar";
 
 // const CreateQuiz = (props: any) => {

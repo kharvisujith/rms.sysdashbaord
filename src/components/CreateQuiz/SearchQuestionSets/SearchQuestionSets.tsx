@@ -6,10 +6,6 @@ import {
   InputAdornment,
   IconButton,
   Button,
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  Checkbox,
   SvgIcon,
   Paper,
   Chip,
@@ -17,26 +13,20 @@ import {
 import SearchIcon from "@mui/icons-material/Search";
 import { useState } from "react";
 import {
-  createQuiz,
   filterQuestionsSets,
   getPreviewQuestionsForCreateQuiz,
-  getSubjectwiseQuiz,
   getSubjectwiseQuizAnswers,
-} from "../../api/apiAgent";
+} from "../../../api/apiAgent";
 import {
-  createQuizRequest,
   subjectwiseQuizAnswersResponse,
   subjectWiseQuizListResponse,
-} from "../../Interface/QuizDetails";
+} from "../../../Interface/QuizDetails";
 import { Typography } from "@material-ui/core";
 import "./SearchQuestionSets.style.scss";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
-import SelectQuestionsModal from "./SelectQuestionsModal";
-import PreviewQuestionsModal from "./PreviewQuestionsModal";
+import SelectQuestionsModal from "../SelectQuestions/SelectQuestionsModal";
+import PreviewQuestionsModal from "../PreviewQuestions/PreviewQuestionsModal";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
-import CardContent from "@mui/material/CardContent";
 
 const SearchQuestionSets = () => {
   const [createQuizSetWiseInfo, setCreateQuizSetWiseInfo] = useState<any>([]);
@@ -73,15 +63,6 @@ const SearchQuestionSets = () => {
           console.log("error in subjwiseapi");
           // setLoader(false);
         });
-      // getSubjectwiseQuiz(searchText)
-      //   .then((response) => {
-      //     console.log("response of searc is", response.data);
-      //     setSubjectwiseDeatails(response.data);
-      //   })
-      // .catch((error: any) => {
-      //   console.log("error in subjwiseapi");
-      //   // setLoader(false);
-      // });
     }
   };
 
@@ -178,16 +159,6 @@ const SearchQuestionSets = () => {
     subjectDetails: subjectWiseQuizListResponse
   ) => {
     try {
-      // const existingIndexforold = newCreateQuizBody.findIndex(
-      //   (obj: any) =>
-      //     obj.subjectName === subjectDetails.subjectName &&
-      //     obj.version === subjectDetails.version
-      // );
-      // if (existingIndexforold !== -1) {
-      //   const newArr = [...newCreateQuizBody];
-      //   newArr.splice(existingIndexforold, 1);
-      //   setNewCreateQuizBody(newArr);
-
       // for new creatquiz body
       const existingIndex = createQuizSetWiseInfo.findIndex(
         (obj: any) =>
@@ -269,30 +240,6 @@ const SearchQuestionSets = () => {
   };
   console.log("new create body is", createQuizSetWiseInfo);
 
-  // const createQuizfromBody = () => {
-  //   const totalQuestions = createQuizSetWiseInfo.reduce(
-  //     (numOfElement: number, obj: any) => numOfElement + obj.questionIds.length,
-  //     0
-  //   );
-  //   console.log("total questions is", totalQuestions);
-  //   const createQuizBody = {
-  //     quizTopic: "react-mid",
-  //     totalQuestions: totalQuestions,
-  //     quizTimeInMinutes: 60,
-  //     quizLinkExpireInHours: 3,
-  //     quizSetWiseInfo: createQuizSetWiseInfo,
-  //   };
-
-  //   createQuiz(createQuizBody)
-  //     .then((response: any) => {
-  //       console.log("creat quiz response is", response.data);
-  //       setQuizLink(
-  //         `http://localhost:3000/rms-aug/test/${response.data?.quizId}/${response.data?.quizLink}`
-  //       );
-  //     })
-  //     .catch((error: any) => console.log("Error in create quiz", error));
-  // };
-
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text).then(
       function () {
@@ -330,7 +277,7 @@ const SearchQuestionSets = () => {
     <>
       <Box className="search-main-container">
         <Box>
-          <FormControl sx={{ m: 1, width: "25ch" }} variant="standard">
+          <FormControl className="search-input" variant="standard">
             <InputLabel htmlFor="search">Search Question Set For</InputLabel>
             <Input
               id="search"
@@ -405,23 +352,8 @@ const SearchQuestionSets = () => {
             )}
         </Box>
         {createQuizSetWiseInfo.length > 0 && (
-          <Box
-          // sx={{
-          //   display: "flex",
-          //   justifyContent: "center",
-          //   width: "100%",
-          //   // border: "2px solid red",
-          // }}
-          >
-            <Box
-              // sx={{
-              //   display: "flex",
-              //   flexDirection: "column",
-              //   justifyContent: "center",
-              //   alignItems: "center",
-              // }}
-              className="selected-sets-box"
-            >
+          <Box>
+            <Box className="selected-sets-box">
               <Typography variant="h6">Selected Question Sets</Typography>
               <Box className="selected-sets">
                 <Paper className="selected-tags-container">
@@ -450,10 +382,6 @@ const SearchQuestionSets = () => {
             >
               Preview
             </Button>
-
-            {/* <Button variant="contained" onClick={createQuizfromBody}>
-              Creat Quiz
-            </Button> */}
           </Box>
         )}
 
