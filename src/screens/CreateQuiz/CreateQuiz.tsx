@@ -171,16 +171,16 @@ import TopNavBar from "../../components/TopNavBar/TopNavBar";
 //       });
 //   };
 
-//   const copyToClipboard = (text: string) => {
-//     navigator.clipboard.writeText(text).then(
-//       function () {
-//         // setCopied(true);
-//       },
-//       function (err) {
-//         console.error("Could not copy text: ", err);
-//       }
-//     );
-//   };
+// const copyToClipboard = (text: string) => {
+//   navigator.clipboard.writeText(text).then(
+//     function () {
+//       // setCopied(true);
+//     },
+//     function (err) {
+//       console.error("Could not copy text: ", err);
+//     }
+//   );
+// };
 
 //   useEffect(() => {
 //     subjectwiseQuizDetails(subject);
