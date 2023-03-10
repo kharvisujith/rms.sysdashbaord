@@ -1,44 +1,13 @@
 import { Typography } from "@material-ui/core";
-import {
-  Box,
-  Button,
-  Chip,
-  CircularProgress,
-  FormControl,
-  Grid,
-  IconButton,
-  Input,
-  InputLabel,
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TablePagination,
-  TableRow,
-  TableSortLabel,
-  TextField,
-} from "@mui/material";
+import { Box, Button, Chip, Grid, Paper } from "@mui/material";
 import { useState } from "react";
-import { getTotalSubmittedQuizInfo } from "../../api/apiAgent";
-import { submittedQuizResponse } from "../../Interface/QuizDetails";
-import { getComparator } from "../../utils/TableSortFunctions";
-import { columns } from "../SubjectExpertComponents/QuestionSetsTableColumn";
+import { getTotalSubmittedQuizInfo } from "../../../api/apiAgent";
+import { submittedQuizResponse } from "../../../Interface/QuizDetails";
 import "./MakeQuiz.style.scss";
-import PastEvaluationsTable from "./PastEvaluationsTable";
-import SearchIcon from "@mui/icons-material/Search";
-import InputAdornment from "@mui/material/InputAdornment";
-import { VisibilityOff, Visibility } from "@material-ui/icons";
-import SearchQuestionSets from "./SearchQuestionSets";
+import PastEvaluationsTable from "../PastEvaluationsTable/PastEvaluationsTable";
+import SearchQuestionSets from "../SearchQuestionSets/SearchQuestionSets";
 
-const favSub = [
-  "React Beginer",
-  "kek",
-  "peek",
-  "c# Advanced",
-  "javascript medium",
-];
+const favSub = ["React", "javascript", "c#"];
 
 const MakeQuiz = () => {
   const [pastEvaluationsData, setpastEvaluationsData] = useState<
@@ -57,8 +26,6 @@ const MakeQuiz = () => {
         // setLoader(false);
         console.log("error in total quiz info api");
       });
-
-    // get the submitted quiz response for this particular tag and dispaly it in a table
   };
 
   return (
@@ -67,7 +34,7 @@ const MakeQuiz = () => {
         <Box className="favorites-container">
           <Grid container className="tags-box" spacing={2}>
             <Grid item xs={10} md={4}>
-              <Typography>Favorites</Typography>
+              <Typography variant="h6">Favorites</Typography>
               <Paper className="tags-container">
                 {favSub.map((tagname: string, index: number) => (
                   <Chip

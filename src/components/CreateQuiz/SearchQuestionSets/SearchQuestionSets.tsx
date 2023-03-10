@@ -6,39 +6,30 @@ import {
   InputAdornment,
   IconButton,
   Button,
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  Checkbox,
   SvgIcon,
   Paper,
+  Chip,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { useState } from "react";
 import {
-  createQuiz,
+  filterQuestionsSets,
   getPreviewQuestionsForCreateQuiz,
-  getSubjectwiseQuiz,
   getSubjectwiseQuizAnswers,
-} from "../../api/apiAgent";
+} from "../../../api/apiAgent";
 import {
-  createQuizRequest,
   subjectwiseQuizAnswersResponse,
   subjectWiseQuizListResponse,
-} from "../../Interface/QuizDetails";
+} from "../../../Interface/QuizDetails";
 import { Typography } from "@material-ui/core";
 import "./SearchQuestionSets.style.scss";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import { cursorTo } from "readline";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import AddIcon from "@mui/icons-material/Add";
-import DeleteIcon from "@mui/icons-material/Delete";
-import { optionIds } from "../../utils/Utils";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
-import SelectQuestionsModal from "./SelectQuestionsModal";
-import PreviewQuestionsModal from "./PreviewQuestionsModal";
+import SelectQuestionsModal from "../SelectQuestions/SelectQuestionsModal";
+import PreviewQuestionsModal from "../PreviewQuestions/PreviewQuestionsModal";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
 const SearchQuestionSets = () => {
+  const [createQuizSetWiseInfo, setCreateQuizSetWiseInfo] = useState<any>([]);
   const [searchText, setSearchText] = useState<string>();
   const [subjectwiseDetails, setSubjectwiseDeatails] = useState<
     subjectWiseQuizListResponse[]
@@ -63,9 +54,9 @@ const SearchQuestionSets = () => {
   const handleSearchQuestionSet = () => {
     console.log("value is", searchText);
     if (searchText) {
-      getSubjectwiseQuiz(searchText)
-        .then((response) => {
-          console.log("response of searc is", response.data);
+      filterQuestionsSets(searchText.split(" "))
+        .then((response: any) => {
+          console.log("filer response is", response);
           setSubjectwiseDeatails(response.data);
         })
         .catch((error: any) => {
@@ -93,10 +84,10 @@ const SearchQuestionSets = () => {
   const getQuestionIdFromNewCreateQuizBody = (
     questionDeatils: subjectwiseQuizAnswersResponse
   ) => {
-    // console.log(
-    //   "valaue of questionDeatails.questinid is ",
-    //   questionDeatils.questionId
-    // );
+    console.log(
+      "valaue of questionDeatails.questinid is ",
+      questionDeatils.questionId
+    );
     const findIndex = createQuizSetWiseInfo.findIndex(
       (obj: any) =>
         obj.subjectName === questionDeatils.subjectName &&
@@ -114,7 +105,20 @@ const SearchQuestionSets = () => {
     }
   };
 
-  const [createQuizSetWiseInfo, setCreateQuizSetWiseInfo] = useState<any>([]);
+  const checkForSubjectAndVersion = (subjectName: string, version: string) => {
+    console.log("subject and version is", subjectName, version);
+    console.log("create djsdklsdjkjk", createQuizSetWiseInfo);
+    const filterdArr = createQuizSetWiseInfo.filter(
+      (obj: any) => obj.subjectName === subjectName && obj.version === version
+    );
+    console.log("filterd array is", filterdArr);
+    if (filterdArr.length > 0) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   const handleAddQuestionSet = async (
     subjectDetails: subjectWiseQuizListResponse
   ) => {
@@ -155,16 +159,6 @@ const SearchQuestionSets = () => {
     subjectDetails: subjectWiseQuizListResponse
   ) => {
     try {
-      // const existingIndexforold = newCreateQuizBody.findIndex(
-      //   (obj: any) =>
-      //     obj.subjectName === subjectDetails.subjectName &&
-      //     obj.version === subjectDetails.version
-      // );
-      // if (existingIndexforold !== -1) {
-      //   const newArr = [...newCreateQuizBody];
-      //   newArr.splice(existingIndexforold, 1);
-      //   setNewCreateQuizBody(newArr);
-
       // for new creatquiz body
       const existingIndex = createQuizSetWiseInfo.findIndex(
         (obj: any) =>
@@ -246,30 +240,6 @@ const SearchQuestionSets = () => {
   };
   console.log("new create body is", createQuizSetWiseInfo);
 
-  const createQuizfromBody = () => {
-    const totalQuestions = createQuizSetWiseInfo.reduce(
-      (numOfElement: number, obj: any) => numOfElement + obj.questionIds.length,
-      0
-    );
-    console.log("total questions is", totalQuestions);
-    const createQuizBody = {
-      quizTopic: "react-mid",
-      totalQuestions: totalQuestions,
-      quizTimeInMinutes: 60,
-      quizLinkExpireInHours: 3,
-      quizSetWiseInfo: createQuizSetWiseInfo,
-    };
-
-    createQuiz(createQuizBody)
-      .then((response: any) => {
-        console.log("creat quiz response is", response.data);
-        setQuizLink(
-          `http://localhost:3000/rms-aug/test/${response.data?.quizId}/${response.data?.quizLink}`
-        );
-      })
-      .catch((error: any) => console.log("Error in create quiz", error));
-  };
-
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text).then(
       function () {
@@ -301,13 +271,13 @@ const SearchQuestionSets = () => {
       });
   };
 
-  console.log("value of body create quiz is", createQuizSetWiseInfo);
+  console.log("createquizsetwiseinfo is", createQuizSetWiseInfo);
 
   return (
     <>
-      <Box>
+      <Box className="search-main-container">
         <Box>
-          <FormControl sx={{ m: 1, width: "25ch" }} variant="standard">
+          <FormControl className="search-input" variant="standard">
             <InputLabel htmlFor="search">Search Question Set For</InputLabel>
             <Input
               id="search"
@@ -325,79 +295,93 @@ const SearchQuestionSets = () => {
         </Box>
 
         <Box className="search-result-container">
-          {subjectwiseDetails.map(
-            (subjectDetails: subjectWiseQuizListResponse, index: number) => (
-              <Paper>
-                <Box>
-                  <Typography>
-                    {" "}
-                    {`${subjectDetails.subjectName} contains ${
-                      subjectDetails.totalQuestionsCount
-                    } Questions, Created by ${"Test User"}, Tag - ${
-                      subjectDetails.tag
-                    } `}
-                  </Typography>
+          {subjectwiseDetails.length > 0 &&
+            subjectwiseDetails?.map(
+              (subjectDetails: subjectWiseQuizListResponse, index: number) => (
+                <Paper key={index}>
+                  <Box className="search-result">
+                    <Box className="search-text">
+                      <Typography>
+                        {`${subjectDetails.subjectName} contains ${
+                          subjectDetails.totalQuestionsCount
+                        } Questions, Created by ${"Test User"}, Tag - ${
+                          subjectDetails.tag
+                        } `}
+                      </Typography>
+                    </Box>
 
-                  <Box>
-                    <Button
-                      onClick={() =>
-                        handleSelectQuestionsModalOpen(subjectDetails)
-                      }
-                    >
-                      Select Questions
-                    </Button>
-                    {getIndexFromNewCreateQuizBody(subjectDetails) ? (
+                    <Box className="selected-icon">
+                      {checkForSubjectAndVersion(
+                        subjectDetails.subjectName,
+                        subjectDetails.version
+                      ) && (
+                        <IconButton size="small">
+                          <CheckCircleIcon className="icon" fontSize="small" />
+                        </IconButton>
+                      )}
+                    </Box>
+
+                    <Box className="search-buttons">
                       <Button
-                        //  variant="contained"
-                        onClick={() => handleDeletQuestionSet(subjectDetails)}
+                        variant="outlined"
+                        onClick={() =>
+                          handleSelectQuestionsModalOpen(subjectDetails)
+                        }
                       >
-                        Remove ALL
+                        Select Questions
                       </Button>
-                    ) : (
-                      <Button
-                        // variant="contained"
-                        onClick={() => handleAddQuestionSet(subjectDetails)}
-                      >
-                        Add ALL
-                      </Button>
-                    )}
+                      {getIndexFromNewCreateQuizBody(subjectDetails) ? (
+                        <Button
+                          variant="outlined"
+                          onClick={() => handleDeletQuestionSet(subjectDetails)}
+                        >
+                          Remove ALL
+                        </Button>
+                      ) : (
+                        <Button
+                          variant="outlined"
+                          onClick={() => handleAddQuestionSet(subjectDetails)}
+                        >
+                          Add ALL
+                        </Button>
+                      )}
+                    </Box>
                   </Box>
-                </Box>
-              </Paper>
-            )
-          )}
+                </Paper>
+              )
+            )}
         </Box>
-        {/* {newCreateQuizBody.length > 0 && (
+        {createQuizSetWiseInfo.length > 0 && (
           <Box>
-            <Typography>Selected Sets</Typography>
-            {newCreateQuizBody.map((obj: createQuizRequest, index: number) => (
-              <Typography key={index}>{`${index + 1}. ${obj.subjectName} - ${
-                obj.totalQuestionsCount
-              } Questions`}</Typography>
-            ))}
+            <Box className="selected-sets-box">
+              <Typography variant="h6">Selected Question Sets</Typography>
+              <Box className="selected-sets">
+                <Paper className="selected-tags-container">
+                  {createQuizSetWiseInfo.map((obj: any, index: number) => (
+                    <Chip
+                      label={`${obj.subjectName} - ${obj.questionIds.length} Questions`}
+                      key={index}
+                      size="small"
+                      className="tagname"
+                      // onClick={() => handleTagsClick("react")}
+                    />
+                  ))}
+                </Paper>
+              </Box>
+            </Box>
           </Box>
-        )} */}
+        )}
 
-        {subjectwiseDetails?.length > 0 && (
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "flex-start",
-              marginTop: 5,
-              marginBottom: 5,
-            }}
-          >
+        {createQuizSetWiseInfo?.length > 0 && (
+          <Box className="preview-button-contaner">
             <Button
               variant="contained"
-              sx={{ marginRight: 5 }}
               onClick={() => handlePreviewQuestionModalOpen()}
+              disabled={createQuizSetWiseInfo.length > 0 ? false : true}
+              className="preview-button"
             >
               Preview
             </Button>
-
-            {/* <Button variant="contained" onClick={createQuizfromBody}>
-              Creat Quiz
-            </Button> */}
           </Box>
         )}
 

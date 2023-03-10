@@ -25,7 +25,7 @@ import "./TopNavBar.style.scss";
 import { setOriginalNode } from "typescript";
 import { randomColor } from "../../utils/Utils";
 import logo from "../../assets/images/logo.png";
-import LogoutIcon from '@mui/icons-material/Logout';
+import LogoutIcon from "@mui/icons-material/Logout";
 import { number } from "prop-types";
 
 const subjectExperPages = [{ name: "Home", route: "/" }];
@@ -186,9 +186,9 @@ const TopNavBar = (props: any) => {
               >
                 <IconButton sx={{ p: 0 }} onClick={handleOpenUserMenu}>
                   <Avatar
-                  style={{
-                    backgroundColor: "grey",
-                  }}
+                    style={{
+                      backgroundColor: "grey",
+                    }}
                   >
                     <AccountCircle />
                   </Avatar>
@@ -246,15 +246,15 @@ const TopNavBar = (props: any) => {
                 </FormControl>
 
                 {settings.map((setting) => (
-                  <MenuItem  onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography> 
-                  <IconButton>
-                    <LogoutIcon />
-                  </IconButton>
+                  <MenuItem onClick={handleCloseUserMenu}>
+                    <IconButton>
+                      <LogoutIcon />
+                    </IconButton>
+                    <Typography textAlign="center">{setting}</Typography>
+
                     {/* <Typography textAlign="center">{setting}</Typography> */}
                   </MenuItem>
                 ))}
-                
               </Menu>
             </Box>
           )}

@@ -133,7 +133,8 @@ export const getPreviewQuestionsForCreateQuiz = (requestBody: any) => {
   });
 };
 
-export const filterQuestionSets = (requestBody: []) => {
+export const filterQuestionsSets = (requestBody: string[]) => {
+  console.log("filter request body", requestBody);
   return axiosClient.put(`quiz/SubjectExpert/questions/filter`, requestBody, {
     headers: {
       "Content-Type": "application/json",
@@ -142,9 +143,17 @@ export const filterQuestionSets = (requestBody: []) => {
 };
 
 export const deleteSetForSubjectExpert = (version: string, subject: string) => {
-  return axiosClient.delete(`quiz/SubjectExpert?version=${version}&subject=${subject}`);
+  return axiosClient.delete(
+    `quiz/SubjectExpert?version=${version}&subject=${subject}`
+  );
 };
 
-export const deleteQquestionsForSubjectExpert = (questionId: number, version: string, subject: string) => {
-  return axiosClient.delete(`quiz/SubjectExpert?questionId=${questionId}&version=${version}&subject=${subject}`);
+export const deleteQquestionsForSubjectExpert = (
+  questionId: number,
+  version: string,
+  subject: string
+) => {
+  return axiosClient.delete(
+    `quiz/SubjectExpert?questionId=${questionId}&version=${version}&subject=${subject}`
+  );
 };

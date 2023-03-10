@@ -50,7 +50,7 @@
 // import { visuallyHidden } from "@mui/utils";
 // import { getComparator } from "../../utils/TableSortFunctions";
 
-import MakeQuiz from "../../components/CreateQuiz/MakeQuiz";
+import MakeQuiz from "../../components/CreateQuiz/MakeQuiz/MakeQuiz";
 import TopNavBar from "../../components/TopNavBar/TopNavBar";
 
 // const CreateQuiz = (props: any) => {
@@ -171,16 +171,16 @@ import TopNavBar from "../../components/TopNavBar/TopNavBar";
 //       });
 //   };
 
-//   const copyToClipboard = (text: string) => {
-//     navigator.clipboard.writeText(text).then(
-//       function () {
-//         // setCopied(true);
-//       },
-//       function (err) {
-//         console.error("Could not copy text: ", err);
-//       }
-//     );
-//   };
+// const copyToClipboard = (text: string) => {
+//   navigator.clipboard.writeText(text).then(
+//     function () {
+//       // setCopied(true);
+//     },
+//     function (err) {
+//       console.error("Could not copy text: ", err);
+//     }
+//   );
+// };
 
 //   useEffect(() => {
 //     subjectwiseQuizDetails(subject);
