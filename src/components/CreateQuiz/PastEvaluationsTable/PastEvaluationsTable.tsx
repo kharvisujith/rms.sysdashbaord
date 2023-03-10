@@ -103,7 +103,7 @@ const PastEvaluationsTable = (props: any) => {
         // setLoader(false);
         console.log("error in total quiz info api");
       });
-  }, []);
+  }, [setpastEvaluationsData]);
 
   return (
     <>

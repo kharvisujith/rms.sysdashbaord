@@ -15,7 +15,6 @@ const MakeQuiz = () => {
   >([]);
 
   const handleTagsClick = (subjectName: string) => {
-    console.log("tags clicked");
     getTotalSubmittedQuizInfo()
       .then((response: any) => {
         setpastEvaluationsData(response.data);

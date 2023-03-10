@@ -15,6 +15,11 @@ import EditIcon from "@mui/icons-material/Edit";
 import UpdateIcon from "@mui/icons-material/Update";
 import AddIcon from "@mui/icons-material/Add";
 import CloseIcon from "@mui/icons-material/Close";
+import {
+  createQuizRequestBody,
+  selectedQuestionsCreateQuiz,
+  selectedQuestionsCreateQuizWithTag,
+} from "../../../Interface/QuizDetails";
 
 const PreviewQuestionsModal = (props: any) => {
   const {
@@ -31,9 +36,9 @@ const PreviewQuestionsModal = (props: any) => {
   } = props;
 
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [totalQuestionCount, setTotalQuestionCount] = useState<number>();
-  const [quizTopic, setQuizTopic] = useState<string>();
-  const [addedTopic, setAddedTopic] = useState<string>();
+  const [totalQuestionCount, setTotalQuestionCount] = useState<number>(0);
+  const [quizTopic, setQuizTopic] = useState<string>("");
+  const [addedTopic, setAddedTopic] = useState<string>("");
   const [assignedTestTime, setAssignedTestTime] = useState<number>(60);
   const [assignedTestExpiry, setAssignedTestExpiry] = useState<number>(2);
 
@@ -49,7 +54,8 @@ const PreviewQuestionsModal = (props: any) => {
 
   const handlePreviewPageChange = () => {
     const totalQuestions = createQuizSetWiseInfo?.reduce(
-      (numOfElement: number, obj: any) => numOfElement + obj.questionIds.length,
+      (numOfElement: number, obj: selectedQuestionsCreateQuizWithTag) =>
+        numOfElement + obj.questionIds.length,
       0
     );
 
@@ -99,14 +105,19 @@ const PreviewQuestionsModal = (props: any) => {
   };
 
   const GenrateQuizLink = () => {
-    const createLinkBody = {
+    const selectedQuestionCreateQuizBody: selectedQuestionsCreateQuiz[] =
+      createQuizSetWiseInfo.map((obj: selectedQuestionsCreateQuizWithTag) => {
+        const { tag, ...rest } = obj;
+        return rest;
+      });
+    const createQuizLinkBody = {
       quizTopic: addedTopic,
       totalQuestions: totalQuestionCount,
       quizTimeInMinutes: assignedTestTime,
       quizLinkExpireInHours: assignedTestExpiry,
-      quizSetWiseInfo: createQuizSetWiseInfo,
+      quizSetWiseInfo: selectedQuestionCreateQuizBody,
     };
-    createQuiz(createLinkBody)
+    createQuiz(createQuizLinkBody)
       .then((response: any) => {
         console.log("creat quiz response is", response.data);
         setQuizLink(
@@ -120,7 +131,7 @@ const PreviewQuestionsModal = (props: any) => {
         setCreateQuizSetWiseInfo([]);
       })
       .catch((error: any) => console.log("Error in create quiz", error));
-    console.log("final body is", createLinkBody);
+    console.log("final body is", createQuizLinkBody);
   };
 
   return (

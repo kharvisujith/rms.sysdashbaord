@@ -1,5 +1,6 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
 import CandidateDetails from "../Interface/CandidateDetails";
+import { createQuizRequestBody } from "../Interface/QuizDetails";
 //import QuizDetails from "../Interface/QuizDetails";
 // import QuizDetails from "../Interface/QuizDetails";
 
@@ -105,8 +106,8 @@ export const submitCandidateInfo = (
   );
 };
 
-export const createQuiz = (values: any) => {
-  return axiosClient.post(`/quiz/interviewer/createquiz`, values, {
+export const createQuiz = (requestBody: createQuizRequestBody) => {
+  return axiosClient.post(`/quiz/interviewer/createquiz`, requestBody, {
     headers: {
       "Content-Type": "application/json",
     },

@@ -27,10 +27,30 @@ export interface quizSubmitRequest {
 }
 
 //export default QuizDetails;
-export interface createQuizRequest {
-  version: string;
+// export interface createQuizRequest {
+//   version: string;
+//   subjectName: string;
+//   totalQuestionsCount: number;
+// }
+
+export interface selectedQuestionsCreateQuizWithTag {
   subjectName: string;
-  totalQuestionsCount: number;
+  version: string;
+  tag: string;
+  questionIds: number[];
+}
+export interface selectedQuestionsCreateQuiz {
+  subjectName: string;
+  version: string;
+  questionIds: number[];
+}
+
+export interface createQuizRequestBody {
+  quizTopic: string;
+  totalQuestions: number;
+  quizTimeInMinutes: number;
+  quizLinkExpireInHours: number;
+  quizSetWiseInfo: selectedQuestionsCreateQuiz[];
 }
 
 export interface createQuizResponse {

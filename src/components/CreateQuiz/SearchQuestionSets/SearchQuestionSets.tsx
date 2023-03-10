@@ -11,13 +11,15 @@ import {
   Chip,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   filterQuestionsSets,
   getPreviewQuestionsForCreateQuiz,
+  getSubjectwiseQuiz,
   getSubjectwiseQuizAnswers,
 } from "../../../api/apiAgent";
 import {
+  selectedQuestionsCreateQuizWithTag,
   subjectwiseQuizAnswersResponse,
   subjectWiseQuizListResponse,
 } from "../../../Interface/QuizDetails";
@@ -29,7 +31,9 @@ import PreviewQuestionsModal from "../PreviewQuestions/PreviewQuestionsModal";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
 const SearchQuestionSets = () => {
-  const [createQuizSetWiseInfo, setCreateQuizSetWiseInfo] = useState<any>([]);
+  const [createQuizSetWiseInfo, setCreateQuizSetWiseInfo] = useState<
+    selectedQuestionsCreateQuizWithTag[]
+  >([]);
   const [searchText, setSearchText] = useState<string>();
   const [subjectwiseDetails, setSubjectwiseDeatails] = useState<
     subjectWiseQuizListResponse[]
@@ -70,7 +74,7 @@ const SearchQuestionSets = () => {
     subjectDetails: subjectWiseQuizListResponse
   ) => {
     const findIndex = createQuizSetWiseInfo.findIndex(
-      (obj: any) =>
+      (obj: selectedQuestionsCreateQuizWithTag) =>
         obj.subjectName === subjectDetails.subjectName &&
         obj.version === subjectDetails.version
     );
@@ -89,7 +93,7 @@ const SearchQuestionSets = () => {
       questionDeatils.questionId
     );
     const findIndex = createQuizSetWiseInfo.findIndex(
-      (obj: any) =>
+      (obj: selectedQuestionsCreateQuizWithTag) =>
         obj.subjectName === questionDeatils.subjectName &&
         obj.version === questionDeatils.version
     );
@@ -109,7 +113,8 @@ const SearchQuestionSets = () => {
     console.log("subject and version is", subjectName, version);
     console.log("create djsdklsdjkjk", createQuizSetWiseInfo);
     const filterdArr = createQuizSetWiseInfo.filter(
-      (obj: any) => obj.subjectName === subjectName && obj.version === version
+      (obj: selectedQuestionsCreateQuizWithTag) =>
+        obj.subjectName === subjectName && obj.version === version
     );
     console.log("filterd array is", filterdArr);
     if (filterdArr.length > 0) {
@@ -124,7 +129,7 @@ const SearchQuestionSets = () => {
   ) => {
     try {
       const existingIndex = createQuizSetWiseInfo.findIndex(
-        (obj: any) =>
+        (obj: selectedQuestionsCreateQuizWithTag) =>
           obj.subjectName === subjectDetails.subjectName &&
           obj.version === subjectDetails.version
       );
@@ -137,14 +142,13 @@ const SearchQuestionSets = () => {
       if (response.data.length > 0) {
         var questionIdsArray = response.data.map((obj: any) => obj.questionId);
 
-        console.log("ids is", questionIdsArray);
-
         if (existingIndex === -1) {
           setCreateQuizSetWiseInfo((prev: any) => [
             ...prev,
             {
               version: subjectDetails.version,
               subjectName: subjectDetails.subjectName,
+              tag: subjectDetails.tag,
               questionIds: questionIdsArray,
             },
           ]);
@@ -161,7 +165,7 @@ const SearchQuestionSets = () => {
     try {
       // for new creatquiz body
       const existingIndex = createQuizSetWiseInfo.findIndex(
-        (obj: any) =>
+        (obj: selectedQuestionsCreateQuizWithTag) =>
           obj.subjectName === subjectDetails.subjectName &&
           obj.version === subjectDetails.version
       );
@@ -200,7 +204,7 @@ const SearchQuestionSets = () => {
         questionDeatils.questionId
       );
       const existingIndex = createQuizSetWiseInfo.findIndex(
-        (obj: any) =>
+        (obj: selectedQuestionsCreateQuizWithTag) =>
           obj.subjectName === questionDeatils.subjectName &&
           obj.version === questionDeatils.version
       );
@@ -211,6 +215,7 @@ const SearchQuestionSets = () => {
             {
               version: questionDeatils.version,
               subjectName: questionDeatils.subjectName,
+              tag: questionDeatils.tag,
               questionIds: [questionDeatils.questionId],
             },
           ]);
@@ -272,6 +277,18 @@ const SearchQuestionSets = () => {
   };
 
   console.log("createquizsetwiseinfo is", createQuizSetWiseInfo);
+
+  useEffect(() => {
+    getSubjectwiseQuiz("")
+      .then((response) => {
+        console.log("response of searc is keeeeeeeeeeek", response.data);
+        setSubjectwiseDeatails(response.data);
+      })
+      .catch((error: any) => {
+        console.log("error in subjwiseapi");
+        // setLoader(false);
+      });
+  }, []);
 
   return (
     <>
@@ -357,15 +374,20 @@ const SearchQuestionSets = () => {
               <Typography variant="h6">Selected Question Sets</Typography>
               <Box className="selected-sets">
                 <Paper className="selected-tags-container">
-                  {createQuizSetWiseInfo.map((obj: any, index: number) => (
-                    <Chip
-                      label={`${obj.subjectName} - ${obj.questionIds.length} Questions`}
-                      key={index}
-                      size="small"
-                      className="tagname"
-                      // onClick={() => handleTagsClick("react")}
-                    />
-                  ))}
+                  {createQuizSetWiseInfo.map(
+                    (
+                      obj: selectedQuestionsCreateQuizWithTag,
+                      index: number
+                    ) => (
+                      <Chip
+                        label={`${obj.tag} - ${obj.questionIds.length} Questions`}
+                        key={index}
+                        size="small"
+                        className="tagname"
+                        // onClick={() => handleTagsClick("react")}
+                      />
+                    )
+                  )}
                 </Paper>
               </Box>
             </Box>
