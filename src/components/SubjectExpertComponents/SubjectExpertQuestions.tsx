@@ -2,7 +2,7 @@ import { Box, Button, CircularProgress, FormControl, Grid, IconButton, Input, In
 import { useEffect, useState } from "react";
 import ReactModal from "react-modal";
 import { useNavigate } from "react-router-dom";
-import { deleteQquestionsForSubjectExpert, deleteSetForSubjectExpert, getSerchForCreateQuiz, getSubjectwiseQuiz, getSubjectwiseQuizAnswers } from "../../api/apiAgent";
+import { deleteQquestionsForSubjectExpert, deleteSetForSubjectExpert, getSubjectwiseQuiz, getSubjectwiseQuizAnswers } from "../../api/apiAgent";
 import { subjectwiseQuizAnswersResponse, subjectWiseQuizListResponse } from "../../Interface/QuizDetails";
 import AllQuestionsAnswers from "../DispalyQuizQuestionsAnswers/AllQuestionsAnswers";
 import TopNavBar from "../TopNavBar/TopNavBar";
@@ -189,7 +189,7 @@ const handleCheckBoxChange = (event: any, questionDeatils: any) => {
 console.log("new create body is", createQuizSetWiseInfo);
 
 const handleDeleteQuestions = (
-  questionDeatails: any
+  questionDeatails: subjectwiseQuizAnswersResponse
 ) => {
   deleteQquestionsForSubjectExpert(questionDeatails.questionId, questionDeatails.version, questionDeatails.subjectName)
   .then((response: any) => {
@@ -281,7 +281,7 @@ return  (
                         handleSelectQuestionsModalOpen(subjectDetails)
                       }
                     >
-                      Edit
+                      View
                     </Button>
                     {/* {getIndexFromNewCreateQuizBody(subjectDetails) ? ( */}
                     

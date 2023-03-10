@@ -133,7 +133,7 @@ export const getPreviewQuestionsForCreateQuiz = (requestBody: any) => {
   });
 };
 
-export const getSerchForCreateQuiz = (requestBody: any) => {
+export const filterQuestionSets = (requestBody: []) => {
   return axiosClient.put(`quiz/SubjectExpert/questions/filter`, requestBody, {
     headers: {
       "Content-Type": "application/json",

@@ -93,9 +93,9 @@ const QuestionsOpenModal = (props: any) => {
                   className="select-check-box"
                 />
                 
-              </Box>
+              {/* </Box>
             )
-          )}
+          )} */}
           <Box>
             <Button >
                 Edit
@@ -107,8 +107,12 @@ const QuestionsOpenModal = (props: any) => {
             </Button>
             
           </Box>
+          </Box>
+            )
+          )}
           <Button onClick={() => setSelectQuestionOpen(false)}>Close</Button>
         </Box>
+        
       </ReactModal>
       {/* </Modal> */}
     </>
