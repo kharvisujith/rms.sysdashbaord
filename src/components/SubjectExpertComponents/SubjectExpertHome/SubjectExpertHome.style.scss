@@ -1,0 +1,17 @@
+.container {
+  margin-left: 5%;
+  margin-right: 5%;
+  //border: 2px solid red;
+
+  .options-box {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 5%;
+
+    .button-option {
+      width: 18%;
+      //  border: 2px solid green;
+    }
+  }
+}

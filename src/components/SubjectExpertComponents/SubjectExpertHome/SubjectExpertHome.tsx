@@ -1,31 +1,29 @@
-import {
-  Box,
-  Button,
-  CircularProgress,
-  FormControl,
-  Grid,
-  IconButton,
-  Input,
-  InputAdornment,
-  InputLabel,
-  Paper,
-  Typography,
-} from "@mui/material";
+import { Box, Button } from "@mui/material";
 import { useEffect, useState } from "react";
-import ReactModal from "react-modal";
 import { useNavigate } from "react-router-dom";
-import { deleteQquestionsForSubjectExpert, deleteSetForSubjectExpert, getSubjectwiseQuiz, getSubjectwiseQuizAnswers } from "../../api/apiAgent";
-import { subjectwiseQuizAnswersResponse, subjectWiseQuizListResponse } from "../../Interface/QuizDetails";
-import AllQuestionsAnswers from "../DispalyQuizQuestionsAnswers/AllQuestionsAnswers";
-import TopNavBar from "../TopNavBar/TopNavBar";
-import "./SubjectList.style.scss";
-import SearchIcon from "@mui/icons-material/Search";
-import ViewModal from "./ViewModal";
-import Swal from "sweetalert2";
-import QuestionsOpenModal from "./QuestionsOpenModal";
-import "./QuestionsOpenModal.style.scss";
+import {
+  deleteQquestionsForSubjectExpert,
+  deleteSetForSubjectExpert,
+  getSubjectwiseQuiz,
+  getSubjectwiseQuizAnswers,
+} from "../../../api/apiAgent";
+import {
+  subjectwiseQuizAnswersResponse,
+  subjectWiseQuizListResponse,
+} from "../../../Interface/QuizDetails";
+import AllQuestionsAnswers from "../../DispalyQuizQuestionsAnswers/AllQuestionsAnswers";
+import TopNavBar from "../../TopNavBar/TopNavBar";
 
-const SubjectExpertQuestions = (props: any) => {
+import SearchIcon from "@mui/icons-material/Search";
+import ViewModal from "../ViewModal";
+import Swal from "sweetalert2";
+import QuestionsOpenModal from "../QuestionsOpenModal";
+import "./SubjectExpertHome.style.scss";
+import QuestionSetsTable from "../QuestionSetsTable/QuestionSetsTable";
+import SelectSubject from "../SelectSubject/SelectSubject";
+import SearchInput from "../SearchInput/SearchInput";
+
+const SubjectExpertHome = (props: any) => {
   const navigate = useNavigate();
   const [loader, setLoader] = useState<boolean>(false);
   const [OpenTestModal, setOpenTestModal] = useState<boolean>(false);
@@ -36,7 +34,6 @@ const SubjectExpertQuestions = (props: any) => {
   const [subjectList, setSubjectList] = useState<subjectWiseQuizListResponse[]>(
     []
   );
-  const [searchText, setSearchText] = useState<string>();
   const [subjectSetQuestions, setSubjectSetQuestions] = useState<
     subjectwiseQuizAnswersResponse[]
   >([]);
@@ -200,12 +197,16 @@ const SubjectExpertQuestions = (props: any) => {
   };
   console.log("new create body is", createQuizSetWiseInfo);
 
-const handleDeleteQuestions = (
-  questionDeatails: subjectwiseQuizAnswersResponse
-) => {
-  deleteQquestionsForSubjectExpert(questionDeatails.questionId, questionDeatails.version, questionDeatails.subjectName)
-  .then((response: any) => {
-    setSubjectSetQuestions(response.data);
+  const handleDeleteQuestions = (
+    questionDeatails: subjectwiseQuizAnswersResponse
+  ) => {
+    deleteQquestionsForSubjectExpert(
+      questionDeatails.questionId,
+      questionDeatails.version,
+      questionDeatails.subjectName
+    )
+      .then((response: any) => {
+        setSubjectSetQuestions(response.data);
         setLoader(false);
         Swal.fire({
           title: "Success",
@@ -226,11 +227,74 @@ const handleDeleteQuestions = (
       });
   };
 
+  const handleNewClick = () => {
+    navigate("/subjectexpert/new");
+  };
+
+  const [subject, setSubject] = useState<string>("ALL");
+  const [subjectWiseQuestionSets, setSubjectWiseQuestionSets] = useState<
+    subjectWiseQuizListResponse[]
+  >([]);
+  const [isQuizSetExists, setIsQuizSetExists] = useState<boolean>(true);
+  const [searchText, setSearchText] = useState<string>("");
+
+  const subjectwiseQuizDetails = async (subject: string) => {
+    console.log("subject wise quiz iss calllledddd");
+    // setLoader(true);
+    getSubjectwiseQuiz(subject === "ALL" ? "" : subject)
+      .then((response: any) => {
+        console.log("get then succes part where loader set is false");
+        // setLoader(false);
+        if (response.status === 204) {
+          setIsQuizSetExists(false);
+        } else {
+          setSubjectWiseQuestionSets(response.data);
+          setIsQuizSetExists(true);
+        }
+      })
+      .catch((error: any) => {
+        console.log("error in subjwiseapi");
+        //     setLoader(false);
+      });
+  };
+
+  console.log("value of search text is", searchText);
+
+  useEffect(() => {
+    subjectwiseQuizDetails(subject);
+  }, [subject]);
   return (
     <>
-      <TopNavBar role={props.role} setRole={props.setRole} />
+      <Box className="container">
+        <Box className="options-box">
+          <Button
+            variant="outlined"
+            className="button-option"
+            onClick={handleNewClick}
+          >
+            New
+          </Button>
+          <Button variant="outlined" className="button-option">
+            View My Question Sets
+          </Button>
 
-      <Box className="new-box">
+          <SearchInput setSearchText={setSearchText} />
+          <SelectSubject subject={subject} setSubject={setSubject} />
+        </Box>
+
+        <Box>
+          <QuestionSetsTable
+            subjectWiseQuestionSets={subjectWiseQuestionSets}
+            //  setSubjectWiseQuestionSets={setSubjectWiseQuestionSets}
+            isQuizSetExists={isQuizSetExists}
+            searchText={searchText}
+          />
+        </Box>
+      </Box>
+
+      {/* <TopNavBar role={props.role} setRole={props.setRole} /> */}
+
+      {/* <Box className="new-box">
         <Box className="box-new">
           <Button
             className="button-name-new"
@@ -241,9 +305,9 @@ const handleDeleteQuestions = (
           >
             New
           </Button>
-        </Box>
+        </Box> */}
 
-        <Box className="box">
+      {/* <Box className="box">
           <Button
             className="button-name"
             variant="contained"
@@ -251,9 +315,9 @@ const handleDeleteQuestions = (
           >
             View My Question Sets
           </Button>
-        </Box>
+        </Box> */}
 
-        <Box>
+      {/* <Box>
           <FormControl sx={{ m: 1, width: "25ch" }} variant="standard">
             <InputLabel htmlFor="search">Search For other Sets</InputLabel>
             <Input
@@ -269,8 +333,8 @@ const handleDeleteQuestions = (
               }
             />
           </FormControl>
-        </Box>
-        {subjectList.map(
+        </Box> */}
+      {/* {subjectList.map(
           (subjectDetails: subjectWiseQuizListResponse, index: number) => (
             <Paper>
               <Box>
@@ -279,54 +343,41 @@ const handleDeleteQuestions = (
                   {`${subjectDetails.subjectName}  ${subjectDetails.createdBy}    ${subjectDetails.tag} ${subjectDetails.version}`}
                 </Typography>
 
-                  <Box>
-                    <Button
-                      onClick={() =>
-                        handleSelectQuestionsModalOpen(subjectDetails)
-                      }
-                    >
-                      View
-                    </Button>
-                    {/* {getIndexFromNewCreateQuizBody(subjectDetails) ? ( */}
-                    
-                      <Button
-                       // variant="contained"
-                           onClick={() => handleDeleteSet(subjectDetails)}
-                      >
-                        Delete
-                      </Button>
-                      
-                    {/* ) : ( */}
-                      {/* <Button
-                        // variant="contained"
-                        // onClick={() => handleAddQuestionSet(subjectDetails)}
-                      >
-                        Add ALL
-                      </Button> */}
-                  {/* )} */}
+                <Box>
+                  <Button
+                    onClick={() =>
+                      handleSelectQuestionsModalOpen(subjectDetails)
+                    }
+                  >
+                    View
+                  </Button>
+              
+
+                  <Button
+                    // variant="contained"
+                    onClick={() => handleDeleteSet(subjectDetails)}
+                  >
+                    Delete
+                  </Button>
+
+               
                 </Box>
               </Box>
             </Paper>
           )
-        )}
-        <QuestionsOpenModal
+        )} */}
+      {/* <QuestionsOpenModal
           selectQuestionOpen={selectQuestionOpen}
           setSelectQuestionOpen={setSelectQuestionOpen}
           subjectSetQuestions={subjectSetQuestions}
           handleCheckBoxChange={handleCheckBoxChange}
           getQuestionIdFromSubjectExpert={getQuestionIdFromSubjectExpert}
           handleDeleteQuestions={handleDeleteQuestions}
-        />
-        {/* </Box> */}
-        {/* ))} */}
-        {/* <ViewModal
-          OpenTestModal={OpenTestModal}
-          setOpenTestModal={setOpenTestModal}
-          quizSubjectInfo={subjectAnswersList}
         /> */}
-      </Box>
+
+      {/* </Box> */}
     </>
   );
 };
 
-export default SubjectExpertQuestions;
+export default SubjectExpertHome;

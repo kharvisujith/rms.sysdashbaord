@@ -40,7 +40,7 @@ import {
   subjectWiseQuizListResponse,
 } from "../../Interface/QuizDetails";
 import Swal from "sweetalert2";
-import { columns } from "./QuestionSetsTableColumn";
+import { QuestionSetscolumns } from "./QuestionSetsTableColumn";
 import { visuallyHidden } from "@mui/utils";
 import { getComparator } from "../../utils/TableSortFunctions";
 import SearchIcon from "@mui/icons-material/Search";
@@ -380,7 +380,7 @@ const SubjectList = (props: any) => {
             <Table stickyHeader>
               <TableHead>
                 <TableRow>
-                  {columns.map((column) => (
+                  {QuestionSetscolumns.map((column: any) => (
                     <TableCell
                       key={column.id}
                       align={column.align}
@@ -449,22 +449,24 @@ const SubjectList = (props: any) => {
                             tabIndex={-1}
                             key={index}
                           >
-                            {columns.map((column: any, index: number) => {
-                              const value = row[column.id];
-                              return (
-                                <TableCell key={index} align={column.align}>
-                                  {column.id === "view"
-                                    ? viewButton(row)
-                                    : column.id.includes("Date")
-                                    ? value?.substring(0, 10)
-                                    : value
-                                    ? value
-                                    : column.id.includes("Date")
-                                    ? "dummy-date"
-                                    : "Test-user"}
-                                </TableCell>
-                              );
-                            })}
+                            {QuestionSetscolumns.map(
+                              (column: any, index: number) => {
+                                const value = row[column.id];
+                                return (
+                                  <TableCell key={index} align={column.align}>
+                                    {column.id === "view"
+                                      ? viewButton(row)
+                                      : column.id.includes("Date")
+                                      ? value?.substring(0, 10)
+                                      : value
+                                      ? value
+                                      : column.id.includes("Date")
+                                      ? "dummy-date"
+                                      : "Test-user"}
+                                  </TableCell>
+                                );
+                              }
+                            )}
                           </TableRow>
                         );
                       })}
