@@ -1,3 +1,9 @@
+.message-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .progress-box {
   margin-top: 1rem;
   margin-bottom: 1rem;
@@ -5,6 +11,7 @@
 
 .answer-box {
   margin-left: 1rem;
+  // min-height: 30vh;
 }
 
 .test-buttons-box {
@@ -49,58 +56,13 @@
   display: "flex";
   flex-direction: "column";
 }
-//  .viewTable-App {
-//   width: 100%;
-//   height: 100vh;
-//   // display: flex;
-//   // justify-content: center;
-//   // align-items: center;
-// }
-// .popup-table{
-//   table {
-//     border: 2px solid forestgreen;
-//     width: 400px;
-//     height: 100px;
-//   }
 
-//   table thead tr th{
-
-//       border-bottom: 2px solid forestgreen;
-//     }
-//     table tbody tr td {
-//       border-width: 1px;
-//       border-style: solid;
-//       border-color: black;
-//     }
-// }
-// .popup-table{
-//   table {
-//     border: 2px solid forestgreen;
-//     width: 400px;
-//     height: 50px;
-//   }
-
-//   tablehead {
-
-//       border-bottom: 2px solid forestgreen;
-//     }
-//     table tablebody tablerow tablecell {
-//       border-width: 1px;
-//       border-style: solid;
-//       border-color: black;
-//     }
-// }
 .popup-left-table {
   table {
-    //   border: 2px solid grey;
     width: 800px;
     height: 50px auto;
     margin-left: auto;
     margin-right: auto;
-    //padding-left: 4rem;
-    //padding-right: 4rem;
-    //padding-top: 0.8rem;
-    //padding-bottom: 0.8rem;
   }
 }
 .popup-right-table {
@@ -111,16 +73,7 @@
     justify-content: right;
   }
 }
-// .table {
-//   border: 2px solid forestgreen;
-//   width: 400px;
-//   height: 100px;
-// }
-//   .th {
-//     border-bottom: 1px solid black;
-//   }
 
-//   .td {
-//     text-align: center;
-//   }
-// }
+.divider {
+  margin: 1rem;
+}

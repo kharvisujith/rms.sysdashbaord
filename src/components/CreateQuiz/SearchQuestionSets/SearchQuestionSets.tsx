@@ -9,6 +9,7 @@ import {
   SvgIcon,
   Paper,
   Chip,
+  CircularProgress,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { useEffect, useState } from "react";
@@ -49,6 +50,8 @@ const SearchQuestionSets = () => {
   const [previewQuestionOpen, setPreviewQuestionOpen] =
     useState<boolean>(false);
   const [previewQuestionsData, setPreviewQuestionsData] = useState<any[]>([]);
+  const [loader, setLoader] = useState<boolean>(false);
+  const [previewLoader, setPreviewLoader] = useState<boolean>(false);
 
   const handleSearchInputChange = (event: any) => {
     console.log("event is", event.target.value);
@@ -57,6 +60,7 @@ const SearchQuestionSets = () => {
 
   const handleSearchQuestionSet = () => {
     console.log("value is", searchText);
+    setLoader(true);
     if (searchText) {
       filterQuestionsSets(searchText.split(" "))
         .then((response: any) => {
@@ -66,7 +70,8 @@ const SearchQuestionSets = () => {
         .catch((error: any) => {
           console.log("error in subjwiseapi");
           // setLoader(false);
-        });
+        })
+        .finally(() => setLoader(false));
     }
   };
 
@@ -182,6 +187,7 @@ const SearchQuestionSets = () => {
   const fetchQuestionsForSetAndSubject = (
     subjectDetails: subjectWiseQuizListResponse
   ) => {
+    setPreviewLoader(true);
     getSubjectwiseQuizAnswers(
       subjectDetails.version,
       subjectDetails.subjectName
@@ -193,7 +199,8 @@ const SearchQuestionSets = () => {
       .catch((error: any) => {
         // setLoader(false);
         console.log("error in subjwise answersapi");
-      });
+      })
+      .finally(() => setPreviewLoader(false));
   };
 
   const handleCheckBoxChange = (event: any, questionDeatils: any) => {
@@ -265,7 +272,7 @@ const SearchQuestionSets = () => {
 
   const handlePreviewQuestionModalOpen = () => {
     setPreviewQuestionOpen(true);
-    console.log("value of request body is", createQuizSetWiseInfo);
+    setPreviewLoader(true);
     getPreviewQuestionsForCreateQuiz(createQuizSetWiseInfo)
       .then((response: any) => {
         console.log("reponse in preview is", response.data);
@@ -273,12 +280,17 @@ const SearchQuestionSets = () => {
       })
       .catch((error: any) => {
         console.log("Error in preview quiz", error);
+      })
+      .finally(() => {
+        console.log("inside finallyyyyyy");
+        setPreviewLoader(false);
       });
   };
 
   console.log("createquizsetwiseinfo is", createQuizSetWiseInfo);
 
   useEffect(() => {
+    setLoader(true);
     getSubjectwiseQuiz("")
       .then((response) => {
         console.log("response of searc is keeeeeeeeeeek", response.data);
@@ -287,7 +299,8 @@ const SearchQuestionSets = () => {
       .catch((error: any) => {
         console.log("error in subjwiseapi");
         // setLoader(false);
-      });
+      })
+      .finally(() => setLoader(false));
   }, []);
 
   return (
@@ -311,63 +324,78 @@ const SearchQuestionSets = () => {
           </FormControl>
         </Box>
 
-        <Box className="search-result-container">
-          {subjectwiseDetails.length > 0 &&
-            subjectwiseDetails?.map(
-              (subjectDetails: subjectWiseQuizListResponse, index: number) => (
-                <Paper key={index}>
-                  <Box className="search-result">
-                    <Box className="search-text">
-                      <Typography>
-                        {`${subjectDetails.subjectName} contains ${
-                          subjectDetails.totalQuestionsCount
-                        } Questions, Created by ${"Test User"}, Tag - ${
-                          subjectDetails.tag
-                        } `}
-                      </Typography>
-                    </Box>
+        {!loader ? (
+          <Box className="search-result-container">
+            {subjectwiseDetails.length > 0 &&
+              subjectwiseDetails?.map(
+                (
+                  subjectDetails: subjectWiseQuizListResponse,
+                  index: number
+                ) => (
+                  <Paper key={index}>
+                    <Box className="search-result">
+                      <Box className="search-text">
+                        <Typography>
+                          {`${subjectDetails.subjectName} contains ${
+                            subjectDetails.totalQuestionsCount
+                          } Questions, Created by ${"Test User"}, Tag - ${
+                            subjectDetails.tag
+                          } `}
+                        </Typography>
+                      </Box>
 
-                    <Box className="selected-icon">
-                      {checkForSubjectAndVersion(
-                        subjectDetails.subjectName,
-                        subjectDetails.version
-                      ) && (
-                        <IconButton size="small">
-                          <CheckCircleIcon className="icon" fontSize="small" />
-                        </IconButton>
-                      )}
-                    </Box>
+                      <Box className="selected-icon">
+                        {checkForSubjectAndVersion(
+                          subjectDetails.subjectName,
+                          subjectDetails.version
+                        ) && (
+                          <IconButton size="small">
+                            <CheckCircleIcon
+                              className="icon"
+                              fontSize="small"
+                            />
+                          </IconButton>
+                        )}
+                      </Box>
 
-                    <Box className="search-buttons">
-                      <Button
-                        variant="outlined"
-                        onClick={() =>
-                          handleSelectQuestionsModalOpen(subjectDetails)
-                        }
-                      >
-                        Select Questions
-                      </Button>
-                      {getIndexFromNewCreateQuizBody(subjectDetails) ? (
+                      <Box className="search-buttons">
                         <Button
                           variant="outlined"
-                          onClick={() => handleDeletQuestionSet(subjectDetails)}
+                          onClick={() =>
+                            handleSelectQuestionsModalOpen(subjectDetails)
+                          }
                         >
-                          Remove ALL
+                          Select Questions
                         </Button>
-                      ) : (
-                        <Button
-                          variant="outlined"
-                          onClick={() => handleAddQuestionSet(subjectDetails)}
-                        >
-                          Add ALL
-                        </Button>
-                      )}
+                        {getIndexFromNewCreateQuizBody(subjectDetails) ? (
+                          <Button
+                            variant="outlined"
+                            onClick={() =>
+                              handleDeletQuestionSet(subjectDetails)
+                            }
+                          >
+                            Remove ALL
+                          </Button>
+                        ) : (
+                          <Button
+                            variant="outlined"
+                            onClick={() => handleAddQuestionSet(subjectDetails)}
+                          >
+                            Add ALL
+                          </Button>
+                        )}
+                      </Box>
                     </Box>
-                  </Box>
-                </Paper>
-              )
-            )}
-        </Box>
+                  </Paper>
+                )
+              )}
+          </Box>
+        ) : (
+          <Box className="table-loader ">
+            <CircularProgress />
+          </Box>
+        )}
+
         {createQuizSetWiseInfo.length > 0 && (
           <Box>
             <Box className="selected-sets-box">
@@ -435,6 +463,7 @@ const SearchQuestionSets = () => {
           getQuestionIdFromNewCreateQuizBody={
             getQuestionIdFromNewCreateQuizBody
           }
+          previewLoader={previewLoader}
         />
         <PreviewQuestionsModal
           previewQuestionOpen={previewQuestionOpen}
@@ -449,6 +478,7 @@ const SearchQuestionSets = () => {
           setCreateQuizSetWiseInfo={setCreateQuizSetWiseInfo}
           setQuizLink={setQuizLink}
           setSubjectwiseDeatails={setSubjectwiseDeatails}
+          previewLoader={previewLoader}
         />
       </Box>
     </>

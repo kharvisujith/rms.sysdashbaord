@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  CircularProgress,
   Paper,
   Table,
   TableBody,
@@ -14,8 +15,8 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import {
-  getSubmittedQuizDetailedInfo,
   getSubmittedQuizInfo,
+  getSubmittedQuizSummary,
   getTotalSubmittedQuizInfo,
 } from "../../../api/apiAgent";
 import {
@@ -41,6 +42,7 @@ const PastEvaluationsTable = (props: any) => {
   >([]);
 
   const [openReviewModal, setOpenReviewModal] = useState<boolean>(false);
+  const [loader, setLoader] = useState<any>(false);
 
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -67,43 +69,63 @@ const PastEvaluationsTable = (props: any) => {
     setOrderBy(property);
   };
 
-  const StartTestViewButtonHandler = (e: any) => {
-    // setLoader(true);
+  // const getDetailedSubmittedQuizInfo = (data: any) => {
+  //   // setLoader(true);
+  //   getSubmittedQuizInfo(data)
+  //     .then((response: any) => {
+  //       setDetailedSubmittedQuizInfoList(response.data);
+  //       console.log("response.data in detailed info is", response.data);
+  //       // setLoader(false);
+  //     })
+  //     .catch((error: any) => {
+  //       //  setLoader(false);
+  //       console.log("error in detailed Subject Answer answersapi");
+  //     });
+  // };
+
+  // const getIndividualQuizSummary = (data: any) => {
+  //   // setLoader(true);
+  //   getSubmittedQuizSummary(data)
+  //     .then((res: any) => {
+  //       setIndividualQuizDetailedInfo(res.data);
+  //       console.log("response.data in summary is", res.data);
+  //       // setLoader(false);
+  //     })
+  //     .catch((error: any) => {
+  //       //  setLoader(false);
+  //       console.log("error in detailed Subject Answer answersapi");
+  //     });
+  // };
+  const StartTestViewButtonHandler = async (data: any) => {
     setOpenReviewModal(true);
+    setLoader(true);
 
-    getSubmittedQuizInfo(e)
-      .then((response: any) => {
-        setDetailedSubmittedQuizInfoList(response.data);
-        console.log("modal data review is", response.data);
-        //  setLoader(false);
-      })
-      .catch((error: any) => {
-        //   setLoader(false);
-        console.log("error in detailed Subject Answer answersapi");
-      });
+    try {
+      const quizSummary = await getSubmittedQuizSummary(data);
 
-    getSubmittedQuizDetailedInfo(e)
-      .then((res: any) => {
-        setIndividualQuizDetailedInfo(res.data);
-        // setLoader(false);
-      })
-      .catch((error: any) => {
-        //   setLoader(false);
-        console.log("error in detailed Subject Answer answersapi");
-      });
+      setIndividualQuizDetailedInfo(quizSummary.data);
+      const quizSubmittedDetails = await getSubmittedQuizInfo(data);
+      setDetailedSubmittedQuizInfoList(quizSubmittedDetails.data);
+    } catch (error: any) {
+      console.log("error in review model", error);
+    } finally {
+      setLoader(false);
+    }
   };
 
   useEffect(() => {
+    setLoader(true);
     getTotalSubmittedQuizInfo()
       .then((response: any) => {
-        // setLoader(false);
+        setLoader(false);
         setpastEvaluationsData(response.data);
       })
       .catch((error: any) => {
-        // setLoader(false);
+        setLoader(false);
         console.log("error in total quiz info api");
       });
   }, [setpastEvaluationsData]);
+  console.log("value of loader is", loader);
 
   return (
     <>
@@ -137,57 +159,74 @@ const PastEvaluationsTable = (props: any) => {
                   )}
                 </TableRow>
               </TableHead>
-              <TableBody>
-                {pastEvaluationsData.length > 0 &&
-                  pastEvaluationsData
-                    .slice()
-                    .sort(getComparator(order, orderBy))
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((row: any, index: number) => {
-                      return (
-                        <TableRow
-                          hover
-                          role="checkbox"
-                          tabIndex={-1}
-                          key={index}
-                        >
-                          {submittedQuizTableColumns.map((column) => {
-                            const value = row[column.id];
-                            return (
-                              <TableCell key={column.id} align={column.align}>
-                                {column.id === "quizId" ? (
-                                  <Button
-                                    variant="contained"
-                                    onClick={() =>
-                                      StartTestViewButtonHandler(value)
-                                    }
-                                  >
-                                    Review
-                                  </Button>
-                                ) : column.format &&
-                                  typeof value === "number" ? (
-                                  column.format(value)
-                                ) : (
-                                  value
-                                )}
-                              </TableCell>
-                            );
-                          })}
-                        </TableRow>
-                      );
-                    })}
-              </TableBody>
+              {!loader ? (
+                <TableBody>
+                  {pastEvaluationsData.length > 0 &&
+                    pastEvaluationsData
+                      .slice()
+                      .sort(getComparator(order, orderBy))
+                      .slice(
+                        page * rowsPerPage,
+                        page * rowsPerPage + rowsPerPage
+                      )
+                      .map((row: any, index: number) => {
+                        return (
+                          <TableRow
+                            hover
+                            role="checkbox"
+                            tabIndex={-1}
+                            key={index}
+                          >
+                            {submittedQuizTableColumns.map((column) => {
+                              const value = row[column.id];
+                              return (
+                                <TableCell key={column.id} align={column.align}>
+                                  {column.id === "quizId" ? (
+                                    <Button
+                                      variant="contained"
+                                      onClick={() =>
+                                        StartTestViewButtonHandler(value)
+                                      }
+                                    >
+                                      Review
+                                    </Button>
+                                  ) : column.format &&
+                                    typeof value === "number" ? (
+                                    column.format(value)
+                                  ) : (
+                                    value
+                                  )}
+                                </TableCell>
+                              );
+                            })}
+                          </TableRow>
+                        );
+                      })}
+                </TableBody>
+              ) : null}
             </Table>
           </TableContainer>
-          <TablePagination
-            rowsPerPageOptions={[10, 25, 100]}
-            component="div"
-            count={pastEvaluationsData?.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-          />
+          {loader ? (
+            <Box className="table-loader">
+              <CircularProgress />
+            </Box>
+          ) : null}
+          {!loader && pastEvaluationsData.length < 1 && (
+            <Box className="table-loader">
+              <Typography>No Data Available</Typography>
+            </Box>
+          )}
+          {loader || pastEvaluationsData.length > 0 ? (
+            <TablePagination
+              rowsPerPageOptions={[10, 25, 100]}
+              component="div"
+              count={pastEvaluationsData?.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+          ) : null}
         </Paper>
 
         <ReviewAnswersModal
@@ -195,6 +234,7 @@ const PastEvaluationsTable = (props: any) => {
           setOpenReviewModal={setOpenReviewModal}
           quizSubjectInfo={detailedSubmittedQuizInfoList}
           totalQuizDetailedInfo={individualQuizDetailedInfo}
+          loader={loader}
         />
       </Box>
     </>

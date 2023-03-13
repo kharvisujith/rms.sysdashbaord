@@ -44,6 +44,7 @@ import { columns } from "./QuestionSetsTableColumn";
 import { visuallyHidden } from "@mui/utils";
 import { getComparator } from "../../utils/TableSortFunctions";
 import SearchIcon from "@mui/icons-material/Search";
+import CloseIcon from "@mui/icons-material/Close";
 
 // interface Data {
 //   subjectName: string;
@@ -98,14 +99,14 @@ const SubjectList = (props: any) => {
   };
   const handleTextChange = (e: any) => {
     setFormError({ ...formError, [e?.target.name]: false });
-    console.log(formError,'formerror');
+    console.log(formError, "formerror");
     const name = e.target.name;
     const value = e.target.value;
     if (subject === "ALL") {
       setUploadData((prev: any) => ({ ...prev, [name]: value }));
     } else {
       setUploadData({ [name]: value, subject: subject });
-      console.log(name, 'data sub');
+      console.log(name, "data sub");
     }
   };
 
@@ -138,23 +139,26 @@ const SubjectList = (props: any) => {
       });
   };
 
- 
   const handleUploadClick = () => {
-    if(uploadData.version && uploadData.subject && uploadData.tags && file) 
-    {
-      console.log('inside if');
+    if (uploadData.version && uploadData.subject && uploadData.tags && file) {
+      console.log("inside if");
       setLoader(true);
       const formData = new FormData();
       formData.append("formFile", file);
 
-      upLoadExcel(uploadData.version, uploadData.subject, uploadData.tags, formData)
+      upLoadExcel(
+        uploadData.version,
+        uploadData.subject,
+        uploadData.tags,
+        formData
+      )
         .then((res) => res.data)
         .then((res) => {
-           setLoader(false);
+          setLoader(false);
           setOpenFileUpload(false);
           subjectwiseQuizDetails(subject);
-          console.log(subject, 'subj data');
-          setUploadData({ version: "", subject: "", tags: ""});
+          console.log(subject, "subj data");
+          setUploadData({ version: "", subject: "", tags: "" });
           Swal.fire({
             title: "Success",
             text: "Question Set Uploaded Succesfully",
@@ -172,7 +176,7 @@ const SubjectList = (props: any) => {
           });
         });
     } else if (!uploadData.version) {
-      console.log('else if');
+      console.log("else if");
       setFormError({ ...formError, version: true });
     } else if (!uploadData.subject) {
       setFormError({ ...formError, subject: true });
@@ -180,10 +184,8 @@ const SubjectList = (props: any) => {
       setFormError({ ...formError, tags: true });
     } else if (!file) {
       setFormError({ ...formError, file: true });
-   
     }
   };
-
 
   const subjectwiseQuizDetails = async (subject: string) => {
     console.log("subject wise quiz iss calllledddd");
@@ -331,7 +333,7 @@ const SubjectList = (props: any) => {
             >
               Upload Question Set
             </Button>
-            
+
             <Box className="search-box">
               <OutlinedInput
                 className="search-input"
@@ -423,10 +425,10 @@ const SubjectList = (props: any) => {
                             .toString()
                             .toLowerCase()
                             .includes(name.toString().toLowerCase()) ||
-                            row.createdBy
+                          row.createdBy
                             ?.toLowerCase()
-                            .includes(name.toLowerCase())  ||
-                            row.updatedBy
+                            .includes(name.toLowerCase()) ||
+                          row.updatedBy
                             ?.toLowerCase()
                             .includes(name.toLowerCase()) ||
                           row.createdDate
@@ -520,6 +522,7 @@ const SubjectList = (props: any) => {
                 variant="contained"
                 color="error"
                 onClick={endTestButtonHandler}
+                endIcon={<CloseIcon />}
               >
                 Close
               </Button>
@@ -540,7 +543,9 @@ const SubjectList = (props: any) => {
             onChange={handleTextChange}
           />
           {formError.version && (
-            <Typography className="error">Please Enter Version Number</Typography>
+            <Typography className="error">
+              Please Enter Version Number
+            </Typography>
           )}
 
           <FormControl
@@ -583,7 +588,7 @@ const SubjectList = (props: any) => {
             className="items"
             onChange={handleTextChange}
           />
-           {formError.tags && (
+          {formError.tags && (
             <Typography className="error">Please Enter Tags</Typography>
           )}
           <TextField

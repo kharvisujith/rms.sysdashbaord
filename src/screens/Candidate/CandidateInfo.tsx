@@ -60,8 +60,7 @@ const CandidateInfo = (props: any) => {
     if (!user) {
       return;
     }
-    if (user.email && user.candidateName &&  (phone_regex.test(user.phone))) {
-      
+    if (user.email && user.candidateName && phone_regex.test(user.phone)) {
       setLoader({ ...loader, buttonLoader: true });
       submitCandidateInfo(parseInt(id!), key!, user)
         .then((res: any) => {
@@ -93,7 +92,7 @@ const CandidateInfo = (props: any) => {
       setFormError({ ...formError, name: true });
     } else if (!phone_regex.test(user.phone)) {
       setFormError({ ...formError, phone: true });
-     }
+    }
   };
 
   useEffect(() => {
@@ -183,9 +182,7 @@ const CandidateInfo = (props: any) => {
                   name="candidateName"
                 />
                 {formError.candidateName && (
-                  <Typography className="error">
-                    Please Enter Name
-                  </Typography>
+                  <Typography className="error">Please Enter Name</Typography>
                 )}
 
                 {/* <TextField
@@ -226,7 +223,7 @@ const CandidateInfo = (props: any) => {
                 />
                 {formError.phone && (
                   <Typography className="error">
-                    Please Enter Phone Number
+                    Please Enter Valid Phone Number
                   </Typography>
                 )}
 

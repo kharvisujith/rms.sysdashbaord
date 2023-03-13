@@ -122,7 +122,7 @@ export const getTotalSubmittedQuizInfo = () => {
 export const getSubmittedQuizInfo = (qId: number) => {
   return axiosClient.get(`quiz/interviewer/submitquiz/${qId}`);
 };
-export const getSubmittedQuizDetailedInfo = (qId: number) => {
+export const getSubmittedQuizSummary = (qId: number) => {
   return axiosClient.get(`quiz/interviewer/submitquizdetails/${qId}`);
 };
 

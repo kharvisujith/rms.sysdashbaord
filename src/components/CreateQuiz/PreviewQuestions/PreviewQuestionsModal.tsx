@@ -20,6 +20,7 @@ import {
   selectedQuestionsCreateQuiz,
   selectedQuestionsCreateQuizWithTag,
 } from "../../../Interface/QuizDetails";
+import { CircularProgress } from "@material-ui/core";
 
 const PreviewQuestionsModal = (props: any) => {
   const {
@@ -33,6 +34,7 @@ const PreviewQuestionsModal = (props: any) => {
     setCreateQuizSetWiseInfo,
     setQuizLink,
     setSubjectwiseDeatails,
+    previewLoader,
   } = props;
 
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -41,17 +43,25 @@ const PreviewQuestionsModal = (props: any) => {
   const [addedTopic, setAddedTopic] = useState<string>("");
   const [assignedTestTime, setAssignedTestTime] = useState<number>(60);
   const [assignedTestExpiry, setAssignedTestExpiry] = useState<number>(2);
+  const [validationError, setValidationError] = useState<any>({
+    quizTopic: false,
+  });
 
   const [anchorElTestTime, setAnchorElTestTime] =
     useState<HTMLButtonElement | null>(null);
   const [anchorlElTestExpiry, setAnchorElTestExpiry] =
     useState<HTMLButtonElement | null>(null);
 
-  const [editTimeChange, setEditTimeChange] = useState<any>({
-    quizTime: "",
-    quizExpiry: "",
+  // const [editTimeChange, setEditTimeChange] = useState<any>({
+  //   quizTime: 60,
+  //   quizExpiry: 2,
+  // });
+  const [testTimings, setTestTimings] = useState<any>({
+    quizTime: 60,
+    quizExpiry: 2,
   });
 
+  const [buttonLoader, setButtonLoader] = useState<Boolean>(false);
   const handlePreviewPageChange = () => {
     const totalQuestions = createQuizSetWiseInfo?.reduce(
       (numOfElement: number, obj: selectedQuestionsCreateQuizWithTag) =>
@@ -68,8 +78,9 @@ const PreviewQuestionsModal = (props: any) => {
   };
 
   const handleAddTopic = () => {
-    setQuizTopic("");
     setAddedTopic(quizTopic);
+    setValidationError({ ...validationError, quizTopic: false });
+    setQuizTopic("");
   };
 
   const handleEditTestTime = (event: any) => {
@@ -88,7 +99,11 @@ const PreviewQuestionsModal = (props: any) => {
   };
 
   const handleEditOnChange = (event: any) => {
-    setEditTimeChange((prev: any) => ({
+    // setEditTimeChange((prev: any) => ({
+    //   ...prev,
+    //   [event.target.name]: event.target.value,
+    // }));
+    setTestTimings((prev: any) => ({
       ...prev,
       [event.target.name]: event.target.value,
     }));
@@ -96,15 +111,20 @@ const PreviewQuestionsModal = (props: any) => {
 
   const handleEditUpdate = (event: any) => {
     if (event.target.name === "testTime") {
-      setAssignedTestTime(parseInt(editTimeChange.quizTime));
+      setAssignedTestTime(parseInt(testTimings.quizTime));
       setAnchorElTestTime(null);
     } else {
-      setAssignedTestExpiry(parseInt(editTimeChange.quizExpiry));
+      setAssignedTestExpiry(parseInt(testTimings.quizExpiry));
       setAnchorElTestExpiry(null);
     }
   };
 
   const GenrateQuizLink = () => {
+    if (!addedTopic) {
+      setValidationError({ ...validationError, quizTopic: true });
+      return;
+    }
+    setButtonLoader(true);
     const selectedQuestionCreateQuizBody: selectedQuestionsCreateQuiz[] =
       createQuizSetWiseInfo.map((obj: selectedQuestionsCreateQuizWithTag) => {
         const { tag, ...rest } = obj;
@@ -126,13 +146,21 @@ const PreviewQuestionsModal = (props: any) => {
         setPreviewQuestionOpen(false);
         setCurrentPage(1);
         setAddedTopic("");
-        setSubjectwiseDeatails([]);
+        // setSubjectwiseDeatails([]);
         setPreviewQuestionsData([]);
         setCreateQuizSetWiseInfo([]);
       })
-      .catch((error: any) => console.log("Error in create quiz", error));
-    console.log("final body is", createQuizLinkBody);
+      .catch((error: any) => console.log("Error in create quiz", error))
+      .finally(() => setButtonLoader(false));
   };
+
+  // if (setPreviewLoader) {
+  //   return (
+  //     <Box className="modal-loader">
+  //       <CircularProgress />
+  //     </Box>
+  //   );
+  // }
 
   return (
     <>
@@ -142,191 +170,210 @@ const PreviewQuestionsModal = (props: any) => {
         ariaHideApp={false}
         style={customStylesModal}
       >
-        <Box className="modal-container">
-          {currentPage === 1 ? (
-            <>
-              <Box className="questions-container">
-                {previewQuestionsData?.map(
-                  (questionData: any, index: number) => (
-                    <Box key={index} className="questions">
-                      <Typography>{`${index + 1}.  ${
-                        questionData.question
-                      }`}</Typography>
-                      <Checkbox
-                        checked={getQuestionIdFromNewCreateQuizBody(
-                          questionData
-                        )}
-                        onChange={(event: any) =>
-                          handleCheckBoxChange(event, questionData)
-                        }
-                        inputProps={{ "aria-label": "controlled" }}
-                        className="select-check-box"
-                      />
-                    </Box>
-                  )
-                )}
-              </Box>
-            </>
-          ) : (
-            <>
-              <Box>
-                <Box className="questions-container">
-                  <Box className="quiz-topic-container">
-                    <Box className="quiz-topic">
-                      <Typography>Topcis Covered</Typography>
-                    </Box>
-                    <Box className="add-topic-container">
-                      <TextField
-                        variant="outlined"
-                        className="text-field"
-                        label={addedTopic ? "Update Topic" : "Add Topic"}
-                        size="small"
-                        onChange={handleTopicChange}
-                        value={quizTopic}
-                      />
-
-                      <Button
-                        variant={quizTopic ? "outlined" : "contained"}
-                        className="button"
-                        onClick={handleAddTopic}
-                        disabled={quizTopic ? false : true}
-                        endIcon={addedTopic ? <UpdateIcon /> : <AddIcon />}
-                      >
-                        {addedTopic ? "Update" : "Add"}
-                      </Button>
-                    </Box>
-                    {addedTopic ? (
-                      <Box>
-                        <Typography>{`Quiz Topic : ${addedTopic}`}</Typography>
-                      </Box>
-                    ) : null}
-                  </Box>
-
-                  <Box className="quiz-info-container">
-                    <Box className="element-box">
-                      <Box className="info-container ">
-                        <Typography>{`Total Number Of Questions Selected ${totalQuestionCount}`}</Typography>
-                      </Box>
-                    </Box>
-                    <Box className="element-box">
-                      <Box className="info-container">
-                        <Typography>{`Estimated Time Rrequired ${assignedTestTime} Minutes`}</Typography>
-                      </Box>
-
-                      <Button
-                        variant="outlined"
-                        className="button"
-                        onClick={handleEditTestTime}
-                        endIcon={<EditIcon />}
-                      >
-                        Edit
-                      </Button>
-                      <Popover
-                        open={Boolean(anchorElTestTime)}
-                        anchorEl={anchorElTestTime}
-                        onClose={handleCloseEditTestTime}
-                        anchorOrigin={{
-                          vertical: "bottom",
-                          horizontal: "left",
-                        }}
-                      >
-                        <Box className="edit-popover">
-                          <TextField
-                            label="Test Duration In Minutes"
-                            type="number"
-                            variant="standard"
-                            name="quizTime"
-                            value={editTimeChange.quizTime}
-                            onChange={handleEditOnChange}
+        {!previewLoader ? (
+          <>
+            <Box className="modal-container">
+              {currentPage === 1 ? (
+                <>
+                  <Box className="questions-container">
+                    {previewQuestionsData?.map(
+                      (questionData: any, index: number) => (
+                        <Box key={index} className="questions">
+                          <Typography>{`${index + 1}.  ${
+                            questionData.question
+                          }`}</Typography>
+                          <Checkbox
+                            checked={getQuestionIdFromNewCreateQuizBody(
+                              questionData
+                            )}
+                            onChange={(event: any) =>
+                              handleCheckBoxChange(event, questionData)
+                            }
+                            inputProps={{ "aria-label": "controlled" }}
+                            className="select-check-box"
                           />
-                          <Button
-                            name="testTime"
-                            onClick={handleEditUpdate}
+                        </Box>
+                      )
+                    )}
+                  </Box>
+                </>
+              ) : (
+                <>
+                  <Box>
+                    <Box className="questions-container">
+                      <Box className="quiz-topic-container">
+                        <Box className="quiz-topic">
+                          <Typography>Topcis Covered</Typography>
+                        </Box>
+                        <Box className="add-topic-container">
+                          <TextField
                             variant="outlined"
+                            className="text-field"
+                            label={addedTopic ? "Update Topic" : "Add Topic*"}
+                            size="small"
+                            onChange={handleTopicChange}
+                            value={quizTopic}
+                          />
+
+                          <Button
+                            variant={quizTopic ? "outlined" : "contained"}
+                            className="button"
+                            onClick={handleAddTopic}
+                            disabled={quizTopic ? false : true}
+                            endIcon={addedTopic ? <UpdateIcon /> : <AddIcon />}
                           >
-                            Update
+                            {addedTopic ? "Update" : "Add"}
                           </Button>
                         </Box>
-                      </Popover>
-                    </Box>
-
-                    <Box className="element-box">
-                      <Box className="info-container">
-                        <Typography>{`Test Link Expires in ${assignedTestExpiry} hours`}</Typography>
+                        {validationError.quizTopic && (
+                          <Typography variant="body2" color="error">
+                            Please Add Topic
+                          </Typography>
+                        )}
+                        {addedTopic ? (
+                          <Box>
+                            <Typography>{`Quiz Topic : ${addedTopic}`}</Typography>
+                          </Box>
+                        ) : null}
                       </Box>
 
-                      <Button
-                        variant="outlined"
-                        className="button"
-                        onClick={handleEditTestExpiry}
-                        endIcon={<EditIcon />}
-                      >
-                        Edit
-                      </Button>
-                    </Box>
-                    <Popover
-                      open={Boolean(anchorlElTestExpiry)}
-                      anchorEl={anchorlElTestExpiry}
-                      onClose={handleCloseEditTestExpiry}
-                      anchorOrigin={{
-                        vertical: "bottom",
-                        horizontal: "left",
-                      }}
-                    >
-                      <Box className="edit-popover">
-                        <TextField
-                          label="Test Expiry in Hours"
-                          type="number"
-                          variant="standard"
-                          name="quizExpiry"
-                          value={editTimeChange.quizExpiry}
-                          onChange={handleEditOnChange}
-                        />
-                        <Button
-                          name="LinkExpiryTime"
-                          variant="contained"
-                          onClick={handleEditUpdate}
+                      <Box className="quiz-info-container">
+                        <Box className="element-box">
+                          <Box className="info-container ">
+                            <Typography>{`Total Number Of Questions Selected ${totalQuestionCount}`}</Typography>
+                          </Box>
+                        </Box>
+                        <Box className="element-box">
+                          <Box className="info-container">
+                            <Typography>{`Estimated Time Rrequired ${assignedTestTime} Minutes`}</Typography>
+                          </Box>
+
+                          <Button
+                            variant="outlined"
+                            className="button"
+                            onClick={handleEditTestTime}
+                            endIcon={<EditIcon />}
+                          >
+                            Edit
+                          </Button>
+                          <Popover
+                            open={Boolean(anchorElTestTime)}
+                            anchorEl={anchorElTestTime}
+                            onClose={handleCloseEditTestTime}
+                            anchorOrigin={{
+                              vertical: "bottom",
+                              horizontal: "left",
+                            }}
+                          >
+                            <Box className="edit-popover">
+                              <TextField
+                                label="Test Duration In Minutes"
+                                type="number"
+                                variant="standard"
+                                name="quizTime"
+                                value={testTimings.quizTime}
+                                onChange={handleEditOnChange}
+                              />
+                              <Button
+                                name="testTime"
+                                onClick={handleEditUpdate}
+                                //variant="outlined"
+                              >
+                                Update
+                              </Button>
+                            </Box>
+                          </Popover>
+                        </Box>
+
+                        <Box className="element-box">
+                          <Box className="info-container">
+                            <Typography>{`Test Link Expires in ${assignedTestExpiry} hours`}</Typography>
+                          </Box>
+
+                          <Button
+                            variant="outlined"
+                            className="button"
+                            onClick={handleEditTestExpiry}
+                            endIcon={<EditIcon />}
+                          >
+                            Edit
+                          </Button>
+                        </Box>
+                        <Popover
+                          open={Boolean(anchorlElTestExpiry)}
+                          anchorEl={anchorlElTestExpiry}
+                          onClose={handleCloseEditTestExpiry}
+                          anchorOrigin={{
+                            vertical: "bottom",
+                            horizontal: "left",
+                          }}
                         >
-                          Update
-                        </Button>
+                          <Box className="edit-popover">
+                            <TextField
+                              label="Test Expiry in Hours"
+                              type="number"
+                              variant="standard"
+                              name="quizExpiry"
+                              value={testTimings.quizExpiry}
+                              onChange={handleEditOnChange}
+                            />
+                            <Button
+                              name="LinkExpiryTime"
+                              //   variant="outlined"
+                              onClick={handleEditUpdate}
+                            >
+                              Update
+                            </Button>
+                          </Box>
+                        </Popover>
                       </Box>
-                    </Popover>
+                      <Box className="generate-link-btn">
+                        {buttonLoader ? (
+                          <Box className="button-loader">
+                            <CircularProgress />
+                          </Box>
+                        ) : (
+                          <Button
+                            variant="contained"
+                            className="generate-btn"
+                            onClick={GenrateQuizLink}
+                          >
+                            Generate Link
+                          </Button>
+                        )}
+                      </Box>
+                    </Box>
                   </Box>
-                  <Box className="generate-link-btn">
-                    <Button
-                      variant="contained"
-                      className="generate-btn"
-                      onClick={GenrateQuizLink}
-                    >
-                      Generate Link
-                    </Button>
-                  </Box>
-                </Box>
+                </>
+              )}
+            </Box>
+
+            <Box className="handle-modal">
+              <Box>
+                <Button variant="outlined" onClick={handlePreviewPageChange}>
+                  {currentPage === 1 ? "Next" : "Back"}
+                </Button>
               </Box>
-            </>
-          )}
-        </Box>
 
-        <Box className="handle-modal">
-          <Box>
-            <Button variant="outlined" onClick={handlePreviewPageChange}>
-              {currentPage === 1 ? "Next" : "Back"}
-            </Button>
+              <Button
+                variant="contained"
+                color="error"
+                onClick={() => {
+                  setPreviewQuestionOpen(false);
+                  setCurrentPage(1);
+                }}
+                endIcon={<CloseIcon />}
+              >
+                Close
+              </Button>
+              <Box></Box>
+            </Box>
+          </>
+        ) : (
+          <Box className="modal-loader">
+            <CircularProgress />
           </Box>
-
-          <Button
-            variant="contained"
-            className="close-button"
-            onClick={() => {
-              setPreviewQuestionOpen(false);
-              setCurrentPage(1);
-            }}
-            endIcon={<CloseIcon />}
-          >
-            Close
-          </Button>
-          <Box></Box>
-        </Box>
+        )}
       </ReactModal>
     </>
   );

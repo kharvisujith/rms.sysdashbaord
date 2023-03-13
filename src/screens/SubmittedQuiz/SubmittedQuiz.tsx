@@ -21,7 +21,7 @@ import ReactModal from "react-modal";
 import {
   getTotalSubmittedQuizInfo,
   getSubmittedQuizInfo,
-  getSubmittedQuizDetailedInfo,
+  getSubmittedQuizSummary,
 } from "../../api/apiAgent";
 import AllSubmittedQuestionsAnswers from "../../components/DispalyQuizCandidateSubmittedQuestionsAnswers/AllSubmittedQuestionsAnswers";
 import NavBarInterviewer from "../../components/NavBar/NavBarInterviewer";
@@ -38,6 +38,7 @@ import { getComparator } from "../../utils/TableSortFunctions";
 import SearchIcon from "@mui/icons-material/Search";
 import TopNavBar from "../../components/TopNavBar/TopNavBar";
 import { submittedQuizTableColumns } from "./SubmittedQuizTableColumn";
+import CloseIcon from "@mui/icons-material/Close";
 
 export const customStylesModal = {
   overlay: { zIndex: 1000 },
@@ -119,7 +120,7 @@ const SubmitQuizes = (props: any) => {
         console.log("error in detailed Subject Answer answersapi");
       });
 
-    getSubmittedQuizDetailedInfo(e)
+    getSubmittedQuizSummary(e)
       .then((res: any) => {
         setIndividualQuizDetailedInfo(res.data);
         setLoader(false);
@@ -197,78 +198,79 @@ const SubmitQuizes = (props: any) => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {totalSubmittedQuizInfoList.length>0 &&
-                 totalSubmittedQuizInfoList
-                  .slice()
-                  .sort(getComparator(order, orderBy))
-                  .filter(
-                    (row) =>
-                      !name.length ||
-                      row.candidateId
-                        .toLowerCase()
-                        .includes(name.toLowerCase()) ||
-                      row.createdBy
-                        .toLowerCase()
-                        .includes(name.toLowerCase()) ||
-                      row.interviewLevel
-                        .toString()
-                        .toLowerCase()
-                        .includes(name.toString().toLowerCase()) ||
-                      row.totalQuestions
-                        .toString()
-                        .toLowerCase()
-                        .includes(name.toString().toLowerCase()) ||
-                      row.answeredQuestions
-                        .toString()
-                        .toLowerCase()
-                        .includes(name.toString().toLowerCase()) ||
-                      row.notAnsweredQuestions
-                        .toString()
-                        .toLowerCase()
-                        .includes(name.toString().toLowerCase()) ||
-                      row.inCorrectAnswers
-                        .toString()
-                        .toLowerCase()
-                        .includes(name.toString().toLowerCase()) ||
-                      row.correctAnswers
-                        .toString()
-                        .toLowerCase()
-                        .includes(name.toString().toLowerCase())
-                  )
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row: any) => {
-                    console.log("test data", totalSubmittedQuizInfoList);
-                    return (
-                      <TableRow
-                        hover
-                        role="checkbox"
-                        tabIndex={-1}
-                        key={row.code}
-                      >
-                        {submittedQuizTableColumns.map((column) => {
-                          const value = row[column.id];
-                          return (
-                            <TableCell key={column.id} align={column.align}>
-                              {column.id === "quizId" ? (
-                                <Button
-                                  variant="contained"
-                                  onClick={() =>
-                                    StartTestViewButtonHandler(value)
-                                  }
-                                >
-                                  Review
-                                </Button>
-                              ) : column.format && typeof value === "number" ? (
-                                column.format(value)
-                              ) : (
-                                value
-                              )}
-                            </TableCell>
-                          );
-                        })}
-                      </TableRow>
-                    );
-                  })}
+                {totalSubmittedQuizInfoList.length > 0 &&
+                  totalSubmittedQuizInfoList
+                    .slice()
+                    .sort(getComparator(order, orderBy))
+                    .filter(
+                      (row) =>
+                        !name.length ||
+                        row.candidateId
+                          .toLowerCase()
+                          .includes(name.toLowerCase()) ||
+                        row.createdBy
+                          .toLowerCase()
+                          .includes(name.toLowerCase()) ||
+                        row.interviewLevel
+                          .toString()
+                          .toLowerCase()
+                          .includes(name.toString().toLowerCase()) ||
+                        row.totalQuestions
+                          .toString()
+                          .toLowerCase()
+                          .includes(name.toString().toLowerCase()) ||
+                        row.answeredQuestions
+                          .toString()
+                          .toLowerCase()
+                          .includes(name.toString().toLowerCase()) ||
+                        row.notAnsweredQuestions
+                          .toString()
+                          .toLowerCase()
+                          .includes(name.toString().toLowerCase()) ||
+                        row.inCorrectAnswers
+                          .toString()
+                          .toLowerCase()
+                          .includes(name.toString().toLowerCase()) ||
+                        row.correctAnswers
+                          .toString()
+                          .toLowerCase()
+                          .includes(name.toString().toLowerCase())
+                    )
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((row: any) => {
+                      console.log("test data", totalSubmittedQuizInfoList);
+                      return (
+                        <TableRow
+                          hover
+                          role="checkbox"
+                          tabIndex={-1}
+                          key={row.code}
+                        >
+                          {submittedQuizTableColumns.map((column) => {
+                            const value = row[column.id];
+                            return (
+                              <TableCell key={column.id} align={column.align}>
+                                {column.id === "quizId" ? (
+                                  <Button
+                                    variant="contained"
+                                    onClick={() =>
+                                      StartTestViewButtonHandler(value)
+                                    }
+                                  >
+                                    Review
+                                  </Button>
+                                ) : column.format &&
+                                  typeof value === "number" ? (
+                                  column.format(value)
+                                ) : (
+                                  value
+                                )}
+                              </TableCell>
+                            );
+                          })}
+                        </TableRow>
+                      );
+                    })}
               </TableBody>
             </Table>
           </TableContainer>
@@ -323,6 +325,7 @@ const SubmitQuizes = (props: any) => {
                 variant="contained"
                 color="error"
                 onClick={endTestButtonHandler}
+                endIcon={<CloseIcon />}
               >
                 Close
               </Button>
