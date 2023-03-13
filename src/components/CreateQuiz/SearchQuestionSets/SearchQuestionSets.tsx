@@ -10,6 +10,7 @@ import {
   Paper,
   Chip,
   CircularProgress,
+  TablePagination,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { useEffect, useState } from "react";
@@ -30,6 +31,12 @@ import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import SelectQuestionsModal from "../SelectQuestions/SelectQuestionsModal";
 import PreviewQuestionsModal from "../PreviewQuestions/PreviewQuestionsModal";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import Pagination, { PaginationProps } from "@mui/material/Pagination";
+import { getComparator } from "../../../utils/TableSortFunctions";
+
+interface CustomPaginationProps extends PaginationProps {
+  rowsPerPage: number;
+}
 
 const SearchQuestionSets = () => {
   const [createQuizSetWiseInfo, setCreateQuizSetWiseInfo] = useState<
@@ -289,6 +296,26 @@ const SearchQuestionSets = () => {
 
   console.log("createquizsetwiseinfo is", createQuizSetWiseInfo);
 
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [order, setOrder] = useState<"asc" | "desc">("desc");
+  const [orderBy, setOrderBy] = useState<any>("createdDate");
+  const handleChangePage = (
+    event: React.MouseEvent<HTMLButtonElement> | null,
+    newPage: number
+  ) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    console.log("value in rowpage change", event.target.value);
+    console.log(parseInt(event.target.value, 10));
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
   useEffect(() => {
     setLoader(true);
     getSubjectwiseQuiz("")
@@ -325,70 +352,93 @@ const SearchQuestionSets = () => {
         </Box>
 
         {!loader ? (
-          <Box className="search-result-container">
-            {subjectwiseDetails.length > 0 &&
-              subjectwiseDetails?.map(
-                (
-                  subjectDetails: subjectWiseQuizListResponse,
-                  index: number
-                ) => (
-                  <Paper key={index}>
-                    <Box className="search-result">
-                      <Box className="search-text">
-                        <Typography>
-                          {`${subjectDetails.subjectName} contains ${
-                            subjectDetails.totalQuestionsCount
-                          } Questions, Created by ${"Test User"}, Tag - ${
-                            subjectDetails.tag
-                          } `}
-                        </Typography>
-                      </Box>
+          <Box>
+            <Box
+              className="search-result-container"
+              // sx={{
+              //   overflowY: subjectwiseDetails.length > 10 ? "scroll" : "",
+              // }}
+            >
+              {subjectwiseDetails.length > 0 &&
+                subjectwiseDetails
+                  .slice()
+                  .sort(getComparator(order, orderBy))
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  ?.map(
+                    (
+                      subjectDetails: subjectWiseQuizListResponse,
+                      index: number
+                    ) => (
+                      <Paper key={index}>
+                        <Box className="search-result">
+                          <Box className="search-text">
+                            <Typography>
+                              {`${subjectDetails.subjectName} contains ${
+                                subjectDetails.totalQuestionsCount
+                              } Questions, Created by ${"Test User"}, Tag - ${
+                                subjectDetails.tag
+                              } `}
+                            </Typography>
+                          </Box>
 
-                      <Box className="selected-icon">
-                        {checkForSubjectAndVersion(
-                          subjectDetails.subjectName,
-                          subjectDetails.version
-                        ) && (
-                          <IconButton size="small">
-                            <CheckCircleIcon
-                              className="icon"
-                              fontSize="small"
-                            />
-                          </IconButton>
-                        )}
-                      </Box>
+                          <Box className="selected-icon">
+                            {checkForSubjectAndVersion(
+                              subjectDetails.subjectName,
+                              subjectDetails.version
+                            ) && (
+                              <IconButton size="small">
+                                <CheckCircleIcon
+                                  className="icon"
+                                  fontSize="small"
+                                />
+                              </IconButton>
+                            )}
+                          </Box>
 
-                      <Box className="search-buttons">
-                        <Button
-                          variant="outlined"
-                          onClick={() =>
-                            handleSelectQuestionsModalOpen(subjectDetails)
-                          }
-                        >
-                          Select Questions
-                        </Button>
-                        {getIndexFromNewCreateQuizBody(subjectDetails) ? (
-                          <Button
-                            variant="outlined"
-                            onClick={() =>
-                              handleDeletQuestionSet(subjectDetails)
-                            }
-                          >
-                            Remove ALL
-                          </Button>
-                        ) : (
-                          <Button
-                            variant="outlined"
-                            onClick={() => handleAddQuestionSet(subjectDetails)}
-                          >
-                            Add ALL
-                          </Button>
-                        )}
-                      </Box>
-                    </Box>
-                  </Paper>
-                )
-              )}
+                          <Box className="search-buttons">
+                            <Button
+                              variant="outlined"
+                              onClick={() =>
+                                handleSelectQuestionsModalOpen(subjectDetails)
+                              }
+                            >
+                              Select Questions
+                            </Button>
+                            {getIndexFromNewCreateQuizBody(subjectDetails) ? (
+                              <Button
+                                variant="outlined"
+                                onClick={() =>
+                                  handleDeletQuestionSet(subjectDetails)
+                                }
+                              >
+                                Remove ALL
+                              </Button>
+                            ) : (
+                              <Button
+                                variant="outlined"
+                                onClick={() =>
+                                  handleAddQuestionSet(subjectDetails)
+                                }
+                              >
+                                Add ALL
+                              </Button>
+                            )}
+                          </Box>
+                        </Box>
+                      </Paper>
+                    )
+                  )}
+              {/* <Paper> */}
+            </Box>
+            <TablePagination
+              component="div"
+              count={subjectwiseDetails?.length}
+              page={page}
+              onPageChange={handleChangePage}
+              rowsPerPage={rowsPerPage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+            {/* </Paper> */}
           </Box>
         ) : (
           <Box className="table-loader ">

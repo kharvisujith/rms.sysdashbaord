@@ -9,6 +9,8 @@
   }
 
   .search-result-container {
+    max-height: 55vh;
+    overflow-y: scroll;
     .search-result {
       padding: 0.5rem;
       display: flex;
