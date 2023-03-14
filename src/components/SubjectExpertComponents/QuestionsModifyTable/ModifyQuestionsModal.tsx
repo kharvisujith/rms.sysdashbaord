@@ -10,6 +10,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { deleteQuestionsById } from "../../../api/apiAgent";
 import Swal from "sweetalert2";
+import { questionsForSetWithAnswers } from "../../../Interface/SubjectExpert/SubjectExpert";
 
 const ModifyQuestionsModal = (props: any) => {
   const {
@@ -98,30 +99,37 @@ const ModifyQuestionsModal = (props: any) => {
                 modifyQuestionsData
                   .slice()
                   .filter(
-                    (row: any) =>
+                    (row: questionsForSetWithAnswers) =>
                       !searchText.length ||
                       row.question
                         .toLowerCase()
                         .includes(searchText.toLowerCase())
                   )
-                  .map((questionDeatails: any, index: number) => (
-                    <Box className="question-main">
-                      <Typography>{`${index + 1}. ${
-                        questionDeatails.question
-                      }`}</Typography>
-                      <Box className="icons-box">
-                        <IconButton size="small">
-                          <EditIcon fontSize="small" />
-                        </IconButton>
-                        <IconButton
-                          size="small"
-                          onClick={() => handleDeleteQuestion(questionDeatails)}
-                        >
-                          <DeleteIcon fontSize="small" />
-                        </IconButton>
+                  .map(
+                    (
+                      questionDeatails: questionsForSetWithAnswers,
+                      index: number
+                    ) => (
+                      <Box className="question-main">
+                        <Typography>{`${index + 1}. ${
+                          questionDeatails.question
+                        }`}</Typography>
+                        <Box className="icons-box">
+                          <IconButton size="small">
+                            <EditIcon fontSize="small" />
+                          </IconButton>
+                          <IconButton
+                            size="small"
+                            onClick={() =>
+                              handleDeleteQuestion(questionDeatails)
+                            }
+                          >
+                            <DeleteIcon fontSize="small" />
+                          </IconButton>
+                        </Box>
                       </Box>
-                    </Box>
-                  ))}
+                    )
+                  )}
             </Box>
           </Box>
           <Box className="modal-close-button-container">

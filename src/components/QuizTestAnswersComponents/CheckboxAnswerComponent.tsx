@@ -5,10 +5,9 @@ import {
   FormGroup,
   Typography,
 } from "@mui/material";
-import { useCallback, useEffect, useState } from "react";
 
 const CheckboxAnswersComponent = (props: any) => {
-  const { question, handleCheckboxAnswerChange, selectedAnswers } = props;
+  const { question } = props;
   return (
     <>
       <Box>

@@ -5,6 +5,7 @@ import { useState } from "react";
 import { Box, Typography } from "@mui/material";
 import { LinearProgress } from "@mui/material";
 import "./AllQuestionsAnswers.style.scss";
+import { questionsForSetWithAnswers } from "../../../Interface/SubjectExpert/SubjectExpert";
 const AllQuestionsAnswers = (props: any) => {
   const { viewQuestions } = props;
 
@@ -23,36 +24,38 @@ const AllQuestionsAnswers = (props: any) => {
       </Box>
       <Box className="questions-container">
         {viewQuestions &&
-          viewQuestions?.map((question: any, index: any) => {
-            switch (question.questionType) {
-              case "SINGLECHOICE":
-                return (
-                  <RadioAnswerComponent
-                    key={index}
-                    question={{
-                      questionNumber: index + 1,
-                      questionData: question,
-                    }}
-                  />
-                );
-              case "MULTIPLECHOICE":
-                return (
-                  <CheckboxAnswersComponent
-                    key={index}
-                    question={{
-                      questionNumber: index + 1,
-                      questionData: question,
-                    }}
-                  />
-                );
-              case "PROGRAMM":
-                return (
-                  <CodingAnswerComponent key={index} question={question} />
-                );
-              default:
-                return null;
+          viewQuestions?.map(
+            (question: questionsForSetWithAnswers, index: number) => {
+              switch (question.questionType) {
+                case "SINGLECHOICE":
+                  return (
+                    <RadioAnswerComponent
+                      key={index}
+                      question={{
+                        questionNumber: index + 1,
+                        questionData: question,
+                      }}
+                    />
+                  );
+                case "MULTIPLECHOICE":
+                  return (
+                    <CheckboxAnswersComponent
+                      key={index}
+                      question={{
+                        questionNumber: index + 1,
+                        questionData: question,
+                      }}
+                    />
+                  );
+                case "PROGRAMM":
+                  return (
+                    <CodingAnswerComponent key={index} question={question} />
+                  );
+                default:
+                  return null;
+              }
             }
-          })}
+          )}
       </Box>
     </>
   );

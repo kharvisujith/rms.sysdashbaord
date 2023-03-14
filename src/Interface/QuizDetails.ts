@@ -1,30 +1,30 @@
-export interface QuizDetails {
-  quizId: number;
-  quizLink: string;
-  quizLinkExpiresAt: string;
-  // createdBy: string;
-  // updatedBy: string;
-  // createdDate: string;
-  // updatedDate: string;
-}
+// export interface QuizDetails {
+//   quizId: number;
+//   quizLink: string;
+//   quizLinkExpiresAt: string;
+//   // createdBy: string;
+//   // updatedBy: string;
+//   // createdDate: string;
+//   // updatedDate: string;
+// }
 
-export interface questionAnswer {
-  questionId: number;
-  questionType: string;
-  questionAnswers: string[];
-  questionAnswerIds: string[];
-}
+// export interface questionAnswer {
+//   questionId: number;
+//   questionType: string;
+//   questionAnswers: string[];
+//   questionAnswerIds: string[];
+// }
 
-export interface questionAnswerData {
-  subjectName: string;
-  setNumber: number;
-  quizAnswers: questionAnswer[];
-}
+// export interface questionAnswerData {
+//   subjectName: string;
+//   setNumber: number;
+//   quizAnswers: questionAnswer[];
+// }
 
-export interface quizSubmitRequest {
-  quizId: number;
-  data: questionAnswerData[];
-}
+// export interface quizSubmitRequest {
+//   quizId: number;
+//   data: questionAnswerData[];
+// }
 
 //export default QuizDetails;
 // export interface createQuizRequest {
@@ -33,6 +33,7 @@ export interface quizSubmitRequest {
 //   totalQuestionsCount: number;
 // }
 
+//for interviewer
 export interface selectedQuestionsCreateQuizWithTag {
   subjectName: string;
   version: string;
@@ -58,6 +59,8 @@ export interface createQuizResponse {
   quizLink: string;
   quizLinkExpiresAt: string;
 }
+
+//for both used
 
 export interface subjectWiseQuizListResponse {
   subjectName: string;

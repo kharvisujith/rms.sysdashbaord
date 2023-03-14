@@ -26,6 +26,7 @@ import {
 } from "../../../api/apiAgent";
 import ModifyQuestionsModal from "./ModifyQuestionsModal";
 import Swal from "sweetalert2";
+import { questionsForSetWithAnswers } from "../../../Interface/SubjectExpert/SubjectExpert";
 
 const QuestionsModifyTable = (props: any) => {
   const {
@@ -37,14 +38,15 @@ const QuestionsModifyTable = (props: any) => {
   } = props;
 
   const [order, setOrder] = useState<Order>("asc");
-  const [orderBy, setOrderBy] = useState<any>("version");
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [orderBy, setOrderBy] = useState<string>("version");
+  const [page, setPage] = useState<number>(0);
+  const [rowsPerPage, setRowsPerPage] = useState<number>(10);
   const [loader, setLoader] = useState<boolean>(false);
 
   const [openModifyQuestionsModal, setOpenModifyQuestionsModal] =
     useState<Boolean>(false);
-  const [modifyQuestionsData, setModifyQuestionsData] = useState<any>();
+  const [modifyQuestionsData, setModifyQuestionsData] =
+    useState<questionsForSetWithAnswers[]>();
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -70,7 +72,9 @@ const QuestionsModifyTable = (props: any) => {
     setOrderBy(property);
   };
 
-  const fetchSubjectwiseQuizQuestonAnswers = (questionDetails: any) => {
+  const fetchSubjectwiseQuizQuestonAnswers = (
+    questionDetails: questionsForSetWithAnswers
+  ) => {
     getSubjectwiseQuizAnswers(
       questionDetails.version,
       questionDetails.subjectName
@@ -88,7 +92,6 @@ const QuestionsModifyTable = (props: any) => {
     setOpenModifyQuestionsModal(true);
     fetchSubjectwiseQuizQuestonAnswers(questionDetails);
   };
-  console.log("value of modifyquestionData is", modifyQuestionsData);
 
   const deleteSelectedQuestionSet = (row: any) => {
     Swal.fire({

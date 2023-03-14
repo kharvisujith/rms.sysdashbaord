@@ -24,7 +24,6 @@ import {
   getSubmittedQuizSummary,
 } from "../../api/apiAgent";
 import AllSubmittedQuestionsAnswers from "../../components/DispalyQuizCandidateSubmittedQuestionsAnswers/AllSubmittedQuestionsAnswers";
-import NavBarInterviewer from "../../components/NavBar/NavBarInterviewer";
 import {
   submittedQuizResponse,
   submittedQuizAnswersResponse,

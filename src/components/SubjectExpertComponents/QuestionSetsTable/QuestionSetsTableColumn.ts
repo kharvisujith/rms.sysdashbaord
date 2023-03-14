@@ -1,4 +1,4 @@
-import { QuesitonSetsTableColumns } from "../../../Interface/SubjectExpert";
+import { QuesitonSetsTableColumns } from "../../../Interface/SubjectExpert/SubjectExpert";
 
 export const QuestionSetscolumns: QuesitonSetsTableColumns[] = [
   { id: "subjectName", label: "Subject Name", minWidth: 70 },

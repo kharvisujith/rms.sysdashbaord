@@ -1,5 +1,3 @@
-import { QuesitonSetsTableColumns } from "../../../Interface/SubjectExpert";
-
 export const QuestionsModifyTableColumns: any = [
   { id: "subjectName", label: "Subject Name", minWidth: 70 },
   {

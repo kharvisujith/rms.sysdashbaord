@@ -11,7 +11,6 @@ import { selectSubjectProps } from "../../../Interface/SubjectExpert/SelectSubje
 const SelectSubject = (props: selectSubjectProps) => {
   const { subject, setSubject } = props;
   const handleSubjectChange = (event: SelectChangeEvent) => {
-    console.log("handle subject changee is calledddd");
     setSubject(event.target.value);
   };
   return (

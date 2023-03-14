@@ -2,6 +2,7 @@ import { Box } from "@mui/material";
 import { useEffect, useState } from "react";
 import { getSubjectwiseQuiz } from "../../../api/apiAgent";
 import { subjectWiseQuizListResponse } from "../../../Interface/QuizDetails";
+import { questionSets } from "../../../Interface/SubjectExpert/SubjectExpert";
 import DownloadAndUpload from "../DownloadAndUpload/DownloadAndUpload";
 import QuestionSetsTable from "../QuestionSetsTable/QuestionSetsTable";
 import SearchInput from "../SearchInput/SearchInput";
@@ -12,7 +13,7 @@ const SubjectExpertNewUpload = () => {
   const [searchText, setSearchText] = useState<string>("");
 
   const [subjectWiseQuestionSets, setSubjectWiseQuestionSets] = useState<
-    subjectWiseQuizListResponse[]
+    questionSets[]
   >([]);
   const [isQuizSetExists, setIsQuizSetExists] = useState<boolean>(true);
 
@@ -55,7 +56,7 @@ const SubjectExpertNewUpload = () => {
 
         <QuestionSetsTable
           subjectWiseQuestionSets={subjectWiseQuestionSets}
-          setSubjectWiseQuestionSets={setSubjectWiseQuestionSets}
+          // setSubjectWiseQuestionSets={setSubjectWiseQuestionSets}
           isQuizSetExists={isQuizSetExists}
           searchText={searchText}
         />

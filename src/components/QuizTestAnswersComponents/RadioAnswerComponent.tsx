@@ -5,7 +5,7 @@ import { padding } from "@mui/system";
 import { useCallback, useEffect, useState } from "react";
 
 const RadioAnswerComponent = (props: any) => {
-  const { question, handleAnswerChange, selectedAnswers } = props;
+  const { question } = props;
 
   return (
     <>

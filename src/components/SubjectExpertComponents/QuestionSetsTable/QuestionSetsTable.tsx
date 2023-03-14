@@ -28,6 +28,10 @@ import {
   Order,
   subjectWiseQuizListResponse,
 } from "../../../Interface/QuizDetails";
+import {
+  QuesitonSetsTableColumns,
+  questionSets,
+} from "../../../Interface/SubjectExpert/SubjectExpert";
 import { getComparator } from "../../../utils/TableSortFunctions";
 import { QuestionSetscolumns } from "./QuestionSetsTableColumn";
 import ViewQuestionsModal from "./ViewQuestionModal";
@@ -42,7 +46,7 @@ const QuestionSetsTable = (props: any) => {
   const [orderBy, setOrderBy] = useState<any>("version");
   const [openViewQuestionsModal, setOpenViewQuestionsModal] =
     useState<Boolean>(false);
-  const [viewQuestions, setViewQuestions] = useState<any>([]);
+  const [viewQuestions, setViewQuestions] = useState<>([]);
 
   const [loader, setLoader] = useState<boolean>(false);
 
@@ -132,7 +136,7 @@ const QuestionSetsTable = (props: any) => {
                       .slice()
                       .sort(getComparator(order, orderBy))
                       .filter(
-                        (row: any) =>
+                        (row: questionSets) =>
                           !searchText.length ||
                           row.subjectName
                             .toLowerCase()
