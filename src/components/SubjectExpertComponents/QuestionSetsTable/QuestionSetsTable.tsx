@@ -46,7 +46,7 @@ const QuestionSetsTable = (props: any) => {
   const [orderBy, setOrderBy] = useState<any>("version");
   const [openViewQuestionsModal, setOpenViewQuestionsModal] =
     useState<Boolean>(false);
-  const [viewQuestions, setViewQuestions] = useState<>([]);
+  const [viewQuestions, setViewQuestions] = useState<questionSets[]>([]);
 
   const [loader, setLoader] = useState<boolean>(false);
 
