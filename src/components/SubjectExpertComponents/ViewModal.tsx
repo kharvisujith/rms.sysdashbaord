@@ -6,7 +6,7 @@ import {
   subjectwiseQuizAnswersResponse,
   subjectWiseQuizListResponse,
 } from "../../Interface/QuizDetails";
-import AllQuestionsAnswers from "../DispalyQuizQuestionsAnswers/AllQuestionsAnswers";
+import AllQuestionsAnswers from "./DispalyQuizQuestionsAnswers/AllQuestionsAnswers";
 import CloseIcon from "@mui/icons-material/Close";
 
 const ViewModal = (props: any) => {

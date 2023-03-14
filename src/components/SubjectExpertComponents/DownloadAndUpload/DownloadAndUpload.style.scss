@@ -1,0 +1,36 @@
+.question-upload-buttons {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  gap: 5%;
+  align-items: center;
+
+  .button-option {
+    width: fit-content;
+  }
+}
+
+.Dialog-Container {
+  display: flex;
+  flex-direction: column !important;
+  justify-content: space-around;
+
+  .items {
+    margin-top: 1rem;
+  }
+  .file {
+    margin-top: 1.5rem;
+  }
+  .buttons-box {
+    display: flex;
+
+    .button {
+      margin: 1rem;
+    }
+  }
+
+  .error {
+    color: red;
+    font-size: 0.8rem;
+  }
+}

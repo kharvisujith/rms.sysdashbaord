@@ -43,13 +43,13 @@ const SubjectExpertNewUpload = () => {
   return (
     <>
       <Box className="container">
-        <Box sx={{ display: "flex", justifyContent: "flex-start", gap: "5%" }}>
+        <Box className="options-box">
           <DownloadAndUpload
             subject={subject}
             setSubject={setSubject}
             subjectwiseQuizDetails={subjectwiseQuizDetails}
           />
-          <SearchInput setSearchText={setSearchText} />
+          <SearchInput setSearchText={setSearchText} text={"search"} />
           <SelectSubject subject={subject} setSubject={setSubject} />
         </Box>
 

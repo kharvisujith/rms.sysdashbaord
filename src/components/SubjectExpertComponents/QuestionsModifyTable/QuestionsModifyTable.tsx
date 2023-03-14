@@ -11,40 +11,40 @@ import {
   TableBody,
   CircularProgress,
   TablePagination,
-  InputAdornment,
-  OutlinedInput,
   Button,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
+  IconButton,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { Order } from "../../../Interface/QuizDetails";
+import { getComparator } from "../../../utils/TableSortFunctions";
+import { QuestionsModifyTableColumns } from "./QuestionsModifyTableColumns";
+
+import DeleteIcon from "@mui/icons-material/Delete";
 import {
-  getSubjectwiseQuiz,
+  deleteQuestionSet,
   getSubjectwiseQuizAnswers,
 } from "../../../api/apiAgent";
-import {
-  Order,
-  subjectWiseQuizListResponse,
-} from "../../../Interface/QuizDetails";
-import { getComparator } from "../../../utils/TableSortFunctions";
-import { QuestionSetscolumns } from "./QuestionSetsTableColumn";
-import ViewQuestionsModal from "./ViewQuestionModal";
+import ModifyQuestionsModal from "./ModifyQuestionsModal";
+import Swal from "sweetalert2";
 
-const QuestionSetsTable = (props: any) => {
-  const { subjectWiseQuestionSets, isQuizSetExists, searchText } = props;
+const QuestionsModifyTable = (props: any) => {
+  const {
+    QuestionsModifyTableData,
+    subjectwiseQuizDetails,
+    isQuizSetExists,
+    searchText,
+    subject,
+  } = props;
 
+  const [order, setOrder] = useState<Order>("asc");
+  const [orderBy, setOrderBy] = useState<any>("version");
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [order, setOrder] = useState<Order>("asc");
-
-  const [orderBy, setOrderBy] = useState<any>("version");
-  const [openViewQuestionsModal, setOpenViewQuestionsModal] =
-    useState<Boolean>(false);
-  const [viewQuestions, setViewQuestions] = useState<any>([]);
-
   const [loader, setLoader] = useState<boolean>(false);
+
+  const [openModifyQuestionsModal, setOpenModifyQuestionsModal] =
+    useState<Boolean>(false);
+  const [modifyQuestionsData, setModifyQuestionsData] = useState<any>();
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -56,7 +56,6 @@ const QuestionSetsTable = (props: any) => {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
-
   const createSortHandler =
     (property: string) => (event: React.MouseEvent<unknown>) => {
       handleRequestSort(event, property);
@@ -71,11 +70,13 @@ const QuestionSetsTable = (props: any) => {
     setOrderBy(property);
   };
 
-  const openViewQuestions = (row: any) => {
-    setOpenViewQuestionsModal(true);
-    getSubjectwiseQuizAnswers(row.version, row.subjectName)
+  const fetchSubjectwiseQuizQuestonAnswers = (questionDetails: any) => {
+    getSubjectwiseQuizAnswers(
+      questionDetails.version,
+      questionDetails.subjectName
+    )
       .then((response: any) => {
-        setViewQuestions(response.data);
+        setModifyQuestionsData(response.data);
         // setLoader(false);
       })
       .catch((error: any) => {
@@ -83,19 +84,76 @@ const QuestionSetsTable = (props: any) => {
         console.log("error in subjwise answersapi");
       });
   };
+  const handleModifyQuestionsModal = (questionDetails: any) => {
+    setOpenModifyQuestionsModal(true);
+    fetchSubjectwiseQuizQuestonAnswers(questionDetails);
+  };
+  console.log("value of modifyquestionData is", modifyQuestionsData);
+
+  const deleteSelectedQuestionSet = (row: any) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+      showLoaderOnConfirm: true,
+      customClass: "swal-alert",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        deleteQuestionSet(row.version, row.subjectName)
+          .then((response: any) => {
+            subjectwiseQuizDetails(subject);
+            setLoader(false);
+            Swal.fire({
+              title: "Success",
+              text: "Deleted Succesfully",
+              timer: 3000,
+              icon: "success",
+              confirmButtonText: "Okay",
+              customClass: "swal-alert",
+            });
+          })
+          .catch((error: any) => {
+            setLoader(false);
+            Swal.fire({
+              title: "error",
+              text: "Failed to delete",
+              timer: 3000,
+              icon: "error",
+              confirmButtonText: "Okay",
+              customClass: "swal-alert",
+            });
+          });
+      }
+    });
+  };
+
+  const DeleteButton = (row: any) => {
+    return (
+      <IconButton
+        size="small"
+        className="delete-icon"
+        onClick={() => deleteSelectedQuestionSet(row)}
+      >
+        <DeleteIcon />
+      </IconButton>
+    );
+  };
 
   const viewButton = (row: any) => {
     return (
       <Button
-        onClick={() => openViewQuestions(row)}
-        variant="contained"
         className="view-button"
+        variant="contained"
+        onClick={() => handleModifyQuestionsModal(row)}
       >
         View
       </Button>
     );
   };
-
   return (
     <>
       <Box>
@@ -107,7 +165,7 @@ const QuestionSetsTable = (props: any) => {
             <Table stickyHeader>
               <TableHead>
                 <TableRow>
-                  {QuestionSetscolumns.map((column) => (
+                  {QuestionsModifyTableColumns.map((column: any) => (
                     <TableCell
                       key={column.id}
                       align={column.align}
@@ -128,8 +186,7 @@ const QuestionSetsTable = (props: any) => {
               {!loader ? (
                 <TableBody>
                   {isQuizSetExists &&
-                    subjectWiseQuestionSets
-                      .slice()
+                    QuestionsModifyTableData.slice()
                       .sort(getComparator(order, orderBy))
                       .filter(
                         (row: any) =>
@@ -141,17 +198,11 @@ const QuestionSetsTable = (props: any) => {
                             .toString()
                             .toLowerCase()
                             .includes(searchText.toString().toLowerCase()) ||
-                          row.totalQuestionsCount
+                          row.tag
                             .toString()
                             .toLowerCase()
                             .includes(searchText.toString().toLowerCase()) ||
                           row.createdBy
-                            ?.toLowerCase()
-                            .includes(searchText.toLowerCase()) ||
-                          row.updatedBy
-                            ?.toLowerCase()
-                            .includes(searchText.toLowerCase()) ||
-                          row.createdDate
                             ?.toLowerCase()
                             .includes(searchText.toLowerCase())
                       )
@@ -167,20 +218,16 @@ const QuestionSetsTable = (props: any) => {
                             tabIndex={-1}
                             key={index}
                           >
-                            {QuestionSetscolumns.map(
+                            {QuestionsModifyTableColumns.map(
                               (column: any, index: number) => {
                                 const value = row[column.id];
                                 return (
                                   <TableCell key={index} align={column.align}>
                                     {column.id === "view"
                                       ? viewButton(row)
-                                      : column.id.includes("Date")
-                                      ? value?.substring(0, 10)
-                                      : value
-                                      ? value
-                                      : column.id.includes("Date")
-                                      ? "dummy-date"
-                                      : "Test-user"}
+                                      : column.id === "delete"
+                                      ? DeleteButton(row)
+                                      : value}
                                   </TableCell>
                                 );
                               }
@@ -206,7 +253,7 @@ const QuestionSetsTable = (props: any) => {
             <TablePagination
               rowsPerPageOptions={[10, 25, 100]}
               component="div"
-              count={subjectWiseQuestionSets.length}
+              count={QuestionsModifyTableData.length}
               rowsPerPage={rowsPerPage}
               page={page}
               onPageChange={handleChangePage}
@@ -215,13 +262,13 @@ const QuestionSetsTable = (props: any) => {
           )}
         </Paper>
       </Box>
-      <ViewQuestionsModal
-        openViewQuestionsModal={openViewQuestionsModal}
-        setOpenViewQuestionsModal={setOpenViewQuestionsModal}
-        viewQuestions={viewQuestions}
-        setViewQuestions={setViewQuestions}
+      <ModifyQuestionsModal
+        openModifyQuestionsModal={openModifyQuestionsModal}
+        setOpenModifyQuestionsModal={setOpenModifyQuestionsModal}
+        modifyQuestionsData={modifyQuestionsData}
+        fetchSubjectwiseQuizQuestonAnswers={fetchSubjectwiseQuizQuestonAnswers}
       />
     </>
   );
 };
-export default QuestionSetsTable;
+export default QuestionsModifyTable;

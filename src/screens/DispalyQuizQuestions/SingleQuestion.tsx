@@ -224,6 +224,7 @@ const SingleQuestion = (props: any) => {
           text: "Test Submitted Succesfully",
           icon: "success",
           confirmButtonText: "Okay",
+          customClass: "swal-alert",
         });
       })
       .then((res: any) => {
@@ -243,6 +244,7 @@ const SingleQuestion = (props: any) => {
           text: "Failed to Submitt Test, Please Retry",
           icon: "error",
           confirmButtonText: "Okay",
+          customClass: "swal-alert",
         });
       });
   }

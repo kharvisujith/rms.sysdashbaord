@@ -4,12 +4,12 @@ import {
   InputLabel,
   Input,
   InputAdornment,
-  IconButton,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
+import { searchInputProps } from "../../../Interface/SubjectExpert/SearchInput";
 
-const SearchInput = (props: any) => {
-  const { setSearchText } = props;
+const SearchInput = (props: searchInputProps) => {
+  const { setSearchText, text } = props;
   return (
     <>
       <Box>
@@ -20,16 +20,14 @@ const SearchInput = (props: any) => {
           }}
           variant="standard"
         >
-          <InputLabel htmlFor="search">Search For other Sets</InputLabel>
+          <InputLabel htmlFor="search">{text}</InputLabel>
           <Input
             id="search"
             type="text"
             onChange={(e: any) => setSearchText(e.target.value)}
             endAdornment={
               <InputAdornment position="end">
-                {/* <IconButton onClick={handleSearchQuestion}> */}
                 <SearchIcon />
-                {/* </IconButton> */}
               </InputAdornment>
             }
           />

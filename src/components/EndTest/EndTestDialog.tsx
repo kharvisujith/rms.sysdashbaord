@@ -44,12 +44,13 @@ const EndTestDialog = (props: any) => {
     };
     submitQuiz(quizAnswerModel)
       .then((response) => {
-        console.log(response.data,'submit quiz');
+        console.log(response.data, "submit quiz");
         Swal.fire({
           title: "Success",
           text: "Test Submitted Succesfully",
           icon: "success",
           confirmButtonText: "Okay",
+          customClass: "swal-alert",
         });
         setLoader(false);
         setOpenEndDialog(false);
@@ -66,7 +67,7 @@ const EndTestDialog = (props: any) => {
       .catch((error) => {
         setLoader(false);
         setOpenEndDialog(false);
-        console.log('inside catch');
+        console.log("inside catch");
         Swal.fire({
           title: "error",
           text: "Failed to Submitt Test, Please Retry",

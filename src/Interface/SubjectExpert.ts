@@ -17,7 +17,8 @@ export interface QuesitonSetsTableColumns {
     | "updatedBy"
     | "createdDate"
     | "updatedDate"
-    | "view";
+    | "view"
+    | "tag";
   label: string;
   minWidth?: number;
   align?: "right";

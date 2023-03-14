@@ -15,6 +15,7 @@ import {
 import { ChangeEvent, useState } from "react";
 import Swal from "sweetalert2";
 import { upLoadExcel } from "../../../api/apiAgent";
+import "./DownloadAndUpload.style.scss";
 
 const UploadDialog = (props: any) => {
   const { openFileUpload, setOpenFileUpload, subject, subjectwiseQuizDetails } =
@@ -58,6 +59,7 @@ const UploadDialog = (props: any) => {
             text: "Question Set Uploaded Succesfully",
             icon: "success",
             confirmButtonText: "Okay",
+            customClass: "swal-alert",
           });
         })
         .catch((error: any) => {
@@ -67,6 +69,7 @@ const UploadDialog = (props: any) => {
             text: "Failed to Upload Question Set",
             icon: "error",
             confirmButtonText: "Okay",
+            customClass: "swal-alert",
           });
         });
     } else if (!uploadData.version) {
@@ -118,23 +121,13 @@ const UploadDialog = (props: any) => {
             </Typography>
           )}
 
-          <FormControl
-            variant="standard"
-            className="items"
-
-            //  sx={{ m: 1, minWidth: 120 }}
-          >
+          <FormControl variant="standard" className="items">
             <InputLabel id="demo-simple-select-standard-label">
               Subject
             </InputLabel>
             <Select
-              //labelId="demo-simple-select-standard-label"
-              //  id="demo-simple-select-standard"
               name="subject"
               label="Subject Name"
-              // type="text"
-              //   value={age}
-              //  onChange={handleChange}
               value={subject === "ALL" ? uploadData.subject : subject}
               onChange={handleTextChange}
               disabled={subject === "ALL" ? false : true}

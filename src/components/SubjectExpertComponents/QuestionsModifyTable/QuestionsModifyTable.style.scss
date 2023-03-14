@@ -1,0 +1,27 @@
+.modal-container {
+  min-height: 70vh;
+
+  .question-main {
+    display: flex;
+    justify-content: flex-start;
+    gap: 2%;
+    align-items: center;
+    margin-bottom: 1rem;
+
+    .icons-box {
+      width: 10%;
+      display: flex;
+      gap: 15%;
+      justify-content: flex-start;
+    }
+  }
+}
+.progress-container {
+  margin-bottom: 1rem;
+}
+
+.modal-close-button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

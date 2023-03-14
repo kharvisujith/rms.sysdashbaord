@@ -143,18 +143,18 @@ export const filterQuestionsSets = (requestBody: string[]) => {
   });
 };
 
-export const deleteSetForSubjectExpert = (version: string, subject: string) => {
+export const deleteQuestionSet = (version: string, subject: string) => {
   return axiosClient.delete(
     `quiz/SubjectExpert?version=${version}&subject=${subject}`
   );
 };
 
-export const deleteQquestionsForSubjectExpert = (
+export const deleteQuestionsById = (
   questionId: number,
   version: string,
   subject: string
 ) => {
   return axiosClient.delete(
-    `quiz/SubjectExpert?questionId=${questionId}&version=${version}&subject=${subject}`
+    `quiz/SubjectExpert/${questionId}?&version=${version}&subject=${subject}`
   );
 };

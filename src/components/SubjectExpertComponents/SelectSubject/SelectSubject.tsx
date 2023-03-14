@@ -6,11 +6,10 @@ import {
   MenuItem,
   SelectChangeEvent,
 } from "@mui/material";
-import { useState } from "react";
+import { selectSubjectProps } from "../../../Interface/SubjectExpert/SelectSubject";
 
-const SelectSubject = (props: any) => {
+const SelectSubject = (props: selectSubjectProps) => {
   const { subject, setSubject } = props;
-  // const [subject, setSubject] = useState<string>("ALL");
   const handleSubjectChange = (event: SelectChangeEvent) => {
     console.log("handle subject changee is calledddd");
     setSubject(event.target.value);

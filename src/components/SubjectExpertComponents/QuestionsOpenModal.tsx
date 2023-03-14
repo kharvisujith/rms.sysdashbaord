@@ -1,11 +1,23 @@
-import { Modal, Box, Typography, Paper, Checkbox, Button, FormControl, IconButton, Input, InputAdornment, InputLabel } from "@mui/material";
+import {
+  Modal,
+  Box,
+  Typography,
+  Paper,
+  Checkbox,
+  Button,
+  FormControl,
+  IconButton,
+  Input,
+  InputAdornment,
+  InputLabel,
+} from "@mui/material";
 import { useState } from "react";
 import ReactModal from "react-modal";
 import { subjectwiseQuizAnswersResponse } from "../../Interface/QuizDetails";
 import { customStylesModal } from "../../screens/SubmittedQuiz/SubmittedQuiz";
-import AllQuestionsAnswers from "../DispalyQuizQuestionsAnswers/AllQuestionsAnswers";
- import "./QuestionsOpenModal.style.scss";
- import SearchIcon from "@mui/icons-material/Search";
+import AllQuestionsAnswers from "./DispalyQuizQuestionsAnswers/AllQuestionsAnswers";
+import "./QuestionsOpenModal.style.scss";
+import SearchIcon from "@mui/icons-material/Search";
 
 const QuestionsOpenModal = (props: any) => {
   const {
@@ -15,28 +27,27 @@ const QuestionsOpenModal = (props: any) => {
     handleCheckBoxChange,
     getQuestionIdFromSubjectExpert,
     handleDeleteQuestions,
-    createQuizSetWiseInfo
+    createQuizSetWiseInfo,
   } = props;
-  const [name, setName] =useState<string>("");
+  const [name, setName] = useState<string>("");
   // const [createQuizSetWiseInfo, setCreateQuizSetWiseInfo] = useState<any>([]);
-  
-//   const getQuestionIdFromSubjectExpert = (
-//     questionDeatils: subjectwiseQuizAnswersResponse
-//   ) => {
-//     const findIndex = createQuizSetWiseInfo.findIndex(
-//       (obj: any) =>
-//         obj.subjectName === questionDeatils.subjectName &&
-//         obj.version === questionDeatils.version
-//     );
 
-//     console.log(findIndex, 'index value');
-   
-//   };
-//   const [openDialog, setOpenDialog] = useState<boolean>(false);
-//   const handleClose = () => {
-//     setOpenDialog(false);
-//   };
- 
+  //   const getQuestionIdFromSubjectExpert = (
+  //     questionDeatils: subjectwiseQuizAnswersResponse
+  //   ) => {
+  //     const findIndex = createQuizSetWiseInfo.findIndex(
+  //       (obj: any) =>
+  //         obj.subjectName === questionDeatils.subjectName &&
+  //         obj.version === questionDeatils.version
+  //     );
+
+  //     console.log(findIndex, 'index value');
+
+  //   };
+  //   const [openDialog, setOpenDialog] = useState<boolean>(false);
+  //   const handleClose = () => {
+  //     setOpenDialog(false);
+  //   };
 
   return (
     <>
@@ -52,7 +63,7 @@ const QuestionsOpenModal = (props: any) => {
         ariaHideApp={false}
         style={customStylesModal}
       >
-         <Box>
+        <Box>
           <FormControl sx={{ m: 1, width: "25ch" }} variant="standard">
             <InputLabel htmlFor="search">Search In Questions</InputLabel>
             <Input
@@ -61,7 +72,7 @@ const QuestionsOpenModal = (props: any) => {
               onChange={(e: any) => setName(e.target.value)}
               endAdornment={
                 <InputAdornment position="end">
-                  <IconButton >
+                  <IconButton>
                     <SearchIcon />
                   </IconButton>
                 </InputAdornment>
@@ -70,16 +81,18 @@ const QuestionsOpenModal = (props: any) => {
           </FormControl>
         </Box>
         <Box>
-          {subjectSetQuestions.filter((obj : subjectwiseQuizAnswersResponse ) =>
-            !name.length || obj.question .toLowerCase().includes(name.toLowerCase()))
-            ?.map(
-            (obj: subjectwiseQuizAnswersResponse, index: number) => (
+          {subjectSetQuestions
+            .filter(
+              (obj: subjectwiseQuizAnswersResponse) =>
+                !name.length ||
+                obj.question.toLowerCase().includes(name.toLowerCase())
+            )
+            ?.map((obj: subjectwiseQuizAnswersResponse, index: number) => (
               <Box key={index} className="questions-container">
                 <Typography>{`${index + 1}.  ${obj.question}`}</Typography>
                 <Typography> {`${obj.questionAnswers} `} </Typography>
                 <Typography> {`${obj.questionOptions}`} </Typography>
 
-                 
                 {/* <AllQuestionsAnswers
                    openDialog={openDialog}
                   handleClose={handleClose}
@@ -92,27 +105,23 @@ const QuestionsOpenModal = (props: any) => {
                   inputProps={{ "aria-label": "controlled" }}
                   className="select-check-box"
                 />
-                
-              {/* </Box>
+
+                {/* </Box>
             )
           )} */}
-          <Box>
-            <Button >
-                Edit
-            </Button>
-          
-            <Button  onClick={() => handleDeleteQuestions(subjectSetQuestions)}
-            >
-                Delete
-            </Button>
-            
-          </Box>
-          </Box>
-            )
-          )}
+                <Box>
+                  <Button>Edit</Button>
+
+                  <Button
+                    onClick={() => handleDeleteQuestions(subjectSetQuestions)}
+                  >
+                    Delete
+                  </Button>
+                </Box>
+              </Box>
+            ))}
           <Button onClick={() => setSelectQuestionOpen(false)}>Close</Button>
         </Box>
-        
       </ReactModal>
       {/* </Modal> */}
     </>

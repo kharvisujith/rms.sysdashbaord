@@ -27,6 +27,7 @@ code {
   align-items: center;
   margin-top: 2rem;
   margin-bottom: 2rem;
+  padding: 1rem;
 }
 
 .modal-loader {
@@ -39,4 +40,24 @@ code {
 
 .button-loader {
   margin: 1rem;
+}
+
+/* these should be moved to common.scss in subject expert later */
+.MuiTableCell-root {
+  padding: 0.5rem !important;
+}
+
+.view-button {
+  height: 1.5rem !important;
+}
+.delete-icon {
+  height: 1.5rem !important;
+}
+
+/* for sweetalert */
+.swal-alert {
+  width: 25rem !important;
+  height: 20rem !important;
+  font-size: 0.8rem !important;
+  /* padding: 0.1rem !important; */
 }

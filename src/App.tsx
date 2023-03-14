@@ -4,17 +4,15 @@ import StartQuiz from "./screens/StartQuiz/StartQuiz";
 import Interviewer from "./screens/Interviewer/Interviewer";
 import PageNotFound from "./screens/PageNotFound/PageNotFound";
 import TestCompleted from "./screens/TestCompleted/TestCompleted";
-import SubjectOptions from "./screens/subjectExpert/SubjectExpert";
 import CandidateInfo from "./screens/Candidate/CandidateInfo";
 import CreateQuiz from "./screens/CreateQuiz/CreateQuiz";
 import SubmittedQuiz from "./screens/SubmittedQuiz/SubmittedQuiz";
 import SubjectExpert from "./screens/subjectExpert/SubjectExpert";
 import SubjectExpertUpload from "./screens/subjectExpert/SubjectExpertUpload";
-import SubjectList from "./components/SubjectExpertComponents/SubjectList";
 
 const App = () => {
   const [role, setRole] =
-    useState<"Interviewer" | "Subject Expert" | null>("Interviewer");
+    useState<"Interviewer" | "Subject Expert" | null>("Subject Expert");
 
   useEffect(() => {
     console.log("rle in useEff main is", role);

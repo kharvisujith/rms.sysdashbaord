@@ -9,8 +9,6 @@ const DownloadAndUpload = (props: any) => {
   const { subject, subjectwiseQuizDetails } = props;
   const [openFileUpload, setOpenFileUpload] = useState(false);
 
-  const [name, setName] = useState<string>("");
-
   const handleUploadFileOpen = () => {
     setOpenFileUpload(true);
   };
@@ -31,6 +29,7 @@ const DownloadAndUpload = (props: any) => {
           text: "Template downloaded succesfully",
           icon: "success",
           confirmButtonText: "Okay",
+          customClass: "swal-alert",
         });
       })
       .catch((error) => {
@@ -40,48 +39,28 @@ const DownloadAndUpload = (props: any) => {
           text: "Failed to Download the template",
           icon: "error",
           confirmButtonText: "Okay",
+          customClass: "swal-alert",
         });
       });
   };
 
   return (
     <>
-      <Box
-        // className="question-upload-buttons"
-        sx={{ display: "flex" }}
-      >
+      <Box className="question-upload-buttons">
         <Button
-          variant="contained"
-          // className="button"
+          variant="outlined"
+          className="button-option"
           onClick={downloadFile}
         >
           Download Template
         </Button>
         <Button
-          variant="contained"
-          //  className="button"
+          variant="outlined"
+          className="button-option"
           onClick={handleUploadFileOpen}
         >
           Upload Question Set
         </Button>
-
-        {/* <Box
-        // className="search-box"
-        >
-          <OutlinedInput
-            //  className="search-input"
-            id="outlined-adornment-weight"
-            value={name}
-            onChange={(e: any) => setName(e.target.value)}
-            placeholder="Search"
-            endAdornment={
-              <InputAdornment position="end">
-                <SearchIcon />
-              </InputAdornment>
-            }
-            aria-describedby="outlined-weight-helper-text"
-          />
-        </Box> */}
       </Box>
       <Box>
         <UploadDialog

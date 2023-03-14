@@ -28,7 +28,10 @@ import logo from "../../assets/images/logo.png";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { number } from "prop-types";
 
-const subjectExperPages = [{ name: "Home", route: "/" }];
+const subjectExperPages = [
+  { name: "Home", route: "/" },
+  { name: "New Upload", route: "/subjectexpert/new" },
+];
 const InterviewerPages = [
   { name: "Home", route: "/" },
   { name: "Create Quiz", route: "/createquiz" },
@@ -110,10 +113,18 @@ const TopNavBar = (props: any) => {
                       key={index}
                       onClick={() => handleCloseNavMenu(page.route)}
                     >
-                      <NavLink
+                      {/* <NavLink
                         to={page.route}
                         className={({ isActive }) =>
                           isActive ? "active-page" : "page-names"
+                        }
+                      >
+                        {page.name}
+                      </NavLink> */}
+                      <NavLink
+                        to={page.route}
+                        className={({ isActive }) =>
+                          isActive ? "active-page-menu" : "page-menu"
                         }
                       >
                         {page.name}

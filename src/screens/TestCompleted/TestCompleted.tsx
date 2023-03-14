@@ -8,7 +8,6 @@ import {
 } from "@mui/material";
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import Swal from "sweetalert2";
 import "./TestCompleted.style.scss";
 import SideBar from "../../components/TopNavBar/TopNavBar";
 import TopNavBarTest from "../../components/TopNavBar/TopNavBarTest";
