@@ -36,3 +36,19 @@ export interface questionsForSetWithAnswers {
   tag: string;
   version: string;
 }
+
+export interface questionForUpdate {
+  questionId: number;
+  question: string;
+  questionType: string;
+  questionOptions: string;
+  questionAnswers: string;
+  questionAnswerIds: string;
+}
+
+export interface UpdateQuestionsSet {
+  version: string;
+  subjectName: string;
+  tag: string;
+  updateQuizDetails: questionForUpdate[];
+}

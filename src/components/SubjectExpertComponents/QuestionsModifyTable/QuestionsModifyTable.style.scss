@@ -1,5 +1,20 @@
 .modal-container {
   min-height: 70vh;
+  .modal-headings-container {
+    display: flex;
+    justify-content: center;
+    gap: 3%;
+    padding: 0.5rem;
+
+    .headings {
+      display: flex;
+      text-transform: uppercase;
+      .topic {
+        font-weight: 550;
+        padding-right: 0.2rem;
+      }
+    }
+  }
 
   .question-main {
     display: flex;

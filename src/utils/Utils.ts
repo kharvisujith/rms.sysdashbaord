@@ -1,4 +1,4 @@
-export const optionIds = ["A", "B", "C", "D"];
+export const optionIds = ["A", "B", "C", "D", "E", "F"];
 
 export const findInnerArrayElement = (outerArray: any, innerElement: any) => {
   for (let i = 0; i < outerArray.length; i++) {

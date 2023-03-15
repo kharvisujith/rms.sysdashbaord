@@ -20,7 +20,7 @@ const AllQuestionsAnswers = (props: any) => {
           <strong>{"TotalQuestions:"}&ensp;</strong>
           {`${viewQuestions.length}`}
         </Typography>
-        <LinearProgress variant={"determinate"} color={"primary"} />
+        <LinearProgress variant={"determinate"} color={"primary"} value={0} />
       </Box>
       <Box className="questions-container">
         {viewQuestions &&
