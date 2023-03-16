@@ -1,6 +1,7 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
 import CandidateDetails from "../Interface/CandidateDetails";
 import { createQuizRequestBody } from "../Interface/QuizDetails";
+import { UpdateQuestionsSet } from "../Interface/SubjectExpert/SubjectExpert";
 //import QuizDetails from "../Interface/QuizDetails";
 // import QuizDetails from "../Interface/QuizDetails";
 
@@ -157,4 +158,13 @@ export const deleteQuestionsById = (
   return axiosClient.delete(
     `quiz/SubjectExpert/${questionId}?&version=${version}&subject=${subject}`
   );
+};
+
+// for subject expert edit questions
+export const updateQuestion = (requestBody: UpdateQuestionsSet) => {
+  return axiosClient.put(`quiz/SubjectExpert`, requestBody, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
 };

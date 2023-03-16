@@ -8,7 +8,7 @@ import { useState } from "react";
 import { Icon, IconButton } from "@material-ui/core";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { deleteQuestionsById } from "../../../api/apiAgent";
+import { deleteQuestionsById, updateQuestion } from "../../../api/apiAgent";
 import Swal from "sweetalert2";
 import {
   questionsForSetWithAnswers,
@@ -103,6 +103,84 @@ const ModifyQuestionsModal = (props: any) => {
   //   setOpenModifyQuestionsModal(false);
   //   subjectwiseQuizDetails(subject);
   // };
+
+  const confirmSave = () => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: `Modified ${editedQuestions?.updateQuizDetails?.length} Questions out of ${modifyQuestionsData?.length}`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, Update",
+      showLoaderOnConfirm: true,
+      customClass: "swal-alert",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        updateQuestion(editedQuestions!)
+          .then((response: any) => {
+            Swal.fire({
+              title: "Success",
+              text: "Updated Succesfully",
+              icon: "success",
+              confirmButtonText: "Okay",
+              customClass: "swal-alert",
+            });
+          })
+          .catch((error: any) => {
+            console.log("error in questions updated");
+            Swal.fire({
+              title: "error",
+              text: "Failed to delete",
+              icon: "error",
+              confirmButtonText: "Okay",
+              customClass: "swal-alert",
+            });
+          });
+        // deleteQuestionsById(
+        //   questionDeatails.questionId,
+        //   questionDeatails.version,
+        //   questionDeatails.subjectName
+        // )
+        //   .then((response: any) => {
+        //     fetchSubjectwiseQuizQuestonAnswers(questionDeatails);
+        // Swal.fire({
+        //   title: "Success",
+        //   text: "Deleted Succesfully",
+        //   icon: "success",
+        //   confirmButtonText: "Okay",
+        //   customClass: "swal-alert",
+        // });
+        //   })
+        //   .catch((error: any) => {
+        // Swal.fire({
+        //   title: "error",
+        //   text: "Failed to delete",
+        //   icon: "error",
+        //   confirmButtonText: "Okay",
+        //   customClass: "swal-alert",
+        // });
+        //   });
+      }
+    });
+  };
+
+  // const getEditedQuestionNumber = () => {
+  //   //  modifyQuestionsData.filter((ele:any)=>{
+  //   //   editedQuestions?.updateQuizDetails.includes(ele.questionId) ? return
+  //   //  }
+  //   console.log("get edited question number is calledd");
+  //   const questionNumbers = modifyQuestionsData.map(
+  //     (ele: any, index: number) => {
+  //       const isQuestionExist = editedQuestions?.updateQuizDetails.map(
+  //         (cur: any) => cur.questionId === ele.questionId
+  //       );
+  //     }
+  //   );
+  // };
+
+  // console.log("valueo fquestion Numbers is", questionNumbers);
+  // return questionNumbers.tostring();
 
   return (
     <>
@@ -220,6 +298,12 @@ const ModifyQuestionsModal = (props: any) => {
                       )
                     )}
               </Box>
+              {editedQuestions ? (
+                <Box>
+                  <Typography>{`Modified Questions :${"1 , 2"} `}</Typography>
+                </Box>
+              ) : null}
+
               <EditPopover
                 anchorElEdit={anchorElEdit}
                 setAnchorElEdit={setAnchorElEdit}
@@ -228,6 +312,7 @@ const ModifyQuestionsModal = (props: any) => {
                 setEditQuestionDetails={setEditQuestionDetails}
                 editedQuestions={editedQuestions}
                 setEditedQuestions={setEditedQuestions}
+                // alreadyEditedIndex, setAlreadyEditedIndex
               />
             </>
             {/* // ) : (
@@ -241,6 +326,9 @@ const ModifyQuestionsModal = (props: any) => {
             } */}
           </Box>
           <Box className="modal-close-button-container">
+            <Button variant="outlined" onClick={confirmSave}>
+              Save
+            </Button>
             <Button
               variant="contained"
               color="error"

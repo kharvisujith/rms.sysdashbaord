@@ -10,7 +10,7 @@ import {
   Select,
   SelectChangeEvent,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   questionForUpdate,
   questionsForSetWithAnswers,
@@ -95,21 +95,17 @@ const EditPopover = (props: any) => {
   };
 
   const handleSaveReference = () => {
-    console.log("save refernce is called");
     if (
       editQuestionDetails.questionType === "SINGLECHOICE" &&
       editQuestionDetails.questionAnswers.length > 1
     ) {
-      console.log("in error part");
       setValidationError(true);
     } else {
-      console.log("outside validation error");
       const questionAnswerIds = optionIds.filter((ele: any, index: number) =>
         editQuestionDetails.questionAnswers.includes(
           editQuestionDetails.questionOptions[index]
         )
       );
-      console.log("quesiton anserr ids is", questionAnswerIds);
 
       const updateQuesitonBody = {
         questionId: editQuestionDetails.questionId,
@@ -119,21 +115,16 @@ const EditPopover = (props: any) => {
         questionAnswers: editQuestionDetails.questionAnswers.toString(),
         questionAnswerIds: questionAnswerIds?.toString(),
       };
-      console.log("update quesiton body is", updateQuesitonBody);
 
       if (editedQuestions?.version) {
-        console.log("not first time");
         const existingIndex = editedQuestions.updateQuizDetails.findIndex(
           (ele: questionForUpdate) =>
             ele.questionId === editQuestionDetails.questionId
         );
 
-        console.log("exising index is", existingIndex);
-
         if (existingIndex === -1) {
           const newArr = [...editedQuestions.updateQuizDetails];
           newArr.push(updateQuesitonBody);
-          console.log("new Array is", newArr);
           setEditedQuestions((prev: UpdateQuestionsSet) => ({
             ...prev,
             updateQuizDetails: newArr,
@@ -147,32 +138,49 @@ const EditPopover = (props: any) => {
           }));
         }
       } else {
-        console.log("its first time babe");
         setEditedQuestions({
           version: editQuestionDetails.version,
           subjectName: editQuestionDetails.subjectName,
           tag: editQuestionDetails.tag,
           updateQuizDetails: [updateQuesitonBody],
-
-          // updateQuizDetails: [
-          //   {
-          //     questionId: editQuestionDetails.questionId,
-          //     question: editQuestionDetails.question,
-          //     questionType: editQuestionDetails.questionType,
-          //     questionOptions: editQuestionDetails.questionOptions.toString(),
-          //     questionAnswers: editQuestionDetails.questionAnswers.toString(),
-          //     questionAnswerIds: questionAnswerIds?.toString(),
-          //   },
-          // ],
         });
-        console.log("keekkekeekekekekekek");
       }
     }
     setAnchorElEdit(null);
   };
 
+  // const checkAlreadyEdited = () => {
+  //   const existingIndex = editedQuestions?.updateQuizDetails.findIndex(
+  //     (question: questionForUpdate) =>
+  //       question.questionId === editQuestionDetails.questionId
+  //   );
+  //   console.log("existing index in checkAlready edited is", existingIndex);
+
+  //   return existingIndex === -1 ? -1 : existingIndex;
+  // };
+
   console.log("value of question detail in popover is", editQuestionDetails);
   console.log("edited quesitons details is", editedQuestions);
+
+  const [alreadyEditedIndex, setAlreadyEditedIndex] = useState<number>(-1);
+
+  useEffect(() => {
+    const checkAlreadyEdited = () => {
+      console.log("check already edited called");
+      if (editedQuestions) {
+        const existingIndex = editedQuestions?.updateQuizDetails.findIndex(
+          (question: questionForUpdate) =>
+            question.questionId === editQuestionDetails.questionId
+        );
+        console.log("existing index in checkAlready edited is", existingIndex);
+        setAlreadyEditedIndex(existingIndex);
+      }
+      // else{
+      //   setAlreadyEditedIndex(-1)
+      // }
+    };
+    checkAlreadyEdited();
+  }, [anchorElEdit]);
 
   return (
     <>
@@ -203,7 +211,17 @@ const EditPopover = (props: any) => {
             type="text"
             variant="standard"
             name="question"
-            value={editQuestionDetails?.question}
+            value={
+              //  editQuestionDetails?.question
+              alreadyEditedIndex === -1
+                ? editQuestionDetails?.question
+                : editedQuestions?.updateQuizDetails[alreadyEditedIndex]
+                    .question
+              // checkAlreadyEdited() === -1
+              //   ? editQuestionDetails?.question
+              //   : editedQuestions.updateQuizDetails[checkAlreadyEdited()]
+              //       .question
+            }
             multiline={true}
             onChange={handleEditFieldChange}
           />
