@@ -28,71 +28,90 @@ const EditPopover = (props: any) => {
     setEditQuestionDetails,
     editedQuestions,
     setEditedQuestions,
+    tempQuestionData,
+    setTempQuestionData,
+    questionIndexInTempData,
+    setQuestionIndexInTempData,
   } = props;
 
-  const [validationError, setValidationError] = useState<boolean>(false);
+  const [validationError, setValidationError] = useState<any>({
+    questionType: false,
+    questionAnswers: false,
+  });
 
   const handleEditFieldChange = (event: any) => {
     console.log(event.target.value, event.target.name);
-
+    const indexofQuestion = tempQuestionData.findIndex(
+      (ele: questionsForSetWithAnswers) =>
+        ele.questionId === editQuestionDetails.questionId
+    );
+    const newArr = [...tempQuestionData];
     switch (event.target.name) {
       case "questionType":
         event.target.value === "SINGLECHOICE" &&
-        editQuestionDetails.questionAnswers.length > 1
-          ? setValidationError(true)
-          : setValidationError(false);
+        tempQuestionData[indexofQuestion].questionAnswers.length > 1
+          ? setValidationError((prev: any) => ({
+              ...prev,
+              questionType: true,
+            }))
+          : setValidationError((prev: any) => ({
+              ...prev,
+              questionType: false,
+            }));
 
-        setEditQuestionDetails((prev: questionsForSetWithAnswers) => ({
-          ...prev,
-          [event.target.name]: event.target.value,
-        }));
+        newArr[indexofQuestion].questionType = event.target.value;
+        setTempQuestionData(newArr);
+
         break;
 
       case "question":
-        setEditQuestionDetails((prev: questionsForSetWithAnswers) => ({
-          ...prev,
-          [event.target.name]: event.target.value,
-        }));
+        newArr[indexofQuestion].question = event.target.value;
+        setTempQuestionData(newArr);
         break;
 
       case "questionOptions":
-        setEditQuestionDetails((prev: questionsForSetWithAnswers) => ({
-          ...prev,
-          [event.target.name]: event.target.value.split(","),
-        }));
+        newArr[indexofQuestion].questionOptions = event.target.value.split(",");
+        setTempQuestionData(newArr);
         break;
 
       case "questionAnswers":
-        event.target.value.split(",").length > 1 &&
-        editQuestionDetails.questionType === "SINGLECHOICE"
-          ? setValidationError(true)
-          : setValidationError(false);
+        console.log("keeeeeeeeeeeeeeeeeeeeeeeeeeeek");
+        const data = event.target.value.split(",");
+        data.length > 1 &&
+        tempQuestionData[indexofQuestion].questionType === "SINGLECHOICE"
+          ? setValidationError((prev: any) => ({
+              ...prev,
+              questionType: true,
+            }))
+          : setValidationError((prev: any) => ({
+              ...prev,
+              questionType: false,
+            }));
 
-        setEditQuestionDetails((prev: questionsForSetWithAnswers) => ({
-          ...prev,
-          [event.target.name]: event.target.value.split(","),
-        }));
+        const allPresent = data.every((elem: any) =>
+          tempQuestionData[indexofQuestion].questionOptions.includes(elem)
+        );
+        allPresent
+          ? setValidationError((prev: any) => ({
+              ...prev,
+              questionAnswers: false,
+            }))
+          : setValidationError((prev: any) => ({
+              ...prev,
+              questionAnswers: true,
+            }));
+
+        // tempQuestionData[indexofQuestion].questionOptions.includes();
+        newArr[indexofQuestion].questionAnswers = event.target.value.split(",");
+        setTempQuestionData(newArr);
+
         break;
 
       default:
         return;
     }
-
-    // if (
-    //   event.target.name === "questionAnswers" ||
-    //   event.target.name === "questionOptions"
-    // ) {
-    //   setEditQuestionDetails((prev: questionsForSetWithAnswers) => ({
-    //     ...prev,
-    //     [event.target.name]: event.target.value.split(","),
-    //   }));
-    // } else {
-    //   setEditQuestionDetails((prev: questionsForSetWithAnswers) => ({
-    //     ...prev,
-    //     [event.target.name]: event.target.value,
-    //   }));
-    // }
   };
+  console.log("tempData is", tempQuestionData);
 
   const handleSaveReference = () => {
     if (
@@ -101,18 +120,34 @@ const EditPopover = (props: any) => {
     ) {
       setValidationError(true);
     } else {
-      const questionAnswerIds = optionIds.filter((ele: any, index: number) =>
-        editQuestionDetails.questionAnswers.includes(
-          editQuestionDetails.questionOptions[index]
-        )
+      const indexofQuestion = tempQuestionData.findIndex(
+        (ele: questionsForSetWithAnswers) =>
+          ele.questionId === editQuestionDetails.questionId
       );
 
+      const questionAnswerIds = optionIds.filter((ele: any, index: number) =>
+        tempQuestionData[indexofQuestion].questionAnswers.includes(
+          tempQuestionData[indexofQuestion].questionOptions[index]
+        )
+      );
+      console.log("quesion ansers ids ", questionAnswerIds);
+
+      // const updateQuesitonBody = {
+      //   questionId: editQuestionDetails.questionId,
+      //   question: editQuestionDetails.question,
+      //   questionType: editQuestionDetails.questionType,
+      //   questionOptions: editQuestionDetails.questionOptions.toString(),
+      //   questionAnswers: editQuestionDetails.questionAnswers.toString(),
+      //   questionAnswerIds: questionAnswerIds?.toString(),
+      // };
       const updateQuesitonBody = {
-        questionId: editQuestionDetails.questionId,
-        question: editQuestionDetails.question,
-        questionType: editQuestionDetails.questionType,
-        questionOptions: editQuestionDetails.questionOptions.toString(),
-        questionAnswers: editQuestionDetails.questionAnswers.toString(),
+        questionId: tempQuestionData[indexofQuestion].questionId,
+        question: tempQuestionData[indexofQuestion].question,
+        questionType: tempQuestionData[indexofQuestion].questionType,
+        questionOptions:
+          tempQuestionData[indexofQuestion].questionOptions.toString(),
+        questionAnswers:
+          tempQuestionData[indexofQuestion].questionAnswers.toString(),
         questionAnswerIds: questionAnswerIds?.toString(),
       };
 
@@ -148,6 +183,7 @@ const EditPopover = (props: any) => {
     }
     setAnchorElEdit(null);
   };
+  console.log("edited array on save pref is", editedQuestions);
 
   // const checkAlreadyEdited = () => {
   //   const existingIndex = editedQuestions?.updateQuizDetails.findIndex(
@@ -162,25 +198,59 @@ const EditPopover = (props: any) => {
   console.log("value of question detail in popover is", editQuestionDetails);
   console.log("edited quesitons details is", editedQuestions);
 
-  const [alreadyEditedIndex, setAlreadyEditedIndex] = useState<number>(-1);
+  // const [questionIndexInTempData, setQuestionIndexInTempData] =
+  //   useState<number>(-1);
+
+  // useEffect(() => {
+  //   // if(tempQuestionDetails?.length <1){
+  //   //   tempQuestionDetails.push(editQuestionDetails)
+  //   // }
+  //   // else{
+
+  //   // }
+  //   const checkAlreadyEdited = () => {
+  //     console.log("check already edited called");
+  //     if (editedQuestions) {
+  //       const existingIndex = editedQuestions?.updateQuizDetails.findIndex(
+  //         (question: questionForUpdate) =>
+  //           question.questionId === editQuestionDetails.questionId
+  //       );
+  //       console.log("existing index in checkAlready edited is", existingIndex);
+  //       setAlreadyEditedIndex(existingIndex);
+  //     }
+  //     // else{
+  //     //   setAlreadyEditedIndex(-1)
+  //     // }
+  //   };
+  //   checkAlreadyEdited();
+  // }, [anchorElEdit]);
 
   useEffect(() => {
-    const checkAlreadyEdited = () => {
-      console.log("check already edited called");
-      if (editedQuestions) {
-        const existingIndex = editedQuestions?.updateQuizDetails.findIndex(
-          (question: questionForUpdate) =>
-            question.questionId === editQuestionDetails.questionId
-        );
-        console.log("existing index in checkAlready edited is", existingIndex);
-        setAlreadyEditedIndex(existingIndex);
+    if (tempQuestionData[0]) {
+      console.log("inside if part");
+      const existingIndex = tempQuestionData?.findIndex(
+        (ele: questionsForSetWithAnswers) =>
+          ele.questionId === editQuestionDetails?.questionId
+      );
+      setQuestionIndexInTempData(existingIndex);
+      if (existingIndex === -1) {
+        setTempQuestionData((prev: questionsForSetWithAnswers[]) => [
+          ...prev,
+          editQuestionDetails,
+        ]);
       }
-      // else{
-      //   setAlreadyEditedIndex(-1)
-      // }
-    };
-    checkAlreadyEdited();
+    } else {
+      console.log("inside else part");
+      setTempQuestionData([editQuestionDetails]);
+      setQuestionIndexInTempData(editQuestionDetails?.questionId);
+    }
   }, [anchorElEdit]);
+  console.log(
+    "value of temp is ",
+    tempQuestionData,
+    tempQuestionData[0]?.questionType
+  );
+  console.log("edit quesiton details is", editQuestionDetails);
 
   return (
     <>
@@ -197,7 +267,12 @@ const EditPopover = (props: any) => {
           <FormControl variant="standard">
             <InputLabel>Question Type</InputLabel>
             <Select
-              value={editQuestionDetails?.questionType}
+              // value={tempQuestionData[0]}
+              value={
+                tempQuestionData[questionIndexInTempData]?.questionType
+                  ? tempQuestionData[questionIndexInTempData].questionType
+                  : editQuestionDetails?.questionType
+              }
               onChange={handleEditFieldChange}
               label="QuestionType"
               name="questionType"
@@ -212,11 +287,20 @@ const EditPopover = (props: any) => {
             variant="standard"
             name="question"
             value={
+              // anchorElEdit
+              //   ? tempQuestionData[questionIndexInTempData]?.question
+              //     ? tempQuestionData[questionIndexInTempData].question
+              //     : editQuestionDetails?.question
+              //   : ""
+              tempQuestionData[questionIndexInTempData]?.question
+                ? tempQuestionData[questionIndexInTempData].question
+                : editQuestionDetails?.question
+              // tempQuestionData[questionIndexInTempData]?.question
               //  editQuestionDetails?.question
-              alreadyEditedIndex === -1
-                ? editQuestionDetails?.question
-                : editedQuestions?.updateQuizDetails[alreadyEditedIndex]
-                    .question
+              // alreadyEditedIndex === -1
+              //   ? editQuestionDetails?.question
+              //   : editedQuestions?.updateQuizDetails[alreadyEditedIndex]
+              //       .question
               // checkAlreadyEdited() === -1
               //   ? editQuestionDetails?.question
               //   : editedQuestions.updateQuizDetails[checkAlreadyEdited()]
@@ -231,7 +315,21 @@ const EditPopover = (props: any) => {
             type="text"
             variant="standard"
             name="questionOptions"
-            value={editQuestionDetails?.questionOptions.toString()}
+            // value={editQuestionDetails?.questionOptions.toString()}
+            value={
+              // anchorElEdit
+              //   ? tempQuestionData[questionIndexInTempData]?.questionOptions
+              //     ? tempQuestionData[questionIndexInTempData]?.questionOptions
+              //     : editQuestionDetails?.questionOptions
+              //   : ""
+
+              tempQuestionData[questionIndexInTempData]?.questionOptions
+                ? tempQuestionData[questionIndexInTempData]?.questionOptions
+                : editQuestionDetails?.questionOptions
+              //  tempQuestionData[
+              //   questionIndexInTempData
+              // ]?.questionOptions.toString()
+            }
             multiline={true}
             onChange={handleEditFieldChange}
           />
@@ -241,13 +339,35 @@ const EditPopover = (props: any) => {
             type="text"
             variant="standard"
             name="questionAnswers"
-            value={editQuestionDetails?.questionAnswers.toString()}
+            // value={editQuestionDetails?.questionAnswers.toString()}
+            value={
+              // anchorElEdit
+              //   ? tempQuestionData[questionIndexInTempData]?.questionAnswers
+              //     ? tempQuestionData[questionIndexInTempData]?.questionAnswers
+              //     : editQuestionDetails?.questionAnswer
+              //   : ""
+              // tempQuestionData[questionIndexInTempData]?.questionAnswers
+              //   ? tempQuestionData[questionIndexInTempData]?.questionAnswers
+              //   : editQuestionDetails?.questionAnswers
+              tempQuestionData[questionIndexInTempData]?.questionAnswers
+                ? tempQuestionData[questionIndexInTempData]?.questionAnswers
+                : editQuestionDetails?.questionAnswers
+
+              //   tempQuestionData[
+              //   questionIndexInTempData
+              // ]?.questionAnswers.toString()
+            }
             multiline={true}
             onChange={handleEditFieldChange}
           />
-          {validationError && (
+          {validationError.questionType && (
             <Typography color="error" variant="body2">
               {`Single Choice Questions Can Have Only One Answer`}
+            </Typography>
+          )}
+          {validationError.questionAnswers && (
+            <Typography color="error" variant="body2">
+              {`Answers Should always be one among the options`}
             </Typography>
           )}
 
