@@ -35,8 +35,16 @@ const ModifyQuestionsModal = (props: any) => {
   const [editQuestionDetails, setEditQuestionDetails] =
     useState<questionsForSetWithAnswers | null>();
 
+  // const [tempQuestionDetails, setTempQuestionDetails] = useState<any>([]);
+  const [tempQuestionData, setTempQuestionData] = useState<
+    questionsForSetWithAnswers[] | []
+  >([]);
+
   const [editedQuestions, setEditedQuestions] =
     useState<UpdateQuestionsSet | null>();
+
+  const [questionIndexInTempData, setQuestionIndexInTempData] =
+    useState<number>(-1);
 
   const handleDeleteQuestion = (questionDeatails: any) => {
     Swal.fire({
@@ -312,6 +320,12 @@ const ModifyQuestionsModal = (props: any) => {
                 setEditQuestionDetails={setEditQuestionDetails}
                 editedQuestions={editedQuestions}
                 setEditedQuestions={setEditedQuestions}
+                // tempQuestionDetails={tempQuestionDetails}
+                // setTempQuestionDetails={setTempQuestionDetails}
+                tempQuestionData={tempQuestionData}
+                setTempQuestionData={setTempQuestionData}
+                questionIndexInTempData={questionIndexInTempData}
+                setQuestionIndexInTempData={setQuestionIndexInTempData}
                 // alreadyEditedIndex, setAlreadyEditedIndex
               />
             </>
