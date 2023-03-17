@@ -4,7 +4,7 @@ import { customStyles } from "../QuestionSetsTable/ViewQuestionModal";
 import CloseIcon from "@mui/icons-material/Close";
 import "./QuestionsModifyTable.style.scss";
 import SearchInput from "../SearchInput/SearchInput";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Icon, IconButton } from "@material-ui/core";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -25,9 +25,10 @@ const ModifyQuestionsModal = (props: any) => {
     fetchSubjectwiseQuizQuestonAnswers,
     subjectwiseQuizDetails,
     subject,
+    orignalData,
   } = props;
 
-  console.log("modified dat is", modifyQuestionsData);
+  console.log("modified data in modal open is", modifyQuestionsData);
 
   const [searchText, setSearchText] = useState<string>("");
   const [anchorElEdit, setAnchorElEdit] =
@@ -46,6 +47,10 @@ const ModifyQuestionsModal = (props: any) => {
 
   const [questionIndexInTempData, setQuestionIndexInTempData] =
     useState<number>(-1);
+
+  const [editedQuestionNumbers, setEditedQuestionNumbers] = useState<
+    number[] | []
+  >([]);
 
   const handleDeleteQuestion = (questionDeatails: any) => {
     Swal.fire({
@@ -190,6 +195,16 @@ const ModifyQuestionsModal = (props: any) => {
 
   // console.log("valueo fquestion Numbers is", questionNumbers);
   // return questionNumbers.tostring();
+  useEffect(() => {
+    if (modifyQuestionsData?.length > 0) {
+      console.log("modify data in useeffect modal is", modifyQuestionsData);
+      //  const newArr = [...modifyQuestionsData];
+      const newArr = JSON.parse(JSON.stringify(modifyQuestionsData));
+
+      setTempQuestionData([...newArr]);
+      console.log("afer setiingggg");
+    }
+  }, [modifyQuestionsData]);
 
   return (
     <>
@@ -307,9 +322,9 @@ const ModifyQuestionsModal = (props: any) => {
                       )
                     )}
               </Box>
-              {editedQuestions ? (
+              {editedQuestions && editedQuestionNumbers?.length > 0 ? (
                 <Box>
-                  <Typography>{`Modified Questions :${"1 , 2"} `}</Typography>
+                  <Typography>{`Modified Questions :${editedQuestionNumbers.toString()}`}</Typography>
                 </Box>
               ) : null}
 
@@ -329,6 +344,9 @@ const ModifyQuestionsModal = (props: any) => {
                 setQuestionIndexInTempData={setQuestionIndexInTempData}
                 modifyQuestionsData={modifyQuestionsData}
                 setModifyQuestionsData={setModifyQuestionsData}
+                orignalData={orignalData}
+                editedQuestionNumbers={editedQuestionNumbers}
+                setEditedQuestionNumbers={setEditedQuestionNumbers}
 
                 // alreadyEditedIndex, setAlreadyEditedIndex
               />

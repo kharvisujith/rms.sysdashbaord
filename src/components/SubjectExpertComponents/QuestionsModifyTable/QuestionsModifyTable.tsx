@@ -48,6 +48,8 @@ const QuestionsModifyTable = (props: any) => {
   const [modifyQuestionsData, setModifyQuestionsData] =
     useState<questionsForSetWithAnswers[]>();
 
+  const [orignalData, setOrginalData] = useState<any>([]);
+
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
   };
@@ -81,6 +83,8 @@ const QuestionsModifyTable = (props: any) => {
     )
       .then((response: any) => {
         setModifyQuestionsData(response.data);
+
+        setOrginalData(response.data);
         // setLoader(false);
       })
       .catch((error: any) => {
@@ -89,8 +93,8 @@ const QuestionsModifyTable = (props: any) => {
       });
   };
   const handleModifyQuestionsModal = (questionDetails: any) => {
-    setOpenModifyQuestionsModal(true);
     fetchSubjectwiseQuizQuestonAnswers(questionDetails);
+    setOpenModifyQuestionsModal(true);
   };
 
   const deleteSelectedQuestionSet = (row: any) => {
@@ -273,6 +277,7 @@ const QuestionsModifyTable = (props: any) => {
         fetchSubjectwiseQuizQuestonAnswers={fetchSubjectwiseQuizQuestonAnswers}
         subjectwiseQuizDetails={subjectwiseQuizDetails}
         subject={subject}
+        orignalData={orignalData}
       />
     </>
   );
