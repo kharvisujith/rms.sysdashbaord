@@ -1,5 +1,7 @@
 .modal-container {
   min-height: 70vh;
+  padding-left: 1rem;
+  padding-right: 1rem;
   .modal-headings-container {
     display: flex;
     justify-content: center;
@@ -39,4 +41,28 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.info-div {
+  margin: top 1rem;
+  margin-bottom: 1rem;
+  .info {
+    font-weight: 520;
+    font-size: 1rem;
+  }
+}
+
+.modal-buttons-container {
+  display: flex;
+  padding-left: 1rem;
+  align-items: flex-start;
+  gap: 40%;
+  align-items: center;
+
+  .save-button {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-top: 0.4rem;
+    padding-bottom: 0.4rem;
+  }
 }

@@ -53,6 +53,8 @@ const QuestionsModifyTable = (props: any) => {
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
   };
+  const [currentTableRowDetails, setCurrentTableRowDetails] =
+    useState<questionsForSetWithAnswers | null>();
 
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -77,14 +79,16 @@ const QuestionsModifyTable = (props: any) => {
   const fetchSubjectwiseQuizQuestonAnswers = (
     questionDetails: questionsForSetWithAnswers
   ) => {
+    console.log("inside fetch sibject wiss quizzzzz");
     getSubjectwiseQuizAnswers(
       questionDetails.version,
       questionDetails.subjectName
     )
       .then((response: any) => {
+        console.log(response.data, "Kkkkkkjdldsjdslkfjlfkdfsjdslkfldklsdj");
         setModifyQuestionsData(response.data);
 
-        setOrginalData(response.data);
+        //  setOrginalData(response.data);
         // setLoader(false);
       })
       .catch((error: any) => {
@@ -93,6 +97,7 @@ const QuestionsModifyTable = (props: any) => {
       });
   };
   const handleModifyQuestionsModal = (questionDetails: any) => {
+    setCurrentTableRowDetails(questionDetails);
     fetchSubjectwiseQuizQuestonAnswers(questionDetails);
     setOpenModifyQuestionsModal(true);
   };
@@ -278,6 +283,7 @@ const QuestionsModifyTable = (props: any) => {
         subjectwiseQuizDetails={subjectwiseQuizDetails}
         subject={subject}
         orignalData={orignalData}
+        currentTableRowDetails={currentTableRowDetails}
       />
     </>
   );

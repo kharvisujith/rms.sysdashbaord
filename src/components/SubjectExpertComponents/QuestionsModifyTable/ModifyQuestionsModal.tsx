@@ -26,6 +26,7 @@ const ModifyQuestionsModal = (props: any) => {
     subjectwiseQuizDetails,
     subject,
     orignalData,
+    currentTableRowDetails,
   } = props;
 
   const [searchText, setSearchText] = useState<string>("");
@@ -125,6 +126,15 @@ const ModifyQuestionsModal = (props: any) => {
               confirmButtonText: "Okay",
               customClass: "swal-alert",
             });
+
+            //  fetchSubjectwiseQuizQuestonAnswers(currentTableRowDetails);
+
+            // setTempQuestionData([]);
+          })
+          .then(() => {
+            // async await should be used
+            fetchSubjectwiseQuizQuestonAnswers(currentTableRowDetails);
+            setEditedQuestionNumbers([]);
           })
           .catch((error: any) => {
             console.log("error in questions updated");
@@ -245,8 +255,15 @@ const ModifyQuestionsModal = (props: any) => {
                     )}
               </Box>
               {editedQuestions && editedQuestionNumbers?.length > 0 ? (
-                <Box>
-                  <Typography>{`Modified Questions :${editedQuestionNumbers.toString()}`}</Typography>
+                <Box className="info-div">
+                  <Typography
+                    variant="body1"
+                    className="info"
+                  >{`Total Modified Questions : ${editedQuestionNumbers?.length}`}</Typography>
+                  <Typography
+                    variant="body1"
+                    className="info"
+                  >{`Question Numbers : ${editedQuestionNumbers.toString()}`}</Typography>
                 </Box>
               ) : null}
 
@@ -270,8 +287,12 @@ const ModifyQuestionsModal = (props: any) => {
               />
             </>
           </Box>
-          <Box className="modal-close-button-container">
-            <Button variant="outlined" onClick={confirmSave}>
+          <Box className="modal-buttons-container">
+            <Button
+              variant="outlined"
+              onClick={confirmSave}
+              className="save-button"
+            >
               Save
             </Button>
             <Button
