@@ -21,6 +21,7 @@ const ModifyQuestionsModal = (props: any) => {
     openModifyQuestionsModal,
     setOpenModifyQuestionsModal,
     modifyQuestionsData,
+    setModifyQuestionsData,
     fetchSubjectwiseQuizQuestonAnswers,
     subjectwiseQuizDetails,
     subject,
@@ -326,6 +327,9 @@ const ModifyQuestionsModal = (props: any) => {
                 setTempQuestionData={setTempQuestionData}
                 questionIndexInTempData={questionIndexInTempData}
                 setQuestionIndexInTempData={setQuestionIndexInTempData}
+                modifyQuestionsData={modifyQuestionsData}
+                setModifyQuestionsData={setModifyQuestionsData}
+
                 // alreadyEditedIndex, setAlreadyEditedIndex
               />
             </>

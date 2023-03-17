@@ -32,12 +32,15 @@ const EditPopover = (props: any) => {
     setTempQuestionData,
     questionIndexInTempData,
     setQuestionIndexInTempData,
+    modifyQuestionsData,
+    setModifyQuestionsData,
   } = props;
 
   const [validationError, setValidationError] = useState<any>({
     questionType: false,
     questionAnswers: false,
   });
+  const [currentQuesitonNumber, setCurrentQuestionNumber] = useState<number>(0);
 
   const handleEditFieldChange = (event: any) => {
     console.log(event.target.value, event.target.name);
@@ -75,7 +78,6 @@ const EditPopover = (props: any) => {
         break;
 
       case "questionAnswers":
-        console.log("keeeeeeeeeeeeeeeeeeeeeeeeeeeek");
         const data = event.target.value.split(",");
         data.length > 1 &&
         tempQuestionData[indexofQuestion].questionType === "SINGLECHOICE"
@@ -226,6 +228,15 @@ const EditPopover = (props: any) => {
   // }, [anchorElEdit]);
 
   useEffect(() => {
+    const questionNumberInModifyQuestons = modifyQuestionsData?.findIndex(
+      (obj: questionsForSetWithAnswers) =>
+        obj.questionId === editQuestionDetails?.questionId
+    );
+    if (questionNumberInModifyQuestons > -1) {
+      setCurrentQuestionNumber(questionNumberInModifyQuestons + 1);
+    }
+    console.log("question number of popoer is", questionNumberInModifyQuestons);
+
     if (tempQuestionData[0]) {
       console.log("inside if part");
       const existingIndex = tempQuestionData?.findIndex(
@@ -242,9 +253,11 @@ const EditPopover = (props: any) => {
     } else {
       console.log("inside else part");
       setTempQuestionData([editQuestionDetails]);
+      // here we have get from modifyQuetionData
       setQuestionIndexInTempData(editQuestionDetails?.questionId);
     }
   }, [anchorElEdit]);
+
   console.log(
     "value of temp is ",
     tempQuestionData,
@@ -287,24 +300,9 @@ const EditPopover = (props: any) => {
             variant="standard"
             name="question"
             value={
-              // anchorElEdit
-              //   ? tempQuestionData[questionIndexInTempData]?.question
-              //     ? tempQuestionData[questionIndexInTempData].question
-              //     : editQuestionDetails?.question
-              //   : ""
               tempQuestionData[questionIndexInTempData]?.question
                 ? tempQuestionData[questionIndexInTempData].question
                 : editQuestionDetails?.question
-              // tempQuestionData[questionIndexInTempData]?.question
-              //  editQuestionDetails?.question
-              // alreadyEditedIndex === -1
-              //   ? editQuestionDetails?.question
-              //   : editedQuestions?.updateQuizDetails[alreadyEditedIndex]
-              //       .question
-              // checkAlreadyEdited() === -1
-              //   ? editQuestionDetails?.question
-              //   : editedQuestions.updateQuizDetails[checkAlreadyEdited()]
-              //       .question
             }
             multiline={true}
             onChange={handleEditFieldChange}
@@ -317,18 +315,9 @@ const EditPopover = (props: any) => {
             name="questionOptions"
             // value={editQuestionDetails?.questionOptions.toString()}
             value={
-              // anchorElEdit
-              //   ? tempQuestionData[questionIndexInTempData]?.questionOptions
-              //     ? tempQuestionData[questionIndexInTempData]?.questionOptions
-              //     : editQuestionDetails?.questionOptions
-              //   : ""
-
               tempQuestionData[questionIndexInTempData]?.questionOptions
                 ? tempQuestionData[questionIndexInTempData]?.questionOptions
                 : editQuestionDetails?.questionOptions
-              //  tempQuestionData[
-              //   questionIndexInTempData
-              // ]?.questionOptions.toString()
             }
             multiline={true}
             onChange={handleEditFieldChange}
@@ -341,21 +330,9 @@ const EditPopover = (props: any) => {
             name="questionAnswers"
             // value={editQuestionDetails?.questionAnswers.toString()}
             value={
-              // anchorElEdit
-              //   ? tempQuestionData[questionIndexInTempData]?.questionAnswers
-              //     ? tempQuestionData[questionIndexInTempData]?.questionAnswers
-              //     : editQuestionDetails?.questionAnswer
-              //   : ""
-              // tempQuestionData[questionIndexInTempData]?.questionAnswers
-              //   ? tempQuestionData[questionIndexInTempData]?.questionAnswers
-              //   : editQuestionDetails?.questionAnswers
               tempQuestionData[questionIndexInTempData]?.questionAnswers
                 ? tempQuestionData[questionIndexInTempData]?.questionAnswers
                 : editQuestionDetails?.questionAnswers
-
-              //   tempQuestionData[
-              //   questionIndexInTempData
-              // ]?.questionAnswers.toString()
             }
             multiline={true}
             onChange={handleEditFieldChange}
@@ -376,7 +353,7 @@ const EditPopover = (props: any) => {
             variant="outlined"
             onClick={handleSaveReference}
           >
-            Save As Reference
+            Save Reference
           </Button>
         </Box>
       </Popover>

@@ -269,6 +269,7 @@ const QuestionsModifyTable = (props: any) => {
         openModifyQuestionsModal={openModifyQuestionsModal}
         setOpenModifyQuestionsModal={setOpenModifyQuestionsModal}
         modifyQuestionsData={modifyQuestionsData}
+        setModifyQuestionsData={setModifyQuestionsData}
         fetchSubjectwiseQuizQuestonAnswers={fetchSubjectwiseQuizQuestonAnswers}
         subjectwiseQuizDetails={subjectwiseQuizDetails}
         subject={subject}
