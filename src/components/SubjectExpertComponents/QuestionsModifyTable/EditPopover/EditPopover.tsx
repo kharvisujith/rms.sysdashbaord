@@ -40,12 +40,6 @@ const EditPopover = (props: any) => {
     setEditedQuestionNumbers,
   } = props;
 
-  console.log("modified data in edit popover is", modifyQuestionsData);
-
-  // const [validationError, setValidationError] = useState<any>({
-  //   questionType: false,
-  //   questionAnswers: false,
-  // });
   const [validationError, setValidationError] = useState<any[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
   const [currentQuestionId, setCurrentQuestionId] = useState<any>();
@@ -55,7 +49,6 @@ const EditPopover = (props: any) => {
     switch (type) {
       case "questionType-add":
         if (validationError.length < 1) {
-          console.log("inside les than one first add");
           setValidationError([
             {
               questionId: tempQuestionData[currentQuestionIndex].questionId,
@@ -64,14 +57,12 @@ const EditPopover = (props: any) => {
             },
           ]);
         } else {
-          console.log("inside else length > 1");
           const existingIndex = validationError.findIndex(
             (cur: any) =>
               cur.questionId ===
               tempQuestionData[currentQuestionIndex].questionId
           );
           if (existingIndex === -1) {
-            console.log("id exist n this");
             setValidationError((prev: any) => [
               ...prev,
               {
@@ -82,7 +73,6 @@ const EditPopover = (props: any) => {
               },
             ]);
           } else {
-            console.log("id does not exist in this");
             const newValArr = [...validationError];
             newValArr[existingIndex].questionType = true;
           }
@@ -94,22 +84,17 @@ const EditPopover = (props: any) => {
         if (validationError.length > 0) {
           const existingIndex = validationError.findIndex(
             (cur: any) => cur.questionId === currentQuestionId
-            //tempQuestionData[currentQuestionIndex].questionId
           );
-          console.log("exising inde  id in else issss", existingIndex);
           const newValArr = [...validationError];
           if (existingIndex !== -1) {
-            console.log("existing foundddd");
             newValArr[existingIndex].questionType = false;
             setValidationError(newValArr);
-            console.log("modified new val araa is", newValArr);
           }
         }
         break;
 
       case "questionAnswers-add":
         if (validationError.length < 1) {
-          console.log("inside les than one first add");
           setValidationError([
             {
               questionId: tempQuestionData[currentQuestionIndex].questionId,
@@ -118,14 +103,12 @@ const EditPopover = (props: any) => {
             },
           ]);
         } else {
-          console.log("inside else length > 1");
           const existingIndex = validationError.findIndex(
             (cur: any) =>
               cur.questionId ===
               tempQuestionData[currentQuestionIndex]?.questionId
           );
           if (existingIndex === -1) {
-            console.log("id exist n this");
             setValidationError((prev: any) => [
               ...prev,
               {
@@ -135,7 +118,6 @@ const EditPopover = (props: any) => {
               },
             ]);
           } else {
-            console.log("id does not exist in this");
             const newValArr = [...validationError];
             newValArr[existingIndex].questionAnswers = true;
           }
@@ -149,13 +131,11 @@ const EditPopover = (props: any) => {
             (cur: any) => cur.questionId === currentQuestionId
             //tempQuestionData[currentQuestionIndex].questionId
           );
-          console.log("exising inde  id in else issss", existingIndex);
+
           const newValArr = [...validationError];
           if (existingIndex !== -1) {
-            console.log("existing foundddd");
             newValArr[existingIndex].questionAnswers = false;
             setValidationError(newValArr);
-            console.log("modified new val araa is", newValArr);
           }
         }
         break;
@@ -165,10 +145,7 @@ const EditPopover = (props: any) => {
   };
 
   const handleEditFieldChange = (event: any) => {
-    console.log(event.target.value, event.target.name);
-
     const newArr = [...tempQuestionData];
-    //  const newValidationArr = [...validationError];
     let isValidationError = false;
     switch (event.target.name) {
       case "questionType":
@@ -176,62 +153,12 @@ const EditPopover = (props: any) => {
           event.target.value === "SINGLECHOICE" &&
           tempQuestionData[currentQuestionIndex].questionAnswers.length > 1
         ) {
-          console.log(" insideeee iffffff");
           HandlValidationsChange("questionType-add");
-          // if (validationError.length < 1) {
-          //   console.log("inside les than one first add");
-          //   setValidationError([
-          //     {
-          //       questionId: tempQuestionData[currentQuestionIndex].questionId,
-          //       questionType: true,
-          //       questionAnswers: false,
-          //     },
-          //   ]);
-          // } else {
-          //   console.log("inside else length > 1");
-          //   const existingIndex = validationError.findIndex(
-          //     (cur: any) =>
-          //       cur.questionId ===
-          //       tempQuestionData[currentQuestionIndex].questionId
-          //   );
-          //   if (existingIndex === -1) {
-          //     console.log("id exist n this");
-          //     setValidationError((prev: any) => [
-          //       ...prev,
-          //       {
-          //         questionId: tempQuestionData[currentQuestionIndex].questionId,
-          //         questionType: true,
-          //         questionAnswers:
-          //           prev[currentQuestionIndex]?.questionAnswers || false,
-          //       },
-          //     ]);
-          //   } else {
-          //     console.log("id does not exist in this");
-          //     const newValArr = [...validationError];
-          //     newValArr[existingIndex].questionType = true;
-          //   }
-          // }
 
           isValidationError = true;
         } else {
           HandlValidationsChange("questionType-remove");
-
-          // if (validationError.length > 0) {
-          //   const existingIndex = validationError.findIndex(
-          //     (cur: any) => cur.questionId === currentQuestionId
-          //     //tempQuestionData[currentQuestionIndex].questionId
-          //   );
-          //   console.log("exising inde  id in else issss", existingIndex);
-          //   const newValArr = [...validationError];
-          //   if (existingIndex !== -1) {
-          //     console.log("existing foundddd");
-          //     newValArr[existingIndex].questionType = false;
-          //     setValidationError(newValArr);
-          //     console.log("modified new val araa is", newValArr);
-          //   }
-          // }
         }
-        //  setValidationError(newValidationArr);
 
         newArr[currentQuestionIndex].questionType = event.target.value;
 
@@ -257,121 +184,23 @@ const EditPopover = (props: any) => {
           tempQuestionData[currentQuestionIndex].questionType === "SINGLECHOICE"
         ) {
           HandlValidationsChange("questionType-add");
-          // console.log(" insideeee iffffff");
-          // if (validationError.length < 1) {
-          //   console.log("inside les than one first add");
-          //   setValidationError([
-          //     {
-          //       questionId: tempQuestionData[currentQuestionIndex].questionId,
-          //       questionType: true,
-          //       questionAnswers: false,
-          //     },
-          //   ]);
-          // } else {
-          //   console.log("inside else length > 1");
-          //   const existingIndex = validationError.findIndex(
-          //     (cur: any) =>
-          //       cur.questionId ===
-          //       tempQuestionData[currentQuestionIndex].questionId
-          //   );
-          //   if (existingIndex === -1) {
-          //     console.log("id exist n this");
-          //     setValidationError((prev: any) => [
-          //       ...prev,
-          //       {
-          //         questionId: tempQuestionData[currentQuestionIndex].questionId,
-          //         questionType: true,
-          //         questionAnswers:
-          //           prev[currentQuestionIndex]?.questionAnswers || false,
-          //       },
-          //     ]);
-          //   } else {
-          //     console.log("id does not exist in this");
-          //     const newValArr = [...validationError];
-          //     newValArr[existingIndex].questionType = true;
-          //   }
-          // }
 
           isValidationError = true;
         } else {
           HandlValidationsChange("questionType-remove");
-          // console.log("Insideeeeeeee elseeeeee");
-          // console.log(validationError.length);
-          // if (validationError.length > 0) {
-          //   const existingIndex = validationError.findIndex(
-          //     (cur: any) => cur.questionId === currentQuestionId
-          //     //tempQuestionData[currentQuestionIndex].questionId
-          //   );
-          //   console.log("exising inde  id in else issss", existingIndex);
-          //   const newValArr = [...validationError];
-          //   if (existingIndex !== -1) {
-          //     console.log("existing foundddd");
-          //     newValArr[existingIndex].questionType = false;
-          //     setValidationError(newValArr);
-          //     console.log("modified new val araa is", newValArr);
-          //   }
-          // }
         }
 
         const allPresent = data.every((elem: any) =>
           tempQuestionData[currentQuestionIndex].questionOptions.includes(elem)
         );
         if (allPresent) {
-          //  HandlValidationsChange("questionType-remove");
-          if (validationError.length > 0) {
-            const existingIndex = validationError.findIndex(
-              (cur: any) => cur.questionId === currentQuestionId
-              //tempQuestionData[currentQuestionIndex].questionId
-            );
-            console.log("exising inde  id in else issss", existingIndex);
-            const newValArr = [...validationError];
-            if (existingIndex !== -1) {
-              console.log("existing foundddd");
-              newValArr[existingIndex].questionAnswers = false;
-              setValidationError(newValArr);
-              console.log("modified new val araa is", newValArr);
-            }
-          }
+          HandlValidationsChange("questionAnswers-remove");
         } else {
-          //  HandlValidationsChange("questionType-add");
-          if (validationError.length < 1) {
-            console.log("inside les than one first add");
-            setValidationError([
-              {
-                questionId: tempQuestionData[currentQuestionIndex].questionId,
-                questionType: false,
-                questionAnswers: true,
-              },
-            ]);
-          } else {
-            console.log("inside else length > 1");
-            const existingIndex = validationError.findIndex(
-              (cur: any) =>
-                cur.questionId ===
-                tempQuestionData[currentQuestionIndex]?.questionId
-            );
-            if (existingIndex === -1) {
-              console.log("id exist n this");
-              setValidationError((prev: any) => [
-                ...prev,
-                {
-                  questionId:
-                    tempQuestionData[currentQuestionIndex]?.questionId,
-                  questionType:
-                    prev[currentQuestionIndex]?.questionType || false,
-                  questionAnswers: true,
-                },
-              ]);
-            } else {
-              console.log("id does not exist in this");
-              const newValArr = [...validationError];
-              newValArr[existingIndex].questionAnswers = true;
-            }
-          }
+          HandlValidationsChange("questionAnswers-add");
 
           isValidationError = true;
         }
-        //  setValidationError(newValidationArr);
+
         newArr[currentQuestionIndex].questionAnswers =
           event.target.value.split(",");
         setTempQuestionData(newArr);
@@ -381,10 +210,9 @@ const EditPopover = (props: any) => {
       default:
         return;
     }
-    console.log("value of newArr after switch is", newArr);
+
     //   checkSaveReferenceDisabled(newArr, isValidationError);
   };
-  // console.log("tempData is", tempQuestionData);
 
   const handleSaveReference = () => {
     const questionAnswerIds = optionIds.filter((ele: any, index: number) =>
@@ -443,20 +271,6 @@ const EditPopover = (props: any) => {
 
     setAnchorElEdit(null);
   };
-  console.log("edited array on save pref is", editedQuestions);
-
-  // const checkAlreadyEdited = () => {
-  //   const existingIndex = editedQuestions?.updateQuizDetails.findIndex(
-  //     (question: questionForUpdate) =>
-  //       question.questionId === editQuestionDetails.questionId
-  //   );
-  //   console.log("existing index in checkAlready edited is", existingIndex);
-
-  //   return existingIndex === -1 ? -1 : existingIndex;
-  // };
-
-  console.log("value of question detail in popover is", editQuestionDetails);
-  console.log("edited quesitons details is", editedQuestions);
 
   const checkSaveReferenceDisabled = (
     updateQuestionData: any,
@@ -473,8 +287,6 @@ const EditPopover = (props: any) => {
     }
   };
 
-  console.log("validation errorarray is", validationError);
-
   const checkQustionTypeValidation = () => {
     if (validationError.length > 0) {
       const index = validationError?.findIndex(
@@ -487,15 +299,11 @@ const EditPopover = (props: any) => {
     return false;
   };
   const checkQuestionAnswersValidation = () => {
-    console.log("check questionansers validation calleeddd");
     if (validationError.length > 0) {
-      console.log("inside ifffffffff");
       const index = validationError?.findIndex(
         (cur: any) => cur.questionId === currentQuestionId
       );
-      console.log("indexxxxxxxxxx is", index);
       if (index !== -1) {
-        console.log(validationError[index].questionAnswers);
         return validationError[index].questionAnswers ? true : false;
       }
     }

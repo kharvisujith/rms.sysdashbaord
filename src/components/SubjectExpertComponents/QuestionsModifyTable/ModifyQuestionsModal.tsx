@@ -28,8 +28,6 @@ const ModifyQuestionsModal = (props: any) => {
     orignalData,
   } = props;
 
-  console.log("modified data in modal open is", modifyQuestionsData);
-
   const [searchText, setSearchText] = useState<string>("");
   const [anchorElEdit, setAnchorElEdit] =
     useState<HTMLButtonElement | null>(null);
@@ -93,16 +91,9 @@ const ModifyQuestionsModal = (props: any) => {
     });
   };
 
-  // const handleOpenEdit = (event: any) => {
-  //   setAnchorElEdit(event.currentTarget);
-  // };
   const handleCloseEdit = () => {
     setAnchorElEdit(null);
   };
-
-  // const handleEditUpdate = () => {
-  //   setAnchorElEdit(null);
-  // };
 
   const handleOpenEditPopover = (
     event: any,
@@ -111,12 +102,6 @@ const ModifyQuestionsModal = (props: any) => {
     setEditQuestionDetails(questiondetails);
     setAnchorElEdit(event.currentTarget);
   };
-
-  // const handleEmptyQuestion = () => {
-  //   console.log("empty question called");
-  //   setOpenModifyQuestionsModal(false);
-  //   subjectwiseQuizDetails(subject);
-  // };
 
   const confirmSave = () => {
     Swal.fire({
@@ -151,58 +136,14 @@ const ModifyQuestionsModal = (props: any) => {
               customClass: "swal-alert",
             });
           });
-        // deleteQuestionsById(
-        //   questionDeatails.questionId,
-        //   questionDeatails.version,
-        //   questionDeatails.subjectName
-        // )
-        //   .then((response: any) => {
-        //     fetchSubjectwiseQuizQuestonAnswers(questionDeatails);
-        // Swal.fire({
-        //   title: "Success",
-        //   text: "Deleted Succesfully",
-        //   icon: "success",
-        //   confirmButtonText: "Okay",
-        //   customClass: "swal-alert",
-        // });
-        //   })
-        //   .catch((error: any) => {
-        // Swal.fire({
-        //   title: "error",
-        //   text: "Failed to delete",
-        //   icon: "error",
-        //   confirmButtonText: "Okay",
-        //   customClass: "swal-alert",
-        // });
-        //   });
       }
     });
   };
 
-  // const getEditedQuestionNumber = () => {
-  //   //  modifyQuestionsData.filter((ele:any)=>{
-  //   //   editedQuestions?.updateQuizDetails.includes(ele.questionId) ? return
-  //   //  }
-  //   console.log("get edited question number is calledd");
-  //   const questionNumbers = modifyQuestionsData.map(
-  //     (ele: any, index: number) => {
-  //       const isQuestionExist = editedQuestions?.updateQuizDetails.map(
-  //         (cur: any) => cur.questionId === ele.questionId
-  //       );
-  //     }
-  //   );
-  // };
-
-  // console.log("valueo fquestion Numbers is", questionNumbers);
-  // return questionNumbers.tostring();
   useEffect(() => {
     if (modifyQuestionsData?.length > 0) {
-      console.log("modify data in useeffect modal is", modifyQuestionsData);
-      //  const newArr = [...modifyQuestionsData];
       const newArr = JSON.parse(JSON.stringify(modifyQuestionsData));
-
       setTempQuestionData([...newArr]);
-      console.log("afer setiingggg");
     }
   }, [modifyQuestionsData]);
 
@@ -216,28 +157,9 @@ const ModifyQuestionsModal = (props: any) => {
       >
         <>
           <Box className="modal-container">
-            {/* {
-              modifyQuestionsData?.length > 0 ? ( */}
             <>
               <Box>
                 {modifyQuestionsData?.length > 0 && (
-                  // <Box>
-                  //   <Typography style={{ padding: 20, textAlign: "center" }}>
-                  //     <strong>{"SubjectName:"}&ensp;</strong>
-                  //     {`${modifyQuestionsData[0]?.subjectName}`}&emsp;
-                  //     <strong>{"Description:"}&ensp;</strong>
-                  //     {`${modifyQuestionsData[0]?.tag}`}&emsp;
-                  //     <strong>{"Version:"}&ensp;</strong>
-                  //     {`${modifyQuestionsData[0].version}`}&emsp;
-                  //     <strong>{"TotalQuestions:"}&ensp;</strong>
-                  //     {`${modifyQuestionsData.length}`}
-                  //   </Typography>
-                  // <LinearProgress
-                  //   variant={"determinate"}
-                  //   color={"primary"}
-                  //   value={0}
-                  // />
-                  // </Box>
                   <Box>
                     <Box className="modal-headings-container">
                       <Box className="headings">
@@ -336,8 +258,6 @@ const ModifyQuestionsModal = (props: any) => {
                 setEditQuestionDetails={setEditQuestionDetails}
                 editedQuestions={editedQuestions}
                 setEditedQuestions={setEditedQuestions}
-                // tempQuestionDetails={tempQuestionDetails}
-                // setTempQuestionDetails={setTempQuestionDetails}
                 tempQuestionData={tempQuestionData}
                 setTempQuestionData={setTempQuestionData}
                 questionIndexInTempData={questionIndexInTempData}
@@ -347,19 +267,8 @@ const ModifyQuestionsModal = (props: any) => {
                 orignalData={orignalData}
                 editedQuestionNumbers={editedQuestionNumbers}
                 setEditedQuestionNumbers={setEditedQuestionNumbers}
-
-                // alreadyEditedIndex, setAlreadyEditedIndex
               />
             </>
-            {/* // ) : (
-              //   <>{handleEmptyQuestion()}</>
-              // )
-
-              // <Box>
-              //   <h1>No content available</h1>
-              //   {/* and call the table api so that it gets dleted 
-               </Box>
-            } */}
           </Box>
           <Box className="modal-close-button-container">
             <Button variant="outlined" onClick={confirmSave}>
