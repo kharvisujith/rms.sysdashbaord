@@ -26,26 +26,32 @@ const EditPopover = (props: any) => {
     setAnchorElEdit,
     handleCloseEdit,
     editQuestionDetails,
-    setEditQuestionDetails,
+    //  setEditQuestionDetails,
     editedQuestions,
     setEditedQuestions,
     tempQuestionData,
     setTempQuestionData,
-    questionIndexInTempData,
-    setQuestionIndexInTempData,
+    // questionIndexInTempData,
+    // setQuestionIndexInTempData,
     modifyQuestionsData,
-    setModifyQuestionsData,
-    orignalData,
+    //   setModifyQuestionsData,
+    //  orignalData,
     editedQuestionNumbers,
     setEditedQuestionNumbers,
+    validationError,
+    setValidationError,
   } = props;
 
-  const [validationError, setValidationError] = useState<any[]>([]);
+  //const [validationError, setValidationError] = useState<any[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
   const [currentQuestionId, setCurrentQuestionId] = useState<any>();
   const [saveRefDisabled, setSaveRefDisabled] = useState<boolean>(true);
 
   const HandlValidationsChange = (type: string) => {
+    const existingIndex = validationError.findIndex(
+      (cur: any) => cur.questionId === currentQuestionId
+      // tempQuestionData[currentQuestionIndex].questionId
+    );
     switch (type) {
       case "questionType-add":
         if (validationError.length < 1) {
@@ -57,11 +63,11 @@ const EditPopover = (props: any) => {
             },
           ]);
         } else {
-          const existingIndex = validationError.findIndex(
-            (cur: any) =>
-              cur.questionId ===
-              tempQuestionData[currentQuestionIndex].questionId
-          );
+          // const existingIndex = validationError.findIndex(
+          //   (cur: any) =>
+          //     cur.questionId ===
+          //     tempQuestionData[currentQuestionIndex].questionId
+          // );
           if (existingIndex === -1) {
             setValidationError((prev: any) => [
               ...prev,
@@ -82,9 +88,9 @@ const EditPopover = (props: any) => {
 
       case "questionType-remove":
         if (validationError.length > 0) {
-          const existingIndex = validationError.findIndex(
-            (cur: any) => cur.questionId === currentQuestionId
-          );
+          // const existingIndex = validationError.findIndex(
+          //   (cur: any) => cur.questionId === currentQuestionId
+          // );
           const newValArr = [...validationError];
           if (existingIndex !== -1) {
             newValArr[existingIndex].questionType = false;
@@ -103,11 +109,11 @@ const EditPopover = (props: any) => {
             },
           ]);
         } else {
-          const existingIndex = validationError.findIndex(
-            (cur: any) =>
-              cur.questionId ===
-              tempQuestionData[currentQuestionIndex]?.questionId
-          );
+          // const existingIndex = validationError.findIndex(
+          //   (cur: any) =>
+          //     cur.questionId ===
+          //     tempQuestionData[currentQuestionIndex]?.questionId
+          // );
           if (existingIndex === -1) {
             setValidationError((prev: any) => [
               ...prev,
@@ -127,10 +133,10 @@ const EditPopover = (props: any) => {
 
       case "questionAnswers-remove":
         if (validationError.length > 0) {
-          const existingIndex = validationError.findIndex(
-            (cur: any) => cur.questionId === currentQuestionId
-            //tempQuestionData[currentQuestionIndex].questionId
-          );
+          // const existingIndex = validationError.findIndex(
+          //   (cur: any) => cur.questionId === currentQuestionId
+          //   //tempQuestionData[currentQuestionIndex].questionId
+          // );
 
           const newValArr = [...validationError];
           if (existingIndex !== -1) {
@@ -154,7 +160,6 @@ const EditPopover = (props: any) => {
           tempQuestionData[currentQuestionIndex].questionAnswers.length > 1
         ) {
           HandlValidationsChange("questionType-add");
-
           isValidationError = true;
         } else {
           HandlValidationsChange("questionType-remove");
@@ -184,7 +189,6 @@ const EditPopover = (props: any) => {
           tempQuestionData[currentQuestionIndex].questionType === "SINGLECHOICE"
         ) {
           HandlValidationsChange("questionType-add");
-
           isValidationError = true;
         } else {
           HandlValidationsChange("questionType-remove");
@@ -197,7 +201,6 @@ const EditPopover = (props: any) => {
           HandlValidationsChange("questionAnswers-remove");
         } else {
           HandlValidationsChange("questionAnswers-add");
-
           isValidationError = true;
         }
 
@@ -211,7 +214,7 @@ const EditPopover = (props: any) => {
         return;
     }
 
-    //   checkSaveReferenceDisabled(newArr, isValidationError);
+    checkSaveReferenceDisabled(newArr, isValidationError);
   };
 
   const handleSaveReference = () => {
@@ -262,28 +265,101 @@ const EditPopover = (props: any) => {
       });
     }
 
-    if (!editedQuestionNumbers.includes(currentQuestionIndex + 1)) {
-      setEditedQuestionNumbers((prev: number[]) => [
+    console.log("edited question number value is", editedQuestionNumbers);
+
+    // const found = myArray.some(function(obj) {
+    //   return obj.id === idToFind && obj.type === typeToFind;
+    // });
+
+    // const isPresent = editedQuestionNumbers.some((cur: any) => {
+    //   return (
+    // cur.questionNumber === currentQuestionIndex + 1 &&
+    // cur.questionType === editQuestionDetails.questionType
+    //   );
+    // });
+    const existingIndex = editedQuestionNumbers.findIndex(
+      (cur: any) =>
+        cur.questionNumber === currentQuestionIndex + 1 &&
+        cur.questionType === editQuestionDetails.questionType
+    );
+    console.log("is present", existingIndex);
+
+    if (existingIndex !== -1) {
+      const newArr = [...editedQuestionNumbers];
+
+      newArr[existingIndex].questionType =
+        tempQuestionData[currentQuestionIndex].questionType;
+    } else {
+      setEditedQuestionNumbers((prev: any) => [
         ...prev,
-        currentQuestionIndex + 1,
+        {
+          questionNumber: currentQuestionIndex + 1,
+          questionType: editQuestionDetails.questionType,
+        },
       ]);
     }
 
+    setSaveRefDisabled(true);
     setAnchorElEdit(null);
+  };
+  console.log("edited questionNumbers", editedQuestionNumbers);
+
+  const compareObjects = (obj1: any, obj2: any) => {
+    const keys1 = Object.keys(obj1);
+    const keys2 = Object.keys(obj2);
+    const commonKeys = keys1.filter((key) => keys2.includes(key));
+
+    return commonKeys.every(
+      (key) => obj1[key].toString() === obj2[key].toString()
+    );
   };
 
   const checkSaveReferenceDisabled = (
-    updateQuestionData: any,
+    // updatedQuestionData: any,
+    updatedQuestionData: any,
     isValidationError: boolean
   ) => {
-    if (
-      JSON.stringify(updateQuestionData[currentQuestionIndex]) ===
-        JSON.stringify(modifyQuestionsData[currentQuestionIndex]) ||
-      isValidationError
-    ) {
+    if (isValidationError) {
       setSaveRefDisabled(true);
     } else {
-      setSaveRefDisabled(false);
+      if (editedQuestions) {
+        const existingIndex = editedQuestions?.updateQuizDetails?.findIndex(
+          (cur: questionForUpdate) =>
+            cur.questionId ===
+            updatedQuestionData[currentQuestionIndex].questionId
+        );
+
+        if (existingIndex !== -1) {
+          if (
+            compareObjects(
+              updatedQuestionData[currentQuestionIndex],
+              editedQuestions.updateQuizDetails[existingIndex]
+            )
+          ) {
+            setSaveRefDisabled(true);
+          } else {
+            setSaveRefDisabled(false);
+          }
+        } else {
+          if (
+            JSON.stringify(updatedQuestionData[currentQuestionIndex]) ===
+            JSON.stringify(modifyQuestionsData[currentQuestionIndex])
+          ) {
+            setSaveRefDisabled(true);
+          } else {
+            setSaveRefDisabled(false);
+          }
+        }
+      } else {
+        if (
+          JSON.stringify(updatedQuestionData[currentQuestionIndex]) ===
+          JSON.stringify(modifyQuestionsData[currentQuestionIndex])
+        ) {
+          setSaveRefDisabled(true);
+        } else {
+          setSaveRefDisabled(false);
+        }
+      }
     }
   };
 
@@ -311,20 +387,20 @@ const EditPopover = (props: any) => {
   };
 
   useEffect(() => {
-    const currentQuestionIndex = modifyQuestionsData?.findIndex(
-      (obj: questionsForSetWithAnswers) =>
-        obj.questionId === editQuestionDetails?.questionId
-    );
-    setCurrentQuestionIndex(currentQuestionIndex);
-    setCurrentQuestionId(tempQuestionData[currentQuestionIndex]?.questionId);
-    // if (tempQuestionData.lenght > 0) {
-    //   checkSaveReferenceDisabled(
-    //     tempQuestionData[currentQuestionIndex],
-    //     validationError[currentQuestionIndex]?.questionType ||
-    //       validationError[currentQuestionIndex].questionAnswers
-    //   );
-    // }
-  }, [anchorElEdit, modifyQuestionsData, editQuestionDetails]);
+    if (modifyQuestionsData.length > 0) {
+      const currentQuestionIndex = modifyQuestionsData?.findIndex(
+        (obj: questionsForSetWithAnswers) =>
+          obj.questionId === editQuestionDetails?.questionId
+      );
+      setCurrentQuestionIndex(currentQuestionIndex);
+      setCurrentQuestionId(tempQuestionData[currentQuestionIndex]?.questionId);
+    }
+  }, [
+    anchorElEdit,
+    modifyQuestionsData,
+    editQuestionDetails,
+    tempQuestionData,
+  ]);
 
   return (
     <>
@@ -417,7 +493,7 @@ const EditPopover = (props: any) => {
               name="LinkExpiryTime"
               variant="outlined"
               onClick={handleSaveReference}
-              // disabled={saveRefDisabled}
+              disabled={saveRefDisabled}
             >
               Save Reference
             </Button>

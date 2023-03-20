@@ -1,7 +1,9 @@
 .modal-container {
-  min-height: 70vh;
+  // min-height: 70vh;
+  height: 90%;
   padding-left: 1rem;
   padding-right: 1rem;
+  //border: 2px solid green;
   .modal-headings-container {
     display: flex;
     justify-content: center;
@@ -18,12 +20,17 @@
     }
   }
 
+  .modal-body {
+    height: 85%;
+    overflow-y: scroll;
+  }
+
   .question-main {
     display: flex;
     justify-content: flex-start;
     gap: 2%;
     align-items: center;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
 
     .icons-box {
       width: 10%;
@@ -34,35 +41,33 @@
   }
 }
 .progress-container {
-  margin-bottom: 1rem;
-}
-
-.modal-close-button-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  // margin-bottom: 1rem;
 }
 
 .info-div {
   margin: top 1rem;
   margin-bottom: 1rem;
+  .question-details {
+    display: flex;
+  }
   .info {
     font-weight: 520;
     font-size: 1rem;
+    margin-right: 0.3rem;
   }
 }
 
 .modal-buttons-container {
+  width: 100%;
   display: flex;
-  padding-left: 1rem;
-  align-items: flex-start;
-  gap: 40%;
+  justify-content: center;
+  gap: 5%;
   align-items: center;
+  //border: 2px solid red;
 
   .save-button {
-    padding-left: 1rem;
-    padding-right: 1rem;
     padding-top: 0.4rem;
     padding-bottom: 0.4rem;
+    width: 10%;
   }
 }

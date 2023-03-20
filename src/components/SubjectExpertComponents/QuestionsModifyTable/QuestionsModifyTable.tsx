@@ -45,16 +45,15 @@ const QuestionsModifyTable = (props: any) => {
 
   const [openModifyQuestionsModal, setOpenModifyQuestionsModal] =
     useState<Boolean>(false);
-  const [modifyQuestionsData, setModifyQuestionsData] =
-    useState<questionsForSetWithAnswers[]>();
-
-  const [orignalData, setOrginalData] = useState<any>([]);
+  const [modifyQuestionsData, setModifyQuestionsData] = useState<
+    questionsForSetWithAnswers[] | []
+  >([]);
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
   };
-  const [currentTableRowDetails, setCurrentTableRowDetails] =
-    useState<questionsForSetWithAnswers | null>();
+  // const [currentTableRowDetails, setCurrentTableRowDetails] =
+  //   useState<questionsForSetWithAnswers | null>();
 
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -97,7 +96,7 @@ const QuestionsModifyTable = (props: any) => {
       });
   };
   const handleModifyQuestionsModal = (questionDetails: any) => {
-    setCurrentTableRowDetails(questionDetails);
+    //   setCurrentTableRowDetails(questionDetails);
     fetchSubjectwiseQuizQuestonAnswers(questionDetails);
     setOpenModifyQuestionsModal(true);
   };
@@ -281,9 +280,8 @@ const QuestionsModifyTable = (props: any) => {
         setModifyQuestionsData={setModifyQuestionsData}
         fetchSubjectwiseQuizQuestonAnswers={fetchSubjectwiseQuizQuestonAnswers}
         subjectwiseQuizDetails={subjectwiseQuizDetails}
-        subject={subject}
-        orignalData={orignalData}
-        currentTableRowDetails={currentTableRowDetails}
+        //   subject={subject}
+        //  currentTableRowDetails={currentTableRowDetails}
       />
     </>
   );

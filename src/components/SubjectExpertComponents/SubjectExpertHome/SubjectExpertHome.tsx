@@ -16,7 +16,7 @@ const SubjectExpertHome = () => {
   const [isQuizSetExists, setIsQuizSetExists] = useState<boolean>(true);
   const [searchText, setSearchText] = useState<string>("");
 
-  const subjectwiseQuizDetails = async (subject: string) => {
+  const subjectwiseQuizDetails = async () => {
     // setLoader(true);
     getSubjectwiseQuiz(subject === "ALL" ? "" : subject)
       .then((response: any) => {
@@ -35,7 +35,7 @@ const SubjectExpertHome = () => {
   };
 
   useEffect(() => {
-    subjectwiseQuizDetails(subject);
+    subjectwiseQuizDetails();
   }, [subject]);
   return (
     <>

@@ -8,7 +8,11 @@ import { useEffect, useState } from "react";
 import { Icon, IconButton } from "@material-ui/core";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { deleteQuestionsById, updateQuestion } from "../../../api/apiAgent";
+import {
+  deleteQuestionsById,
+  getSubjectwiseQuizAnswers,
+  updateQuestion,
+} from "../../../api/apiAgent";
 import Swal from "sweetalert2";
 import {
   questionsForSetWithAnswers,
@@ -24,9 +28,9 @@ const ModifyQuestionsModal = (props: any) => {
     setModifyQuestionsData,
     fetchSubjectwiseQuizQuestonAnswers,
     subjectwiseQuizDetails,
-    subject,
-    orignalData,
-    currentTableRowDetails,
+    //   subject,
+    //   orignalData,
+    //  currentTableRowDetails,
   } = props;
 
   const [searchText, setSearchText] = useState<string>("");
@@ -44,53 +48,14 @@ const ModifyQuestionsModal = (props: any) => {
   const [editedQuestions, setEditedQuestions] =
     useState<UpdateQuestionsSet | null>();
 
-  const [questionIndexInTempData, setQuestionIndexInTempData] =
-    useState<number>(-1);
+  // const [questionIndexInTempData, setQuestionIndexInTempData] =
+  //   useState<number>(-1);
 
   const [editedQuestionNumbers, setEditedQuestionNumbers] = useState<
-    number[] | []
+    any[] | []
   >([]);
 
-  const handleDeleteQuestion = (questionDeatails: any) => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-      showLoaderOnConfirm: true,
-      customClass: "swal-alert",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        deleteQuestionsById(
-          questionDeatails.questionId,
-          questionDeatails.version,
-          questionDeatails.subjectName
-        )
-          .then((response: any) => {
-            fetchSubjectwiseQuizQuestonAnswers(questionDeatails);
-            Swal.fire({
-              title: "Success",
-              text: "Deleted Succesfully",
-              icon: "success",
-              confirmButtonText: "Okay",
-              customClass: "swal-alert",
-            });
-          })
-          .catch((error: any) => {
-            Swal.fire({
-              title: "error",
-              text: "Failed to delete",
-              icon: "error",
-              confirmButtonText: "Okay",
-              customClass: "swal-alert",
-            });
-          });
-      }
-    });
-  };
+  const [validationError, setValidationError] = useState<any[]>([]);
 
   const handleCloseEdit = () => {
     setAnchorElEdit(null);
@@ -102,6 +67,119 @@ const ModifyQuestionsModal = (props: any) => {
   ) => {
     setEditQuestionDetails(questiondetails);
     setAnchorElEdit(event.currentTarget);
+  };
+
+  const clearEditData = () => {
+    setTempQuestionData([]);
+    setEditedQuestions(null);
+    setEditedQuestionNumbers([]);
+    setValidationError([]);
+  };
+
+  const handleCloseEditModal = () => {
+    clearEditData();
+    // setTempQuestionData([]);
+    // setEditedQuestions(null);
+    // setEditedQuestionNumbers([]);
+    // setValidationError([]);
+    setOpenModifyQuestionsModal(false);
+  };
+
+  const handleDeleteQuestion = async (questionDetails: any) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+      showLoaderOnConfirm: true,
+      customClass: "swal-alert",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const deleteResponse = await deleteQuestionsById(
+            questionDetails.questionId,
+            questionDetails.version,
+            questionDetails.subjectName
+          );
+          if (deleteResponse.status !== 200) {
+            throw new Error(`Delete API error:: ${deleteResponse.status}`);
+          }
+          clearEditData();
+
+          const fetchQuestionResponse = await getSubjectwiseQuizAnswers(
+            questionDetails.version,
+            questionDetails.subjectName
+          );
+          if (fetchQuestionResponse.status === 204) {
+            handleCloseEditModal();
+            setModifyQuestionsData(fetchQuestionResponse.data);
+          } else if (fetchQuestionResponse.status !== 200) {
+            throw new Error(
+              `Fetch questions API error:: ${fetchQuestionResponse.status}`
+            );
+          }
+          setModifyQuestionsData(fetchQuestionResponse.data);
+          subjectwiseQuizDetails();
+        } catch (error: any) {
+          console.log("Error", error);
+        }
+        // deleteQuestionsById(
+        //   questionDetails.questionId,
+        //   questionDetails.version,
+        //   questionDetails.subjectName
+        // )
+        //   .then((response: any) => {
+        //     console.log("keeeeeeeeeeeeek");
+        //     //clearEditData();
+        // getSubjectwiseQuizAnswers(
+        //   questionDetails.version,
+        //   questionDetails.subjectName
+        // )
+        //       .then((response: any) => {
+        //         console.log(response.data);
+        //         console.log("peeeeeeeek");
+
+        //         if (response.data.length < 1) {
+        //           console.log("Yesssssssssss");
+        //           handleCloseEditModal();
+        //         }
+        //         setModifyQuestionsData(response.data);
+        //       })
+        //       .catch((error: any) => {
+        //         // setLoader(false);
+        //         Swal.fire({
+        //           title: "error",
+        //           text: "Failed to fetch Questions",
+        //           icon: "error",
+        //           confirmButtonText: "Okay",
+        //           customClass: "swal-alert",
+        //         });
+
+        //         console.log("error in subjwise answersapi");
+        //       });
+        //     // fetchSubjectwiseQuizQuestonAnswers(questionDeatails);
+        //     Swal.fire({
+        //       title: "Success",
+        //       text: "Deleted Succesfully",
+        //       icon: "success",
+        //       confirmButtonText: "Okay",
+        //       customClass: "swal-alert",
+        //     });
+        //   })
+        //   .catch((error: any) => {
+        //     Swal.fire({
+        //       title: "error",
+        //       text: "Failed to delete",
+        //       icon: "error",
+        //       confirmButtonText: "Okay",
+        //       customClass: "swal-alert",
+        //     });
+        //   });
+      }
+    });
   };
 
   const confirmSave = () => {
@@ -133,8 +211,8 @@ const ModifyQuestionsModal = (props: any) => {
           })
           .then(() => {
             // async await should be used
-            fetchSubjectwiseQuizQuestonAnswers(currentTableRowDetails);
-            setEditedQuestionNumbers([]);
+            //   fetchSubjectwiseQuizQuestonAnswers(currentTableRowDetails);
+            handleCloseEditModal();
           })
           .catch((error: any) => {
             console.log("error in questions updated");
@@ -149,6 +227,12 @@ const ModifyQuestionsModal = (props: any) => {
       }
     });
   };
+
+  // const checkSaveDisable = ()=> {
+  //   if(editedQuestions){
+  //     return
+  //   }
+  // }
 
   useEffect(() => {
     if (modifyQuestionsData?.length > 0) {
@@ -206,99 +290,124 @@ const ModifyQuestionsModal = (props: any) => {
                 )}
               </Box>
 
-              <Box>
-                <SearchInput
-                  setSearchText={setSearchText}
-                  text={"Search in Questions"}
-                />
-              </Box>
-              <Box>
-                {modifyQuestionsData?.length > 0 &&
-                  modifyQuestionsData
-                    .slice()
-                    .filter(
-                      (row: questionsForSetWithAnswers) =>
-                        !searchText.length ||
-                        row.question
-                          .toLowerCase()
-                          .includes(searchText.toLowerCase())
-                    )
-                    .map(
-                      (
-                        questionDeatails: questionsForSetWithAnswers,
-                        index: number
-                      ) => (
-                        <Box className="question-main" key={index}>
-                          <Typography>{`${index + 1}. ${
-                            questionDeatails.question
-                          }`}</Typography>
-                          <Box className="icons-box">
-                            <IconButton
-                              size="small"
-                              onClick={(event: any) =>
-                                handleOpenEditPopover(event, questionDeatails)
-                              }
-                            >
-                              <EditIcon fontSize="small" />
-                            </IconButton>
-                            <IconButton
-                              size="small"
-                              onClick={() =>
-                                handleDeleteQuestion(questionDeatails)
-                              }
-                            >
-                              <DeleteIcon fontSize="small" />
-                            </IconButton>
-                          </Box>
-                        </Box>
-                      )
-                    )}
-              </Box>
-              {editedQuestions && editedQuestionNumbers?.length > 0 ? (
-                <Box className="info-div">
-                  <Typography
-                    variant="body1"
-                    className="info"
-                  >{`Total Modified Questions : ${editedQuestionNumbers?.length}`}</Typography>
-                  <Typography
-                    variant="body1"
-                    className="info"
-                  >{`Question Numbers : ${editedQuestionNumbers.toString()}`}</Typography>
+              <Box className="modal-body">
+                <Box>
+                  <SearchInput
+                    setSearchText={setSearchText}
+                    text={"Search in Questions"}
+                  />
                 </Box>
-              ) : null}
+                <Box>
+                  {modifyQuestionsData?.length > 0 &&
+                    modifyQuestionsData
+                      .slice()
+                      .filter(
+                        (row: questionsForSetWithAnswers) =>
+                          !searchText.length ||
+                          row.question
+                            .toLowerCase()
+                            .includes(searchText.toLowerCase())
+                      )
+                      .map(
+                        (
+                          questionDeatails: questionsForSetWithAnswers,
+                          index: number
+                        ) => (
+                          <Box className="question-main" key={index}>
+                            <Typography>{`${index + 1}. ${
+                              questionDeatails.question
+                            }`}</Typography>
+                            <Box className="icons-box">
+                              <IconButton
+                                size="small"
+                                onClick={(event: any) =>
+                                  handleOpenEditPopover(event, questionDeatails)
+                                }
+                              >
+                                <EditIcon fontSize="small" />
+                              </IconButton>
+                              <IconButton
+                                size="small"
+                                onClick={() =>
+                                  handleDeleteQuestion(questionDeatails)
+                                }
+                              >
+                                <DeleteIcon fontSize="small" />
+                              </IconButton>
+                            </Box>
+                          </Box>
+                        )
+                      )}
+                </Box>
+                {editedQuestions && editedQuestionNumbers?.length > 0 && (
+                  <>
+                    <Box className="info-div">
+                      <Typography
+                        variant="body1"
+                        className="info"
+                      >{`Total Modified Questions : ${editedQuestionNumbers?.length}`}</Typography>
+
+                      <Box
+                        //sx={{ display: "flex" }}
+                        className="question-details"
+                      >
+                        <Typography
+                          variant="body1"
+                          className="info"
+                        >{`Question Numbers : ${` `}`}</Typography>
+                        {editedQuestionNumbers.map(
+                          (cur: any, index: number) => (
+                            <Typography className="info">
+                              {` ${cur.questionNumber}-${cur.questionType[0]}`}
+                              {index < editedQuestionNumbers.length - 1
+                                ? `,`
+                                : null}
+                            </Typography>
+                          )
+                        )}
+                      </Box>
+                    </Box>
+                  </>
+                )}
+              </Box>
 
               <EditPopover
                 anchorElEdit={anchorElEdit}
                 setAnchorElEdit={setAnchorElEdit}
                 handleCloseEdit={handleCloseEdit}
                 editQuestionDetails={editQuestionDetails}
-                setEditQuestionDetails={setEditQuestionDetails}
+                //   setEditQuestionDetails={setEditQuestionDetails}
                 editedQuestions={editedQuestions}
                 setEditedQuestions={setEditedQuestions}
                 tempQuestionData={tempQuestionData}
                 setTempQuestionData={setTempQuestionData}
-                questionIndexInTempData={questionIndexInTempData}
-                setQuestionIndexInTempData={setQuestionIndexInTempData}
                 modifyQuestionsData={modifyQuestionsData}
-                setModifyQuestionsData={setModifyQuestionsData}
-                orignalData={orignalData}
+                //  setModifyQuestionsData={setModifyQuestionsData}
+                // orignalData={orignalData}
                 editedQuestionNumbers={editedQuestionNumbers}
                 setEditedQuestionNumbers={setEditedQuestionNumbers}
+                validationError={validationError}
+                setValidationError={setValidationError}
               />
             </>
           </Box>
           <Box className="modal-buttons-container">
             <Button
-              variant="outlined"
+              variant="contained"
               onClick={confirmSave}
+              color="primary"
               className="save-button"
+              disabled={editedQuestions ? false : true}
             >
               Save
             </Button>
             <Button
               variant="contained"
               color="error"
-              onClick={() => setOpenModifyQuestionsModal(false)}
+              onClick={
+                handleCloseEditModal
+                // setOpenModifyQuestionsModal(false)
+              }
               endIcon={<CloseIcon />}
             >
               Close
