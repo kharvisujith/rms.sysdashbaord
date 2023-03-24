@@ -327,6 +327,7 @@ const EditPopover = (props: any) => {
     curIndex?: number
   ) => {
     console.log("check ref is called");
+    console.log(updateQuestionData);
     // if (isValidationError) {
     //   setSaveRefDisabled(true);
     // } else {
@@ -382,8 +383,18 @@ const EditPopover = (props: any) => {
       setSaveRefDisabled(true);
     } else {
       if (editedQuestions) {
+        console.log(
+          "edited quseion isn check ref is ",
+          editedQuestions.updateQuizDetails
+        );
+        console.log(
+          "udpate qid is",
+          updateQuestionData[currentQuestionIndex].questionId
+        );
         const existingIndex = editedQuestions.updateQuizDetails.findIndex(
-          (cur: any) => cur.questionId === updateQuestionData.questionId
+          (cur: any) =>
+            cur.questionId ===
+            updateQuestionData[currentQuestionIndex].questionId
         );
         console.log("index in edite quesiton is", existingIndex);
         if (existingIndex === -1) {
@@ -402,7 +413,7 @@ const EditPopover = (props: any) => {
         } else {
           console.log("inside idnex !== - 1 in disable check");
           const areEqual = compareFieldsAtIndex(
-            tempQuestionData[curIndex ? curIndex : currentQuestionIndex],
+            updateQuestionData[curIndex ? curIndex : currentQuestionIndex],
             editedQuestions.updateQuizDetails[existingIndex]
           );
           areEqual ? setSaveRefDisabled(true) : setSaveRefDisabled(false);
@@ -431,8 +442,6 @@ const EditPopover = (props: any) => {
     }
   };
 
-  console.log("edited quetstion details is");
-
   const checkQustionTypeValidation = () => {
     if (validationError.length > 0) {
       const index = validationError?.findIndex(
@@ -457,23 +466,13 @@ const EditPopover = (props: any) => {
   };
 
   const CheckSaveButtonDisabledOnEnter = (index: number) => {
-    console.log("inside validation save button dsiable");
     if (checkQuestionAnswersValidation() || checkQustionTypeValidation()) {
       setSaveRefDisabled(true);
     } else {
       if (editedQuestions) {
-        console.log("inside edited questions");
         const existingIndex = editedQuestions.updateQuizDetails.findIndex(
-          (cur: any) => cur.questionId === editQuestionDetails.questionId
-        );
-
-        console.log("exising index inn useffect isss", existingIndex);
-
-        console.log("MODIFY: ", modifyQuestionsData[index]);
-        console.log("TEMP :", tempQuestionData[index]);
-        console.log(
-          "EDITED : ",
-          editedQuestions.updateQuizDetails[existingIndex]
+          (cur: any) =>
+            cur.questionId === tempQuestionData[currentQuestionIndex].questionId
         );
 
         if (existingIndex === -1) {
@@ -481,23 +480,18 @@ const EditPopover = (props: any) => {
             JSON.stringify(tempQuestionData[index]) ===
             JSON.stringify(modifyQuestionsData[index])
           ) {
-            console.log("inside treu");
             setSaveRefDisabled(true);
           } else {
-            console.log("inside false");
             setSaveRefDisabled(false);
           }
         } else {
-          console.log("In arequeal part");
           const areEqual = compareFieldsAtIndex(
             tempQuestionData[index],
             editedQuestions.updateQuizDetails[existingIndex]
           );
-          console.log("value of areEqual is", areEqual);
           areEqual ? setSaveRefDisabled(true) : setSaveRefDisabled(false);
         }
       } else {
-        console.log("outside edited questions");
         if (
           JSON.stringify(tempQuestionData[index]) ===
           JSON.stringify(modifyQuestionsData[index])

@@ -6,7 +6,7 @@ export const submittedQuizTableColumns: SubmittedQuesitonSetsTableColumns[] = [
   { id: "createdBy", label: "CreatedBy", minWidth: 160 },
   // { id: 'createdDate', label: 'CreatedDate', minWidth: 160 ,//align: 'right',
   // format: (value: number) => value.toLocaleString('en-US'),},
-  { id: "interviewLevel", label: "InterviewLevel", minWidth: 5 },
+  // { id: "interviewLevel", label: "InterviewLevel", minWidth: 5 },
   { id: "totalQuestions", label: "TotalQuestions", minWidth: 10 },
   { id: "answeredQuestions", label: "Answered", minWidth: 10 },
   { id: "notAnsweredQuestions", label: "NotAnswered", minWidth: 10 },

@@ -17,13 +17,13 @@ export const createdQuizColumns: createdQuizTableColumns[] = [
     //align: 'right',
     // format: (value: number) => value.toLocaleString('en-US'),
   },
-  {
-    id: "lastLoggedIn",
-    label: "LastLoggedIn",
-    minWidth: 150,
-    //align: 'center',
-    // format: (value: number) => value.toLocaleString('en-US'),
-  },
+  // {
+  //   id: "lastLoggedIn",
+  //   label: "LastLoggedIn",
+  //   minWidth: 150,
+  //   //align: 'center',
+  //   // format: (value: number) => value.toLocaleString('en-US'),
+  // },
   {
     id: "loginAttempts",
     label: "LoginAttempts",
