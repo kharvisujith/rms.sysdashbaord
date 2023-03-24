@@ -33,7 +33,7 @@ const ViewQuestionsModal = (props: any) => {
             // setViewQuestions={setViewQuestions}
           />
 
-          <Box className="modal-close-button-container">
+          <Box className="modal-buttons-container">
             <Button
               variant="contained"
               color="error"

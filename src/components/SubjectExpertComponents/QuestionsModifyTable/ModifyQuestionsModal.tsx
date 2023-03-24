@@ -108,6 +108,13 @@ const ModifyQuestionsModal = (props: any) => {
             throw new Error(`Delete API error:: ${deleteResponse.status}`);
           }
           clearEditData();
+          Swal.fire({
+            title: "Success",
+            text: "Deleted Succesfully",
+            icon: "success",
+            confirmButtonText: "Okay",
+            customClass: "swal-alert",
+          });
 
           const fetchQuestionResponse = await getSubjectwiseQuizAnswers(
             questionDetails.version,
@@ -125,6 +132,13 @@ const ModifyQuestionsModal = (props: any) => {
           subjectwiseQuizDetails();
         } catch (error: any) {
           console.log("Error", error);
+          Swal.fire({
+            title: "error",
+            text: "Failed to delete",
+            icon: "error",
+            confirmButtonText: "Okay",
+            customClass: "swal-alert",
+          });
         }
         // deleteQuestionsById(
         //   questionDetails.questionId,
@@ -161,22 +175,22 @@ const ModifyQuestionsModal = (props: any) => {
         //         console.log("error in subjwise answersapi");
         //       });
         //     // fetchSubjectwiseQuizQuestonAnswers(questionDeatails);
-        //     Swal.fire({
-        //       title: "Success",
-        //       text: "Deleted Succesfully",
-        //       icon: "success",
-        //       confirmButtonText: "Okay",
-        //       customClass: "swal-alert",
-        //     });
+        // Swal.fire({
+        //   title: "Success",
+        //   text: "Deleted Succesfully",
+        //   icon: "success",
+        //   confirmButtonText: "Okay",
+        //   customClass: "swal-alert",
+        // });
         //   })
         //   .catch((error: any) => {
-        //     Swal.fire({
-        //       title: "error",
-        //       text: "Failed to delete",
-        //       icon: "error",
-        //       confirmButtonText: "Okay",
-        //       customClass: "swal-alert",
-        //     });
+        // Swal.fire({
+        //   title: "error",
+        //   text: "Failed to delete",
+        //   icon: "error",
+        //   confirmButtonText: "Okay",
+        //   customClass: "swal-alert",
+        // });
         //   });
       }
     });
@@ -355,16 +369,17 @@ const ModifyQuestionsModal = (props: any) => {
                           variant="body1"
                           className="info"
                         >{`Question Numbers : ${` `}`}</Typography>
-                        {editedQuestionNumbers.map(
-                          (cur: any, index: number) => (
-                            <Typography className="info">
-                              {` ${cur.questionNumber}-${cur.questionType[0]}`}
-                              {index < editedQuestionNumbers.length - 1
-                                ? `,`
-                                : null}
-                            </Typography>
-                          )
-                        )}
+                        {editedQuestionNumbers.length > 0 &&
+                          editedQuestionNumbers?.map(
+                            (cur: any, index: number) => (
+                              <Typography className="info">
+                                {` ${cur.questionNumber}-${cur.questionType[0]}`}
+                                {index < editedQuestionNumbers.length - 1
+                                  ? `,`
+                                  : null}
+                              </Typography>
+                            )
+                          )}
                       </Box>
                     </Box>
                   </>
