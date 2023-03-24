@@ -1,5 +1,4 @@
 import { Typography } from "@material-ui/core";
-import { QuestionAnswer } from "@material-ui/icons";
 import {
   Popover,
   Box,
@@ -11,7 +10,7 @@ import {
   Select,
   SelectChangeEvent,
 } from "@mui/material";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   questionForUpdate,
   questionsForSetWithAnswers,
@@ -215,7 +214,6 @@ const EditPopover = (props: any) => {
   };
 
   const handleSaveReference = () => {
-    console.log("save called");
     const questionAnswerIds = optionIds.filter((ele: any, index: number) =>
       tempQuestionData[currentQuestionIndex].questionAnswers.includes(
         tempQuestionData[currentQuestionIndex].questionOptions[index]
@@ -300,19 +298,11 @@ const EditPopover = (props: any) => {
     setSaveRefDisabled(true);
     setAnchorElEdit(null);
   };
-  console.log("editedquestion number is", editedQuestionNumbers);
-  console.log("editedquestion is", editedQuestions);
 
   const compareFieldsAtIndex = (obj1: any, obj2: any) => {
-    // const obj1 = tempData[];
-    // const obj2 = editedData[index];
-    console.log("inside compare");
-    console.log(obj1, obj2);
-
     const commonFields = Object.keys(obj1).filter((field) =>
       obj2.hasOwnProperty(field)
     );
-    console.log("commnfields is", commonFields);
 
     const areEqual = commonFields.every(
       (field) => obj1[field].toString() === obj2[field].toString()
@@ -326,77 +316,15 @@ const EditPopover = (props: any) => {
     isValidationError: boolean,
     curIndex?: number
   ) => {
-    console.log("check ref is called");
-    console.log(updateQuestionData);
-    // if (isValidationError) {
-    //   setSaveRefDisabled(true);
-    // } else {
-    //   if (editedQuestions) {
-    //     console.log("inside edited questions");
-    //     const existingIndex = editedQuestions.updateQuizDetails.findIndex(
-    //       (cur: any) => cur.questionId === editQuestionDetails.questionId
-    //     );
-
-    //     if (existingIndex === -1) {
-    //       if (
-    //         JSON.stringify(
-    //           updateQuestionData[curIndex ? curIndex : currentQuestionIndex]
-    //         ) ===
-    //         JSON.stringify(
-    //           modifyQuestionsData[curIndex ? curIndex : currentQuestionIndex]
-    //         )
-    //       ) {
-    //         console.log("inside treu");
-    //         setSaveRefDisabled(true);
-    //       } else {
-    //         console.log("inside false");
-    //         setSaveRefDisabled(false);
-    //       }
-    //     } else {
-    //       console.log("In arequeal part");
-    //       const areEqual = compareFieldsAtIndex(
-    //         tempQuestionData[curIndex ? curIndex : currentQuestionIndex],
-    //         editedQuestions.updateQuizDetails[existingIndex]
-    //       );
-    //       console.log("value of areEqual is", areEqual);
-    //       areEqual ? setSaveRefDisabled(true) : setSaveRefDisabled(false);
-    //     }
-    //   } else {
-    //     console.log("outside edited questions");
-    //     if (
-    //       JSON.stringify(
-    //         tempQuestionData[curIndex ? curIndex : currentQuestionIndex]
-    //       ) ===
-    //       JSON.stringify(
-    //         modifyQuestionsData[curIndex ? curIndex : currentQuestionIndex]
-    //       )
-    //     ) {
-    //       setSaveRefDisabled(true);
-    //     } else {
-    //       setSaveRefDisabled(false);
-    //     }
-    //   }
-    // }
-    console.log("update dquesiton data is", updateQuestionData);
-    console.log("isvalidateon is", isValidationError);
     if (isValidationError) {
       setSaveRefDisabled(true);
     } else {
       if (editedQuestions) {
-        console.log(
-          "edited quseion isn check ref is ",
-          editedQuestions.updateQuizDetails
-        );
-        console.log(
-          "udpate qid is",
-          updateQuestionData[currentQuestionIndex].questionId
-        );
         const existingIndex = editedQuestions.updateQuizDetails.findIndex(
           (cur: any) =>
             cur.questionId ===
             updateQuestionData[currentQuestionIndex].questionId
         );
-        console.log("index in edite quesiton is", existingIndex);
         if (existingIndex === -1) {
           if (
             JSON.stringify(
@@ -411,7 +339,6 @@ const EditPopover = (props: any) => {
             setSaveRefDisabled(false);
           }
         } else {
-          console.log("inside idnex !== - 1 in disable check");
           const areEqual = compareFieldsAtIndex(
             updateQuestionData[curIndex ? curIndex : currentQuestionIndex],
             editedQuestions.updateQuizDetails[existingIndex]
@@ -419,11 +346,6 @@ const EditPopover = (props: any) => {
           areEqual ? setSaveRefDisabled(true) : setSaveRefDisabled(false);
         }
       } else {
-        console.log("inside else part");
-        console.log(
-          "curret index is",
-          curIndex ? curIndex : currentQuestionIndex
-        );
         if (
           JSON.stringify(
             updateQuestionData[curIndex ? curIndex : currentQuestionIndex]
@@ -432,10 +354,8 @@ const EditPopover = (props: any) => {
             modifyQuestionsData[curIndex ? curIndex : currentQuestionIndex]
           )
         ) {
-          console.log("inside if true");
           setSaveRefDisabled(true);
         } else {
-          console.log("Inside if false");
           setSaveRefDisabled(false);
         }
       }
@@ -470,13 +390,11 @@ const EditPopover = (props: any) => {
       setSaveRefDisabled(true);
     } else {
       if (editedQuestions) {
-        console.log("inside edited quesitons");
         const existingIndex = editedQuestions.updateQuizDetails.findIndex(
           (cur: any) => cur.questionId === tempQuestionData[index].questionId
         );
 
         if (existingIndex === -1) {
-          console.log("inside exising index -1");
           if (
             JSON.stringify(tempQuestionData[index]) ===
             JSON.stringify(modifyQuestionsData[index])
@@ -490,11 +408,9 @@ const EditPopover = (props: any) => {
             tempQuestionData[index],
             editedQuestions.updateQuizDetails[existingIndex]
           );
-          console.log("areEqual is", areEqual);
           areEqual ? setSaveRefDisabled(true) : setSaveRefDisabled(false);
         }
       } else {
-        console.log("inside else edited");
         if (
           JSON.stringify(tempQuestionData[index]) ===
           JSON.stringify(modifyQuestionsData[index])
@@ -508,7 +424,6 @@ const EditPopover = (props: any) => {
   };
 
   useEffect(() => {
-    console.log("Inside useeffectttttttttt");
     if (modifyQuestionsData.length > 0) {
       const currentQuestionIndex = modifyQuestionsData?.findIndex(
         (obj: questionsForSetWithAnswers) =>
@@ -524,92 +439,7 @@ const EditPopover = (props: any) => {
         //   currentQuestionIndex
         // );
       }
-
-      // if (tempQuestionData.length > 0) {
-      //   checkSaveReferenceDisabled(
-      //     tempQuestionData,
-      //     checkQuestionAnswersValidation() || checkQustionTypeValidation(),
-      //     currentQuestionIndex
-      //   );
-      // }
-      // if (tempQuestionData.length > 0) {
-      //   console.log("inside validation save button dsiable");
-      //   if (checkQuestionAnswersValidation() || checkQustionTypeValidation()) {
-      //     setSaveRefDisabled(true);
-      //   } else {
-      //     if (editedQuestions) {
-      //       console.log("inside edited questions");
-      //       const existingIndex = editedQuestions.updateQuizDetails.findIndex(
-      //         (cur: any) => cur.questionId === editQuestionDetails.questionId
-      //       );
-
-      //       console.log("exising index inn useffect isss", existingIndex);
-
-      //       console.log("MODIFY: ", modifyQuestionsData[currentQuestionIndex]);
-      //       console.log("TEMP :", tempQuestionData[currentQuestionIndex]);
-      //       console.log(
-      //         "EDITED : ",
-      //         editedQuestions.updateQuizDetails[existingIndex]
-      //       );
-
-      //       if (existingIndex === -1) {
-      //         if (
-      //           JSON.stringify(tempQuestionData[currentQuestionIndex]) ===
-      //           JSON.stringify(modifyQuestionsData[currentQuestionIndex])
-      //         ) {
-      //           console.log("inside treu");
-      //           setSaveRefDisabled(true);
-      //         } else {
-      //           console.log("inside false");
-      //           setSaveRefDisabled(false);
-      //         }
-      //       } else {
-      //         console.log("In arequeal part");
-      //         const areEqual = compareFieldsAtIndex(
-      //           tempQuestionData[currentQuestionIndex],
-      //           editedQuestions.updateQuizDetails[existingIndex]
-      //         );
-      //         console.log("value of areEqual is", areEqual);
-      //         areEqual ? setSaveRefDisabled(true) : setSaveRefDisabled(false);
-      //       }
-      //     } else {
-      //       console.log("outside edited questions");
-      //       if (
-      //         JSON.stringify(tempQuestionData[currentQuestionIndex]) ===
-      //         JSON.stringify(modifyQuestionsData[currentQuestionIndex])
-      //       ) {
-      //         setSaveRefDisabled(true);
-      //       } else {
-      //         setSaveRefDisabled(false);
-      //       }
-      //     }
-      //   }
-      // }
     }
-
-    // console.log("editqestion details is", editQuestionDetails);
-
-    // if (tempQuestionData.length > 0) {
-    //   console.log("calleeddd");
-
-    // if (editedQuestions) {
-    //   const existingIndex = editedQuestions.updateQuizDetails.findIndex(
-    //     (cur: any) => cur.questionId === editQuestionDetails.questionId
-    //   );
-    //   if(existingIndex === -1){
-    //   }
-    // }
-    // if (
-    //   tempQuestionData[currentQuestionIndex] ===
-    //   editedQuestions?.updateQuizDetails[currentQuestionIndex]
-    // ) {
-    // }
-    // checkSaveReferenceDisabled(
-    //   tempQuestionData,
-    //   checkQustionTypeValidation() || checkQuestionAnswersValidation(),
-    //   currentQuestionIndex
-    // );
-    //  }
   }, [anchorElEdit, modifyQuestionsData, editQuestionDetails]);
 
   return (
@@ -631,7 +461,6 @@ const EditPopover = (props: any) => {
             <FormControl variant="standard">
               <InputLabel>Question Type</InputLabel>
               <Select
-                // value={tempQuestionData[0]}
                 value={
                   tempQuestionData[currentQuestionIndex]?.questionType
                     ? tempQuestionData[currentQuestionIndex]?.questionType
@@ -651,11 +480,7 @@ const EditPopover = (props: any) => {
               type="text"
               variant="standard"
               name="question"
-              value={
-                tempQuestionData[currentQuestionIndex]?.question
-                // ? tempQuestionData[questionIndexInTempData].question
-                // : editQuestionDetails?.question
-              }
+              value={tempQuestionData[currentQuestionIndex]?.question}
               multiline={true}
               onChange={handleEditFieldChange}
             />
@@ -665,12 +490,7 @@ const EditPopover = (props: any) => {
               type="text"
               variant="standard"
               name="questionOptions"
-              // value={editQuestionDetails?.questionOptions.toString()}
-              value={
-                tempQuestionData[currentQuestionIndex]?.questionOptions
-                // ? tempQuestionData[questionIndexInTempData]?.questionOptions
-                // : editQuestionDetails?.questionOptions
-              }
+              value={tempQuestionData[currentQuestionIndex]?.questionOptions}
               multiline={true}
               onChange={handleEditFieldChange}
             />
@@ -680,12 +500,7 @@ const EditPopover = (props: any) => {
               type="text"
               variant="standard"
               name="questionAnswers"
-              // value={editQuestionDetails?.questionAnswers.toString()}
-              value={
-                tempQuestionData[currentQuestionIndex]?.questionAnswers
-                // ? tempQuestionData[questionIndexInTempData]?.questionAnswers
-                // : editQuestionDetails?.questionAnswers
-              }
+              value={tempQuestionData[currentQuestionIndex]?.questionAnswers}
               multiline={true}
               onChange={handleEditFieldChange}
             />

@@ -5,7 +5,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import "./QuestionsModifyTable.style.scss";
 import SearchInput from "../SearchInput/SearchInput";
 import { useEffect, useState } from "react";
-import { Icon, IconButton } from "@material-ui/core";
+import { IconButton } from "@material-ui/core";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import {
@@ -40,16 +40,12 @@ const ModifyQuestionsModal = (props: any) => {
   const [editQuestionDetails, setEditQuestionDetails] =
     useState<questionsForSetWithAnswers | null>();
 
-  // const [tempQuestionDetails, setTempQuestionDetails] = useState<any>([]);
   const [tempQuestionData, setTempQuestionData] = useState<
     questionsForSetWithAnswers[] | []
   >([]);
 
   const [editedQuestions, setEditedQuestions] =
     useState<UpdateQuestionsSet | null>();
-
-  // const [questionIndexInTempData, setQuestionIndexInTempData] =
-  //   useState<number>(-1);
 
   const [editedQuestionNumbers, setEditedQuestionNumbers] = useState<
     any[] | []
@@ -78,10 +74,6 @@ const ModifyQuestionsModal = (props: any) => {
 
   const handleCloseEditModal = () => {
     clearEditData();
-    // setTempQuestionData([]);
-    // setEditedQuestions(null);
-    // setEditedQuestionNumbers([]);
-    // setValidationError([]);
     setOpenModifyQuestionsModal(false);
   };
 
@@ -140,58 +132,6 @@ const ModifyQuestionsModal = (props: any) => {
             customClass: "swal-alert",
           });
         }
-        // deleteQuestionsById(
-        //   questionDetails.questionId,
-        //   questionDetails.version,
-        //   questionDetails.subjectName
-        // )
-        //   .then((response: any) => {
-        //     console.log("keeeeeeeeeeeeek");
-        //     //clearEditData();
-        // getSubjectwiseQuizAnswers(
-        //   questionDetails.version,
-        //   questionDetails.subjectName
-        // )
-        //       .then((response: any) => {
-        //         console.log(response.data);
-        //         console.log("peeeeeeeek");
-
-        //         if (response.data.length < 1) {
-        //           console.log("Yesssssssssss");
-        //           handleCloseEditModal();
-        //         }
-        //         setModifyQuestionsData(response.data);
-        //       })
-        //       .catch((error: any) => {
-        //         // setLoader(false);
-        //         Swal.fire({
-        //           title: "error",
-        //           text: "Failed to fetch Questions",
-        //           icon: "error",
-        //           confirmButtonText: "Okay",
-        //           customClass: "swal-alert",
-        //         });
-
-        //         console.log("error in subjwise answersapi");
-        //       });
-        //     // fetchSubjectwiseQuizQuestonAnswers(questionDeatails);
-        // Swal.fire({
-        //   title: "Success",
-        //   text: "Deleted Succesfully",
-        //   icon: "success",
-        //   confirmButtonText: "Okay",
-        //   customClass: "swal-alert",
-        // });
-        //   })
-        //   .catch((error: any) => {
-        // Swal.fire({
-        //   title: "error",
-        //   text: "Failed to delete",
-        //   icon: "error",
-        //   confirmButtonText: "Okay",
-        //   customClass: "swal-alert",
-        // });
-        //   });
       }
     });
   };
@@ -218,14 +158,8 @@ const ModifyQuestionsModal = (props: any) => {
               confirmButtonText: "Okay",
               customClass: "swal-alert",
             });
-
-            //  fetchSubjectwiseQuizQuestonAnswers(currentTableRowDetails);
-
-            // setTempQuestionData([]);
           })
           .then(() => {
-            // async await should be used
-            //   fetchSubjectwiseQuizQuestonAnswers(currentTableRowDetails);
             handleCloseEditModal();
           })
           .catch((error: any) => {
@@ -241,12 +175,6 @@ const ModifyQuestionsModal = (props: any) => {
       }
     });
   };
-
-  // const checkSaveDisable = ()=> {
-  //   if(editedQuestions){
-  //     return
-  //   }
-  // }
 
   useEffect(() => {
     if (modifyQuestionsData?.length > 0) {
@@ -372,7 +300,7 @@ const ModifyQuestionsModal = (props: any) => {
                         {editedQuestionNumbers.length > 0 &&
                           editedQuestionNumbers?.map(
                             (cur: any, index: number) => (
-                              <Typography className="info">
+                              <Typography className="info" key={index}>
                                 {` ${cur.questionNumber}-${cur.questionType[0]}`}
                                 {index < editedQuestionNumbers.length - 1
                                   ? `,`
@@ -419,10 +347,7 @@ const ModifyQuestionsModal = (props: any) => {
             <Button
               variant="contained"
               color="error"
-              onClick={
-                handleCloseEditModal
-                // setOpenModifyQuestionsModal(false)
-              }
+              onClick={handleCloseEditModal}
               endIcon={<CloseIcon />}
             >
               Close

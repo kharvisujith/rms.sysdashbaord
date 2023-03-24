@@ -162,7 +162,7 @@ const TopNavBar = (props: any) => {
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {role === "Subject Expert"
               ? subjectExperPages.map((page: any, index: number) => (
-                  <Box className="pages">
+                  <Box className="pages" key={index}>
                     <NavLink
                       to={page.route}
                       className={({ isActive }) =>
@@ -256,8 +256,8 @@ const TopNavBar = (props: any) => {
                   </Select>
                 </FormControl>
 
-                {settings.map((setting) => (
-                  <MenuItem onClick={handleCloseUserMenu}>
+                {settings.map((setting: any, index: number) => (
+                  <MenuItem onClick={handleCloseUserMenu} key={index}>
                     <IconButton>
                       <LogoutIcon />
                     </IconButton>
