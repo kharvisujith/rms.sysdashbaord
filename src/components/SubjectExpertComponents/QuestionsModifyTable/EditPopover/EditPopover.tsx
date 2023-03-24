@@ -313,8 +313,7 @@ const EditPopover = (props: any) => {
 
   const checkSaveReferenceDisabled = (
     updateQuestionData: any,
-    isValidationError: boolean,
-    curIndex?: number
+    isValidationError: boolean
   ) => {
     if (isValidationError) {
       setSaveRefDisabled(true);
@@ -327,12 +326,8 @@ const EditPopover = (props: any) => {
         );
         if (existingIndex === -1) {
           if (
-            JSON.stringify(
-              updateQuestionData[curIndex ? curIndex : currentQuestionIndex]
-            ) ===
-            JSON.stringify(
-              modifyQuestionsData[curIndex ? curIndex : currentQuestionIndex]
-            )
+            JSON.stringify(updateQuestionData[currentQuestionIndex]) ===
+            JSON.stringify(modifyQuestionsData[currentQuestionIndex])
           ) {
             setSaveRefDisabled(true);
           } else {
@@ -340,19 +335,15 @@ const EditPopover = (props: any) => {
           }
         } else {
           const areEqual = compareFieldsAtIndex(
-            updateQuestionData[curIndex ? curIndex : currentQuestionIndex],
+            updateQuestionData[currentQuestionIndex],
             editedQuestions.updateQuizDetails[existingIndex]
           );
           areEqual ? setSaveRefDisabled(true) : setSaveRefDisabled(false);
         }
       } else {
         if (
-          JSON.stringify(
-            updateQuestionData[curIndex ? curIndex : currentQuestionIndex]
-          ) ===
-          JSON.stringify(
-            modifyQuestionsData[curIndex ? curIndex : currentQuestionIndex]
-          )
+          JSON.stringify(updateQuestionData[currentQuestionIndex]) ===
+          JSON.stringify(modifyQuestionsData[currentQuestionIndex])
         ) {
           setSaveRefDisabled(true);
         } else {
