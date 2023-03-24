@@ -470,12 +470,13 @@ const EditPopover = (props: any) => {
       setSaveRefDisabled(true);
     } else {
       if (editedQuestions) {
+        console.log("inside edited quesitons");
         const existingIndex = editedQuestions.updateQuizDetails.findIndex(
-          (cur: any) =>
-            cur.questionId === tempQuestionData[currentQuestionIndex].questionId
+          (cur: any) => cur.questionId === tempQuestionData[index].questionId
         );
 
         if (existingIndex === -1) {
+          console.log("inside exising index -1");
           if (
             JSON.stringify(tempQuestionData[index]) ===
             JSON.stringify(modifyQuestionsData[index])
@@ -489,9 +490,11 @@ const EditPopover = (props: any) => {
             tempQuestionData[index],
             editedQuestions.updateQuizDetails[existingIndex]
           );
+          console.log("areEqual is", areEqual);
           areEqual ? setSaveRefDisabled(true) : setSaveRefDisabled(false);
         }
       } else {
+        console.log("inside else edited");
         if (
           JSON.stringify(tempQuestionData[index]) ===
           JSON.stringify(modifyQuestionsData[index])
