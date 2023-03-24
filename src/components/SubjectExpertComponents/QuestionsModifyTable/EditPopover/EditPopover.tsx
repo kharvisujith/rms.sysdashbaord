@@ -303,11 +303,79 @@ const EditPopover = (props: any) => {
   console.log("editedquestion number is", editedQuestionNumbers);
   console.log("editedquestion is", editedQuestions);
 
+  const compareFieldsAtIndex = (obj1: any, obj2: any) => {
+    // const obj1 = tempData[];
+    // const obj2 = editedData[index];
+    console.log("inside compare");
+    console.log(obj1, obj2);
+
+    const commonFields = Object.keys(obj1).filter((field) =>
+      obj2.hasOwnProperty(field)
+    );
+    console.log("commnfields is", commonFields);
+
+    const areEqual = commonFields.every(
+      (field) => obj1[field].toString() === obj2[field].toString()
+    );
+
+    return areEqual;
+  };
+
   const checkSaveReferenceDisabled = (
     updateQuestionData: any,
-    isValidationError: boolean
+    isValidationError: boolean,
+    curIndex?: number
   ) => {
     console.log("check ref is called");
+    // if (isValidationError) {
+    //   setSaveRefDisabled(true);
+    // } else {
+    //   if (editedQuestions) {
+    //     console.log("inside edited questions");
+    //     const existingIndex = editedQuestions.updateQuizDetails.findIndex(
+    //       (cur: any) => cur.questionId === editQuestionDetails.questionId
+    //     );
+
+    //     if (existingIndex === -1) {
+    //       if (
+    //         JSON.stringify(
+    //           updateQuestionData[curIndex ? curIndex : currentQuestionIndex]
+    //         ) ===
+    //         JSON.stringify(
+    //           modifyQuestionsData[curIndex ? curIndex : currentQuestionIndex]
+    //         )
+    //       ) {
+    //         console.log("inside treu");
+    //         setSaveRefDisabled(true);
+    //       } else {
+    //         console.log("inside false");
+    //         setSaveRefDisabled(false);
+    //       }
+    //     } else {
+    //       console.log("In arequeal part");
+    //       const areEqual = compareFieldsAtIndex(
+    //         tempQuestionData[curIndex ? curIndex : currentQuestionIndex],
+    //         editedQuestions.updateQuizDetails[existingIndex]
+    //       );
+    //       console.log("value of areEqual is", areEqual);
+    //       areEqual ? setSaveRefDisabled(true) : setSaveRefDisabled(false);
+    //     }
+    //   } else {
+    //     console.log("outside edited questions");
+    //     if (
+    //       JSON.stringify(
+    //         tempQuestionData[curIndex ? curIndex : currentQuestionIndex]
+    //       ) ===
+    //       JSON.stringify(
+    //         modifyQuestionsData[curIndex ? curIndex : currentQuestionIndex]
+    //       )
+    //     ) {
+    //       setSaveRefDisabled(true);
+    //     } else {
+    //       setSaveRefDisabled(false);
+    //     }
+    //   }
+    // }
     console.log("update dquesiton data is", updateQuestionData);
     console.log("isvalidateon is", isValidationError);
     if (isValidationError) {
@@ -320,8 +388,12 @@ const EditPopover = (props: any) => {
         console.log("index in edite quesiton is", existingIndex);
         if (existingIndex === -1) {
           if (
-            JSON.stringify(updateQuestionData[currentQuestionIndex]) ===
-            JSON.stringify(modifyQuestionsData[currentQuestionIndex])
+            JSON.stringify(
+              updateQuestionData[curIndex ? curIndex : currentQuestionIndex]
+            ) ===
+            JSON.stringify(
+              modifyQuestionsData[curIndex ? curIndex : currentQuestionIndex]
+            )
           ) {
             setSaveRefDisabled(true);
           } else {
@@ -329,21 +401,25 @@ const EditPopover = (props: any) => {
           }
         } else {
           console.log("inside idnex !== - 1 in disable check");
-          if (
-            JSON.stringify(updateQuestionData[currentQuestionIndex]) ===
-            JSON.stringify(editedQuestions.updateQuizDetails[existingIndex])
-          ) {
-            setSaveRefDisabled(true);
-          } else {
-            setSaveRefDisabled(false);
-          }
+          const areEqual = compareFieldsAtIndex(
+            tempQuestionData[curIndex ? curIndex : currentQuestionIndex],
+            editedQuestions.updateQuizDetails[existingIndex]
+          );
+          areEqual ? setSaveRefDisabled(true) : setSaveRefDisabled(false);
         }
       } else {
         console.log("inside else part");
-        console.log("curret index is", currentQuestionIndex);
+        console.log(
+          "curret index is",
+          curIndex ? curIndex : currentQuestionIndex
+        );
         if (
-          JSON.stringify(updateQuestionData[currentQuestionIndex]) ===
-          JSON.stringify(modifyQuestionsData[currentQuestionIndex])
+          JSON.stringify(
+            updateQuestionData[curIndex ? curIndex : currentQuestionIndex]
+          ) ===
+          JSON.stringify(
+            modifyQuestionsData[curIndex ? curIndex : currentQuestionIndex]
+          )
         ) {
           console.log("inside if true");
           setSaveRefDisabled(true);
@@ -353,16 +429,6 @@ const EditPopover = (props: any) => {
         }
       }
     }
-
-    // if (
-    //   JSON.stringify(updateQuestionData[currentQuestionIndex]) ===
-    //     JSON.stringify(modifyQuestionsData[currentQuestionIndex]) ||
-    //   isValidationError
-    // ) {
-    //   setSaveRefDisabled(true);
-    // } else {
-    //   setSaveRefDisabled(false);
-    // }
   };
 
   console.log("edited quetstion details is");
@@ -390,32 +456,163 @@ const EditPopover = (props: any) => {
     return false;
   };
 
+  const CheckSaveButtonDisabledOnEnter = (index: number) => {
+    console.log("inside validation save button dsiable");
+    if (checkQuestionAnswersValidation() || checkQustionTypeValidation()) {
+      setSaveRefDisabled(true);
+    } else {
+      if (editedQuestions) {
+        console.log("inside edited questions");
+        const existingIndex = editedQuestions.updateQuizDetails.findIndex(
+          (cur: any) => cur.questionId === editQuestionDetails.questionId
+        );
+
+        console.log("exising index inn useffect isss", existingIndex);
+
+        console.log("MODIFY: ", modifyQuestionsData[index]);
+        console.log("TEMP :", tempQuestionData[index]);
+        console.log(
+          "EDITED : ",
+          editedQuestions.updateQuizDetails[existingIndex]
+        );
+
+        if (existingIndex === -1) {
+          if (
+            JSON.stringify(tempQuestionData[index]) ===
+            JSON.stringify(modifyQuestionsData[index])
+          ) {
+            console.log("inside treu");
+            setSaveRefDisabled(true);
+          } else {
+            console.log("inside false");
+            setSaveRefDisabled(false);
+          }
+        } else {
+          console.log("In arequeal part");
+          const areEqual = compareFieldsAtIndex(
+            tempQuestionData[index],
+            editedQuestions.updateQuizDetails[existingIndex]
+          );
+          console.log("value of areEqual is", areEqual);
+          areEqual ? setSaveRefDisabled(true) : setSaveRefDisabled(false);
+        }
+      } else {
+        console.log("outside edited questions");
+        if (
+          JSON.stringify(tempQuestionData[index]) ===
+          JSON.stringify(modifyQuestionsData[index])
+        ) {
+          setSaveRefDisabled(true);
+        } else {
+          setSaveRefDisabled(false);
+        }
+      }
+    }
+  };
+
   useEffect(() => {
-    const currentQuestionIndex = modifyQuestionsData?.findIndex(
-      (obj: questionsForSetWithAnswers) =>
-        obj.questionId === editQuestionDetails?.questionId
-    );
-    setCurrentQuestionIndex(currentQuestionIndex);
-    setCurrentQuestionId(tempQuestionData[currentQuestionIndex]?.questionId);
-    if (tempQuestionData.length > 0) {
-      // if (editedQuestions) {
-      //   const existingIndex = editedQuestions.updateQuizDetails.findIndex(
-      //     (cur: any) => cur.questionId === editQuestionDetails.questionId
+    console.log("Inside useeffectttttttttt");
+    if (modifyQuestionsData.length > 0) {
+      const currentQuestionIndex = modifyQuestionsData?.findIndex(
+        (obj: questionsForSetWithAnswers) =>
+          obj.questionId === editQuestionDetails?.questionId
+      );
+      setCurrentQuestionIndex(currentQuestionIndex);
+      setCurrentQuestionId(tempQuestionData[currentQuestionIndex]?.questionId);
+      if (tempQuestionData.length > 0) {
+        CheckSaveButtonDisabledOnEnter(currentQuestionIndex);
+        // checkSaveReferenceDisabled(
+        //   tempQuestionData,
+        //   checkQuestionAnswersValidation() || checkQustionTypeValidation(),
+        //   currentQuestionIndex
+        // );
+      }
+
+      // if (tempQuestionData.length > 0) {
+      //   checkSaveReferenceDisabled(
+      //     tempQuestionData,
+      //     checkQuestionAnswersValidation() || checkQustionTypeValidation(),
+      //     currentQuestionIndex
       //   );
-      //   if(existingIndex === -1){
+      // }
+      // if (tempQuestionData.length > 0) {
+      //   console.log("inside validation save button dsiable");
+      //   if (checkQuestionAnswersValidation() || checkQustionTypeValidation()) {
+      //     setSaveRefDisabled(true);
+      //   } else {
+      //     if (editedQuestions) {
+      //       console.log("inside edited questions");
+      //       const existingIndex = editedQuestions.updateQuizDetails.findIndex(
+      //         (cur: any) => cur.questionId === editQuestionDetails.questionId
+      //       );
+
+      //       console.log("exising index inn useffect isss", existingIndex);
+
+      //       console.log("MODIFY: ", modifyQuestionsData[currentQuestionIndex]);
+      //       console.log("TEMP :", tempQuestionData[currentQuestionIndex]);
+      //       console.log(
+      //         "EDITED : ",
+      //         editedQuestions.updateQuizDetails[existingIndex]
+      //       );
+
+      //       if (existingIndex === -1) {
+      //         if (
+      //           JSON.stringify(tempQuestionData[currentQuestionIndex]) ===
+      //           JSON.stringify(modifyQuestionsData[currentQuestionIndex])
+      //         ) {
+      //           console.log("inside treu");
+      //           setSaveRefDisabled(true);
+      //         } else {
+      //           console.log("inside false");
+      //           setSaveRefDisabled(false);
+      //         }
+      //       } else {
+      //         console.log("In arequeal part");
+      //         const areEqual = compareFieldsAtIndex(
+      //           tempQuestionData[currentQuestionIndex],
+      //           editedQuestions.updateQuizDetails[existingIndex]
+      //         );
+      //         console.log("value of areEqual is", areEqual);
+      //         areEqual ? setSaveRefDisabled(true) : setSaveRefDisabled(false);
+      //       }
+      //     } else {
+      //       console.log("outside edited questions");
+      //       if (
+      //         JSON.stringify(tempQuestionData[currentQuestionIndex]) ===
+      //         JSON.stringify(modifyQuestionsData[currentQuestionIndex])
+      //       ) {
+      //         setSaveRefDisabled(true);
+      //       } else {
+      //         setSaveRefDisabled(false);
+      //       }
+      //     }
       //   }
       // }
-      // if (
-      //   tempQuestionData[currentQuestionIndex] ===
-      //   editedQuestions?.updateQuizDetails[currentQuestionIndex]
-      // ) {
-      // }
-      // checkSaveReferenceDisabled(
-      //   tempQuestionData,
-      //   checkQustionTypeValidation() || checkQuestionAnswersValidation(),
-      //   currentQuestionIndex
-      // );
     }
+
+    // console.log("editqestion details is", editQuestionDetails);
+
+    // if (tempQuestionData.length > 0) {
+    //   console.log("calleeddd");
+
+    // if (editedQuestions) {
+    //   const existingIndex = editedQuestions.updateQuizDetails.findIndex(
+    //     (cur: any) => cur.questionId === editQuestionDetails.questionId
+    //   );
+    //   if(existingIndex === -1){
+    //   }
+    // }
+    // if (
+    //   tempQuestionData[currentQuestionIndex] ===
+    //   editedQuestions?.updateQuizDetails[currentQuestionIndex]
+    // ) {
+    // }
+    // checkSaveReferenceDisabled(
+    //   tempQuestionData,
+    //   checkQustionTypeValidation() || checkQuestionAnswersValidation(),
+    //   currentQuestionIndex
+    // );
+    //  }
   }, [anchorElEdit, modifyQuestionsData, editQuestionDetails]);
 
   return (
