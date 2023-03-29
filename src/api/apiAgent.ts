@@ -1,5 +1,9 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
-import CandidateDetails from "../Interface/CandidateDetails";
+import {
+  submitCandidateInfoRequestBody,
+  verifyCandidateRequestBody,
+} from "../Interface/CandidateDetails";
+
 import { createQuizRequestBody } from "../Interface/QuizDetails";
 import { UpdateQuestionsSet } from "../Interface/SubjectExpert/SubjectExpert";
 //import QuizDetails from "../Interface/QuizDetails";
@@ -66,6 +70,7 @@ export const upLoadExcel = (
   );
 };
 
+// this is not used
 export const getQuizQuestions = (version: string, subject: string) => {
   return axiosClient.get(
     `quiz/candidate/questions?version=${version}&subject=${subject}`
@@ -77,33 +82,47 @@ export const getSubjectwiseQuiz = (subject: string) => {
     params: { subject: subject },
   });
 };
+
 export const getSubjectwiseQuizAnswers = (version: any, subject: any) => {
   return axiosClient.get(
     `quiz/SubjectExpert/questions?version=${version}&subject=${subject}`
   );
 };
-export const submitQuiz = (quizAnswers: any) => {
-  return axiosClient.post("/quiz/interviewer/submitquiz", quizAnswers, {
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-};
+// export const submitQuiz = (quizAnswers: any) => {
+//   return axiosClient.post("/quiz/interviewer/submitquiz", quizAnswers, {
+//     headers: {
+//       "Content-Type": "application/json",
+//     },
+//   });
+// };
 
-export const verifyCandidate = (qId: number, confirmcode: string) => {
-  return axiosClient.get(
-    `quiz/candidate/checkquizid?quizId=${qId}&confirmationCode=${confirmcode}`
+// export const verifyCandidate = (qId: number, confirmcode: string) => {
+//   return axiosClient.get(
+//     `quiz/candidate/checkquizid?quizId=${qId}&confirmationCode=${confirmcode}`
+//   );
+// };
+
+// export const submitCandidateInfo = (
+//   qId: number,
+//   confirmcode: string,
+//   user: CandidateDetails
+// ) => {
+//   return axiosClient.post(
+//     `/quiz/candidate/adduser?quizId=${qId}&confirmationCode=${confirmcode}`,
+//     user
+//   );
+// };
+
+// for candidatae
+const submitCandidateInfo = (data: submitCandidateInfoRequestBody) => {
+  return axiosClient.post(
+    `/quiz/candidate/adduser?quizId=${data.qId}&confirmationCode=${data.confirmcode}`,
+    data.user
   );
 };
-
-export const submitCandidateInfo = (
-  qId: number,
-  confirmcode: string,
-  user: CandidateDetails
-) => {
-  return axiosClient.post(
-    `/quiz/candidate/adduser?quizId=${qId}&confirmationCode=${confirmcode}`,
-    user
+export const verifyCandidate = (data: verifyCandidateRequestBody) => {
+  return axiosClient.get(
+    `quiz/candidate/checkquizid?quizId=${data.id}&confirmationCode=${data.key}`
   );
 };
 
@@ -114,6 +133,15 @@ export const createQuiz = (requestBody: createQuizRequestBody) => {
     },
   });
 };
+
+export const submitQuiz = (quizAnswers: any) => {
+  return axiosClient.post("/quiz/interviewer/submitquiz", quizAnswers, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+};
+
 export const getTotalQuizLinksInfo = () => {
   return axiosClient.get(`quiz/interviewer/quizdetails`);
 };
@@ -167,4 +195,30 @@ export const updateQuestion = (requestBody: UpdateQuestionsSet) => {
       "Content-Type": "application/json",
     },
   });
+};
+
+export const apiAgent = {
+  candidate: {
+    submitQuiz: submitQuiz,
+    verifyCandidate: verifyCandidate,
+    submitCandidateInfo: submitCandidateInfo,
+  },
+  interviewer: {
+    createQuiz: createQuiz,
+    getTotalQuizLinksInfo: getTotalQuizLinksInfo,
+    getTotalSubmittedQuizInfo: getTotalSubmittedQuizInfo,
+    getSubmittedQuizInfo: getSubmittedQuizInfo,
+    getSubmittedQuizSummary: getSubmittedQuizSummary,
+    getPreviewQuestionsForCreateQuiz: getPreviewQuestionsForCreateQuiz,
+    filterQuestionsSets: filterQuestionsSets,
+    deleteQuestionSet: deleteQuestionSet,
+    deleteQuestionsById: deleteQuestionsById,
+  },
+  subjectExpert: {
+    downnLoadExcel: downnLoadExcel,
+    upLoadExcel: upLoadExcel,
+    getSubjectwiseQuiz: getSubjectwiseQuiz,
+    getSubjectwiseQuizAnswers: getSubjectwiseQuizAnswers,
+    updateQuestion: updateQuestion,
+  },
 };

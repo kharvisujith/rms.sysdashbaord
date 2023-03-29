@@ -2,7 +2,7 @@ import CheckboxSubmittedAnswerComponent from "../QuizSubmittedTestAnswersCompone
 import RadioSubmittedAnswerComponent from "../QuizSubmittedTestAnswersComponents/RadioSubmittedAnswerComponent";
 import CodingSubmittedAnswerComponent from "../QuizSubmittedTestAnswersComponents/CodingSubmittedAnswerComponent";
 import { useState, useEffect } from "react";
-import EndTestDialog from "../EndTest/EndTestDialog";
+import EndTestDialog from "../CandidateComponents/EndTest/EndTestDialog";
 import {
   Box,
   TableContainer,

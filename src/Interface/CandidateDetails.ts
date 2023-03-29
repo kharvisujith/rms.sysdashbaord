@@ -1,4 +1,4 @@
-interface CandidateDetails {
+export interface CandidateDetails {
   candidateName: string;
   // middleName?: string;
   // lastName: string;
@@ -6,4 +6,13 @@ interface CandidateDetails {
   phone: string;
 }
 
-export default CandidateDetails;
+export interface verifyCandidateRequestBody {
+  id: number;
+  key: string;
+}
+
+export interface submitCandidateInfoRequestBody {
+  qId: number;
+  confirmcode: string;
+  user: CandidateDetails;
+}

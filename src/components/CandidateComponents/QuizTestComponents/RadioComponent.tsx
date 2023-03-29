@@ -2,7 +2,7 @@ import { RadioGroup, FormControlLabel, Radio } from "@mui/material";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { useCallback, useEffect, useState } from "react";
-import { optionIds } from "../../utils/Utils";
+import { optionIds } from "../../../utils/Utils";
 
 const RadioComponent = (props: any) => {
   const { questionInfo, handleAnswerChange, selectedAnswers } = props;

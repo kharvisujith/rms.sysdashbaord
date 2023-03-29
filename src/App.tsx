@@ -1,18 +1,22 @@
 import { useEffect, useState } from "react";
-import { Routes, Route } from "react-router-dom";
-import StartQuiz from "./screens/StartQuiz/StartQuiz";
+import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import Interviewer from "./screens/Interviewer/Interviewer";
 import PageNotFound from "./screens/PageNotFound/PageNotFound";
-import TestCompleted from "./screens/TestCompleted/TestCompleted";
-import CandidateInfo from "./screens/Candidate/CandidateInfo";
 import CreateQuiz from "./screens/CreateQuiz/CreateQuiz";
 import SubmittedQuiz from "./screens/SubmittedQuiz/SubmittedQuiz";
 import SubjectExpert from "./screens/subjectExpert/SubjectExpert";
 import SubjectExpertUpload from "./screens/subjectExpert/SubjectExpertUpload";
+import { history } from "./utils/helper/_helper";
+import CandidatInfoScreen from "./screens/Candidate/CandidateInfoScreen";
+import StartQuizScreen from "./screens/Candidate/StartQuizScreen";
+import TestCompletedScreen from "./screens/Candidate/TestCompletedScreen";
 
 const App = () => {
+  history.navigate = useNavigate();
+  history.location = useLocation();
+
   const [role, setRole] =
-    useState<"Interviewer" | "Subject Expert" | null>("Subject Expert");
+    useState<"Interviewer" | "Subject Expert" | null>("Interviewer");
 
   useEffect(() => {
     console.log("rle in useEff main is", role);
@@ -40,9 +44,12 @@ const App = () => {
               element={<SubmittedQuiz role={role} setRole={setRole} />}
             />
             <Route path="*" element={<PageNotFound />} />
-            <Route path="/rms-aug/test/:id/:key" element={<CandidateInfo />} />
-            <Route path="/rms-aug/test/start" element={<StartQuiz />} />
-            <Route path="/test_submitted" element={<TestCompleted />} />
+            <Route
+              path="/rms-aug/test/:id/:key"
+              element={<CandidatInfoScreen />}
+            />
+            <Route path="/rms-aug/test/start" element={<StartQuizScreen />} />
+            <Route path="/test_submitted" element={<TestCompletedScreen />} />
           </Routes>
         </>
       ) : role === "Subject Expert" ? (
@@ -58,18 +65,27 @@ const App = () => {
               element={<SubjectExpertUpload role={role} setRole={setRole} />}
             />
             <Route path="*" element={<PageNotFound />} />
-            <Route path="/rms-aug/test/:id/:key" element={<CandidateInfo />} />
-            <Route path="/rms-aug/test/start" element={<StartQuiz />} />
-            <Route path="/test_submitted" element={<TestCompleted />} />
+            <Route
+              path="/rms-aug/test/:id/:key"
+              element={<CandidatInfoScreen />}
+            />
+            <Route path="/rms-aug/test/start" element={<StartQuizScreen />} />
+            <Route path="/test_submitted" element={<TestCompletedScreen />} />
           </Routes>
         </>
       ) : (
-        <Routes>
-          <Route path="/rms-aug/test/:id/:key" element={<CandidateInfo />} />
-          <Route path="/rms-aug/test/start" element={<StartQuiz />} />
-          <Route path="/test_submitted" element={<TestCompleted />} />
-          <Route path="*" element={<PageNotFound />} />
-        </Routes>
+        <>
+          {/* <TopNavBarTest /> */}
+          <Routes>
+            <Route
+              path="/rms-aug/test/:id/:key"
+              element={<CandidatInfoScreen />}
+            />
+            <Route path="/rms-aug/test/start" element={<StartQuizScreen />} />
+            <Route path="/test_submitted" element={<TestCompletedScreen />} />
+            <Route path="*" element={<PageNotFound />} />
+          </Routes>
+        </>
       )}
     </>
   );

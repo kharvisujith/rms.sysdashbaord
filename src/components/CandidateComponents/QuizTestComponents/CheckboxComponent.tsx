@@ -49,7 +49,6 @@ const CheckboxComponent = (props: any) => {
                 <FormControlLabel
                   control={
                     <Checkbox
-                      // checked={value.includes(option) ? true : false}
                       checked={value.indexOf(option) !== -1}
                       onChange={(event) => {
                         const selectedIndex =
@@ -61,8 +60,6 @@ const CheckboxComponent = (props: any) => {
                         handleCheckboxAnswerChange(
                           event,
                           questionInfo.questionData,
-                          // questionInfo.questionData.questionId,
-                          // questionInfo.questionData.questionType,
                           selectedIndex
                         );
                       }}

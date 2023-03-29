@@ -1,67 +1,62 @@
 import { CircularProgress, Divider, Typography } from "@mui/material";
-import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Toolbar from "@mui/material/Toolbar";
-import ReactModal from "react-modal";
+
 import "./StartQuiz.style.scss";
 import SingleQuestion from "../DispalyQuizQuestions/SingleQuestion";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { verifyCandidate } from "../../api/apiAgent";
-import { AxiosError, AxiosResponse } from "axios";
-import TopNavBarTest from "../../components/TopNavBar/TopNavBarTest";
+
+import { useAppDispatch, useAppSelector } from "../../../Store/ConfigureStrore";
+import { startTest, verifyCandidate } from "../../../Redux/candidateSlice";
 const StartQuiz = () => {
-  const [isKeyValid, setIsKeyValid] = useState<boolean>(false);
-  const [errorMessage, setErrorMessage] = useState<string>();
-  const [testStarted, setTestStarted] = useState<boolean>(false);
-  const [loader, setLoader] = useState<boolean>(false);
+  const dispatch = useAppDispatch();
+  const {
+    verifyCredentials,
+    verifiedStatus,
+    loadingStatus,
+    isTestStarted,
+    errorMessage,
+  } = useAppSelector((state: any) => state.candidate);
+
+  //const [errorMessage, setErrorMessage] = useState<string>();
 
   const location = useLocation();
 
-  const startTestButtonHandler = () => {
-    setTestStarted(true);
-    // navigate("")
-    // setOpenTestModal(true);
-  };
-
   useEffect(() => {
-    if (isKeyValid) {
+    if (verifiedStatus.startQuizPage) {
       window.addEventListener("beforeunload", (event) => {
-        localStorage.setItem("testStarted", testStarted.toString());
+        localStorage.setItem("testStarted", isTestStarted.toString());
       });
     }
     return () => {
       window.removeEventListener("beforeunload", (event) => {});
       window.removeEventListener("unload", (event) => {});
     };
-  }, [testStarted, isKeyValid]);
-  console.log("value of testStarted is", testStarted);
+  }, [isTestStarted, verifiedStatus.startQuizPage]);
 
   useEffect(() => {
-    setLoader(true);
-    verifyCandidate(
-      parseInt(location.state.verifyCredentials.id!),
-      location.state.verifyCredentials.key!
-    )
-      .then((res: AxiosResponse) => {
-        setIsKeyValid(true);
-        setTestStarted(localStorage.getItem("testStarted") === "true");
-        setLoader(false);
-      })
-      .catch((error: any) => {
-        if (error.response.status === 400) {
-          if (error.response.data) {
-            setErrorMessage(error.response.data);
-          } else {
-            setErrorMessage("something wrong");
-          }
-        }
-        setLoader(false);
-      });
-  }, [location.state.verifyCredentials]);
+    const verify = async () => {
+      try {
+        const data = {
+          id: location.state.verifyCredentials.id,
+          key: location.state.verifyCredentials.key,
+        };
+        await dispatch(
+          verifyCandidate({
+            data: data,
+            fromPage: "startQuiz",
+          })
+        );
+      } catch (error: any) {
+        console.log("error in verify candiate", error);
+      }
+    };
 
-  if (!isKeyValid && !loader) {
+    verify();
+  }, [verifyCredentials]);
+
+  if (!verifiedStatus.startQuizPage && !loadingStatus.pageLoader) {
     return (
       <>
         <Box className="error-box">
@@ -76,13 +71,12 @@ const StartQuiz = () => {
 
   return (
     <>
-      <TopNavBarTest />
       <Box className="main-layout-wrap">
-        {loader ? (
+        {loadingStatus.pageLoader ? (
           <Box className="page-loader">
             <CircularProgress />
           </Box>
-        ) : !testStarted ? (
+        ) : !isTestStarted ? (
           <>
             <Box className="info-box">
               <Typography variant="h5">Test Informations : </Typography>
@@ -100,7 +94,7 @@ const StartQuiz = () => {
                 variant="contained"
                 color="error"
                 onClick={() => {
-                  startTestButtonHandler();
+                  dispatch(startTest());
                 }}
               >
                 Start Test
@@ -109,9 +103,8 @@ const StartQuiz = () => {
           </>
         ) : (
           <SingleQuestion
-            quizQuestions={location.state}
+            quizQuestions={location.state.testQuestions}
             quizId={location.state.verifyCredentials.id}
-            // isKeyValid={isKeyValid}
           />
         )}
       </Box>

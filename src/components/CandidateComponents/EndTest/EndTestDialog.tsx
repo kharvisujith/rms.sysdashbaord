@@ -8,18 +8,15 @@ import {
   Button,
   CircularProgress,
 } from "@mui/material";
-import Typography from "@mui/material/Typography";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
-import { submitQuiz } from "../../api/apiAgent";
-import { CaluclateTotalNumberOfAnswers } from "../../utils/Utils";
+import { apiAgent } from "../../../api/apiAgent";
+
+import { CaluclateTotalNumberOfAnswers } from "../../../utils/Utils";
 import "./EndTestDialog.style.scss";
 const EndTestDialog = (props: any) => {
   const {
-    // openDialog,
-    // handleClose,
-    // setOpenDialog,
     selectedAnswers,
     totalNumberOfQuestions,
     Ref,
@@ -27,14 +24,12 @@ const EndTestDialog = (props: any) => {
     openEndDialog,
     setOpenEndDialog,
   } = props;
+
   const navigate = useNavigate();
   const [totalAnswerdQuestions, setTotalAnsweredQuestion] = useState<number>(0);
   const [loader, setLoader] = useState<boolean>(false);
-  // const [loader, setLoader] = useState<boolean>(false);
 
-  const endTest = () => {
-    setLoader(true);
-    // setLoader(true);
+  const endTest = async () => {
     const quizAnswerModel = {
       quizId: parseInt(quizId),
       totalQuestions: totalNumberOfQuestions,
@@ -42,9 +37,11 @@ const EndTestDialog = (props: any) => {
       notAnsweredQuestions: totalNumberOfQuestions - totalAnswerdQuestions,
       data: selectedAnswers,
     };
-    submitQuiz(quizAnswerModel)
-      .then((response) => {
-        console.log(response.data, "submit quiz");
+
+    try {
+      setLoader(true);
+      const res = await apiAgent.candidate.submitQuiz(quizAnswerModel);
+      if (res.status === 200) {
         Swal.fire({
           title: "Success",
           text: "Test Submitted Succesfully",
@@ -52,8 +49,6 @@ const EndTestDialog = (props: any) => {
           confirmButtonText: "Okay",
           customClass: "swal-alert",
         });
-        setLoader(false);
-        setOpenEndDialog(false);
         clearInterval(Ref.current);
         localStorage.clear();
         navigate("/test_submitted", {
@@ -63,18 +58,16 @@ const EndTestDialog = (props: any) => {
             notAnswered: totalNumberOfQuestions - totalAnswerdQuestions,
           },
         });
-      })
-      .catch((error) => {
-        setLoader(false);
-        setOpenEndDialog(false);
-        console.log("inside catch");
-        Swal.fire({
-          title: "error",
-          text: "Failed to Submitt Test, Please Retry",
-          icon: "error",
-          confirmButtonText: "Okay",
-        });
-      });
+      }
+    } catch (error: any) {
+      setOpenEndDialog(false);
+      Swal.fire({
+        title: "error",
+        text: "Failed to Submitt Test, Please Retry",
+        icon: "error",
+        confirmButtonText: "Okay",
+      }).finally(() => setLoader(false));
+    }
   };
 
   useEffect(() => {

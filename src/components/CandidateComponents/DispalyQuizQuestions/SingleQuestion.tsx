@@ -1,20 +1,16 @@
 import { Box, Button, LinearProgress, Typography } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
-import EndTestDialog from "../../components/EndTest/EndTestDialog";
-import CheckboxComponent from "../../components/QuizTestComponents/CheckboxComponent";
-import CodingComponent from "../../components/QuizTestComponents/CodingComponent";
-import RadioComponent from "../../components/QuizTestComponents/RadioComponent";
+import EndTestDialog from "../EndTest/EndTestDialog";
+import CheckboxComponent from "../QuizTestComponents/CheckboxComponent";
+import CodingComponent from "../QuizTestComponents/CodingComponent";
+import RadioComponent from "../QuizTestComponents/RadioComponent";
 import "./SingleQuestion.style.scss";
-import { clear } from "console";
-import { useLocation, useNavigate } from "react-router-dom";
-import {
-  CaluclateTotalNumberOfAnswers,
-  findInnerArrayElement,
-  optionIds,
-} from "../../utils/Utils";
-import { submitQuiz } from "../../api/apiAgent";
+import { useNavigate } from "react-router-dom";
+import { CaluclateTotalNumberOfAnswers, optionIds } from "../../../utils/Utils";
+
 import Swal from "sweetalert2";
-import { QuestionAnswer } from "@material-ui/icons";
+
+import { apiAgent } from "../../../api/apiAgent";
 
 const SingleQuestion = (props: any) => {
   const { quizQuestions, quizId } = props;
@@ -113,7 +109,7 @@ const SingleQuestion = (props: any) => {
 
   const handleProgressStatus = () => {
     const statusPercentage =
-      ((answeredQuestions + 1) * 100) / quizQuestions.data.length;
+      ((answeredQuestions + 1) * 100) / quizQuestions.length;
     setAnsweredQuestions((prev) => prev + 1);
     setProgressStatus(statusPercentage);
   };
@@ -211,13 +207,10 @@ const SingleQuestion = (props: any) => {
     };
   };
 
-  if (timeCompletd) {
-    const submitQuizData = {
-      quizId: parseInt(quizId),
-      data: selectedAnswers,
-    };
-    submitQuiz(submitQuizData)
-      .then((response: any) => {
+  const autoSubmitQuiz = async (submitQuizData: any) => {
+    try {
+      const res = await apiAgent.candidate.submitQuiz(submitQuizData);
+      if (res.status === 200) {
         localStorage.clear();
         Swal.fire({
           title: "Success",
@@ -226,27 +219,32 @@ const SingleQuestion = (props: any) => {
           confirmButtonText: "Okay",
           customClass: "swal-alert",
         });
-      })
-      .then((res: any) => {
-        const answeredQuestions =
-          CaluclateTotalNumberOfAnswers(selectedAnswers);
-        navigate("/test_submitted", {
-          state: {
-            totalNumberOfQuestions: quizQuestions.data.length,
-            answered: answeredQuestions,
-            notAnswered: quizQuestions.data.length - answeredQuestions,
-          },
-        });
-      })
-      .catch((error: any) => {
-        Swal.fire({
-          title: "error",
-          text: "Failed to Submitt Test, Please Retry",
-          icon: "error",
-          confirmButtonText: "Okay",
-          customClass: "swal-alert",
-        });
+      }
+      const answeredQuestions = CaluclateTotalNumberOfAnswers(selectedAnswers);
+      localStorage.clear();
+      navigate("/test_submitted", {
+        state: {
+          totalNumberOfQuestions: quizQuestions.length,
+          answered: answeredQuestions,
+          notAnswered: quizQuestions.length - answeredQuestions,
+        },
       });
+    } catch (error: any) {
+      console.log("error in submit quiz by time");
+    }
+  };
+
+  if (timeCompletd) {
+    const totalAnswered = CaluclateTotalNumberOfAnswers(selectedAnswers);
+    const submitQuizData = {
+      quizId: parseInt(quizId),
+      totalQuestions: quizQuestions.length,
+      answeredQuestions: totalAnswered,
+      notAnsweredQuestions: quizQuestions.length - totalAnswered,
+      data: selectedAnswers,
+    };
+
+    autoSubmitQuiz(submitQuizData);
   }
 
   const startTimer = (time: any) => {
@@ -266,7 +264,6 @@ const SingleQuestion = (props: any) => {
   };
 
   const clearTimer = (time: any) => {
-    console.log("value of time in clearTimer is", time);
     const id = setInterval(() => {
       startTimer(time);
     }, 1000);
@@ -285,7 +282,7 @@ const SingleQuestion = (props: any) => {
       return deadline;
     } else {
       let deadline = new Date();
-      deadline.setMinutes(deadline.getMinutes() + quizQuestions.data.length);
+      deadline.setMinutes(deadline.getMinutes() + quizQuestions.length);
       return deadline;
     }
   };
@@ -307,9 +304,9 @@ const SingleQuestion = (props: any) => {
       localStorage.getItem("timer") === "undefined" ||
       !localStorage.getItem("timer")
     ) {
-      //   clearTimer(getDeadTime());
+      clearTimer(getDeadTime());
     } else {
-      //   clearTimer(getDeadTime(localStorage.getItem("timer")));
+      clearTimer(getDeadTime(localStorage.getItem("timer")));
     }
   }, []);
 
@@ -324,7 +321,7 @@ const SingleQuestion = (props: any) => {
       <Box className="question-container">
         <Box className="progress-box">
           <Box className="progress-data">
-            <Typography variant="body1">{`Answered ${answeredQuestions} out of ${quizQuestions.data?.length}`}</Typography>
+            <Typography variant="body1">{`Answered ${answeredQuestions} out of ${quizQuestions.length}`}</Typography>
             {timer && (
               <Typography variant="body1">{`Time Remaining - ${timer}`}</Typography>
             )}
@@ -335,9 +332,10 @@ const SingleQuestion = (props: any) => {
             color={"primary"}
           />
         </Box>
+
         <Box className="questions">
           {quizQuestions &&
-            quizQuestions.data?.map((question: any, index: any) => {
+            quizQuestions.map((question: any, index: any) => {
               if (index + 1 === currentQuestion) {
                 switch (question.questionType) {
                   case "SINGLECHOICE":
@@ -373,7 +371,7 @@ const SingleQuestion = (props: any) => {
             })}
         </Box>
         <Box className="test-buttons-box">
-          {currentQuestion <= quizQuestions.data.length && currentQuestion > 1 && (
+          {currentQuestion <= quizQuestions.length && currentQuestion > 1 && (
             <Button
               variant="outlined"
               onClick={moveToPreviousQuestion}
@@ -382,7 +380,7 @@ const SingleQuestion = (props: any) => {
               Previous
             </Button>
           )}
-          {currentQuestion < quizQuestions.data.length && (
+          {currentQuestion < quizQuestions.length && (
             <Button
               variant="contained"
               onClick={moveToNextQuestion}
@@ -406,9 +404,9 @@ const SingleQuestion = (props: any) => {
         {openEndDialog && (
           <EndTestDialog
             selectedAnswers={selectedAnswers}
-            totalNumberOfQuestions={quizQuestions.data.length}
+            totalNumberOfQuestions={quizQuestions.length}
             Ref={Ref}
-            quizId={quizQuestions.quizId}
+            quizId={quizId}
             openEndDialog={openEndDialog}
             setOpenEndDialog={setOpenEndDialog}
           />

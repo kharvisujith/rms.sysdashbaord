@@ -1,23 +1,12 @@
-import {
-  Box,
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  Typography,
-} from "@mui/material";
-import { useEffect } from "react";
+import { Box, Card, CardContent, Typography } from "@mui/material";
 import { useLocation } from "react-router-dom";
 import "./TestCompleted.style.scss";
-import SideBar from "../../components/TopNavBar/TopNavBar";
-import TopNavBarTest from "../../components/TopNavBar/TopNavBarTest";
 
-const TestCompleted = (props: any) => {
+const TestCompleted = () => {
   const location = useLocation();
 
   return (
     <>
-      <TopNavBarTest />
       <Box className="test-submitted-box">
         <Box className="test-summary">
           <Card className="summary-card">
