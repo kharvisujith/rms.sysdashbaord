@@ -8,8 +8,10 @@ import {
   CircularProgress,
 } from "@mui/material";
 import ReactModal from "react-modal";
-import { subjectwiseQuizAnswersResponse } from "../../../Interface/QuizDetails";
-import { customStylesModal } from "../../InterviewerComponents/SubmittedQuiz/SubmittedQuizes";
+import { subjectwiseQuizAnswersResponse } from "../../../../Interface/QuizDetails";
+import { customStylesModal } from "../../SubmittedQuiz/SubmittedQuizes";
+// import { subjectwiseQuizAnswersResponse } from "../../../Interface/QuizDetails";
+// import { customStylesModal } from "../../InterviewerComponents/SubmittedQuiz/SubmittedQuizes";
 import "./SelectQuestionsModal.style.scss";
 
 const SelectQuestionsModal = (props: any) => {
@@ -30,8 +32,8 @@ const SelectQuestionsModal = (props: any) => {
         style={customStylesModal}
       >
         {!previewLoader ? (
-          <Box>
-            <Box className="modal-container">
+          <>
+            <Box className="modal-content-container">
               {subjectSetQuestions?.map(
                 (obj: subjectwiseQuizAnswersResponse, index: number) => (
                   <Box key={index} className="questions">
@@ -51,7 +53,10 @@ const SelectQuestionsModal = (props: any) => {
               )}
             </Box>
 
-            <Box className="save-button">
+            <Box
+              className="close-button-container"
+              //save-button"
+            >
               <Button
                 variant="contained"
                 onClick={() => setSelectQuestionOpen(false)}
@@ -59,7 +64,7 @@ const SelectQuestionsModal = (props: any) => {
                 Save
               </Button>
             </Box>
-          </Box>
+          </>
         ) : (
           <Box className="modal-loader">
             <CircularProgress />

@@ -1,9 +1,11 @@
 import { Box, Button } from "@mui/material";
 import ReactModal from "react-modal";
-import { customStylesModal } from "../../InterviewerComponents/SubmittedQuiz/SubmittedQuizes";
-import AllSubmittedQuestionsAnswers from "../../DispalyQuizCandidateSubmittedQuestionsAnswers/AllSubmittedQuestionsAnswers";
+
 import "./ReviewAnswersModal.style.scss";
+import "../../../Common/Common.style.scss";
 import CloseIcon from "@mui/icons-material/Close";
+import { customStylesModal } from "../../SubmittedQuiz/SubmittedQuizes";
+import AllSubmittedQuestionsAnswers from "../../DispalyQuizCandidateSubmittedQuestionsAnswers/AllSubmittedQuestionsAnswers";
 
 const ReviewAnswersModal = (props: any) => {
   const {
@@ -29,8 +31,9 @@ const ReviewAnswersModal = (props: any) => {
           />
           {!loader ? (
             <Box
-              className="close-button"
+              // className="close-button"
               //   style={{ display: "flex", justifyContent: "center" }}
+              className="close-button-container"
             >
               <Button
                 variant="contained"

@@ -9,10 +9,16 @@ const AnswersFooterComponent = (props: any) => {
   return (
     <>
       <Box>
-      <Typography  justifyContent="space-between" alignItems="center"style={{ padding: 15 }}>
-          <strong>{'Answers:'}&ensp;</strong>{`${question.questionData.questionAnswersIds.toString()}`}<br/>
+        <Typography
+          justifyContent="space-between"
+          alignItems="center"
+          style={{ padding: 15 }}
+        >
+          <strong>{"Answers:"}&ensp;</strong>
+          {`${question.questionData.questionAnswersIds.toString()}`}
+          <br />
           {`${question.questionData.questionAnswers.toString()}`}
-      </Typography>
+        </Typography>
       </Box>
     </>
   );

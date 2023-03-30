@@ -1,47 +1,43 @@
-.modal-container {
-  // min-height: 70vh;
-  height: 90%;
+.modal-content-container-subparts {
+  height: 86%;
   padding-left: 1rem;
   padding-right: 1rem;
-  //border: 2px solid green;
-  .modal-headings-container {
+}
+
+.modal-headings-container {
+  display: flex;
+  justify-content: center;
+  gap: 3%;
+  padding: 0.5rem;
+
+  .headings {
     display: flex;
-    justify-content: center;
-    gap: 3%;
-    padding: 0.5rem;
-
-    .headings {
-      display: flex;
-      text-transform: uppercase;
-      .topic {
-        font-weight: 550;
-        padding-right: 0.2rem;
-      }
-    }
-  }
-
-  .modal-body {
-    height: 85%;
-    overflow-y: scroll;
-  }
-
-  .question-main {
-    display: flex;
-    justify-content: flex-start;
-    gap: 2%;
-    align-items: center;
-    margin-bottom: 0.5rem;
-
-    .icons-box {
-      width: 10%;
-      display: flex;
-      gap: 15%;
-      justify-content: flex-start;
+    text-transform: uppercase;
+    .topic {
+      font-weight: 550;
+      padding-right: 0.2rem;
     }
   }
 }
-.progress-container {
-  // margin-bottom: 1rem;
+
+.modal-body {
+  height: 85%;
+  overflow-y: scroll;
+}
+
+.question-main {
+  display: flex;
+  justify-content: flex-start;
+  gap: 2%;
+  align-items: center;
+  margin-bottom: 0.5rem;
+
+  .icons-box {
+    width: 10%;
+    display: flex;
+    gap: 15%;
+    justify-content: flex-start;
+  }
 }
 
 .info-div {
@@ -57,17 +53,17 @@
   }
 }
 
-.modal-buttons-container {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  gap: 5%;
-  align-items: center;
-  //border: 2px solid red;
+// .modal-buttons-container {
+//   width: 100%;
+//   display: flex;
+//   justify-content: center;
+//   gap: 5%;
+//   align-items: center;
+//   //border: 2px solid red;
 
-  .save-button {
-    padding-top: 0.4rem;
-    padding-bottom: 0.4rem;
-    width: 10%;
-  }
+.save-button {
+  padding-top: 0.4rem;
+  padding-bottom: 0.4rem;
+  width: 10%;
 }
+//}

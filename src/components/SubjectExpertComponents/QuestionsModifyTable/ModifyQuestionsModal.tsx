@@ -192,7 +192,11 @@ const ModifyQuestionsModal = (props: any) => {
         style={customStyles}
       >
         <>
-          <Box className="modal-container">
+          <Box
+            // className="modal-container"
+            //className="modal-content-container"
+            className="modal-content-container-subparts"
+          >
             <>
               <Box>
                 {modifyQuestionsData?.length > 0 && (
@@ -334,7 +338,10 @@ const ModifyQuestionsModal = (props: any) => {
               />
             </>
           </Box>
-          <Box className="modal-buttons-container">
+          <Box
+            // className="modal-buttons-container"
+            className="close-button-container"
+          >
             <Button
               variant="contained"
               onClick={confirmSave}

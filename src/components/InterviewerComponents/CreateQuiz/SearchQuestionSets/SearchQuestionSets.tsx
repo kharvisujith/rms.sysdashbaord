@@ -14,17 +14,7 @@ import {
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { useEffect, useState } from "react";
-import {
-  filterQuestionsSets,
-  getPreviewQuestionsForCreateQuiz,
-  getSubjectwiseQuiz,
-  getSubjectwiseQuizAnswers,
-} from "../../../api/apiAgent";
-import {
-  selectedQuestionsCreateQuizWithTag,
-  subjectwiseQuizAnswersResponse,
-  subjectWiseQuizListResponse,
-} from "../../../Interface/QuizDetails";
+
 import { Typography } from "@material-ui/core";
 import "./SearchQuestionSets.style.scss";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
@@ -32,7 +22,18 @@ import SelectQuestionsModal from "../SelectQuestions/SelectQuestionsModal";
 import PreviewQuestionsModal from "../PreviewQuestions/PreviewQuestionsModal";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import Pagination, { PaginationProps } from "@mui/material/Pagination";
-import { getComparator } from "../../../utils/TableSortFunctions";
+import {
+  selectedQuestionsCreateQuizWithTag,
+  subjectwiseQuizAnswersResponse,
+  subjectWiseQuizListResponse,
+} from "../../../../Interface/QuizDetails";
+import { getComparator } from "../../../../utils/TableSortFunctions";
+import {
+  filterQuestionsSets,
+  getPreviewQuestionsForCreateQuiz,
+  getSubjectwiseQuiz,
+  getSubjectwiseQuizAnswers,
+} from "../../../../api/apiAgent";
 
 interface CustomPaginationProps extends PaginationProps {
   rowsPerPage: number;
@@ -319,7 +320,7 @@ const SearchQuestionSets = () => {
   useEffect(() => {
     setLoader(true);
     getSubjectwiseQuiz("")
-      .then((response) => {
+      .then((response: any) => {
         console.log("response of searc is keeeeeeeeeeek", response.data);
         setSubjectwiseDeatails(response.data);
       })

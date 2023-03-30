@@ -1,11 +1,12 @@
 import { Typography } from "@material-ui/core";
 import { Box, Button, Chip, Grid, Paper } from "@mui/material";
 import { useState } from "react";
-import { getTotalSubmittedQuizInfo } from "../../../api/apiAgent";
-import { submittedQuizResponse } from "../../../Interface/QuizDetails";
+
 import "./MakeQuiz.style.scss";
 import PastEvaluationsTable from "../PastEvaluationsTable/PastEvaluationsTable";
 import SearchQuestionSets from "../SearchQuestionSets/SearchQuestionSets";
+import { submittedQuizResponse } from "../../../../Interface/QuizDetails";
+import { getTotalSubmittedQuizInfo } from "../../../../api/apiAgent";
 
 const favSub = ["React", "javascript", "c#"];
 

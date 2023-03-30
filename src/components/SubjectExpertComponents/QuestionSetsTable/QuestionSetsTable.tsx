@@ -93,7 +93,7 @@ const QuestionSetsTable = (props: any) => {
       <Button
         onClick={() => openViewQuestions(row)}
         variant="contained"
-        className="view-button"
+        className="table-button"
       >
         View
       </Button>

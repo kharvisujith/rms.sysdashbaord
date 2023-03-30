@@ -1,6 +1,6 @@
-import CheckboxAnswersComponent from "../../QuizTestAnswersComponents/CheckboxAnswerComponent";
-import RadioAnswerComponent from "../../QuizTestAnswersComponents/RadioAnswerComponent";
-import CodingAnswerComponent from "../../QuizTestAnswersComponents/CodingAnswerComponent";
+import CheckboxAnswersComponent from "../QuizTestAnswersComponents/CheckboxAnswerComponent";
+import RadioAnswerComponent from "../QuizTestAnswersComponents/RadioAnswerComponent";
+import CodingAnswerComponent from "../QuizTestAnswersComponents/CodingAnswerComponent";
 import { useState } from "react";
 import { Box, Typography } from "@mui/material";
 import { LinearProgress } from "@mui/material";
@@ -11,8 +11,8 @@ const AllQuestionsAnswers = (props: any) => {
 
   return (
     <>
-      <Box className="progress-container">
-        <Typography style={{ padding: 20, textAlign: "center" }}>
+      <Box className="modal-heading-container">
+        <Typography style={{ padding: 5, textAlign: "center" }}>
           <strong>{"SubjectName:"}&ensp;</strong>
           {`${viewQuestions[0]?.subjectName.toString()}`}&emsp;
           <strong>{"Version:"}&ensp;</strong>
@@ -22,7 +22,7 @@ const AllQuestionsAnswers = (props: any) => {
         </Typography>
         <LinearProgress variant={"determinate"} color={"primary"} value={0} />
       </Box>
-      <Box className="questions-container">
+      <Box className="questions-body">
         {viewQuestions &&
           viewQuestions?.map(
             (question: questionsForSetWithAnswers, index: number) => {

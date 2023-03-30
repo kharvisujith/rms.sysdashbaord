@@ -22,8 +22,9 @@ import {
   getTotalSubmittedQuizInfo,
   getSubmittedQuizInfo,
   getSubmittedQuizSummary,
+  apiAgent,
 } from "../../../api/apiAgent";
-import AllSubmittedQuestionsAnswers from "../../DispalyQuizCandidateSubmittedQuestionsAnswers/AllSubmittedQuestionsAnswers";
+import AllSubmittedQuestionsAnswers from "../DispalyQuizCandidateSubmittedQuestionsAnswers/AllSubmittedQuestionsAnswers";
 import {
   submittedQuizResponse,
   submittedQuizAnswersResponse,
@@ -38,14 +39,16 @@ import SearchIcon from "@mui/icons-material/Search";
 import TopNavBar from "../../TopNavBar/TopNavBar";
 import { submittedQuizTableColumns } from "./SubmittedQuizTableColumn";
 import CloseIcon from "@mui/icons-material/Close";
+import "../../Common/Common.style.scss";
 
+//this has to in utils
 export const customStylesModal = {
   overlay: { zIndex: 1000 },
 };
 
-const SubmitQuizes = (props: any) => {
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+const SubmitedQuizes = (props: any) => {
+  const [page, setPage] = useState<number>(0);
+  const [rowsPerPage, setRowsPerPage] = useState<number>(10);
   const [totalSubmittedQuizInfoList, setTotalSubmittedQuizInfoList] = useState<
     submittedQuizResponse[]
   >([]);
@@ -55,7 +58,6 @@ const SubmitQuizes = (props: any) => {
     submittedQuizDetailedInfoResponse[]
   >([]);
   const [order, setOrder] = useState<Order>("asc");
-  //const [orderBy, setOrderBy] = useState<keyof Data>("setNumber");
   const [orderBy, setOrderBy] = useState<any>("correctAnswers");
   const [loader, setLoader] = useState<boolean>(false);
   const [name, setName] = useState<string>("");
@@ -73,21 +75,29 @@ const SubmitQuizes = (props: any) => {
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
   };
-
   const [OpenTestModal, setOpenTestModal] = useState<boolean>(false);
-  const [openDialog, setOpenDialog] = useState<boolean>(false);
-  //const [text, setText] = useState('');
+
   const totalSubmittedQuizurlInfo = async () => {
-    setLoader(true);
-    getTotalSubmittedQuizInfo()
-      .then((response: any) => {
-        setTotalSubmittedQuizInfoList(response.data);
-        setLoader(false);
-      })
-      .catch((error: any) => {
-        setLoader(false);
-        console.log("error in total quiz info api");
-      });
+    try {
+      setLoader(true);
+
+      const response = await apiAgent.interviewer.getTotalSubmittedQuizInfo();
+      setTotalSubmittedQuizInfoList(response.data);
+    } catch (error: any) {
+      console.log("Error in fetch submited quiz table");
+    } finally {
+      setLoader(false);
+    }
+    // setLoader(true);
+    // getTotalSubmittedQuizInfo()
+    //   .then((response: any) => {
+    //     setTotalSubmittedQuizInfoList(response.data);
+    //     setLoader(false);
+    //   })
+    //   .catch((error: any) => {
+    //     setLoader(false);
+    //     console.log("error in total quiz info api");
+    //   });
   };
 
   const handleChangeRowsPerPage = (
@@ -100,34 +110,49 @@ const SubmitQuizes = (props: any) => {
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
   };
-  const handleClose = () => {
-    setOpenDialog(false);
-  };
+
   const endTestButtonHandler = () => {
     setOpenTestModal(false);
   };
 
-  const StartTestViewButtonHandler = (e: any) => {
-    setLoader(true);
-    getSubmittedQuizInfo(e)
-      .then((response: any) => {
-        setDetailedSubmittedQuizInfoList(response.data);
-        setLoader(false);
-      })
-      .catch((error: any) => {
-        setLoader(false);
-        console.log("error in detailed Subject Answer answersapi");
-      });
+  const StartTestViewButtonHandler = async (data: any) => {
+    try {
+      setLoader(true);
+      const response1 = await apiAgent.interviewer.getSubmittedQuizInfo(data);
+      if (response1.status === 200) {
+        setDetailedSubmittedQuizInfoList(response1.data);
+      }
+      const response2 = await apiAgent.interviewer.getSubmittedQuizSummary(
+        data
+      );
+      if (response2.status === 200) {
+        setIndividualQuizDetailedInfo(response2.data);
+      }
+    } catch (error: any) {
+      console.log("Error in submitted view data");
+    } finally {
+      setLoader(false);
+    }
+    // setLoader(true);
+    // getSubmittedQuizInfo(data)
+    //   .then((response: any) => {
+    //     setDetailedSubmittedQuizInfoList(response.data);
+    //     setLoader(false);
+    //   })
+    //   .catch((error: any) => {
+    //     setLoader(false);
+    //     console.log("error in detailed Subject Answer answersapi");
+    //   });
 
-    getSubmittedQuizSummary(e)
-      .then((res: any) => {
-        setIndividualQuizDetailedInfo(res.data);
-        setLoader(false);
-      })
-      .catch((error: any) => {
-        setLoader(false);
-        console.log("error in detailed Subject Answer answersapi");
-      });
+    // getSubmittedQuizSummary(data)
+    //   .then((res: any) => {
+    //     setIndividualQuizDetailedInfo(res.data);
+    //     setLoader(false);
+    //   })
+    //   .catch((error: any) => {
+    //     setLoader(false);
+    //     console.log("error in detailed Subject Answer answersapi");
+    //   });
 
     setOpenTestModal(true);
   };
@@ -138,18 +163,10 @@ const SubmitQuizes = (props: any) => {
 
   return (
     <>
-      <TopNavBar role={props.role} setRole={props.setRole} />
       <Box className="subjectlist-box">
         <Box className="search-box">
           <OutlinedInput
             className="search-input"
-            //   sx={{
-
-            //    borderRadius: "0.3rem",
-            //    height: 30,
-            //    minWidth: 10,
-            //    border: "0.1px solid #000",
-            //  }}
             id="outlined-adornment-weight"
             value={name}
             onChange={(e: any) => setName(e.target.value)}
@@ -251,6 +268,7 @@ const SubmitQuizes = (props: any) => {
                               <TableCell key={column.id} align={column.align}>
                                 {column.id === "quizId" ? (
                                   <Button
+                                    className="table-button"
                                     variant="contained"
                                     onClick={() =>
                                       StartTestViewButtonHandler(value)
@@ -297,7 +315,7 @@ const SubmitQuizes = (props: any) => {
           ) : null}
         </Paper>
       </Box>
-      <div className="quiz-start-btn-wrap">
+      <Box className="quiz-start-btn-wrap">
         <ReactModal
           isOpen={OpenTestModal}
           contentLabel="Minimal Modal Example"
@@ -311,15 +329,12 @@ const SubmitQuizes = (props: any) => {
               </Box>
             ) : (
               <AllSubmittedQuestionsAnswers
-                // openDialog={openDialog}
-                // handleClose={handleClose}
-                // setOpenDialog={setOpenDialog}
                 quizSubjectInfo={detailedSubmittedQuizInfoList}
                 totalQuizDetailedInfo={individualQuizDetailedInfo}
               />
             )}
 
-            <Box style={{ display: "flex", justifyContent: "center" }}>
+            <Box className="close-button-container">
               <Button
                 variant="contained"
                 color="error"
@@ -331,9 +346,9 @@ const SubmitQuizes = (props: any) => {
             </Box>
           </>
         </ReactModal>
-      </div>
+      </Box>
     </>
   );
 };
 
-export default SubmitQuizes;
+export default SubmitedQuizes;

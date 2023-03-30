@@ -12,108 +12,24 @@ import {
   CircularProgress,
   InputAdornment,
   OutlinedInput,
-  Input,
-  TextField,
-  IconButton,
 } from "@mui/material";
 import { Box } from "@mui/system";
 import { useState, useEffect } from "react";
-import { getTotalQuizLinksInfo } from "../../../api/apiAgent";
-import { createdQuizTableColumns, Order } from "../../../Interface/QuizDetails";
+import { apiAgent, getTotalQuizLinksInfo } from "../../../api/apiAgent";
+import { Order } from "../../../Interface/QuizDetails";
 import { getComparator } from "../../../utils/TableSortFunctions";
 import "./InterviewerQuizTable.style.scss";
 import { createdQuizColumns } from "./InterviewQuizTableColumns";
 import SearchIcon from "@mui/icons-material/Search";
 
-// interface Column {
-//   id:
-//     | "quizId"
-//     | "candidateId"
-//     | "quizCodeExpirationAt"
-//     | "quizSubmittedAt"
-//     | "lastLoggedIn"
-//     | "loginAttempts"
-//     | "url";
-//   label: string;
-//   minWidth?: number;
-//   align?: "right";
-//   format?: (value: number) => string;
-// }
-
-// const columns: Column[] = [
-//   { id: "quizId", label: "QuizId", minWidth: 70 },
-//   { id: "candidateId", label: "CandidateId", minWidth: 150 },
-//   {
-//     id: "quizCodeExpirationAt",
-//     label: "QuizCodeExpirationAt",
-//     minWidth: 150,
-//     //align: 'right',
-//     // format: (value: number) => value.toLocaleString('en-US'),
-//   },
-//   {
-//     id: "quizSubmittedAt",
-//     label: "QuizSubmittedAt",
-//     minWidth: 150,
-//     //align: 'right',
-//     // format: (value: number) => value.toLocaleString('en-US'),
-//   },
-//   {
-//     id: "lastLoggedIn",
-//     label: "LastLoggedIn",
-//     minWidth: 150,
-//     //align: 'center',
-//     // format: (value: number) => value.toLocaleString('en-US'),
-//   },
-//   {
-//     id: "loginAttempts",
-//     label: "LoginAttempts",
-//     minWidth: 10,
-//     // align: 'right',
-//     //format: (value: number) => value.toLocaleString('en-US'),
-//   },
-//   {
-//     id: "url",
-//     label: "Url",
-//     minWidth: 100,
-//     //align: 'right',
-//     //format: (value: number) => value.toLocaleString('en-US'),
-//   },
-// ];
-
-// interface Data {
-//   quizId: number;
-//   candidateId: string;
-//   quizCodeExpirationAt: string;
-//   quizSubmittedAt: string;
-//   lastLoggedIn: string;
-//   loginAttempts: number;
-//   url: string;
-// }
-
 const InterviewQuiz = () => {
-  //  const classes = useStyles();
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [page, setPage] = useState<number>(0);
+  const [rowsPerPage, setRowsPerPage] = useState<number>(10);
   const [totalQuizInfo, setTotalQuizInfo] = useState<any>([]);
   const [order, setOrder] = useState<Order>("asc");
-  //const [orderBy, setOrderBy] = useState<keyof Data>("setNumber");
-  const [orderBy, setOrderBy] = useState<any>("version");
+  const [orderBy, setOrderBy] = useState<string>("version");
   const [loader, setLoader] = useState<boolean>(false);
   const [name, setName] = useState<string>("");
-  // const [rows, setRows] = useState([]);
-
-  //const [text, setText] = useState('');
-
-  // const handleSearch = (searchedVal: string) => {
-  //     const filteredRows = totalQuizInfo.filter((row: any) => {
-  //       return (
-  //          row.quizId.toString().toLowerCase().includes(searchedVal.toString().toLowerCase()));
-  //           // || row.setNumber.toString().toLowerCase().includes(searchedVal.toString().toLowerCase())
-  //           // || row.totalQuestionsCount.toString().toLowerCase().includes(searchedVal.toString().toLowerCase()));
-  //     });
-  //       setRows(filteredRows);
-  //     console.log(filteredRows, 'row value');
-  //   };
 
   const createSortHandler =
     (property: string) => (event: React.MouseEvent<unknown>) => {
@@ -130,16 +46,25 @@ const InterviewQuiz = () => {
   };
 
   const totalQuizurlInfo = async () => {
-    setLoader(true);
-    getTotalQuizLinksInfo()
-      .then((response: any) => {
-        setTotalQuizInfo(response.data);
-        setLoader(false);
-      })
-      .catch((error: any) => {
-        setLoader(false);
-        console.log("error in total quiz info api");
-      });
+    try {
+      setLoader(true);
+
+      const res = await apiAgent.interviewer.getTotalQuizLinksInfo();
+      setTotalQuizInfo(res.data);
+    } catch (error: any) {
+    } finally {
+      setLoader(false);
+    }
+    // setLoader(true);
+    // getTotalQuizLinksInfo()
+    //   .then((response: any) => {
+    //     setTotalQuizInfo(response.data);
+    //     setLoader(false);
+    //   })
+    //   .catch((error: any) => {
+    //     setLoader(false);
+    //     console.log("error in total quiz info api");
+    //   });
   };
 
   const handleChangePage = (event: unknown, newPage: number) => {
@@ -166,26 +91,10 @@ const InterviewQuiz = () => {
         <Box className="search-box">
           <OutlinedInput
             className="search-input"
-            //  size="small"
-            //   sx={{
-
-            //    borderRadius: "0.3rem",
-            //    height: 30,
-            //    minWidth: 10,
-            //    border: "0.1px solid #000",
-            //  }}
             id="outlined-adornment-weight"
             value={name}
             onChange={(e: any) => setName(e.target.value)}
             placeholder="Search"
-            //  InputProps={{
-            //   endAdornment: (
-            //     <InputAdornment position="end">
-            //       <SearchIcon />
-            //     </InputAdornment>
-            //   ),
-            // }}
-            // variant="standard"
             endAdornment={
               <InputAdornment position="end">
                 <SearchIcon />
@@ -215,13 +124,6 @@ const InterviewQuiz = () => {
                         onClick={createSortHandler(column.id)}
                       >
                         {column.label}
-                        {/* {orderBy === column.id ? (
-                          <Box component="span" sx={visuallyHidden}>
-                            {order === "desc"
-                              ? "sorted descending"
-                              : "sorted ascending"}
-                          </Box>
-                        ) : null} */}
                       </TableSortLabel>
                     </TableCell>
                   ))}

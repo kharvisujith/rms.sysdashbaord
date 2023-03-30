@@ -15,17 +15,18 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import {
-  getSubmittedQuizInfo,
   getSubmittedQuizSummary,
+  getSubmittedQuizInfo,
   getTotalSubmittedQuizInfo,
-} from "../../../api/apiAgent";
+} from "../../../../api/apiAgent";
 import {
   Order,
   submittedQuizAnswersResponse,
   submittedQuizDetailedInfoResponse,
-} from "../../../Interface/QuizDetails";
-import { submittedQuizTableColumns } from "../../InterviewerComponents/SubmittedQuiz/SubmittedQuizTableColumn";
-import { getComparator } from "../../../utils/TableSortFunctions";
+} from "../../../../Interface/QuizDetails";
+import { getComparator } from "../../../../utils/TableSortFunctions";
+import { submittedQuizTableColumns } from "../../SubmittedQuiz/SubmittedQuizTableColumn";
+
 import ReviewAnswersModal from "../ReviewAnswers/ReviewAnswersModal";
 
 const PastEvaluationsTable = (props: any) => {
@@ -177,13 +178,14 @@ const PastEvaluationsTable = (props: any) => {
                             tabIndex={-1}
                             key={index}
                           >
-                            {submittedQuizTableColumns.map((column) => {
+                            {submittedQuizTableColumns.map((column: any) => {
                               const value = row[column.id];
                               return (
                                 <TableCell key={column.id} align={column.align}>
                                   {column.id === "quizId" ? (
                                     <Button
                                       variant="contained"
+                                      className="table-button"
                                       onClick={() =>
                                         StartTestViewButtonHandler(value)
                                       }

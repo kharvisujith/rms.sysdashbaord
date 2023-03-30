@@ -30,24 +30,30 @@ const RadioSubmittedAnswerComponent = (props: any) => {
         </RadioGroup>
       </Box>
       <Box>
-      <Typography
-            justifyContent="space-between"
-            alignItems="center"
-            style={{ padding: 15 }}
-          >
-            <p>
-            <strong style={{backgroundColor:'lightblue'}}>{"Submitted Answers:"}</strong>&ensp;
+        <Typography
+          justifyContent="space-between"
+          alignItems="center"
+          style={{ padding: 15 }}
+        >
+          <p>
+            <strong style={{ backgroundColor: "lightblue" }}>
+              {"Submitted Answers:"}
+            </strong>
+            &ensp;
             {`${question.questionData.submittedAnswersIds.toString()}`}
             &ensp;&ensp;&ensp;
             {`${question.questionData.submittedAnswers.toString()}`}
-            </p>
-            <p >
-            <strong style={{backgroundColor:'lightgreen'}}>{"Correct Answers:"}</strong>&ensp;
+          </p>
+          <p>
+            <strong style={{ backgroundColor: "lightgreen" }}>
+              {"Correct Answers:"}
+            </strong>
+            &ensp;
             {`${question.questionData.masterQuestionAnswersIds.toString()}`}
             &ensp;&ensp;&ensp;
             {`${question.questionData.masterQuestionAnswers.toString()}`}
-            </p>
-      </Typography>
+          </p>
+        </Typography>
       </Box>
     </>
   );

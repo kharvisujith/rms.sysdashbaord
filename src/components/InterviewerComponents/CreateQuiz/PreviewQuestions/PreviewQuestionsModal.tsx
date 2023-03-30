@@ -8,19 +8,20 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import ReactModal from "react-modal";
-import { createQuiz } from "../../../api/apiAgent";
-import { customStylesModal } from "../../InterviewerComponents/SubmittedQuiz/SubmittedQuizes";
+
 import "./PreviewQuestionsModal.style.scss";
 import EditIcon from "@mui/icons-material/Edit";
 import UpdateIcon from "@mui/icons-material/Update";
 import AddIcon from "@mui/icons-material/Add";
 import CloseIcon from "@mui/icons-material/Close";
+
+import { CircularProgress } from "@material-ui/core";
 import {
-  createQuizRequestBody,
   selectedQuestionsCreateQuiz,
   selectedQuestionsCreateQuizWithTag,
-} from "../../../Interface/QuizDetails";
-import { CircularProgress } from "@material-ui/core";
+} from "../../../../Interface/QuizDetails";
+import { createQuiz } from "../../../../api/apiAgent";
+import { customStylesModal } from "../../SubmittedQuiz/SubmittedQuizes";
 
 const PreviewQuestionsModal = (props: any) => {
   const {
@@ -172,10 +173,15 @@ const PreviewQuestionsModal = (props: any) => {
       >
         {!previewLoader ? (
           <>
-            <Box className="modal-container">
+            <Box
+              //   className="modal-container"
+              className="modal-content-container"
+            >
               {currentPage === 1 ? (
                 <>
-                  <Box className="questions-container">
+                  <Box
+                  //  className="questions-container"
+                  >
                     {previewQuestionsData?.map(
                       (questionData: any, index: number) => (
                         <Box key={index} className="questions">
@@ -200,7 +206,9 @@ const PreviewQuestionsModal = (props: any) => {
               ) : (
                 <>
                   <Box>
-                    <Box className="questions-container">
+                    <Box
+                    //  className="questions-container"
+                    >
                       <Box className="quiz-topic-container">
                         <Box className="quiz-topic">
                           <Typography>Topcis Covered</Typography>
@@ -348,7 +356,10 @@ const PreviewQuestionsModal = (props: any) => {
               )}
             </Box>
 
-            <Box className="handle-modal">
+            <Box
+              className="handle-modal"
+              // className="close-button-container"
+            >
               <Box>
                 <Button variant="outlined" onClick={handlePreviewPageChange}>
                   {currentPage === 1 ? "Next" : "Back"}

@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
 import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
-import Interviewer from "./screens/Interviewer/InterviewerHomeScreen";
 import PageNotFound from "./screens/PageNotFound/PageNotFound";
-import SubmittedQuiz from "./components/InterviewerComponents/SubmittedQuiz/SubmittedQuizes";
 import SubjectExpert from "./screens/subjectExpert/SubjectExpert";
 import SubjectExpertUpload from "./screens/subjectExpert/SubjectExpertUpload";
 import { history } from "./utils/helper/_helper";
 import CandidatInfoScreen from "./screens/Candidate/CandidateInfoScreen";
 import StartQuizScreen from "./screens/Candidate/StartQuizScreen";
 import TestCompletedScreen from "./screens/Candidate/TestCompletedScreen";
-import CreateQuiz from "./screens/Interviewer/CreateQuizScreen";
+import InterviewerHomeScreen from "./screens/Interviewer/InterviewerHomeScreen";
+import CreateQuizScreen from "./screens/Interviewer/CreateQuizScreen";
+import SubmittedQuizScreen from "./screens/Interviewer/SubmittedQuizScreen";
 
 const App = () => {
   history.navigate = useNavigate();
@@ -33,15 +33,15 @@ const App = () => {
           <Routes>
             <Route
               path="/"
-              element={<Interviewer role={role} setRole={setRole} />}
+              element={<InterviewerHomeScreen role={role} setRole={setRole} />}
             />
             <Route
               path="/createquiz"
-              element={<CreateQuiz role={role} setRole={setRole} />}
+              element={<CreateQuizScreen role={role} setRole={setRole} />}
             />
             <Route
               path="/submitted-quiz"
-              element={<SubmittedQuiz role={role} setRole={setRole} />}
+              element={<SubmittedQuizScreen role={role} setRole={setRole} />}
             />
             <Route path="*" element={<PageNotFound />} />
             <Route

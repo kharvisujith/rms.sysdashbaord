@@ -149,7 +149,7 @@ const QuestionsModifyTable = (props: any) => {
   const viewButton = (row: any) => {
     return (
       <Button
-        className="view-button"
+        className="table-button"
         variant="contained"
         onClick={() => handleModifyQuestionsModal(row)}
       >

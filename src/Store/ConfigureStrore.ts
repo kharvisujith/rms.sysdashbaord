@@ -1,12 +1,14 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { useDispatch, TypedUseSelectorHook, useSelector } from "react-redux";
 import { candidateSlice } from "../Redux/candidateSlice";
+import { interviewerSlice } from "../Redux/interviewerSlice";
+import { subjectExpertSlice } from "../Redux/subjectexpertSlice";
 
 export const store = configureStore({
   reducer: {
     candidate: candidateSlice.reducer,
-    // resume: resumeSlice.reducer,
-    // requisition: requisitionSlice.reducer,
+    interviewer: interviewerSlice.reducer,
+    subjectExpert: subjectExpertSlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

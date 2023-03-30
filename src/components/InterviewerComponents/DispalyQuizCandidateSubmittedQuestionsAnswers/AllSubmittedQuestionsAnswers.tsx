@@ -1,8 +1,6 @@
 import CheckboxSubmittedAnswerComponent from "../QuizSubmittedTestAnswersComponents/CheckboxSubmittedAnswerComponent";
 import RadioSubmittedAnswerComponent from "../QuizSubmittedTestAnswersComponents/RadioSubmittedAnswerComponent";
 import CodingSubmittedAnswerComponent from "../QuizSubmittedTestAnswersComponents/CodingSubmittedAnswerComponent";
-import { useState, useEffect } from "react";
-import EndTestDialog from "../CandidateComponents/EndTest/EndTestDialog";
 import {
   Box,
   TableContainer,
@@ -12,23 +10,15 @@ import {
   TableRow,
   TableBody,
   TableFooter,
-  LinearProgress,
   Typography,
   CircularProgress,
 } from "@mui/material";
 import "./AllSubmittedQuestionsAnswers.style.scss";
-import { submittedQuizDetailedInfoResponse } from "../../Interface/QuizDetails";
+import { submittedQuizDetailedInfoResponse } from "../../../Interface/QuizDetails";
 import { Divider } from "@material-ui/core";
 const AllSubmittedQuestionsAnswers = (props: any) => {
   const { quizSubjectInfo, totalQuizDetailedInfo, loader } = props;
-  const [selectedAnswers, setSelectedAnswers] = useState<any>([]);
-  const [progressStatus, setProgressStatus] = useState<number>(0);
-  const [answeredQuestions, setAnsweredQuestions] = useState<number>(0);
-  const [OpenTestModal, setOpenTestModal] = useState(true);
 
-  console.log("value of loader in modal is", loader);
-
-  // return totalQuizDetailedInfo.length > 0 ? (
   if (loader) {
     return (
       <Box className="page-loader">
@@ -39,14 +29,17 @@ const AllSubmittedQuestionsAnswers = (props: any) => {
 
   if (!loader && totalQuizDetailedInfo.length < 1) {
     return (
-      <Box className="modal-container message-box">
+      <Box className="modal-content-container message-box">
         <Typography>Candidate Has Not Answered Any of the Questions</Typography>
       </Box>
     );
   }
   return (
     <>
-      <Box className="modal-container">
+      <Box
+        // className="modal-container"
+        className="modal-content-container"
+      >
         <Box className="progress-box">
           <TableContainer className="popup-left-table">
             <Table>

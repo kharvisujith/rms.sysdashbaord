@@ -13,7 +13,7 @@ code {
     monospace;
 }
 
-.page-loader {
+/* .page-loader {
   width: 100%;
   height: 80vh;
   display: flex;
@@ -43,23 +43,22 @@ code {
 }
 
 /* these should be moved to common.scss in subject expert later */
-.MuiTableCell-root {
+/* .MuiTableCell-root {
   padding: 0.5rem !important;
 }
 
-.view-button {
+.table-button {
   height: 1.5rem !important;
 }
 .delete-icon {
   height: 1.5rem !important;
-}
+} */
 
 /* for sweetalert */
-.swal-alert {
+/* .swal-alert {
   width: 25rem !important;
   height: 20rem !important;
   font-size: 0.8rem !important;
-  /* padding: 0.1rem !important; */
 }
 
 ::-webkit-scrollbar {
@@ -72,10 +71,10 @@ code {
 }
 
 ::-webkit-scrollbar-thumb {
-  /* background: #ebebeb; */
+ 
   background: #000;
   border-radius: 20px;
-}
+}  */
 
 /* ::-webkit-scrollbar-track {
   background: radial-gradient(circle at 14px 18px, white 5px, transparent 7px)

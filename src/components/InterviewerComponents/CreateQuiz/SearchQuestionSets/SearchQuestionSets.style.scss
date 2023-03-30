@@ -64,27 +64,27 @@
         }
       }
 
-      .questions-container {
-        //  margin-bottom: 2rem;
+      // .questions-container {
+      //   //  margin-bottom: 2rem;
+      //   display: flex;
+      //   justify-content: space-between;
+      //   align-items: center;
+
+      .select-check-box {
+        margin-right: 15%;
+      }
+      .options-container {
+        margin-left: 2rem;
         display: flex;
-        justify-content: space-between;
-        align-items: center;
 
-        .select-check-box {
-          margin-right: 15%;
-        }
-        .options-container {
-          margin-left: 2rem;
+        .options-box {
+          margin-left: 1rem;
           display: flex;
-
-          .options-box {
-            margin-left: 1rem;
-            display: flex;
-            // margin-right: 2rem;
-            .option {
-              margin-right: 2rem;
-            }
+          // margin-right: 2rem;
+          .option {
+            margin-right: 2rem;
           }
+          // }
         }
       }
     }
