@@ -2,6 +2,10 @@ import { RadioGroup, FormControlLabel, Radio } from "@mui/material";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { useCallback, useEffect, useState } from "react";
+import {
+  quizAnswers,
+  selectedAnswersBody,
+} from "../../../Interface/Candidate/CandidateInterface";
 import { optionIds } from "../../../utils/Utils";
 
 const RadioComponent = (props: any) => {
@@ -11,7 +15,7 @@ const RadioComponent = (props: any) => {
 
   const getSelectedValue = useCallback(
     (questionData: any) => {
-      const result = selectedAnswers.filter((cur: any) => {
+      const result = selectedAnswers.filter((cur: selectedAnswersBody) => {
         return (
           cur.subjectName === questionData.subjectName &&
           cur.version === questionData.version &&
@@ -23,7 +27,7 @@ const RadioComponent = (props: any) => {
 
       if (result[0]) {
         const ansIndex = result[0].quizAnswers.findIndex(
-          (obj: any) => obj.questionId === questionData.questionId
+          (obj: quizAnswers) => obj.questionId === questionData.questionId
         );
         setValue(result[0].quizAnswers[ansIndex].questionAnswers);
       }

@@ -6,6 +6,10 @@ import {
   Typography,
 } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
+import {
+  quizAnswers,
+  selectedAnswersBody,
+} from "../../../Interface/Candidate/CandidateInterface";
 
 const CheckboxComponent = (props: any) => {
   const { questionInfo, handleCheckboxAnswerChange, selectedAnswers } = props;
@@ -14,11 +18,11 @@ const CheckboxComponent = (props: any) => {
 
   const getSelectedValue = useCallback(
     (questionData: any) => {
-      const result = selectedAnswers.filter((cur: any) => {
+      const result = selectedAnswers.filter((cur: selectedAnswersBody) => {
         return (
           cur.subjectName === questionData.subjectName &&
           cur.version === questionData.version &&
-          cur.quizAnswers.find((elem: any) => {
+          cur.quizAnswers.find((elem: quizAnswers) => {
             return elem.questionId === questionData.questionId;
           })
         );
@@ -26,7 +30,7 @@ const CheckboxComponent = (props: any) => {
 
       if (result[0]) {
         const ansIndex = result[0].quizAnswers.findIndex(
-          (obj: any) => obj.questionId === questionData.questionId
+          (obj: quizAnswers) => obj.questionId === questionData.questionId
         );
         setValue(result[0].quizAnswers[ansIndex].questionAnswers);
       }

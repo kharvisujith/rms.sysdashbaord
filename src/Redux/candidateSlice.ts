@@ -1,13 +1,14 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { apiAgent } from "../api/apiAgent";
 import {
+  candiDateSliceStates,
   submitCandidateInfoRequestBody,
   verifyCandidateRequestBody,
-} from "../Interface/CandidateDetails";
+} from "../Interface/Candidate/CandidateInterface";
 import { history } from "../utils/helper/_helper";
 import Swal from "sweetalert2";
 
-const initialState: any = {
+const initialState: candiDateSliceStates = {
   verifyCredentials: {
     id: "",
     key: "",
@@ -20,7 +21,7 @@ const initialState: any = {
   testQuestions: [],
 
   isTestStarted: Boolean(localStorage.getItem("testStarted")) || false,
-  selectedAnswers: [],
+  // selectedAnswers: [],
 
   loadingStatus: {
     buttonLoader: false,
@@ -41,7 +42,7 @@ const initialState: any = {
 // );
 
 export const verifyCandidate = createAsyncThunk<
-  any,
+  { data: verifyCandidateRequestBody; fromPage: string },
   { data: verifyCandidateRequestBody; fromPage: string }
 >("candidate/verify", async ({ data, fromPage }, thunkAPI: any) => {
   try {
@@ -74,36 +75,20 @@ export const submitCandidateInfo = createAsyncThunk<any, any>(
   }
 );
 
-//export const signInUser = createAsyncThunk<any, any>(
-//   "account/signInUser",
-//   async (data, thunkAPI) => {
-//     try {
-//       const result = await agent.account.login(data);
-// if (!result) {
-//   throw new Error("Invalid credentials");
-// }
-//       return result;
-//     } catch (error: any) {
-//       return thunkAPI.rejectWithValue({ error: error.data });
-//     }
-//   }
-// );
-
 export const candidateSlice = createSlice({
   name: "candidate",
   initialState,
   reducers: {
-    dummyMethod: (state: any) => {
+    dummyMethod: (state: candiDateSliceStates) => {
       console.log("dummy methodddddddd");
       // state.keek = "keek keeek";
     },
 
-    setVerifyCredentials: (state: any, action: any) => {
-      console.log("I am in reducerrrrrr and value is", action.payload);
+    setVerifyCredentials: (state: candiDateSliceStates, action: any) => {
       state.verifyCredentials.id = action.payload.id;
       state.verifyCredentials.key = action.payload.key;
     },
-    startTest: (state: any) => {
+    startTest: (state: candiDateSliceStates) => {
       state.isTestStarted = true;
       localStorage.setItem("testStarted", "true");
     },
@@ -111,7 +96,7 @@ export const candidateSlice = createSlice({
   extraReducers: (builder: any) => {
     builder.addCase(
       submitCandidateInfo.fulfilled,
-      (state: any, action: any) => {
+      (state: candiDateSliceStates, action: any) => {
         state.testQuestions = action.payload;
         state.loadingStatus.buttonLoader = false;
         history.navigate("/rms-aug/test/start", {
@@ -125,70 +110,52 @@ export const candidateSlice = createSlice({
         });
       }
     );
-    builder.addCase(submitCandidateInfo.rejected, (state: any, action: any) => {
-      state.loadingStatus.buttonLoader = false;
-    });
-    builder.addCase(submitCandidateInfo.pending, (state: any, action: any) => {
-      state.loadingStatus.buttonLoader = true;
-    });
-
-    builder.addCase(verifyCandidate.fulfilled, (state: any, action: any) => {
-      console.log("verify fullfilled called", action.payload);
-      console.log(
-        "action payload in verify isss",
-        action.payload,
-        action.payload.data
-      );
-
-      if (action.payload.fromPage === "candidateInfo") {
-        console.log("insideeeeeeeee candiate page");
-        state.verifiedStatus.candidateInfoPage = true;
-        //   state.verifyCredentials.id = action.payload.data.id;
-        //  state.verifyCredentials.key = action.payload.data.key;
-      } else {
-        state.verifiedStatus.startQuizPage = true;
-        state.isTestStarted = localStorage.getItem("testStarted") === "true";
-        // setTestStarted(localStorage.getItem("testStarted") === "true");
+    builder.addCase(
+      submitCandidateInfo.rejected,
+      (state: candiDateSliceStates, action: any) => {
+        state.loadingStatus.buttonLoader = false;
       }
+    );
+    builder.addCase(
+      submitCandidateInfo.pending,
+      (state: candiDateSliceStates, action: any) => {
+        state.loadingStatus.buttonLoader = true;
+      }
+    );
 
-      state.errorMessage = "";
-      state.loadingStatus.pageLoader = false;
-    });
-    builder.addCase(verifyCandidate.rejected, (state: any, action: any) => {
-      console.log("verify rejected called", action.payload);
-
-      console.log("action payload in verify error part is", action.payload);
-      console.log(
-        "data and status is",
-        action.payload.data,
-        action.payload.status
-      );
-
-      if (action.payload.status === 400) {
-        if (action.payload.data) {
-          state.errorMessage = action.payload.data;
+    builder.addCase(
+      verifyCandidate.fulfilled,
+      (state: candiDateSliceStates, action: any) => {
+        if (action.payload.fromPage === "candidateInfo") {
+          state.verifiedStatus.candidateInfoPage = true;
         } else {
-          state.errorMessage = "Something Wrong ";
+          state.verifiedStatus.startQuizPage = true;
+          state.isTestStarted = localStorage.getItem("testStarted") === "true";
         }
-      }
-      state.loadingStatus.pageLoader = false;
-    });
-    builder.addCase(verifyCandidate.pending, (state: any, action: any) => {
-      state.loadingStatus.pageLoader = true;
-    });
 
-    //   builder.addCase(submitQuiz.fulfilled, (state: any, action: any) => {
-    //     Swal.fire({
-    //       title: "Success",
-    //       text: "Test Submitted Succesfully",
-    //       icon: "success",
-    //       confirmButtonText: "Okay",
-    //       customClass: "swal-alert",
-    //     });
-    //     localStorage.clear();
-    //   });
-    //   builder.addCase(submitQuiz.rejected, (state: any, action: any) => {});
-    //   builder.addCase(submitQuiz.pending, (state: any, action: any) => {});
+        state.errorMessage = "";
+        state.loadingStatus.pageLoader = false;
+      }
+    );
+    builder.addCase(
+      verifyCandidate.rejected,
+      (state: candiDateSliceStates, action: any) => {
+        if (action.payload.status === 400) {
+          if (action.payload.data) {
+            state.errorMessage = action.payload.data;
+          } else {
+            state.errorMessage = "Something Wrong ";
+          }
+        }
+        state.loadingStatus.pageLoader = false;
+      }
+    );
+    builder.addCase(
+      verifyCandidate.pending,
+      (state: candiDateSliceStates, action: any) => {
+        state.loadingStatus.pageLoader = true;
+      }
+    );
   },
 });
 

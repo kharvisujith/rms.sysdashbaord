@@ -7,6 +7,11 @@ import RadioComponent from "../QuizTestComponents/RadioComponent";
 import "./SingleQuestion.style.scss";
 import { useNavigate } from "react-router-dom";
 import { CaluclateTotalNumberOfAnswers, optionIds } from "../../../utils/Utils";
+import {
+  quizAnswers,
+  selectedAnswersBody,
+  submitQuizRequestBody,
+} from "../../../Interface/Candidate/CandidateInterface";
 
 import Swal from "sweetalert2";
 
@@ -16,7 +21,9 @@ const SingleQuestion = (props: any) => {
   const { quizQuestions, quizId } = props;
 
   const [currentQuestion, setCurrentQuestion] = useState<number>(1);
-  const [selectedAnswers, setSelectedAnswers] = useState<any>([]);
+  const [selectedAnswers, setSelectedAnswers] = useState<selectedAnswersBody[]>(
+    []
+  );
   const [progressStatus, setProgressStatus] = useState<number>(0);
   const [answeredQuestions, setAnsweredQuestions] = useState<number>(0);
   const [timer, setTimer] = useState<any>();
@@ -40,7 +47,7 @@ const SingleQuestion = (props: any) => {
   ) => {
     const selectedAns = (event.target as HTMLInputElement).value;
 
-    const existingId = selectedAnswers.filter((cur: any) => {
+    const existingId = selectedAnswers.filter((cur: selectedAnswersBody) => {
       return (
         cur.subjectName === questionData.subjectName &&
         cur.version === questionData.version &&
@@ -49,22 +56,25 @@ const SingleQuestion = (props: any) => {
         })
       );
     });
-    const existingSetAndSubject = selectedAnswers.filter((cur: any) => {
-      return (
-        cur.subjectName === questionData.subjectName &&
-        cur.version === questionData.version
-      );
-    });
+    const existingSetAndSubject = selectedAnswers.filter(
+      (cur: selectedAnswersBody) => {
+        return (
+          cur.subjectName === questionData.subjectName &&
+          cur.version === questionData.version
+        );
+      }
+    );
     const indexOFExistingSetAndSubject = selectedAnswers.findIndex(
-      (obj: any) =>
+      (obj: selectedAnswersBody) =>
         obj.subjectName === questionData.subjectName &&
         obj.version === questionData.version
     );
+    var quizAnswerIndex: any;
     if (indexOFExistingSetAndSubject !== -1) {
-      var quizAnswerIndex = selectedAnswers[
+      quizAnswerIndex = selectedAnswers[
         indexOFExistingSetAndSubject
       ].quizAnswers.findIndex(
-        (item: any) => item.questionId === questionData.questionId
+        (item: quizAnswers) => item.questionId === questionData.questionId
       );
     }
 
@@ -88,7 +98,7 @@ const SingleQuestion = (props: any) => {
       setSelectedAnswers(newArr);
       handleProgressStatus();
     } else {
-      setSelectedAnswers((prev: any) => [
+      setSelectedAnswers((prev: selectedAnswersBody[]) => [
         ...prev,
         {
           subjectName: questionData.subjectName,
@@ -120,16 +130,16 @@ const SingleQuestion = (props: any) => {
     selectedIndex: any
   ) => {
     const indexOFExistingSetAndSubject = selectedAnswers.findIndex(
-      (obj: any) =>
+      (obj: selectedAnswersBody) =>
         obj.subjectName === questionData.subjectName &&
         obj.version === questionData.version
     );
-    let quizAnswerIndex;
+    let quizAnswerIndex: any;
     if (indexOFExistingSetAndSubject !== -1) {
       quizAnswerIndex = selectedAnswers[
         indexOFExistingSetAndSubject
       ].quizAnswers.findIndex(
-        (item: any) => item.questionId === questionData.questionId
+        (item: quizAnswers) => item.questionId === questionData.questionId
       );
     }
 
@@ -174,7 +184,7 @@ const SingleQuestion = (props: any) => {
         handleProgressStatus();
       }
     } else {
-      setSelectedAnswers((prev: any) => [
+      setSelectedAnswers((prev: selectedAnswersBody[]) => [
         ...prev,
         {
           subjectName: questionData.subjectName,
@@ -207,7 +217,7 @@ const SingleQuestion = (props: any) => {
     };
   };
 
-  const autoSubmitQuiz = async (submitQuizData: any) => {
+  const autoSubmitQuiz = async (submitQuizData: submitQuizRequestBody) => {
     try {
       const res = await apiAgent.candidate.submitQuiz(submitQuizData);
       if (res.status === 200) {
@@ -236,7 +246,7 @@ const SingleQuestion = (props: any) => {
 
   if (timeCompletd) {
     const totalAnswered = CaluclateTotalNumberOfAnswers(selectedAnswers);
-    const submitQuizData = {
+    const submitQuizData: submitQuizRequestBody = {
       quizId: parseInt(quizId),
       totalQuestions: quizQuestions.length,
       answeredQuestions: totalAnswered,

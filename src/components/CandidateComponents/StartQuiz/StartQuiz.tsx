@@ -5,7 +5,7 @@ import Button from "@mui/material/Button";
 import "./StartQuiz.style.scss";
 import SingleQuestion from "../DispalyQuizQuestions/SingleQuestion";
 import { useLocation } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 import { useAppDispatch, useAppSelector } from "../../../Store/ConfigureStrore";
 import { startTest, verifyCandidate } from "../../../Redux/candidateSlice";

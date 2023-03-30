@@ -15,16 +15,18 @@ import { useAppDispatch, useAppSelector } from "../../../Store/ConfigureStrore";
 import { submitCandidateInfo } from "../../../Redux/candidateSlice";
 import {
   CandidateDetails,
+  candidateFromError,
   submitCandidateInfoRequestBody,
   verifyCandidateRequestBody,
-} from "../../../Interface/CandidateDetails";
+} from "../../../Interface/Candidate/CandidateInterface";
 
 import { verifyCandidate } from "../../../Redux/candidateSlice";
 
-const CandidateInfo = (props: any) => {
+const CandidateInfo = () => {
   const dispatch = useAppDispatch();
-  const { errorMessage, verifiedStatus, loadingStatus, verifyCredentials } =
-    useAppSelector((state: any) => state.candidate);
+  const { errorMessage, verifiedStatus, loadingStatus } = useAppSelector(
+    (state: any) => state.candidate
+  );
 
   const { id, key } = useParams();
 
@@ -35,15 +37,15 @@ const CandidateInfo = (props: any) => {
     email: "",
     phone: "",
   });
-  const [formError, setFormError] = useState<any>({
+  const [formError, setFormError] = useState<candidateFromError>({
     candidateName: false,
     email: false,
     phone: false,
   });
 
   const regex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
-
   const phone_regex = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
+
   // /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
   const handleChange = (e: any) => {
     setFormError({ ...formError, [e?.target.name]: false });
@@ -72,7 +74,7 @@ const CandidateInfo = (props: any) => {
     } else if (!regex.test(user.email)) {
       setFormError({ ...formError, email: true });
     } else if (!user.candidateName) {
-      setFormError({ ...formError, name: true });
+      setFormError({ ...formError, candidateName: true });
     } else if (!phone_regex.test(user.phone)) {
       setFormError({ ...formError, phone: true });
     }

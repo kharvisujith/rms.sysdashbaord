@@ -1,8 +1,9 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
 import {
   submitCandidateInfoRequestBody,
+  submitQuizRequestBody,
   verifyCandidateRequestBody,
-} from "../Interface/CandidateDetails";
+} from "../Interface/Candidate/CandidateInterface";
 
 import { createQuizRequestBody } from "../Interface/QuizDetails";
 import { UpdateQuestionsSet } from "../Interface/SubjectExpert/SubjectExpert";
@@ -11,12 +12,6 @@ import { UpdateQuestionsSet } from "../Interface/SubjectExpert/SubjectExpert";
 
 export const axiosClient = axios.create({
   baseURL: `https://localhost:5001/api/Rms/1/`,
-  // https://localhost:5001/api/Rms/1/quiz/interviewer/createquiz
-  // https://localhost:5001/api/Rms/1/quiz/getCandidateQuestions?set=1&subject=javascript
-  // headers: {
-  //   'Accept': 'application/json',
-  //   'Content-Type': 'application/json'
-  // }
 });
 
 // these two gets called everytime we send api request to that particular instance
@@ -134,7 +129,7 @@ export const createQuiz = (requestBody: createQuizRequestBody) => {
   });
 };
 
-export const submitQuiz = (quizAnswers: any) => {
+export const submitQuiz = (quizAnswers: submitQuizRequestBody) => {
   return axiosClient.post("/quiz/interviewer/submitquiz", quizAnswers, {
     headers: {
       "Content-Type": "application/json",
