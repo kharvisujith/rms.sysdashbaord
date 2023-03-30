@@ -9,7 +9,7 @@ import {
 import { useState } from "react";
 import ReactModal from "react-modal";
 import { createQuiz } from "../../../api/apiAgent";
-import { customStylesModal } from "../../../screens/SubmittedQuiz/SubmittedQuiz";
+import { customStylesModal } from "../../InterviewerComponents/SubmittedQuiz/SubmittedQuizes";
 import "./PreviewQuestionsModal.style.scss";
 import EditIcon from "@mui/icons-material/Edit";
 import UpdateIcon from "@mui/icons-material/Update";

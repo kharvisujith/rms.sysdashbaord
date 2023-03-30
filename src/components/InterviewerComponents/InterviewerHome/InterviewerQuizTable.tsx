@@ -18,9 +18,9 @@ import {
 } from "@mui/material";
 import { Box } from "@mui/system";
 import { useState, useEffect } from "react";
-import { getTotalQuizLinksInfo } from "../../api/apiAgent";
-import { createdQuizTableColumns, Order } from "../../Interface/QuizDetails";
-import { getComparator } from "../../utils/TableSortFunctions";
+import { getTotalQuizLinksInfo } from "../../../api/apiAgent";
+import { createdQuizTableColumns, Order } from "../../../Interface/QuizDetails";
+import { getComparator } from "../../../utils/TableSortFunctions";
 import "./InterviewerQuizTable.style.scss";
 import { createdQuizColumns } from "./InterviewQuizTableColumns";
 import SearchIcon from "@mui/icons-material/Search";
@@ -101,14 +101,14 @@ const InterviewQuiz = () => {
   const [loader, setLoader] = useState<boolean>(false);
   const [name, setName] = useState<string>("");
   // const [rows, setRows] = useState([]);
-  
+
   //const [text, setText] = useState('');
 
   // const handleSearch = (searchedVal: string) => {
   //     const filteredRows = totalQuizInfo.filter((row: any) => {
   //       return (
   //          row.quizId.toString().toLowerCase().includes(searchedVal.toString().toLowerCase()));
-  //           // || row.setNumber.toString().toLowerCase().includes(searchedVal.toString().toLowerCase()) 
+  //           // || row.setNumber.toString().toLowerCase().includes(searchedVal.toString().toLowerCase())
   //           // || row.totalQuestionsCount.toString().toLowerCase().includes(searchedVal.toString().toLowerCase()));
   //     });
   //       setRows(filteredRows);
@@ -163,36 +163,37 @@ const InterviewQuiz = () => {
   return (
     <>
       <Box className="quiztable-box">
-      <Box className="search-box">
-      <OutlinedInput className="search-input"
-      //  size="small"
-        //   sx={{
-           
-        //    borderRadius: "0.3rem",
-        //    height: 30,
-        //    minWidth: 10,
-        //    border: "0.1px solid #000",
-        //  }}
-          id="outlined-adornment-weight"
-         value={name}
-         onChange={(e: any) => setName(e.target.value)}
-         placeholder="Search"
-        //  InputProps={{
-        //   endAdornment: (
-        //     <InputAdornment position="end">
-        //       <SearchIcon />
-        //     </InputAdornment>
-        //   ),
-        // }}
-        // variant="standard"
-         endAdornment={
-           <InputAdornment position="end">
-             <SearchIcon />
-           </InputAdornment>
-         }
-         aria-describedby="outlined-weight-helper-text"
-       />
-       </Box>
+        <Box className="search-box">
+          <OutlinedInput
+            className="search-input"
+            //  size="small"
+            //   sx={{
+
+            //    borderRadius: "0.3rem",
+            //    height: 30,
+            //    minWidth: 10,
+            //    border: "0.1px solid #000",
+            //  }}
+            id="outlined-adornment-weight"
+            value={name}
+            onChange={(e: any) => setName(e.target.value)}
+            placeholder="Search"
+            //  InputProps={{
+            //   endAdornment: (
+            //     <InputAdornment position="end">
+            //       <SearchIcon />
+            //     </InputAdornment>
+            //   ),
+            // }}
+            // variant="standard"
+            endAdornment={
+              <InputAdornment position="end">
+                <SearchIcon />
+              </InputAdornment>
+            }
+            aria-describedby="outlined-weight-helper-text"
+          />
+        </Box>
         <Paper className="paper">
           <Typography variant="h5" className="table-title">
             Quiz Details
@@ -228,53 +229,72 @@ const InterviewQuiz = () => {
               </TableHead>
 
               <TableBody>
-                {totalQuizInfo.length>0 &&
-                totalQuizInfo
-                  .slice()
-                  .sort(getComparator(order, orderBy))
-                  
-                   .filter((row:any) => !name.length || row.quizId.toString().toLowerCase().includes(name.toString().toLowerCase()) ||
-                     row.candidateId?.toLowerCase().includes(name.toLowerCase()) || row.quizSubmittedAt?.toLowerCase().includes(name.toLowerCase()) ||
-                     row.loginAttempts.toString().toLowerCase().includes(name.toString().toLowerCase()) ||
-                     row.lastLoggedIn?.toLowerCase().includes(name.toLowerCase()) ||
-                      row.quizCodeExpirationAt.toLowerCase().includes(name.toLowerCase()))
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row: any, index: number) => {
-                    return (
-                      <TableRow
-                        hover
-                        role="checkbox"
-                        tabIndex={-1}
-                        key={index}
-                      >
-                        {createdQuizColumns.map((column: any, index: any) => {
-                          const value = row[column.id];
-                          return (
-                            <TableCell key={index} align={column.align}>
-                              {column.format && typeof value === "number"
-                                ? column.id == "url"
-                                  ? column.format(value)
-                                  : value
-                                : column.id == "url"
-                                ? value.slice(value.length - 12)
-                                : value}
-                              {column.id === "url" &&
-                              (row["quizCodeExpirationAt"] == null ||
-                                row["quizSubmittedAt"] == null) ? (
-                                <button
-                                  onClick={() => copyCodeToClipboard(value)}
-                                >
-                                  Copy
-                                </button>
-                              ) : (
-                                ""
-                              )}
-                            </TableCell>
-                          );
-                        })}
-                      </TableRow>
-                    );
-                  })}
+                {totalQuizInfo.length > 0 &&
+                  totalQuizInfo
+                    .slice()
+                    .sort(getComparator(order, orderBy))
+
+                    .filter(
+                      (row: any) =>
+                        !name.length ||
+                        row.quizId
+                          .toString()
+                          .toLowerCase()
+                          .includes(name.toString().toLowerCase()) ||
+                        row.candidateId
+                          ?.toLowerCase()
+                          .includes(name.toLowerCase()) ||
+                        row.quizSubmittedAt
+                          ?.toLowerCase()
+                          .includes(name.toLowerCase()) ||
+                        row.loginAttempts
+                          .toString()
+                          .toLowerCase()
+                          .includes(name.toString().toLowerCase()) ||
+                        row.lastLoggedIn
+                          ?.toLowerCase()
+                          .includes(name.toLowerCase()) ||
+                        row.quizCodeExpirationAt
+                          .toLowerCase()
+                          .includes(name.toLowerCase())
+                    )
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((row: any, index: number) => {
+                      return (
+                        <TableRow
+                          hover
+                          role="checkbox"
+                          tabIndex={-1}
+                          key={index}
+                        >
+                          {createdQuizColumns.map((column: any, index: any) => {
+                            const value = row[column.id];
+                            return (
+                              <TableCell key={index} align={column.align}>
+                                {column.format && typeof value === "number"
+                                  ? column.id == "url"
+                                    ? column.format(value)
+                                    : value
+                                  : column.id == "url"
+                                  ? value.slice(value.length - 12)
+                                  : value}
+                                {column.id === "url" &&
+                                (row["quizCodeExpirationAt"] == null ||
+                                  row["quizSubmittedAt"] == null) ? (
+                                  <button
+                                    onClick={() => copyCodeToClipboard(value)}
+                                  >
+                                    Copy
+                                  </button>
+                                ) : (
+                                  ""
+                                )}
+                              </TableCell>
+                            );
+                          })}
+                        </TableRow>
+                      );
+                    })}
               </TableBody>
             </Table>
           </TableContainer>

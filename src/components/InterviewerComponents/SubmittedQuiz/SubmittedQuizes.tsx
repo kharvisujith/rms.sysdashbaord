@@ -22,20 +22,20 @@ import {
   getTotalSubmittedQuizInfo,
   getSubmittedQuizInfo,
   getSubmittedQuizSummary,
-} from "../../api/apiAgent";
-import AllSubmittedQuestionsAnswers from "../../components/DispalyQuizCandidateSubmittedQuestionsAnswers/AllSubmittedQuestionsAnswers";
+} from "../../../api/apiAgent";
+import AllSubmittedQuestionsAnswers from "../../DispalyQuizCandidateSubmittedQuestionsAnswers/AllSubmittedQuestionsAnswers";
 import {
   submittedQuizResponse,
   submittedQuizAnswersResponse,
   submittedQuizDetailedInfoResponse,
   Order,
-} from "../../Interface/QuizDetails";
+} from "../../../Interface/QuizDetails";
 
 import "./SubmittedQuiz.style.scss";
 import { visuallyHidden } from "@mui/utils";
-import { getComparator } from "../../utils/TableSortFunctions";
+import { getComparator } from "../../../utils/TableSortFunctions";
 import SearchIcon from "@mui/icons-material/Search";
-import TopNavBar from "../../components/TopNavBar/TopNavBar";
+import TopNavBar from "../../TopNavBar/TopNavBar";
 import { submittedQuizTableColumns } from "./SubmittedQuizTableColumn";
 import CloseIcon from "@mui/icons-material/Close";
 

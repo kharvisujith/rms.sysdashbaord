@@ -115,22 +115,24 @@ const submitCandidateInfo = (data: submitCandidateInfoRequestBody) => {
     data.user
   );
 };
-export const verifyCandidate = (data: verifyCandidateRequestBody) => {
+const verifyCandidate = (data: verifyCandidateRequestBody) => {
   return axiosClient.get(
     `quiz/candidate/checkquizid?quizId=${data.id}&confirmationCode=${data.key}`
   );
 };
 
-export const createQuiz = (requestBody: createQuizRequestBody) => {
-  return axiosClient.post(`/quiz/interviewer/createquiz`, requestBody, {
+const submitQuiz = (quizAnswers: submitQuizRequestBody) => {
+  return axiosClient.post("/quiz/interviewer/submitquiz", quizAnswers, {
     headers: {
       "Content-Type": "application/json",
     },
   });
 };
 
-export const submitQuiz = (quizAnswers: submitQuizRequestBody) => {
-  return axiosClient.post("/quiz/interviewer/submitquiz", quizAnswers, {
+/////for interview
+
+export const createQuiz = (requestBody: createQuizRequestBody) => {
+  return axiosClient.post(`/quiz/interviewer/createquiz`, requestBody, {
     headers: {
       "Content-Type": "application/json",
     },

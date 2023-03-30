@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import ReactModal from "react-modal";
 import { subjectwiseQuizAnswersResponse } from "../../../Interface/QuizDetails";
-import { customStylesModal } from "../../../screens/SubmittedQuiz/SubmittedQuiz";
+import { customStylesModal } from "../../InterviewerComponents/SubmittedQuiz/SubmittedQuizes";
 import "./SelectQuestionsModal.style.scss";
 
 const SelectQuestionsModal = (props: any) => {

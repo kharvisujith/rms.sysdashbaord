@@ -1,6 +1,6 @@
 import { Box, Button } from "@mui/material";
 import ReactModal from "react-modal";
-import { customStylesModal } from "../../../screens/SubmittedQuiz/SubmittedQuiz";
+import { customStylesModal } from "../../InterviewerComponents/SubmittedQuiz/SubmittedQuizes";
 import AllSubmittedQuestionsAnswers from "../../DispalyQuizCandidateSubmittedQuestionsAnswers/AllSubmittedQuestionsAnswers";
 import "./ReviewAnswersModal.style.scss";
 import CloseIcon from "@mui/icons-material/Close";

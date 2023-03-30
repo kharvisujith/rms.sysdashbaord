@@ -24,7 +24,7 @@ import {
   submittedQuizAnswersResponse,
   submittedQuizDetailedInfoResponse,
 } from "../../../Interface/QuizDetails";
-import { submittedQuizTableColumns } from "../../../screens/SubmittedQuiz/SubmittedQuizTableColumn";
+import { submittedQuizTableColumns } from "../../InterviewerComponents/SubmittedQuiz/SubmittedQuizTableColumn";
 import { getComparator } from "../../../utils/TableSortFunctions";
 import ReviewAnswersModal from "../ReviewAnswers/ReviewAnswersModal";
 

@@ -1,4 +1,4 @@
-import { createdQuizTableColumns } from "../../Interface/QuizDetails";
+import { createdQuizTableColumns } from "../../../Interface/QuizDetails";
 
 export const createdQuizColumns: createdQuizTableColumns[] = [
   { id: "quizId", label: "QuizId", minWidth: 70 },
