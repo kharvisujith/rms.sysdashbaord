@@ -78,6 +78,7 @@ export const getSubjectwiseQuiz = (subject: string) => {
   });
 };
 
+// this is dup, changed name -> setSubject
 export const getSubjectwiseQuizAnswers = (version: any, subject: any) => {
   return axiosClient.get(
     `quiz/SubjectExpert/questions?version=${version}&subject=${subject}`
@@ -130,13 +131,27 @@ const submitQuiz = (quizAnswers: submitQuizRequestBody) => {
 };
 
 /////for interview
-
 export const createQuiz = (requestBody: createQuizRequestBody) => {
   return axiosClient.post(`/quiz/interviewer/createquiz`, requestBody, {
     headers: {
       "Content-Type": "application/json",
     },
   });
+};
+
+export const getSubjectwiseQuestionSets = (subject: string) => {
+  return axiosClient.get("/quiz/SubjectExpert/allquestions", {
+    params: { subject: subject },
+  });
+};
+
+export const getQuestionAnswersForSetAndSubject = (
+  version: any,
+  subject: any
+) => {
+  return axiosClient.get(
+    `quiz/SubjectExpert/questions?version=${version}&subject=${subject}`
+  );
 };
 
 export const getTotalQuizLinksInfo = () => {
@@ -210,6 +225,8 @@ export const apiAgent = {
     filterQuestionsSets: filterQuestionsSets,
     deleteQuestionSet: deleteQuestionSet,
     deleteQuestionsById: deleteQuestionsById,
+    getSubjectwiseQuestionSets: getSubjectwiseQuestionSets,
+    getQuestionAnswersForSetAndSubject: getQuestionAnswersForSetAndSubject,
   },
   subjectExpert: {
     downnLoadExcel: downnLoadExcel,

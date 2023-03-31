@@ -29,21 +29,42 @@ import {
 } from "../../../../Interface/QuizDetails";
 import { getComparator } from "../../../../utils/TableSortFunctions";
 import {
+  apiAgent,
   filterQuestionsSets,
   getPreviewQuestionsForCreateQuiz,
+  getSubjectwiseQuestionSets,
   getSubjectwiseQuiz,
   getSubjectwiseQuizAnswers,
 } from "../../../../api/apiAgent";
+import {
+  useAppDispatch,
+  useAppSelector,
+} from "../../../../Store/ConfigureStrore";
+import {
+  fetchFilteredQuestionSets,
+  fetchQuestionForSetAndSubject,
+  fetchsubjectwiseQuestionSets,
+  handleAddQuestionSetsToCreteQuizBody,
+  handleSelectQuestionsModal,
+} from "../../../../Redux/interviewerSlice";
 
 interface CustomPaginationProps extends PaginationProps {
   rowsPerPage: number;
 }
 
 const SearchQuestionSets = () => {
+  const dispatch = useAppDispatch();
+  const {
+    subjectwiseQuestionSets,
+    createQuizSetWiseInfoBody,
+    searchText,
+    loadingStatus,
+  } = useAppSelector((state: any) => state.interviewer);
+
   const [createQuizSetWiseInfo, setCreateQuizSetWiseInfo] = useState<
     selectedQuestionsCreateQuizWithTag[]
   >([]);
-  const [searchText, setSearchText] = useState<string>();
+  // const [searchText, setSearchText] = useState<string>();
   const [subjectwiseDetails, setSubjectwiseDeatails] = useState<
     subjectWiseQuizListResponse[]
   >([]);
@@ -62,31 +83,37 @@ const SearchQuestionSets = () => {
   const [previewLoader, setPreviewLoader] = useState<boolean>(false);
 
   const handleSearchInputChange = (event: any) => {
-    console.log("event is", event.target.value);
-    setSearchText(event.target.value);
+    dispatch({ type: "interviewer/handleSearchInputChange", payload: event });
+    // console.log("event is", event.target.value);
+    // setSearchText(event.target.value);
   };
 
-  const handleSearchQuestionSet = () => {
-    console.log("value is", searchText);
-    setLoader(true);
-    if (searchText) {
-      filterQuestionsSets(searchText.split(" "))
-        .then((response: any) => {
-          console.log("filer response is", response);
-          setSubjectwiseDeatails(response.data);
-        })
-        .catch((error: any) => {
-          console.log("error in subjwiseapi");
-          // setLoader(false);
-        })
-        .finally(() => setLoader(false));
+  const handleSearchQuestionSet = async () => {
+    try {
+      await dispatch(fetchFilteredQuestionSets());
+    } catch (error: any) {
+      console.log("Error in filter", error);
     }
+    // console.log("value is", searchText);
+    // setLoader(true);
+    // if (searchText) {
+    //   filterQuestionsSets(searchText.split(" "))
+    //     .then((response: any) => {
+    //       console.log("filer response is", response);
+    //       setSubjectwiseDeatails(response.data);
+    //     })
+    //     .catch((error: any) => {
+    //       console.log("error in subjwiseapi");
+    //       // setLoader(false);
+    //     })
+    //     .finally(() => setLoader(false));
+    // }
   };
 
   const getIndexFromNewCreateQuizBody = (
     subjectDetails: subjectWiseQuizListResponse
   ) => {
-    const findIndex = createQuizSetWiseInfo.findIndex(
+    const findIndex = createQuizSetWiseInfoBody.findIndex(
       (obj: selectedQuestionsCreateQuizWithTag) =>
         obj.subjectName === subjectDetails.subjectName &&
         obj.version === subjectDetails.version
@@ -141,54 +168,63 @@ const SearchQuestionSets = () => {
     subjectDetails: subjectWiseQuizListResponse
   ) => {
     try {
-      const existingIndex = createQuizSetWiseInfo.findIndex(
-        (obj: selectedQuestionsCreateQuizWithTag) =>
-          obj.subjectName === subjectDetails.subjectName &&
-          obj.version === subjectDetails.version
-      );
-      // get all the question ids for particualr set and subjetname - api needed to get only question-ids for set and subject
-      const response = await getSubjectwiseQuizAnswers(
-        subjectDetails.version,
-        subjectDetails.subjectName
-      );
-
-      if (response.data.length > 0) {
-        var questionIdsArray = response.data.map((obj: any) => obj.questionId);
-
-        if (existingIndex === -1) {
-          setCreateQuizSetWiseInfo((prev: any) => [
-            ...prev,
-            {
-              version: subjectDetails.version,
-              subjectName: subjectDetails.subjectName,
-              tag: subjectDetails.tag,
-              questionIds: questionIdsArray,
-            },
-          ]);
-        }
-      }
+      await dispatch(handleAddQuestionSetsToCreteQuizBody(subjectDetails));
     } catch (error: any) {
-      console.log("Error in get question ids", error);
+      console.log("Error in Add Quesiton Sets", error);
     }
+    // try {
+    //   const existingIndex = createQuizSetWiseInfo.findIndex(
+    //     (obj: selectedQuestionsCreateQuizWithTag) =>
+    //       obj.subjectName === subjectDetails.subjectName &&
+    //       obj.version === subjectDetails.version
+    //   );
+    //   // get all the question ids for particualr set and subjetname - api needed to get only question-ids for set and subject
+    //   const response = await getSubjectwiseQuizQuestionAnswers(
+    //     subjectDetails.version,
+    //     subjectDetails.subjectName
+    //   );
+
+    //   if (response.data.length > 0) {
+    //     var questionIdsArray = response.data.map((obj: any) => obj.questionId);
+
+    //     if (existingIndex === -1) {
+    //       setCreateQuizSetWiseInfo((prev: any) => [
+    //         ...prev,
+    //         {
+    //           version: subjectDetails.version,
+    //           subjectName: subjectDetails.subjectName,
+    //           tag: subjectDetails.tag,
+    //           questionIds: questionIdsArray,
+    //         },
+    //       ]);
+    //     }
+    //   }
+    // } catch (error: any) {
+    //   console.log("Error in get question ids", error);
+    // }
   };
 
-  const handleDeletQuestionSet = (
+  const handleRemovetQuestionSet = (
     subjectDetails: subjectWiseQuizListResponse
   ) => {
     try {
       // for new creatquiz body
-      const existingIndex = createQuizSetWiseInfo.findIndex(
-        (obj: selectedQuestionsCreateQuizWithTag) =>
-          obj.subjectName === subjectDetails.subjectName &&
-          obj.version === subjectDetails.version
-      );
-      if (existingIndex !== -1) {
-        const newCreatQuizArr = [...createQuizSetWiseInfo];
-        newCreatQuizArr.splice(existingIndex, 1);
-        setCreateQuizSetWiseInfo(newCreatQuizArr);
-      }
+      dispatch({
+        type: "interviewer/handleAddQuestionSetToCreateQuizBody",
+        payload: subjectDetails,
+      });
+      // const existingIndex = createQuizSetWiseInfo.findIndex(
+      //   (obj: selectedQuestionsCreateQuizWithTag) =>
+      //     obj.subjectName === subjectDetails.subjectName &&
+      //     obj.version === subjectDetails.version
+      // );
+      // if (existingIndex !== -1) {
+      //   const newCreatQuizArr = [...createQuizSetWiseInfo];
+      //   newCreatQuizArr.splice(existingIndex, 1);
+      //   setCreateQuizSetWiseInfo(newCreatQuizArr);
+      // }
     } catch (error: any) {
-      console.log("Error in get question ans ids", error);
+      console.log("Error in delte qestion set ", error);
     }
   };
 
@@ -271,10 +307,18 @@ const SearchQuestionSets = () => {
     );
   };
 
-  const handleSelectQuestionsModalOpen = (
+  const handleSelectQuestionsModalOpen = async (
     subjectDetails: subjectWiseQuizListResponse
   ) => {
-    setSelectQuestionOpen(true);
+    // setSelectQuestionOpen(true);
+    try {
+      await dispatch(handleSelectQuestionsModal());
+
+      await dispatch(fetchQuestionForSetAndSubject(subjectDetails));
+    } catch (error: any) {
+      console.log("Error in Select Questions modal", error);
+    }
+
     fetchQuestionsForSetAndSubject(subjectDetails);
   };
 
@@ -318,17 +362,25 @@ const SearchQuestionSets = () => {
   };
 
   useEffect(() => {
-    setLoader(true);
-    getSubjectwiseQuiz("")
-      .then((response: any) => {
-        console.log("response of searc is keeeeeeeeeeek", response.data);
-        setSubjectwiseDeatails(response.data);
-      })
-      .catch((error: any) => {
-        console.log("error in subjwiseapi");
-        // setLoader(false);
-      })
-      .finally(() => setLoader(false));
+    const fetchSubjectwiseQuestionSets = async () => {
+      try {
+        await dispatch(fetchsubjectwiseQuestionSets(""));
+      } catch (error: any) {
+        console.log("Error in fetching subject wise questionsets", error);
+      }
+    };
+    fetchSubjectwiseQuestionSets();
+    // setLoader(true);
+    // getSubjectwiseQuestionSets("")
+    //   .then((response: any) => {
+    //     console.log("response of searc is keeeeeeeeeeek", response.data);
+    //     setSubjectwiseDeatails(response.data);
+    //   })
+    //   .catch((error: any) => {
+    //     console.log("error in subjwiseapi");
+    //     // setLoader(false);
+    //   })
+    //   .finally(() => setLoader(false));
   }, []);
 
   return (
@@ -352,7 +404,7 @@ const SearchQuestionSets = () => {
           </FormControl>
         </Box>
 
-        {!loader ? (
+        {!loadingStatus.cardLoader ? (
           <Box>
             <Box
               className="search-result-container"
@@ -360,8 +412,8 @@ const SearchQuestionSets = () => {
               //   overflowY: subjectwiseDetails.length > 10 ? "scroll" : "",
               // }}
             >
-              {subjectwiseDetails.length > 0 &&
-                subjectwiseDetails
+              {subjectwiseQuestionSets?.length > 0 &&
+                subjectwiseQuestionSets
                   .slice()
                   .sort(getComparator(order, orderBy))
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
@@ -409,7 +461,7 @@ const SearchQuestionSets = () => {
                               <Button
                                 variant="outlined"
                                 onClick={() =>
-                                  handleDeletQuestionSet(subjectDetails)
+                                  handleRemovetQuestionSet(subjectDetails)
                                 }
                               >
                                 Remove ALL
@@ -447,13 +499,13 @@ const SearchQuestionSets = () => {
           </Box>
         )}
 
-        {createQuizSetWiseInfo.length > 0 && (
+        {createQuizSetWiseInfoBody.length > 0 && (
           <Box>
             <Box className="selected-sets-box">
               <Typography variant="h6">Selected Question Sets</Typography>
               <Box className="selected-sets">
                 <Paper className="selected-tags-container">
-                  {createQuizSetWiseInfo.map(
+                  {createQuizSetWiseInfoBody.map(
                     (
                       obj: selectedQuestionsCreateQuizWithTag,
                       index: number
@@ -473,12 +525,12 @@ const SearchQuestionSets = () => {
           </Box>
         )}
 
-        {createQuizSetWiseInfo?.length > 0 && (
+        {createQuizSetWiseInfoBody?.length > 0 && (
           <Box className="preview-button-contaner">
             <Button
               variant="contained"
               onClick={() => handlePreviewQuestionModalOpen()}
-              disabled={createQuizSetWiseInfo.length > 0 ? false : true}
+              disabled={createQuizSetWiseInfoBody.length > 0 ? false : true}
               className="preview-button"
             >
               Preview
