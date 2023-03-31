@@ -6,39 +6,45 @@ import "../../../Common/Common.style.scss";
 import CloseIcon from "@mui/icons-material/Close";
 import { customStylesModal } from "../../SubmittedQuiz/SubmittedQuizes";
 import AllSubmittedQuestionsAnswers from "../../DispalyQuizCandidateSubmittedQuestionsAnswers/AllSubmittedQuestionsAnswers";
+import {
+  useAppDispatch,
+  useAppSelector,
+} from "../../../../Store/ConfigureStrore";
+import { handleReviewAnswersModal } from "../../../../Redux/interviewerSlice";
 
 const ReviewAnswersModal = (props: any) => {
-  const {
-    openReviewModal,
-    setOpenReviewModal,
-    quizSubjectInfo,
-    totalQuizDetailedInfo,
-    loader,
-  } = props;
+  // const {
+  //   // openReviewModal,
+  //   // setOpenReviewModal,
+  //   // quizSubjectInfo,
+  //   // totalQuizDetailedInfo,
+  //   // loader,
+  // } = props;
+
+  const dispatch = useAppDispatch();
+  const { loadingStatus, isReviewModalOpen } = useAppSelector(
+    (state: any) => state.interviewer
+  );
   return (
     <>
       <ReactModal
-        isOpen={openReviewModal}
+        isOpen={isReviewModalOpen}
         contentLabel="Minimal Modal Example"
         ariaHideApp={false}
         style={customStylesModal}
       >
         <>
           <AllSubmittedQuestionsAnswers
-            quizSubjectInfo={quizSubjectInfo}
-            totalQuizDetailedInfo={totalQuizDetailedInfo}
-            loader={loader}
+          // quizSubjectInfo={quizSubjectInfo}
+          // totalQuizDetailedInfo={totalQuizDetailedInfo}
+          // loader={loader}
           />
-          {!loader ? (
-            <Box
-              // className="close-button"
-              //   style={{ display: "flex", justifyContent: "center" }}
-              className="close-button-container"
-            >
+          {!loadingStatus.modalLoader ? (
+            <Box className="close-button-container">
               <Button
                 variant="contained"
                 color="error"
-                onClick={() => setOpenReviewModal(false)}
+                onClick={() => dispatch(handleReviewAnswersModal())}
                 endIcon={<CloseIcon />}
               >
                 Close

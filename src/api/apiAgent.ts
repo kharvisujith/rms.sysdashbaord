@@ -145,10 +145,10 @@ export const getTotalQuizLinksInfo = () => {
 export const getTotalSubmittedQuizInfo = () => {
   return axiosClient.get(`quiz/interviewer/submitquiz`);
 };
-export const getSubmittedQuizInfo = (qId: number) => {
+export const getPastEvaluationsIndivualAnswers = (qId: number) => {
   return axiosClient.get(`quiz/interviewer/submitquiz/${qId}`);
 };
-export const getSubmittedQuizSummary = (qId: number) => {
+export const getPastEvaluationsIndividualSummary = (qId: number) => {
   return axiosClient.get(`quiz/interviewer/submitquizdetails/${qId}`);
 };
 
@@ -204,8 +204,8 @@ export const apiAgent = {
     createQuiz: createQuiz,
     getTotalQuizLinksInfo: getTotalQuizLinksInfo,
     getTotalSubmittedQuizInfo: getTotalSubmittedQuizInfo,
-    getSubmittedQuizInfo: getSubmittedQuizInfo,
-    getSubmittedQuizSummary: getSubmittedQuizSummary,
+    getPastEvaluationsIndivualAnswers: getPastEvaluationsIndivualAnswers,
+    getPastEvaluationsIndividualSummary: getPastEvaluationsIndividualSummary,
     getPreviewQuestionsForCreateQuiz: getPreviewQuestionsForCreateQuiz,
     filterQuestionsSets: filterQuestionsSets,
     deleteQuestionSet: deleteQuestionSet,

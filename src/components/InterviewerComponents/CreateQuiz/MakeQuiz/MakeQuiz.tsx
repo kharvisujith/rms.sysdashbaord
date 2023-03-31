@@ -15,18 +15,18 @@ const MakeQuiz = () => {
     submittedQuizResponse[]
   >([]);
 
-  const handleTagsClick = (subjectName: string) => {
-    getTotalSubmittedQuizInfo()
-      .then((response: any) => {
-        setpastEvaluationsData(response.data);
-        // setLoader(false);
-        console.log("response", response.data);
-      })
-      .catch((error: any) => {
-        // setLoader(false);
-        console.log("error in total quiz info api");
-      });
-  };
+  // const handleTagsClick = (subjectName: string) => {
+  //   getTotalSubmittedQuizInfo()
+  //     .then((response: any) => {
+  //       setpastEvaluationsData(response.data);
+  //       // setLoader(false);
+  //       console.log("response", response.data);
+  //     })
+  //     .catch((error: any) => {
+  //       // setLoader(false);
+  //       console.log("error in total quiz info api");
+  //     });
+  // };
 
   return (
     <>
@@ -42,7 +42,7 @@ const MakeQuiz = () => {
                     key={index}
                     size="small"
                     className="tagname"
-                    onClick={() => handleTagsClick("react")}
+                    // onClick={() => handleTagsClick("react")}
                   />
                 ))}
               </Paper>
@@ -53,8 +53,8 @@ const MakeQuiz = () => {
           </Grid>
         </Box>
         <PastEvaluationsTable
-          pastEvaluationsData={pastEvaluationsData}
-          setpastEvaluationsData={setpastEvaluationsData}
+        // pastEvaluationsData={pastEvaluationsData}
+        //setpastEvaluationsData={setpastEvaluationsData}
         />
 
         <SearchQuestionSets />

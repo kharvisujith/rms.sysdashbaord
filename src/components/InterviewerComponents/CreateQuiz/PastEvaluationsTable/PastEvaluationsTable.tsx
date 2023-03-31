@@ -15,8 +15,8 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import {
-  getSubmittedQuizSummary,
-  getSubmittedQuizInfo,
+  getPastEvaluationsIndividualSummary,
+  getPastEvaluationsIndivualAnswers,
   getTotalSubmittedQuizInfo,
 } from "../../../../api/apiAgent";
 import {
@@ -24,13 +24,28 @@ import {
   submittedQuizAnswersResponse,
   submittedQuizDetailedInfoResponse,
 } from "../../../../Interface/QuizDetails";
+import {
+  fetchPastEvaluations,
+  fetchPastEvaluationsIndividualAnswers,
+  fetchPastEvaluationsIndividualSummary,
+  handleReviewAnswersModal,
+} from "../../../../Redux/interviewerSlice";
+import {
+  useAppDispatch,
+  useAppSelector,
+} from "../../../../Store/ConfigureStrore";
 import { getComparator } from "../../../../utils/TableSortFunctions";
 import { submittedQuizTableColumns } from "../../SubmittedQuiz/SubmittedQuizTableColumn";
 
 import ReviewAnswersModal from "../ReviewAnswers/ReviewAnswersModal";
 
 const PastEvaluationsTable = (props: any) => {
-  const { pastEvaluationsData, setpastEvaluationsData } = props;
+  //const { pastEvaluationsData, setpastEvaluationsData } = props;
+
+  const dispatch = useAppDispatch();
+  const { loadingStatus, pastEvaluationsTableData } = useAppSelector(
+    (state: any) => state.interviewer
+  );
 
   const [order, setOrder] = useState<Order>("asc");
   const [orderBy, setOrderBy] = useState<any>("correctAnswers");
@@ -97,36 +112,48 @@ const PastEvaluationsTable = (props: any) => {
   //       console.log("error in detailed Subject Answer answersapi");
   //     });
   // };
-  const StartTestViewButtonHandler = async (data: any) => {
-    setOpenReviewModal(true);
-    setLoader(true);
+  const handleOpenReviewModal = async (testId: any) => {
+    // setOpenReviewModal(true);
+    // setLoader(true);
+    dispatch(handleReviewAnswersModal());
 
     try {
-      const quizSummary = await getSubmittedQuizSummary(data);
+      await dispatch(fetchPastEvaluationsIndividualSummary(testId));
+      await dispatch(fetchPastEvaluationsIndividualAnswers(testId));
+      // const quizSummary = await getPastEvaluationsIndividualSummary(testId);
 
-      setIndividualQuizDetailedInfo(quizSummary.data);
-      const quizSubmittedDetails = await getSubmittedQuizInfo(data);
-      setDetailedSubmittedQuizInfoList(quizSubmittedDetails.data);
+      // setIndividualQuizDetailedInfo(quizSummary.data);
+      // const quizSubmittedDetails = await getPastEvaluationsIndivualAnswers(
+      //   testId
+      // );
+      // setDetailedSubmittedQuizInfoList(quizSubmittedDetails.data);
     } catch (error: any) {
       console.log("error in review model", error);
-    } finally {
-      setLoader(false);
     }
+    //  finally {
+    //   setLoader(false);
+    // }
   };
 
   useEffect(() => {
-    setLoader(true);
-    getTotalSubmittedQuizInfo()
-      .then((response: any) => {
-        setLoader(false);
-        setpastEvaluationsData(response.data);
-      })
-      .catch((error: any) => {
-        setLoader(false);
-        console.log("error in total quiz info api");
-      });
-  }, [setpastEvaluationsData]);
-  console.log("value of loader is", loader);
+    const getPastEvaluations = async () => {
+      await dispatch(fetchPastEvaluations());
+    };
+    getPastEvaluations();
+    // setLoader(true);
+    // getTotalSubmittedQuizInfo()
+    //   .then((response: any) => {
+    //     setLoader(false);
+    //     setpastEvaluationsData(response.data);
+    //   })
+    //   .catch((error: any) => {
+    //     setLoader(false);
+    //     console.log("error in total quiz info api");
+    //   });
+  }, []);
+  //console.log("value of loader is", loader);
+  console.log("past Evalutoin tabl edat isss", pastEvaluationsTableData);
+  console.log("laodddder iss", loadingStatus.tableLoader);
 
   return (
     <>
@@ -160,10 +187,10 @@ const PastEvaluationsTable = (props: any) => {
                   )}
                 </TableRow>
               </TableHead>
-              {!loader ? (
+              {!loadingStatus.tableLoader ? (
                 <TableBody>
-                  {pastEvaluationsData.length > 0 &&
-                    pastEvaluationsData
+                  {pastEvaluationsTableData?.length > 0 &&
+                    pastEvaluationsTableData
                       .slice()
                       .sort(getComparator(order, orderBy))
                       .slice(
@@ -187,7 +214,7 @@ const PastEvaluationsTable = (props: any) => {
                                       variant="contained"
                                       className="table-button"
                                       onClick={() =>
-                                        StartTestViewButtonHandler(value)
+                                        handleOpenReviewModal(value)
                                       }
                                     >
                                       Review
@@ -208,21 +235,21 @@ const PastEvaluationsTable = (props: any) => {
               ) : null}
             </Table>
           </TableContainer>
-          {loader ? (
+          {loadingStatus.tableLoader ? (
             <Box className="table-loader">
               <CircularProgress />
             </Box>
           ) : null}
-          {!loader && pastEvaluationsData.length < 1 && (
+          {!loadingStatus.tableLoader && pastEvaluationsTableData?.length < 1 && (
             <Box className="table-loader">
               <Typography>No Data Available</Typography>
             </Box>
           )}
-          {loader || pastEvaluationsData.length > 0 ? (
+          {loadingStatus.tableLoader || pastEvaluationsTableData?.length > 0 ? (
             <TablePagination
               rowsPerPageOptions={[10, 25, 100]}
               component="div"
-              count={pastEvaluationsData?.length}
+              count={pastEvaluationsTableData?.length}
               rowsPerPage={rowsPerPage}
               page={page}
               onPageChange={handleChangePage}
@@ -232,11 +259,11 @@ const PastEvaluationsTable = (props: any) => {
         </Paper>
 
         <ReviewAnswersModal
-          openReviewModal={openReviewModal}
-          setOpenReviewModal={setOpenReviewModal}
-          quizSubjectInfo={detailedSubmittedQuizInfoList}
-          totalQuizDetailedInfo={individualQuizDetailedInfo}
-          loader={loader}
+        // openReviewModal={openReviewModal}
+        // setOpenReviewModal={setOpenReviewModal}
+        // quizSubjectInfo={detailedSubmittedQuizInfoList}
+        // totalQuizDetailedInfo={individualQuizDetailedInfo}
+        // loader={loader}
         />
       </Box>
     </>

@@ -16,10 +16,18 @@ import {
 import "./AllSubmittedQuestionsAnswers.style.scss";
 import { submittedQuizDetailedInfoResponse } from "../../../Interface/QuizDetails";
 import { Divider } from "@material-ui/core";
+import { useAppDispatch, useAppSelector } from "../../../Store/ConfigureStrore";
 const AllSubmittedQuestionsAnswers = (props: any) => {
-  const { quizSubjectInfo, totalQuizDetailedInfo, loader } = props;
+  // const { quizSubjectInfo, totalQuizDetailedInfo, loader } = props;
 
-  if (loader) {
+  const dispatch = useAppDispatch();
+  const {
+    loadingStatus,
+    pastEvaluationIndividualSummaryData,
+    pastEvaluationIndividualAnswersData,
+  } = useAppSelector((state: any) => state.interviewer);
+
+  if (loadingStatus.modalLoader) {
     return (
       <Box className="page-loader">
         <CircularProgress />
@@ -27,7 +35,10 @@ const AllSubmittedQuestionsAnswers = (props: any) => {
     );
   }
 
-  if (!loader && totalQuizDetailedInfo.length < 1) {
+  if (
+    !loadingStatus.modalLoader &&
+    pastEvaluationIndividualSummaryData?.length < 1
+  ) {
     return (
       <Box className="modal-content-container message-box">
         <Typography>Candidate Has Not Answered Any of the Questions</Typography>
@@ -58,8 +69,8 @@ const AllSubmittedQuestionsAnswers = (props: any) => {
               </TableHead>
 
               <TableBody>
-                {totalQuizDetailedInfo.length > 0 &&
-                  totalQuizDetailedInfo?.map(
+                {pastEvaluationIndividualSummaryData?.length > 0 &&
+                  pastEvaluationIndividualSummaryData?.map(
                     (row: submittedQuizDetailedInfoResponse, index: number) => (
                       <TableRow key={index}>
                         <TableCell align="center">{row.subjectName}</TableCell>
@@ -92,8 +103,8 @@ const AllSubmittedQuestionsAnswers = (props: any) => {
                   </TableCell>
                   <TableCell align="center">
                     <strong>{`${
-                      totalQuizDetailedInfo.length > 0 &&
-                      totalQuizDetailedInfo
+                      pastEvaluationIndividualSummaryData?.length > 0 &&
+                      pastEvaluationIndividualSummaryData
                         ?.map(
                           (datum: submittedQuizDetailedInfoResponse) =>
                             datum?.totalQuestions
@@ -103,8 +114,8 @@ const AllSubmittedQuestionsAnswers = (props: any) => {
                   </TableCell>
                   <TableCell align="center">
                     <strong>{`${
-                      totalQuizDetailedInfo.length > 0 &&
-                      totalQuizDetailedInfo
+                      pastEvaluationIndividualSummaryData?.length > 0 &&
+                      pastEvaluationIndividualSummaryData
                         ?.map(
                           (datum: submittedQuizDetailedInfoResponse) =>
                             datum?.answeredQuestions
@@ -114,8 +125,8 @@ const AllSubmittedQuestionsAnswers = (props: any) => {
                   </TableCell>
                   <TableCell align="center">
                     <strong>{`${
-                      totalQuizDetailedInfo.length > 0 &&
-                      totalQuizDetailedInfo
+                      pastEvaluationIndividualSummaryData?.length > 0 &&
+                      pastEvaluationIndividualSummaryData
                         ?.map(
                           (datum: submittedQuizDetailedInfoResponse) =>
                             datum?.notAnsweredQuestions
@@ -125,8 +136,8 @@ const AllSubmittedQuestionsAnswers = (props: any) => {
                   </TableCell>
                   <TableCell align="center">
                     <strong style={{ backgroundColor: "lightgreen" }}>{`${
-                      totalQuizDetailedInfo.length > 0 &&
-                      totalQuizDetailedInfo
+                      pastEvaluationIndividualSummaryData?.length > 0 &&
+                      pastEvaluationIndividualSummaryData
                         ?.map(
                           (datum: submittedQuizDetailedInfoResponse) =>
                             datum?.correctAnswers
@@ -136,8 +147,8 @@ const AllSubmittedQuestionsAnswers = (props: any) => {
                   </TableCell>
                   <TableCell align="center">
                     <strong style={{ backgroundColor: "red" }}>{`${
-                      totalQuizDetailedInfo.length > 0 &&
-                      totalQuizDetailedInfo
+                      pastEvaluationIndividualSummaryData?.length > 0 &&
+                      pastEvaluationIndividualSummaryData
                         ?.map(
                           (datum: submittedQuizDetailedInfoResponse) =>
                             datum?.inCorrectAnswers
@@ -154,40 +165,42 @@ const AllSubmittedQuestionsAnswers = (props: any) => {
           <Divider />
         </Box>
         <Box className="answer-box">
-          {quizSubjectInfo.length > 0 &&
-            quizSubjectInfo?.map((question: any, index: any) => {
-              switch (question.questionType) {
-                case "SINGLECHOICE":
-                  return (
-                    <RadioSubmittedAnswerComponent
-                      key={index}
-                      question={{
-                        questionNumber: index + 1,
-                        questionData: question,
-                      }}
-                    />
-                  );
-                case "MULTIPLECHOICE":
-                  return (
-                    <CheckboxSubmittedAnswerComponent
-                      key={index}
-                      question={{
-                        questionNumber: index + 1,
-                        questionData: question,
-                      }}
-                    />
-                  );
-                case "PROGRAMM":
-                  return (
-                    <CodingSubmittedAnswerComponent
-                      key={index}
-                      question={question}
-                    />
-                  );
-                default:
-                  return null;
+          {pastEvaluationIndividualAnswersData?.length > 0 &&
+            pastEvaluationIndividualAnswersData?.map(
+              (question: any, index: any) => {
+                switch (question.questionType) {
+                  case "SINGLECHOICE":
+                    return (
+                      <RadioSubmittedAnswerComponent
+                        key={index}
+                        question={{
+                          questionNumber: index + 1,
+                          questionData: question,
+                        }}
+                      />
+                    );
+                  case "MULTIPLECHOICE":
+                    return (
+                      <CheckboxSubmittedAnswerComponent
+                        key={index}
+                        question={{
+                          questionNumber: index + 1,
+                          questionData: question,
+                        }}
+                      />
+                    );
+                  case "PROGRAMM":
+                    return (
+                      <CodingSubmittedAnswerComponent
+                        key={index}
+                        question={question}
+                      />
+                    );
+                  default:
+                    return null;
+                }
               }
-            })}
+            )}
         </Box>
       </Box>
     </>

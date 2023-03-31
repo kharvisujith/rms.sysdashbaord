@@ -18,12 +18,7 @@ import {
 import { Box } from "@mui/system";
 import React, { useState, useEffect } from "react";
 import ReactModal from "react-modal";
-import {
-  getTotalSubmittedQuizInfo,
-  getSubmittedQuizInfo,
-  getSubmittedQuizSummary,
-  apiAgent,
-} from "../../../api/apiAgent";
+import { apiAgent } from "../../../api/apiAgent";
 import AllSubmittedQuestionsAnswers from "../DispalyQuizCandidateSubmittedQuestionsAnswers/AllSubmittedQuestionsAnswers";
 import {
   submittedQuizResponse,
@@ -118,13 +113,14 @@ const SubmitedQuizes = (props: any) => {
   const StartTestViewButtonHandler = async (data: any) => {
     try {
       setLoader(true);
-      const response1 = await apiAgent.interviewer.getSubmittedQuizInfo(data);
+      const response1 =
+        await apiAgent.interviewer.getPastEvaluationsIndivualAnswers(data);
+
       if (response1.status === 200) {
         setDetailedSubmittedQuizInfoList(response1.data);
       }
-      const response2 = await apiAgent.interviewer.getSubmittedQuizSummary(
-        data
-      );
+      const response2 =
+        await apiAgent.interviewer.getPastEvaluationsIndividualSummary(data);
       if (response2.status === 200) {
         setIndividualQuizDetailedInfo(response2.data);
       }
