@@ -1,11 +1,12 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { apiAgent } from "../api/apiAgent";
 import {
+  interviewerSliceStates,
   selectedQuestionsCreateQuizWithTag,
   subjectWiseQuizListResponse,
 } from "../Interface/Interviewer/InterviewerInterface";
 
-const initialState: any = {
+const initialState: interviewerSliceStates = {
   pastEvaluationsTableData: [],
   pastEvaluationIndividualSummaryData: [],
   pastEvaluationIndividualAnswersData: [],
@@ -27,25 +28,6 @@ const initialState: any = {
     buttonLoader: false,
   },
 };
-
-// export const verifyCandidate = createAsyncThunk<
-//   { data: verifyCandidateRequestBody; fromPage: string },
-//   { data: verifyCandidateRequestBody; fromPage: string }
-// >("candidate/verify", async ({ data, fromPage }, thunkAPI: any) => {
-//   try {
-//     console.log("inside thunk funtion");
-//     const res = await apiAgent.candidate.verifyCandidate(data);
-//     console.log("res of thunk is", res);
-
-//     return { data, fromPage };
-
-//     // return res;
-
-//     //return { data, fromPage };
-//   } catch (error: any) {
-//     return thunkAPI.rejectWithValue(error.response);
-//   }
-// });
 
 export const fetchPastEvaluations = createAsyncThunk<any>(
   "interviwer/pastEvalutionsSummary",
@@ -103,15 +85,6 @@ export const handleAddQuestionSetsToCreteQuizBody = createAsyncThunk<any, any>(
   "interviewer/addQuestionSet",
   async (subjecDetails: any, thunkAPI: any) => {
     try {
-      // const { createQuizSetWiseInfoBody, subjectwiseQuestionSets } =
-      //   thunkAPI.getState().interview.;
-      // console.log("thunk api getstate value si ", createQuizSetWiseInfoBody);
-      // const existingIndex = createQuizSetWiseInfoBody.findIndex(
-      //   (obj: selectedQuestionsCreateQuizWithTag) =>
-      //     obj.subjectName === subjectwiseQuestionSets.subjectName &&
-      //     obj.version === subjectwiseQuestionSets.version
-      // );
-
       const response =
         await apiAgent.interviewer.getQuestionAnswersForSetAndSubject(
           subjecDetails.version,
@@ -193,31 +166,24 @@ export const interviewerSlice = createSlice({
   name: "interviewer",
   initialState,
   reducers: {
-    handleReviewAnswersModal: (state: any) => {
+    handleReviewAnswersModal: (state: interviewerSliceStates) => {
       state.isReviewModalOpen
         ? (state.isReviewModalOpen = false)
         : (state.isReviewModalOpen = true);
     },
-    handleSelectQuestionsModal: (state: any) => {
-      console.log("modal open reducer called");
-      // if (state.isSelectQuestionModalOpen) {
-      //   state.selectQuestions = [];
-      // }
+    handleSelectQuestionsModal: (state: interviewerSliceStates) => {
       state.isSelectQuestionModalOpen
         ? (state.isSelectQuestionModalOpen = false)
         : (state.isSelectQuestionModalOpen = true);
     },
 
-    handleSearchInputChange: (state: any, action: any) => {
-      console.log("valueeee   i ssss", action.payload.target.value);
+    handleSearchInputChange: (state: interviewerSliceStates, action: any) => {
       state.searchText = action.payload.target.value;
     },
-    handleRemoveQuestionSetsCreateQuizBody: (state: any, action: any) => {
-      console.log(
-        "in reducer delte",
-        action.payload
-        // action.payload.subjecDetails.subjectName
-      );
+    handleRemoveQuestionSetsCreateQuizBody: (
+      state: interviewerSliceStates,
+      action: any
+    ) => {
       const existingIndex = state.createQuizSetWiseInfoBody.findIndex(
         (obj: selectedQuestionsCreateQuizWithTag) =>
           obj.subjectName === action.payload.subjectName &&
@@ -232,14 +198,15 @@ export const interviewerSlice = createSlice({
       }
     },
 
-    handleSelectQuestionsCheckBoxChange: (state: any, action: any) => {
-      console.log("onchage reducer calleddd");
+    handleSelectQuestionsCheckBoxChange: (
+      state: interviewerSliceStates,
+      action: any
+    ) => {
       const existingIndex = state.createQuizSetWiseInfoBody.findIndex(
         (obj: selectedQuestionsCreateQuizWithTag) =>
           obj.subjectName === action.payload.questionDeatils.subjectName &&
           obj.version === action.payload.questionDeatils.version
       );
-      console.log("existng index is", existingIndex, action.payload.even);
       if (action.payload.event.target.checked) {
         if (existingIndex === -1) {
           state.createQuizSetWiseInfoBody = [
@@ -251,25 +218,14 @@ export const interviewerSlice = createSlice({
               questionIds: [action.payload.questionDeatils.questionId],
             },
           ];
-          // setCreateQuizSetWiseInfo((prev: any) => [
-          //   ...prev,
-          //   {
-          //     version: questionDeatils.version,
-          //     subjectName: questionDeatils.subjectName,
-          //     tag: questionDeatils.tag,
-          //     questionIds: [questionDeatils.questionId],
-          //   },
-          // ]);
         } else {
           const newArray = [...state.createQuizSetWiseInfoBody];
           newArray[existingIndex].questionIds.push(
             action.payload.questionDeatils.questionId
           );
-          //setCreateQuizSetWiseInfo(newArray);
           state.createQuizSetWiseInfoBody = newArray;
         }
       } else {
-        console.log("inside else part of check false");
         if (existingIndex !== -1) {
           const newArray = [...state.createQuizSetWiseInfoBody];
           const indexOfQuestionId = newArray[existingIndex].questionIds.indexOf(
@@ -281,12 +237,11 @@ export const interviewerSlice = createSlice({
             newArray.splice(existingIndex, 1);
           }
           state.createQuizSetWiseInfoBody = newArray;
-          // setCreateQuizSetWiseInfo(newArray);
         }
       }
     },
 
-    handlePreviewModal: (state: any) => {
+    handlePreviewModal: (state: interviewerSliceStates) => {
       state.previewModalStates.isPreviewModalOpen
         ? (state.previewModalStates.isPreviewModalOpen = false)
         : (state.previewModalStates.isPreviewModalOpen = true);
@@ -295,101 +250,96 @@ export const interviewerSlice = createSlice({
   extraReducers: (builder: any) => {
     builder.addCase(
       fetchPastEvaluations.fulfilled,
-      (state: any, action: any) => {
-        console.log(
-          "IN fullfillleddd, past evaluaton table data isss",
-          action.payload
-        );
+      (state: interviewerSliceStates, action: any) => {
         state.pastEvaluationsTableData = action.payload;
         state.loadingStatus.tableLoader = false;
       }
     );
     builder.addCase(
       fetchPastEvaluations.rejected,
-      (state: any, action: any) => {
+      (state: interviewerSliceStates, action: any) => {
         state.loadingStatus.tableLoader = false;
       }
     );
-    builder.addCase(fetchPastEvaluations.pending, (state: any, action: any) => {
-      state.loadingStatus.tableLoader = true;
-    });
+    builder.addCase(
+      fetchPastEvaluations.pending,
+      (state: interviewerSliceStates, action: any) => {
+        state.loadingStatus.tableLoader = true;
+      }
+    );
 
     builder.addCase(
       fetchPastEvaluationsIndividualSummary.fulfilled,
-      (state: any, action: any) => {
+      (state: interviewerSliceStates, action: any) => {
         state.pastEvaluationIndividualSummaryData = action.payload;
         state.loadingStatus.moadlLoader = false;
       }
     );
     builder.addCase(
       fetchPastEvaluationsIndividualSummary.rejected,
-      (state: any, action: any) => {
+      (state: interviewerSliceStates, action: any) => {
         state.loadingStatus.moadlLoader = false;
       }
     );
     builder.addCase(
       fetchPastEvaluationsIndividualSummary.pending,
-      (state: any, action: any) => {
+      (state: interviewerSliceStates, action: any) => {
         state.loadingStatus.moadlLoader = true;
       }
     );
     builder.addCase(
       fetchPastEvaluationsIndividualAnswers.fulfilled,
-      (state: any, action: any) => {
+      (state: interviewerSliceStates, action: any) => {
         state.pastEvaluationIndividualAnswersData = action.payload;
         state.loadingStatus.moadlLoader = false;
       }
     );
     builder.addCase(
       fetchPastEvaluationsIndividualAnswers.rejected,
-      (state: any, action: any) => {
+      (state: interviewerSliceStates, action: any) => {
         state.loadingStatus.moadlLoader = false;
       }
     );
     builder.addCase(
       fetchPastEvaluationsIndividualAnswers.pending,
-      (state: any, action: any) => {
+      (state: interviewerSliceStates, action: any) => {
         state.loadingStatus.moadlLoader = true;
       }
     );
 
     builder.addCase(
       fetchsubjectwiseQuestionSets.fulfilled,
-      (state: any, action: any) => {
-        console.log("inside fullfillllled card", action.payload);
+      (state: interviewerSliceStates, action: any) => {
         state.subjectwiseQuestionSets = action.payload;
         state.loadingStatus.cardLoader = false;
       }
     );
     builder.addCase(
       fetchsubjectwiseQuestionSets.rejected,
-      (state: any, action: any) => {
+      (state: interviewerSliceStates, action: any) => {
         state.loadingStatus.cardLoader = false;
       }
     );
     builder.addCase(
       fetchsubjectwiseQuestionSets.pending,
-      (state: any, action: any) => {
+      (state: interviewerSliceStates, action: any) => {
         state.loadingStatus.cardLoader = true;
       }
     );
 
     builder.addCase(
       handleAddQuestionSetsToCreteQuizBody.fulfilled,
-      (state: any, action: any) => {
+      (state: interviewerSliceStates, action: any) => {
         if (action.payload.responseData.length > 0) {
-          console.log("inside fullfilled respone is > 0 yes");
           var questionIdsArray = action.payload.responseData.map(
             (obj: any) => obj.questionId
           );
 
-          const existingIndex = state.createQuizSetWiseInfoBody.findIndex(
+          const existingIndex = state.createQuizSetWiseInfoBody?.findIndex(
             (obj: selectedQuestionsCreateQuizWithTag) =>
-              obj.subjectName === state.subjectwiseQuestionSets.subjectName &&
-              obj.version === state.subjectwiseQuestionSets.version
+              obj.subjectName === action.payload.subjecDetails.subjectName &&
+              obj.version === action.payload.subjectDetails.version
           );
-          console.log("exindex is", existingIndex);
-          console.log("subjectwiseQuesitonSets");
 
           if (existingIndex === -1) {
             state.createQuizSetWiseInfoBody = [
@@ -403,94 +353,99 @@ export const interviewerSlice = createSlice({
             ];
           }
         }
-        console.log("keeeek", state.createQuizSetWiseInfoBody);
       }
     );
     builder.addCase(
       handleAddQuestionSetsToCreteQuizBody.rejected,
-      (state: any, action: any) => {
-        console.log("Error in Add Quesiton Sets", action.payload);
-      }
+      (state: interviewerSliceStates, action: any) => {}
     );
     builder.addCase(
       handleAddQuestionSetsToCreteQuizBody.pending,
-      (state: any, action: any) => {}
+      (state: interviewerSliceStates, action: any) => {}
     );
 
     builder.addCase(
       fetchFilteredQuestionSets.fulfilled,
-      (state: any, action: any) => {
+      (state: interviewerSliceStates, action: any) => {
         state.subjectwiseQuestionSets = action.payload;
         state.loadingStatus.cardLoader = false;
       }
     );
     builder.addCase(
       fetchFilteredQuestionSets.rejected,
-      (state: any, action: any) => {
-        console.log("filter rejecteed");
+      (state: interviewerSliceStates, action: any) => {
         state.loadingStatus.cardLoader = false;
       }
     );
     builder.addCase(
       fetchFilteredQuestionSets.pending,
-      (state: any, action: any) => {
+      (state: interviewerSliceStates, action: any) => {
         state.loadingStatus.cardLoader = true;
       }
     );
 
     builder.addCase(
       fetchQuestionForSetAndSubject.fulfilled,
-      (state: any, action: any) => {
+      (state: interviewerSliceStates, action: any) => {
         state.selectQuestions = action.payload;
         state.loadingStatus.moadlLoader = false;
       }
     );
     builder.addCase(
       fetchQuestionForSetAndSubject.rejected,
-      (state: any, action: any) => {
+      (state: interviewerSliceStates, action: any) => {
         state.loadingStatus.moadlLoader = false;
       }
     );
     builder.addCase(
       fetchQuestionForSetAndSubject.pending,
-      (state: any, action: any) => {
+      (state: interviewerSliceStates, action: any) => {
         state.loadingStatus.moadlLoader = true;
       }
     );
 
     builder.addCase(
       fetchPreviewQuestionsForCreateQuiz.fulfilled,
-      (state: any, action: any) => {
+      (state: interviewerSliceStates, action: any) => {
         state.previewModalStates.previewQuestions = action.payload;
         state.loadingStatus.moadlLoader = true;
       }
     );
     builder.addCase(
       fetchPreviewQuestionsForCreateQuiz.rejected,
-      (state: any, action: any) => {
+      (state: interviewerSliceStates, action: any) => {
         state.loadingStatus.moadlLoader = true;
       }
     );
     builder.addCase(
       fetchPreviewQuestionsForCreateQuiz.pending,
-      (state: any, action: any) => {
+      (state: interviewerSliceStates, action: any) => {
         state.loadingStatus.moadlLoader = true;
       }
     );
 
-    builder.addCase(genrateQuizLink.fulfilled, (state: any, action: any) => {
-      state.previewModalStates.quizLink = `${window.location.origin}/rms-aug/test/${action.payload?.quizId}/${action.payload?.quizLink}`;
-      state.previewModalStates.isPreviewModalOpen = false;
-      state.previewModalStates.previewQuestions = [];
-      state.createQuizSetWiseInfoBody = [];
-      state.loadingStatus.buttonLoader = false;
-    });
-    builder.addCase(genrateQuizLink.rejected, (state: any, action: any) => {
-      state.loadingStatus.buttonLoader = false;
-    });
-    builder.addCase(genrateQuizLink.pending, (state: any, action: any) => {
-      state.loadingStatus.buttonLoader = true;
-    });
+    builder.addCase(
+      genrateQuizLink.fulfilled,
+      (state: interviewerSliceStates, action: any) => {
+        state.previewModalStates.quizLink = `${window.location.origin}/rms-aug/test/${action.payload?.quizId}/${action.payload?.quizLink}`;
+        state.previewModalStates.isPreviewModalOpen = false;
+        state.previewModalStates.previewQuestions = [];
+        state.createQuizSetWiseInfoBody = [];
+        state.loadingStatus.buttonLoader = false;
+      }
+    );
+    builder.addCase(
+      genrateQuizLink.rejected,
+      (state: interviewerSliceStates, action: any) => {
+        state.loadingStatus.buttonLoader = false;
+      }
+    );
+    builder.addCase(
+      genrateQuizLink.pending,
+      (state: interviewerSliceStates, action: any) => {
+        state.loadingStatus.buttonLoader = true;
+      }
+    );
   },
 });
 

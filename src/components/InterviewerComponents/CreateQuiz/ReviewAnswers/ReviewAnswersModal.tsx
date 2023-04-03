@@ -4,23 +4,15 @@ import ReactModal from "react-modal";
 import "./ReviewAnswersModal.style.scss";
 import "../../../Common/Common.style.scss";
 import CloseIcon from "@mui/icons-material/Close";
-import { customStylesModal } from "../../SubmittedQuiz/SubmittedQuizes";
 import AllSubmittedQuestionsAnswers from "../../DispalyQuizCandidateSubmittedQuestionsAnswers/AllSubmittedQuestionsAnswers";
 import {
   useAppDispatch,
   useAppSelector,
 } from "../../../../Store/ConfigureStrore";
 import { handleReviewAnswersModal } from "../../../../Redux/interviewerSlice";
+import { customStylesModal } from "../../../../utils/Utils";
 
-const ReviewAnswersModal = (props: any) => {
-  // const {
-  //   // openReviewModal,
-  //   // setOpenReviewModal,
-  //   // quizSubjectInfo,
-  //   // totalQuizDetailedInfo,
-  //   // loader,
-  // } = props;
-
+const ReviewAnswersModal = () => {
   const dispatch = useAppDispatch();
   const { loadingStatus, isReviewModalOpen } = useAppSelector(
     (state: any) => state.interviewer
@@ -34,11 +26,7 @@ const ReviewAnswersModal = (props: any) => {
         style={customStylesModal}
       >
         <>
-          <AllSubmittedQuestionsAnswers
-          // quizSubjectInfo={quizSubjectInfo}
-          // totalQuizDetailedInfo={totalQuizDetailedInfo}
-          // loader={loader}
-          />
+          <AllSubmittedQuestionsAnswers />
           {!loadingStatus.modalLoader ? (
             <Box className="close-button-container">
               <Button

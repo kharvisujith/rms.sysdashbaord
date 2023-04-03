@@ -29,3 +29,7 @@ export const randomColor = () => {
 
   return color;
 };
+
+export const customStylesModal = {
+  overlay: { zIndex: 1000 },
+};

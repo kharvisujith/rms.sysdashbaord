@@ -18,12 +18,8 @@ const SubjectExpertNewUpload = () => {
   const [isQuizSetExists, setIsQuizSetExists] = useState<boolean>(true);
 
   const subjectwiseQuizDetails = async (subject: string) => {
-    console.log("subject wise quiz iss calllledddd");
-    // setLoader(true);
     getSubjectwiseQuiz(subject === "ALL" ? "" : subject)
       .then((response: any) => {
-        console.log("get then succes part where loader set is false");
-        // setLoader(false);
         if (response.status === 204) {
           setIsQuizSetExists(false);
         } else {
@@ -33,7 +29,6 @@ const SubjectExpertNewUpload = () => {
       })
       .catch((error: any) => {
         console.log("error in subjwiseapi");
-        //     setLoader(false);
       });
   };
 

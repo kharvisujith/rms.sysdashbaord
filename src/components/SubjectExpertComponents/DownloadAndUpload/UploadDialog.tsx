@@ -36,7 +36,6 @@ const UploadDialog = (props: any) => {
   const [loader, setLoader] = useState<Boolean>(false);
   const handleUploadClick = () => {
     if (uploadData.version && uploadData.subject && uploadData.tags && file) {
-      console.log("inside if");
       setLoader(true);
       const formData = new FormData();
       formData.append("formFile", file);
@@ -52,7 +51,6 @@ const UploadDialog = (props: any) => {
           setLoader(false);
           setOpenFileUpload(false);
           subjectwiseQuizDetails(subject);
-          //  console.log(subject, "subj data");
           setUploadData({ version: "", subject: "", tags: "" });
           Swal.fire({
             title: "Success",
@@ -73,7 +71,6 @@ const UploadDialog = (props: any) => {
           });
         });
     } else if (!uploadData.version) {
-      console.log("else if");
       setFormError({ ...formError, version: true });
     } else if (!uploadData.subject) {
       setFormError({ ...formError, subject: true });
@@ -86,14 +83,13 @@ const UploadDialog = (props: any) => {
 
   const handleTextChange = (e: any) => {
     setFormError({ ...formError, [e?.target.name]: false });
-    console.log(formError, "formerror");
+
     const name = e.target.name;
     const value = e.target.value;
     if (subject === "ALL") {
       setUploadData((prev: any) => ({ ...prev, [name]: value }));
     } else {
       setUploadData({ [name]: value, subject: subject });
-      console.log(name, "data sub");
     }
   };
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {

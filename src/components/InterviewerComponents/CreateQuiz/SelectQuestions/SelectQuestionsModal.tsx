@@ -1,34 +1,21 @@
 import {
-  Modal,
   Box,
   Typography,
-  Paper,
   Checkbox,
   Button,
   CircularProgress,
 } from "@mui/material";
 import ReactModal from "react-modal";
 import { subjectwiseQuizAnswersResponse } from "../../../../Interface/Interviewer/InterviewerInterface";
-import { customStylesModal } from "../../SubmittedQuiz/SubmittedQuizes";
-// import { subjectwiseQuizAnswersResponse } from "../../../Interface/QuizDetails";
-// import { customStylesModal } from "../../InterviewerComponents/SubmittedQuiz/SubmittedQuizes";
 import "./SelectQuestionsModal.style.scss";
 import {
   useAppDispatch,
   useAppSelector,
 } from "../../../../Store/ConfigureStrore";
 import { handleSelectQuestionsModal } from "../../../../Redux/interviewerSlice";
+import { customStylesModal } from "../../../../utils/Utils";
 
-const SelectQuestionsModal = (props: any) => {
-  const {
-    selectQuestionOpen,
-    setSelectQuestionOpen,
-    subjectSetQuestions,
-    handleCheckBoxChange,
-    // getQuestionIdFromNewCreateQuizBody,
-    previewLoader,
-  } = props;
-
+const SelectQuestionsModal = () => {
   const {
     isSelectQuestionModalOpen,
     selectQuestions,
@@ -79,10 +66,7 @@ const SelectQuestionsModal = (props: any) => {
                     }`}</Typography>
                     <Checkbox
                       checked={checkIdInCreateQuizBody(questionData)}
-                      //  checked={isChecked(questionData)}
-                      //  checked={isChecked(questionData)}
                       onChange={(event: any) =>
-                        // handleCheckBoxChange(event, questionData)
                         dispatch({
                           type: "interviewer/handleSelectQuestionsCheckBoxChange",
                           payload: {
@@ -99,16 +83,10 @@ const SelectQuestionsModal = (props: any) => {
               )}
             </Box>
 
-            <Box
-              className="close-button-container"
-              //save-button"
-            >
+            <Box className="close-button-container">
               <Button
                 variant="contained"
-                onClick={() =>
-                  // dispatch(setEmptyonClose())
-                  dispatch(handleSelectQuestionsModal())
-                }
+                onClick={() => dispatch(handleSelectQuestionsModal())}
               >
                 Save
               </Button>

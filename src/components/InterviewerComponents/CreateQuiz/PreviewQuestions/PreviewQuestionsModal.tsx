@@ -8,21 +8,17 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import ReactModal from "react-modal";
-
 import "./PreviewQuestionsModal.style.scss";
 import EditIcon from "@mui/icons-material/Edit";
 import UpdateIcon from "@mui/icons-material/Update";
 import AddIcon from "@mui/icons-material/Add";
 import CloseIcon from "@mui/icons-material/Close";
-
 import { CircularProgress } from "@material-ui/core";
 import {
   selectedQuestionsCreateQuiz,
   selectedQuestionsCreateQuizWithTag,
   subjectwiseQuizAnswersResponse,
 } from "../../../../Interface/Interviewer/InterviewerInterface";
-import { createQuiz } from "../../../../api/apiAgent";
-import { customStylesModal } from "../../SubmittedQuiz/SubmittedQuizes";
 import {
   useAppDispatch,
   useAppSelector,
@@ -31,22 +27,9 @@ import {
   genrateQuizLink,
   handlePreviewModal,
 } from "../../../../Redux/interviewerSlice";
+import { customStylesModal } from "../../../../utils/Utils";
 
-const PreviewQuestionsModal = (props: any) => {
-  const {
-    previewQuestionOpen,
-    setPreviewQuestionOpen,
-    previewQuestionsData,
-    setPreviewQuestionsData,
-    // getQuestionIdFromNewCreateQuizBody,
-    handleCheckBoxChange,
-    createQuizSetWiseInfo,
-    setCreateQuizSetWiseInfo,
-    setQuizLink,
-    setSubjectwiseDeatails,
-    previewLoader,
-  } = props;
-
+const PreviewQuestionsModal = () => {
   const { previewModalStates, createQuizSetWiseInfoBody, loadingStatus } =
     useAppSelector((state: any) => state.interviewer);
   const dispatch = useAppDispatch();
@@ -66,10 +49,6 @@ const PreviewQuestionsModal = (props: any) => {
   const [anchorlElTestExpiry, setAnchorElTestExpiry] =
     useState<HTMLButtonElement | null>(null);
 
-  // const [editTimeChange, setEditTimeChange] = useState<any>({
-  //   quizTime: 60,
-  //   quizExpiry: 2,
-  // });
   const [testTimings, setTestTimings] = useState<any>({
     quizTime: 60,
     quizExpiry: 2,
@@ -113,10 +92,6 @@ const PreviewQuestionsModal = (props: any) => {
   };
 
   const handleEditOnChange = (event: any) => {
-    // setEditTimeChange((prev: any) => ({
-    //   ...prev,
-    //   [event.target.name]: event.target.value,
-    // }));
     setTestTimings((prev: any) => ({
       ...prev,
       [event.target.name]: event.target.value,
@@ -134,8 +109,6 @@ const PreviewQuestionsModal = (props: any) => {
   };
 
   const GenrateQuizLink = async () => {
-    console.log("generate callled");
-
     try {
       if (!addedTopic) {
         setValidationError({ ...validationError, quizTopic: true });
@@ -149,7 +122,6 @@ const PreviewQuestionsModal = (props: any) => {
             return rest;
           }
         );
-      console.log("select body is", selectedQuestionCreateQuizBody);
       const createQuizLinkBody = {
         quizTopic: addedTopic,
         totalQuestions: totalQuestionCount,
@@ -164,30 +136,7 @@ const PreviewQuestionsModal = (props: any) => {
     } catch (error: any) {
       console.log("Error in create Quiz", error);
     }
-    // createQuiz(createQuizLinkBody)
-    //   .then((response: any) => {
-    //     console.log("creat quiz response is", response.data);
-    //     setQuizLink(
-    //       `http://localhost:3000/rms-aug/test/${response.data?.quizId}/${response.data?.quizLink}`
-    //     );
-    //     setPreviewQuestionOpen(false);
-    //     setCurrentPage(1);
-    //     setAddedTopic("");
-    //     // setSubjectwiseDeatails([]);
-    //     setPreviewQuestionsData([]);
-    //     setCreateQuizSetWiseInfo([]);
-    //   })
-    //   .catch((error: any) => console.log("Error in create quiz", error))
-    //   .finally(() => setButtonLoader(false));
   };
-
-  // if (setPreviewLoader) {
-  //   return (
-  //     <Box className="modal-loader">
-  //       <CircularProgress />
-  //     </Box>
-  //   );
-  // }
 
   const checkIdInCreateQuizBody = (
     questionDeatils: subjectwiseQuizAnswersResponse
@@ -230,15 +179,8 @@ const PreviewQuestionsModal = (props: any) => {
                             questionData.question
                           }`}</Typography>
                           <Checkbox
-                            // checked={getQuestionIdFromNewCreateQuizBody(
-                            //   questionData
-                            // )}
                             checked={checkIdInCreateQuizBody(questionData)}
-                            // onChange={(event: any) =>
-                            //   //handleCheckBoxChange(event, questionData)
-                            // }
                             onChange={(event: any) =>
-                              // handleCheckBoxChange(event, obj)
                               dispatch({
                                 type: "interviewer/handleSelectQuestionsCheckBoxChange",
                                 payload: {
@@ -406,10 +348,7 @@ const PreviewQuestionsModal = (props: any) => {
               )}
             </Box>
 
-            <Box
-              className="handle-modal"
-              // className="close-button-container"
-            >
+            <Box className="handle-modal">
               <Box>
                 <Button variant="outlined" onClick={handlePreviewPageChange}>
                   {currentPage === 1 ? "Next" : "Back"}
@@ -420,7 +359,6 @@ const PreviewQuestionsModal = (props: any) => {
                 variant="contained"
                 color="error"
                 onClick={() => {
-                  // setPreviewQuestionOpen(false);
                   dispatch(handlePreviewModal());
                   setCurrentPage(1);
                 }}

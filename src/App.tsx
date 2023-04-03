@@ -18,9 +18,7 @@ const App = () => {
   const [role, setRole] =
     useState<"Interviewer" | "Subject Expert" | null>("Interviewer");
 
-  useEffect(() => {
-    console.log("rle in useEff main is", role);
-  }, []);
+  useEffect(() => {}, []);
   return (
     <>
       {/* {role === "Interviewer" || role === "Subject Expert" ? (

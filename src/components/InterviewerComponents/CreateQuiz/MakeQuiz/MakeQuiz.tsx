@@ -1,33 +1,12 @@
 import { Typography } from "@material-ui/core";
 import { Box, Button, Chip, Grid, Paper } from "@mui/material";
-import { useState } from "react";
-
 import "./MakeQuiz.style.scss";
 import PastEvaluationsTable from "../PastEvaluationsTable/PastEvaluationsTable";
 import SearchQuestionSets from "../SearchQuestionSets/SearchQuestionSets";
-import { submittedQuizResponse } from "../../../../Interface/Interviewer/InterviewerInterface";
-import { getTotalSubmittedQuizInfo } from "../../../../api/apiAgent";
 
 const favSub = ["React", "javascript", "c#"];
 
 const MakeQuiz = () => {
-  const [pastEvaluationsData, setpastEvaluationsData] = useState<
-    submittedQuizResponse[]
-  >([]);
-
-  // const handleTagsClick = (subjectName: string) => {
-  //   getTotalSubmittedQuizInfo()
-  //     .then((response: any) => {
-  //       setpastEvaluationsData(response.data);
-  //       // setLoader(false);
-  //       console.log("response", response.data);
-  //     })
-  //     .catch((error: any) => {
-  //       // setLoader(false);
-  //       console.log("error in total quiz info api");
-  //     });
-  // };
-
   return (
     <>
       <Box className="container">
@@ -52,10 +31,7 @@ const MakeQuiz = () => {
             </Grid>
           </Grid>
         </Box>
-        <PastEvaluationsTable
-        // pastEvaluationsData={pastEvaluationsData}
-        //setpastEvaluationsData={setpastEvaluationsData}
-        />
+        <PastEvaluationsTable />
 
         <SearchQuestionSets />
       </Box>

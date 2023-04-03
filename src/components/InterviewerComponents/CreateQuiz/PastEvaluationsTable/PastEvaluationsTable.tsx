@@ -15,11 +15,6 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import {
-  getPastEvaluationsIndividualSummary,
-  getPastEvaluationsIndivualAnswers,
-  getTotalSubmittedQuizInfo,
-} from "../../../../api/apiAgent";
-import {
   Order,
   pastEvaluationsTableDataResponse,
   submittedQuizIndividualSummaryResponse,
@@ -39,9 +34,7 @@ import { submittedQuizTableColumns } from "../../SubmittedQuiz/SubmittedQuizTabl
 
 import ReviewAnswersModal from "../ReviewAnswers/ReviewAnswersModal";
 
-const PastEvaluationsTable = (props: any) => {
-  //const { pastEvaluationsData, setpastEvaluationsData } = props;
-
+const PastEvaluationsTable = () => {
   const dispatch = useAppDispatch();
   const { loadingStatus, pastEvaluationsTableData } = useAppSelector(
     (state: any) => state.interviewer
@@ -51,14 +44,6 @@ const PastEvaluationsTable = (props: any) => {
   const [orderBy, setOrderBy] = useState<any>("correctAnswers");
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [detailedSubmittedQuizInfoList, setDetailedSubmittedQuizInfoList] =
-    useState<pastEvaluationsTableDataResponse[]>([]);
-  const [individualQuizDetailedInfo, setIndividualQuizDetailedInfo] = useState<
-    submittedQuizIndividualSummaryResponse[]
-  >([]);
-
-  const [openReviewModal, setOpenReviewModal] = useState<boolean>(false);
-  const [loader, setLoader] = useState<any>(false);
 
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -85,54 +70,15 @@ const PastEvaluationsTable = (props: any) => {
     setOrderBy(property);
   };
 
-  // const getDetailedSubmittedQuizInfo = (data: any) => {
-  //   // setLoader(true);
-  //   getSubmittedQuizInfo(data)
-  //     .then((response: any) => {
-  //       setDetailedSubmittedQuizInfoList(response.data);
-  //       console.log("response.data in detailed info is", response.data);
-  //       // setLoader(false);
-  //     })
-  //     .catch((error: any) => {
-  //       //  setLoader(false);
-  //       console.log("error in detailed Subject Answer answersapi");
-  //     });
-  // };
-
-  // const getIndividualQuizSummary = (data: any) => {
-  //   // setLoader(true);
-  //   getSubmittedQuizSummary(data)
-  //     .then((res: any) => {
-  //       setIndividualQuizDetailedInfo(res.data);
-  //       console.log("response.data in summary is", res.data);
-  //       // setLoader(false);
-  //     })
-  //     .catch((error: any) => {
-  //       //  setLoader(false);
-  //       console.log("error in detailed Subject Answer answersapi");
-  //     });
-  // };
   const handleOpenReviewModal = async (testId: any) => {
-    // setOpenReviewModal(true);
-    // setLoader(true);
     dispatch(handleReviewAnswersModal());
 
     try {
       await dispatch(fetchPastEvaluationsIndividualSummary(testId));
       await dispatch(fetchPastEvaluationsIndividualAnswers(testId));
-      // const quizSummary = await getPastEvaluationsIndividualSummary(testId);
-
-      // setIndividualQuizDetailedInfo(quizSummary.data);
-      // const quizSubmittedDetails = await getPastEvaluationsIndivualAnswers(
-      //   testId
-      // );
-      // setDetailedSubmittedQuizInfoList(quizSubmittedDetails.data);
     } catch (error: any) {
       console.log("error in review model", error);
     }
-    //  finally {
-    //   setLoader(false);
-    // }
   };
 
   useEffect(() => {
@@ -140,20 +86,7 @@ const PastEvaluationsTable = (props: any) => {
       await dispatch(fetchPastEvaluations());
     };
     getPastEvaluations();
-    // setLoader(true);
-    // getTotalSubmittedQuizInfo()
-    //   .then((response: any) => {
-    //     setLoader(false);
-    //     setpastEvaluationsData(response.data);
-    //   })
-    //   .catch((error: any) => {
-    //     setLoader(false);
-    //     console.log("error in total quiz info api");
-    //   });
   }, []);
-  //console.log("value of loader is", loader);
-  console.log("past Evalutoin tabl edat isss", pastEvaluationsTableData);
-  console.log("laodddder iss", loadingStatus.tableLoader);
 
   return (
     <>
@@ -258,13 +191,7 @@ const PastEvaluationsTable = (props: any) => {
           ) : null}
         </Paper>
 
-        <ReviewAnswersModal
-        // openReviewModal={openReviewModal}
-        // setOpenReviewModal={setOpenReviewModal}
-        // quizSubjectInfo={detailedSubmittedQuizInfoList}
-        // totalQuizDetailedInfo={individualQuizDetailedInfo}
-        // loader={loader}
-        />
+        <ReviewAnswersModal />
       </Box>
     </>
   );

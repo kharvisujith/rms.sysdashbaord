@@ -46,15 +46,8 @@ export const verifyCandidate = createAsyncThunk<
   { data: verifyCandidateRequestBody; fromPage: string }
 >("candidate/verify", async ({ data, fromPage }, thunkAPI: any) => {
   try {
-    console.log("inside thunk funtion");
     const res = await apiAgent.candidate.verifyCandidate(data);
-    console.log("res of thunk is", res);
-
     return { data, fromPage };
-
-    // return res;
-
-    //return { data, fromPage };
   } catch (error: any) {
     return thunkAPI.rejectWithValue(error.response);
   }
@@ -79,11 +72,6 @@ export const candidateSlice = createSlice({
   name: "candidate",
   initialState,
   reducers: {
-    dummyMethod: (state: candiDateSliceStates) => {
-      console.log("dummy methodddddddd");
-      // state.keek = "keek keeek";
-    },
-
     setVerifyCredentials: (state: candiDateSliceStates, action: any) => {
       state.verifyCredentials.id = action.payload.id;
       state.verifyCredentials.key = action.payload.key;
@@ -159,5 +147,4 @@ export const candidateSlice = createSlice({
   },
 });
 
-export const { setVerifyCredentials, dummyMethod, startTest } =
-  candidateSlice.actions;
+export const { setVerifyCredentials, startTest } = candidateSlice.actions;

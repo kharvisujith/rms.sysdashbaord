@@ -132,4 +132,22 @@ export interface createdQuizTableColumns {
 export interface interviewerSliceStates {
   pastEvaluationsTableData: pastEvaluationsTableDataResponse[];
   pastEvaluationIndividualSummaryData: submittedQuizIndividualSummaryResponse[];
+  pastEvaluationIndividualAnswersData: any[];
+  subjectwiseQuestionSets: subjectwiseQuizAnswersResponse[];
+  createQuizSetWiseInfoBody: selectedQuestionsCreateQuizWithTag[];
+  searchText: string;
+  selectQuestions: subjectwiseQuizAnswersResponse[];
+  isReviewModalOpen: boolean;
+  isSelectQuestionModalOpen: boolean;
+  previewModalStates: {
+    isPreviewModalOpen: boolean;
+    previewQuestions: subjectwiseQuizAnswersResponse[];
+    quizLink: string;
+  };
+  loadingStatus: {
+    tableLoader: boolean;
+    moadlLoader: boolean;
+    cardLoader: boolean;
+    buttonLoader: boolean;
+  };
 }

@@ -53,7 +53,6 @@ export const upLoadExcel = (
   tags: string,
   formData: FormData
 ) => {
-  console.log("value of subject upload api is", subject);
   return axiosClient.post(
     `/quiz/import?version=${version}&SubjectName=${subject}&tag=${tags}`,
     formData,
@@ -176,7 +175,6 @@ export const getPreviewQuestionsForCreateQuiz = (requestBody: any) => {
 };
 
 export const filterQuestionsSets = (requestBody: string[]) => {
-  console.log("filter request body", requestBody);
   return axiosClient.put(`quiz/SubjectExpert/questions/filter`, requestBody, {
     headers: {
       "Content-Type": "application/json",

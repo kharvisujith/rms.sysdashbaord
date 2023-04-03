@@ -15,7 +15,7 @@ import {
 } from "@mui/material";
 import { Box } from "@mui/system";
 import { useState, useEffect } from "react";
-import { apiAgent, getTotalQuizLinksInfo } from "../../../api/apiAgent";
+import { apiAgent } from "../../../api/apiAgent";
 import { Order } from "../../../Interface/Interviewer/InterviewerInterface";
 import { getComparator } from "../../../utils/TableSortFunctions";
 import "./InterviewerQuizTable.style.scss";
@@ -55,16 +55,6 @@ const InterviewQuiz = () => {
     } finally {
       setLoader(false);
     }
-    // setLoader(true);
-    // getTotalQuizLinksInfo()
-    //   .then((response: any) => {
-    //     setTotalQuizInfo(response.data);
-    //     setLoader(false);
-    //   })
-    //   .catch((error: any) => {
-    //     setLoader(false);
-    //     console.log("error in total quiz info api");
-    //   });
   };
 
   const handleChangePage = (event: unknown, newPage: number) => {

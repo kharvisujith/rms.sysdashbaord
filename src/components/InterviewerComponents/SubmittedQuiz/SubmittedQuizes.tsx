@@ -1,5 +1,4 @@
 import {
-  makeStyles,
   Paper,
   Typography,
   TableContainer,
@@ -20,12 +19,6 @@ import React, { useState, useEffect } from "react";
 import ReactModal from "react-modal";
 import { apiAgent } from "../../../api/apiAgent";
 import AllSubmittedQuestionsAnswers from "../DispalyQuizCandidateSubmittedQuestionsAnswers/AllSubmittedQuestionsAnswers";
-// import {
-//   submittedQuizResponse,
-//   submittedQuizDetailedInfoResponse,
-//   Order,
-// } from "../../../Interface/Interviewer/QuizDetails";
-
 import "./SubmittedQuiz.style.scss";
 import { visuallyHidden } from "@mui/utils";
 import { getComparator } from "../../../utils/TableSortFunctions";
@@ -40,11 +33,12 @@ import {
   submittedQuizIndividualSummaryResponse,
   submittedQuizResponse,
 } from "../../../Interface/Interviewer/InterviewerInterface";
+import { customStylesModal } from "../../../utils/Utils";
 
 //this has to in utils
-export const customStylesModal = {
-  overlay: { zIndex: 1000 },
-};
+// export const customStylesModal = {
+//   overlay: { zIndex: 1000 },
+// };
 
 const SubmitedQuizes = (props: any) => {
   const [page, setPage] = useState<number>(0);
@@ -88,16 +82,6 @@ const SubmitedQuizes = (props: any) => {
     } finally {
       setLoader(false);
     }
-    // setLoader(true);
-    // getTotalSubmittedQuizInfo()
-    //   .then((response: any) => {
-    //     setTotalSubmittedQuizInfoList(response.data);
-    //     setLoader(false);
-    //   })
-    //   .catch((error: any) => {
-    //     setLoader(false);
-    //     console.log("error in total quiz info api");
-    //   });
   };
 
   const handleChangeRowsPerPage = (
@@ -134,26 +118,6 @@ const SubmitedQuizes = (props: any) => {
     } finally {
       setLoader(false);
     }
-    // setLoader(true);
-    // getSubmittedQuizInfo(data)
-    //   .then((response: any) => {
-    //     setDetailedSubmittedQuizInfoList(response.data);
-    //     setLoader(false);
-    //   })
-    //   .catch((error: any) => {
-    //     setLoader(false);
-    //     console.log("error in detailed Subject Answer answersapi");
-    //   });
-
-    // getSubmittedQuizSummary(data)
-    //   .then((res: any) => {
-    //     setIndividualQuizDetailedInfo(res.data);
-    //     setLoader(false);
-    //   })
-    //   .catch((error: any) => {
-    //     setLoader(false);
-    //     console.log("error in detailed Subject Answer answersapi");
-    //   });
 
     setOpenTestModal(true);
   };
@@ -255,7 +219,6 @@ const SubmitedQuizes = (props: any) => {
                     )
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row: any) => {
-                      console.log("test data", totalSubmittedQuizInfoList);
                       return (
                         <TableRow
                           hover
