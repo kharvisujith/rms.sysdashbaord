@@ -20,12 +20,11 @@ import React, { useState, useEffect } from "react";
 import ReactModal from "react-modal";
 import { apiAgent } from "../../../api/apiAgent";
 import AllSubmittedQuestionsAnswers from "../DispalyQuizCandidateSubmittedQuestionsAnswers/AllSubmittedQuestionsAnswers";
-import {
-  submittedQuizResponse,
-  submittedQuizAnswersResponse,
-  submittedQuizDetailedInfoResponse,
-  Order,
-} from "../../../Interface/QuizDetails";
+// import {
+//   submittedQuizResponse,
+//   submittedQuizDetailedInfoResponse,
+//   Order,
+// } from "../../../Interface/Interviewer/QuizDetails";
 
 import "./SubmittedQuiz.style.scss";
 import { visuallyHidden } from "@mui/utils";
@@ -35,6 +34,12 @@ import TopNavBar from "../../TopNavBar/TopNavBar";
 import { submittedQuizTableColumns } from "./SubmittedQuizTableColumn";
 import CloseIcon from "@mui/icons-material/Close";
 import "../../Common/Common.style.scss";
+import {
+  Order,
+  pastEvaluationsTableDataResponse,
+  submittedQuizIndividualSummaryResponse,
+  submittedQuizResponse,
+} from "../../../Interface/Interviewer/InterviewerInterface";
 
 //this has to in utils
 export const customStylesModal = {
@@ -48,9 +53,9 @@ const SubmitedQuizes = (props: any) => {
     submittedQuizResponse[]
   >([]);
   const [detailedSubmittedQuizInfoList, setDetailedSubmittedQuizInfoList] =
-    useState<submittedQuizAnswersResponse[]>([]);
+    useState<pastEvaluationsTableDataResponse[]>([]);
   const [individualQuizDetailedInfo, setIndividualQuizDetailedInfo] = useState<
-    submittedQuizDetailedInfoResponse[]
+    submittedQuizIndividualSummaryResponse[]
   >([]);
   const [order, setOrder] = useState<Order>("asc");
   const [orderBy, setOrderBy] = useState<any>("correctAnswers");

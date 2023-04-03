@@ -26,7 +26,7 @@ import {
   selectedQuestionsCreateQuizWithTag,
   subjectwiseQuizAnswersResponse,
   subjectWiseQuizListResponse,
-} from "../../../../Interface/QuizDetails";
+} from "../../../../Interface/Interviewer/InterviewerInterface";
 import { getComparator } from "../../../../utils/TableSortFunctions";
 import {
   apiAgent,
@@ -42,9 +42,11 @@ import {
 } from "../../../../Store/ConfigureStrore";
 import {
   fetchFilteredQuestionSets,
+  fetchPreviewQuestionsForCreateQuiz,
   fetchQuestionForSetAndSubject,
   fetchsubjectwiseQuestionSets,
   handleAddQuestionSetsToCreteQuizBody,
+  handlePreviewModal,
   handleSelectQuestionsModal,
 } from "../../../../Redux/interviewerSlice";
 
@@ -59,6 +61,7 @@ const SearchQuestionSets = () => {
     createQuizSetWiseInfoBody,
     searchText,
     loadingStatus,
+    previewModalStates,
   } = useAppSelector((state: any) => state.interviewer);
 
   const [createQuizSetWiseInfo, setCreateQuizSetWiseInfo] = useState<
@@ -73,7 +76,7 @@ const SearchQuestionSets = () => {
     subjectwiseQuizAnswersResponse[]
   >([]);
 
-  const [quizLink, setQuizLink] = useState<string>();
+  //const [quizLink, setQuizLink] = useState<string>();
 
   const [selectQuestionOpen, setSelectQuestionOpen] = useState<boolean>(false);
   const [previewQuestionOpen, setPreviewQuestionOpen] =
@@ -150,13 +153,10 @@ const SearchQuestionSets = () => {
   };
 
   const checkForSubjectAndVersion = (subjectName: string, version: string) => {
-    console.log("subject and version is", subjectName, version);
-    console.log("create djsdklsdjkjk", createQuizSetWiseInfo);
-    const filterdArr = createQuizSetWiseInfo.filter(
+    const filterdArr = createQuizSetWiseInfoBody.filter(
       (obj: selectedQuestionsCreateQuizWithTag) =>
         obj.subjectName === subjectName && obj.version === version
     );
-    console.log("filterd array is", filterdArr);
     if (filterdArr.length > 0) {
       return true;
     } else {
@@ -207,10 +207,11 @@ const SearchQuestionSets = () => {
   const handleRemovetQuestionSet = (
     subjectDetails: subjectWiseQuizListResponse
   ) => {
+    console.log("rmove all method onckick called");
     try {
       // for new creatquiz body
       dispatch({
-        type: "interviewer/handleAddQuestionSetToCreateQuizBody",
+        type: "interviewer/handleRemoveQuestionSetsCreateQuizBody",
         payload: subjectDetails,
       });
       // const existingIndex = createQuizSetWiseInfo.findIndex(
@@ -312,31 +313,38 @@ const SearchQuestionSets = () => {
   ) => {
     // setSelectQuestionOpen(true);
     try {
-      await dispatch(handleSelectQuestionsModal());
+      dispatch(handleSelectQuestionsModal());
 
       await dispatch(fetchQuestionForSetAndSubject(subjectDetails));
     } catch (error: any) {
       console.log("Error in Select Questions modal", error);
     }
 
-    fetchQuestionsForSetAndSubject(subjectDetails);
+    //  fetchQuestionsForSetAndSubject(subjectDetails);
   };
 
-  const handlePreviewQuestionModalOpen = () => {
-    setPreviewQuestionOpen(true);
-    setPreviewLoader(true);
-    getPreviewQuestionsForCreateQuiz(createQuizSetWiseInfo)
-      .then((response: any) => {
-        console.log("reponse in preview is", response.data);
-        setPreviewQuestionsData(response.data);
-      })
-      .catch((error: any) => {
-        console.log("Error in preview quiz", error);
-      })
-      .finally(() => {
-        console.log("inside finallyyyyyy");
-        setPreviewLoader(false);
-      });
+  const handlePreviewQuestionModalOpen = async () => {
+    dispatch(handlePreviewModal());
+    // setPreviewQuestionOpen(true);
+    // setPreviewLoader(true);
+    try {
+      await dispatch(fetchPreviewQuestionsForCreateQuiz());
+    } catch (error: any) {
+      console.log("Error in preview quesiton modal", error);
+    }
+
+    // getPreviewQuestionsForCreateQuiz(createQuizSetWiseInfo)
+    //   .then((response: any) => {
+    //     console.log("reponse in preview is", response.data);
+    //     setPreviewQuestionsData(response.data);
+    //   })
+    //   .catch((error: any) => {
+    //     console.log("Error in preview quiz", error);
+    //   })
+    //   .finally(() => {
+    //     console.log("inside finallyyyyyy");
+    //     setPreviewLoader(false);
+    //   });
   };
 
   console.log("createquizsetwiseinfo is", createQuizSetWiseInfo);
@@ -538,15 +546,15 @@ const SearchQuestionSets = () => {
           </Box>
         )}
 
-        {quizLink && (
+        {previewModalStates.quizLink && (
           <Box className="box-link">
             <Typography>{`Test Link :`}</Typography>
             <Box className="test-link">
-              <Typography>{quizLink}</Typography>
+              <Typography>{previewModalStates.quizLink}</Typography>
               <Button
                 className="copy"
                 variant="outlined"
-                onClick={() => copyToClipboard(quizLink)}
+                onClick={() => copyToClipboard(previewModalStates.quizLink)}
               >
                 <SvgIcon
                   className="icon"
@@ -559,29 +567,29 @@ const SearchQuestionSets = () => {
           </Box>
         )}
         <SelectQuestionsModal
-          selectQuestionOpen={selectQuestionOpen}
-          setSelectQuestionOpen={setSelectQuestionOpen}
-          subjectSetQuestions={subjectSetQuestions}
-          handleCheckBoxChange={handleCheckBoxChange}
-          getQuestionIdFromNewCreateQuizBody={
-            getQuestionIdFromNewCreateQuizBody
-          }
-          previewLoader={previewLoader}
+        //  selectQuestionOpen={selectQuestionOpen}
+        //  setSelectQuestionOpen={setSelectQuestionOpen}
+        //   subjectSetQuestions={subjectSetQuestions}
+        //   handleCheckBoxChange={handleCheckBoxChange}
+        // getQuestionIdFromNewCreateQuizBody={
+        //   getQuestionIdFromNewCreateQuizBody
+        // }
+        //   previewLoader={previewLoader}
         />
         <PreviewQuestionsModal
-          previewQuestionOpen={previewQuestionOpen}
-          setPreviewQuestionOpen={setPreviewQuestionOpen}
-          previewQuestionsData={previewQuestionsData}
-          setPreviewQuestionsData={setPreviewQuestionsData}
-          handleCheckBoxChange={handleCheckBoxChange}
-          getQuestionIdFromNewCreateQuizBody={
-            getQuestionIdFromNewCreateQuizBody
-          }
-          createQuizSetWiseInfo={createQuizSetWiseInfo}
-          setCreateQuizSetWiseInfo={setCreateQuizSetWiseInfo}
-          setQuizLink={setQuizLink}
-          setSubjectwiseDeatails={setSubjectwiseDeatails}
-          previewLoader={previewLoader}
+        //   previewQuestionOpen={previewQuestionOpen}
+        ////  setPreviewQuestionOpen={setPreviewQuestionOpen}
+        // previewQuestionsData={previewQuestionsData}
+        /////   setPreviewQuestionsData={setPreviewQuestionsData}
+        //  handleCheckBoxChange={handleCheckBoxChange}
+        // getQuestionIdFromNewCreateQuizBody={
+        //   getQuestionIdFromNewCreateQuizBody
+        // }
+        //  createQuizSetWiseInfo={createQuizSetWiseInfo}
+        //  setCreateQuizSetWiseInfo={setCreateQuizSetWiseInfo}
+        //   setQuizLink={setQuizLink}
+        //  setSubjectwiseDeatails={setSubjectwiseDeatails}
+        //  previewLoader={previewLoader}
         />
       </Box>
     </>

@@ -27,7 +27,7 @@ import {
 import {
   Order,
   subjectWiseQuizListResponse,
-} from "../../../Interface/QuizDetails";
+} from "../../../Interface/Interviewer/InterviewerInterface";
 import {
   QuesitonSetsTableColumns,
   questionSets,

@@ -1,7 +1,7 @@
 import { Box, Button } from "@mui/material";
 import { useEffect, useState } from "react";
 import { getSubjectwiseQuiz } from "../../../api/apiAgent";
-import { subjectWiseQuizListResponse } from "../../../Interface/QuizDetails";
+import { subjectWiseQuizListResponse } from "../../../Interface/Interviewer/InterviewerInterface";
 
 import "./SubjectExpertHome.style.scss";
 import SelectSubject from "../SelectSubject/SelectSubject";

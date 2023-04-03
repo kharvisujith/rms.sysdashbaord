@@ -16,7 +16,7 @@ import {
 import { Box } from "@mui/system";
 import { useState, useEffect } from "react";
 import { apiAgent, getTotalQuizLinksInfo } from "../../../api/apiAgent";
-import { Order } from "../../../Interface/QuizDetails";
+import { Order } from "../../../Interface/Interviewer/InterviewerInterface";
 import { getComparator } from "../../../utils/TableSortFunctions";
 import "./InterviewerQuizTable.style.scss";
 import { createdQuizColumns } from "./InterviewQuizTableColumns";

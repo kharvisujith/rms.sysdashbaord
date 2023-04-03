@@ -14,9 +14,9 @@ import {
   CircularProgress,
 } from "@mui/material";
 import "./AllSubmittedQuestionsAnswers.style.scss";
-import { submittedQuizDetailedInfoResponse } from "../../../Interface/QuizDetails";
 import { Divider } from "@material-ui/core";
 import { useAppDispatch, useAppSelector } from "../../../Store/ConfigureStrore";
+import { submittedQuizIndividualSummaryResponse } from "../../../Interface/Interviewer/InterviewerInterface";
 const AllSubmittedQuestionsAnswers = (props: any) => {
   // const { quizSubjectInfo, totalQuizDetailedInfo, loader } = props;
 
@@ -71,7 +71,10 @@ const AllSubmittedQuestionsAnswers = (props: any) => {
               <TableBody>
                 {pastEvaluationIndividualSummaryData?.length > 0 &&
                   pastEvaluationIndividualSummaryData?.map(
-                    (row: submittedQuizDetailedInfoResponse, index: number) => (
+                    (
+                      row: submittedQuizIndividualSummaryResponse,
+                      index: number
+                    ) => (
                       <TableRow key={index}>
                         <TableCell align="center">{row.subjectName}</TableCell>
                         <TableCell align="center">{row.version}</TableCell>
@@ -106,8 +109,8 @@ const AllSubmittedQuestionsAnswers = (props: any) => {
                       pastEvaluationIndividualSummaryData?.length > 0 &&
                       pastEvaluationIndividualSummaryData
                         ?.map(
-                          (datum: submittedQuizDetailedInfoResponse) =>
-                            datum?.totalQuestions
+                          (datu: submittedQuizIndividualSummaryResponse) =>
+                            datu?.totalQuestions
                         )
                         .reduce((a: number, b: number) => a + b)
                     }`}</strong>
@@ -117,8 +120,8 @@ const AllSubmittedQuestionsAnswers = (props: any) => {
                       pastEvaluationIndividualSummaryData?.length > 0 &&
                       pastEvaluationIndividualSummaryData
                         ?.map(
-                          (datum: submittedQuizDetailedInfoResponse) =>
-                            datum?.answeredQuestions
+                          (data: submittedQuizIndividualSummaryResponse) =>
+                            data?.answeredQuestions
                         )
                         .reduce((a: number, b: number) => a + b)
                     }`}</strong>
@@ -128,7 +131,7 @@ const AllSubmittedQuestionsAnswers = (props: any) => {
                       pastEvaluationIndividualSummaryData?.length > 0 &&
                       pastEvaluationIndividualSummaryData
                         ?.map(
-                          (datum: submittedQuizDetailedInfoResponse) =>
+                          (datum: submittedQuizIndividualSummaryResponse) =>
                             datum?.notAnsweredQuestions
                         )
                         .reduce((a: number, b: number) => a + b)
@@ -139,7 +142,7 @@ const AllSubmittedQuestionsAnswers = (props: any) => {
                       pastEvaluationIndividualSummaryData?.length > 0 &&
                       pastEvaluationIndividualSummaryData
                         ?.map(
-                          (datum: submittedQuizDetailedInfoResponse) =>
+                          (datum: submittedQuizIndividualSummaryResponse) =>
                             datum?.correctAnswers
                         )
                         .reduce((a: number, b: number) => a + b)
@@ -150,7 +153,7 @@ const AllSubmittedQuestionsAnswers = (props: any) => {
                       pastEvaluationIndividualSummaryData?.length > 0 &&
                       pastEvaluationIndividualSummaryData
                         ?.map(
-                          (datum: submittedQuizDetailedInfoResponse) =>
+                          (datum: submittedQuizIndividualSummaryResponse) =>
                             datum?.inCorrectAnswers
                         )
                         .reduce((a: number, b: number) => a + b)

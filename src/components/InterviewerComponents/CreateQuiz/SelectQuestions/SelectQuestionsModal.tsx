@@ -8,11 +8,16 @@ import {
   CircularProgress,
 } from "@mui/material";
 import ReactModal from "react-modal";
-import { subjectwiseQuizAnswersResponse } from "../../../../Interface/QuizDetails";
+import { subjectwiseQuizAnswersResponse } from "../../../../Interface/Interviewer/InterviewerInterface";
 import { customStylesModal } from "../../SubmittedQuiz/SubmittedQuizes";
 // import { subjectwiseQuizAnswersResponse } from "../../../Interface/QuizDetails";
 // import { customStylesModal } from "../../InterviewerComponents/SubmittedQuiz/SubmittedQuizes";
 import "./SelectQuestionsModal.style.scss";
+import {
+  useAppDispatch,
+  useAppSelector,
+} from "../../../../Store/ConfigureStrore";
+import { handleSelectQuestionsModal } from "../../../../Redux/interviewerSlice";
 
 const SelectQuestionsModal = (props: any) => {
   const {
@@ -20,30 +25,71 @@ const SelectQuestionsModal = (props: any) => {
     setSelectQuestionOpen,
     subjectSetQuestions,
     handleCheckBoxChange,
-    getQuestionIdFromNewCreateQuizBody,
+    // getQuestionIdFromNewCreateQuizBody,
     previewLoader,
   } = props;
+
+  const {
+    isSelectQuestionModalOpen,
+    selectQuestions,
+    createQuizSetWiseInfoBody,
+    loadingStatus,
+  } = useAppSelector((state: any) => state.interviewer);
+  const dispatch = useAppDispatch();
+
+  const checkIdInCreateQuizBody = (
+    questionDeatils: subjectwiseQuizAnswersResponse
+  ) => {
+    const findIndex = createQuizSetWiseInfoBody?.findIndex(
+      (obj: any) =>
+        obj.subjectName === questionDeatils.subjectName &&
+        obj.version === questionDeatils.version
+    );
+    if (findIndex !== -1) {
+      const newArr = [...createQuizSetWiseInfoBody];
+      const isIdPresent = newArr[findIndex].questionIds.includes(
+        questionDeatils.questionId
+      );
+      if (isIdPresent) return true;
+      else return false;
+    } else {
+      return false;
+    }
+  };
+
   return (
     <>
       <ReactModal
-        isOpen={selectQuestionOpen}
+        isOpen={isSelectQuestionModalOpen}
         contentLabel="Minimal Modal Example"
         ariaHideApp={false}
         style={customStylesModal}
       >
-        {!previewLoader ? (
+        {!loadingStatus.modalLoader ? (
           <>
             <Box className="modal-content-container">
-              {subjectSetQuestions?.map(
-                (obj: subjectwiseQuizAnswersResponse, index: number) => (
+              {selectQuestions?.map(
+                (
+                  questionData: subjectwiseQuizAnswersResponse,
+                  index: number
+                ) => (
                   <Box key={index} className="questions">
                     <Typography className="text">{`${index + 1}.  ${
-                      obj.question
+                      questionData.question
                     }`}</Typography>
                     <Checkbox
-                      checked={getQuestionIdFromNewCreateQuizBody(obj)}
+                      checked={checkIdInCreateQuizBody(questionData)}
+                      //  checked={isChecked(questionData)}
+                      //  checked={isChecked(questionData)}
                       onChange={(event: any) =>
-                        handleCheckBoxChange(event, obj)
+                        // handleCheckBoxChange(event, questionData)
+                        dispatch({
+                          type: "interviewer/handleSelectQuestionsCheckBoxChange",
+                          payload: {
+                            event: event,
+                            questionDeatils: questionData,
+                          },
+                        })
                       }
                       inputProps={{ "aria-label": "controlled" }}
                       className="select-check-box"
@@ -59,7 +105,10 @@ const SelectQuestionsModal = (props: any) => {
             >
               <Button
                 variant="contained"
-                onClick={() => setSelectQuestionOpen(false)}
+                onClick={() =>
+                  // dispatch(setEmptyonClose())
+                  dispatch(handleSelectQuestionsModal())
+                }
               >
                 Save
               </Button>

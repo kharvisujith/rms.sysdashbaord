@@ -3,23 +3,28 @@ import { apiAgent } from "../api/apiAgent";
 import {
   selectedQuestionsCreateQuizWithTag,
   subjectWiseQuizListResponse,
-} from "../Interface/QuizDetails";
+} from "../Interface/Interviewer/InterviewerInterface";
 
 const initialState: any = {
-  keek: "",
   pastEvaluationsTableData: [],
   pastEvaluationIndividualSummaryData: [],
   pastEvaluationIndividualAnswersData: [],
   subjectwiseQuestionSets: [],
   createQuizSetWiseInfoBody: [],
   searchText: "",
-  questionAnswersForSelecteQuestionsModal: [],
+  selectQuestions: [],
   isReviewModalOpen: false,
-  isSelectQuesitonModalOpen: false,
+  isSelectQuestionModalOpen: false,
+  previewModalStates: {
+    isPreviewModalOpen: false,
+    previewQuestions: [],
+    quizLink: "",
+  },
   loadingStatus: {
     tableLoader: false,
     moadlLoader: false,
     cardLoader: false,
+    buttonLoader: false,
   },
 };
 
@@ -154,6 +159,36 @@ export const fetchQuestionForSetAndSubject = createAsyncThunk<any, any>(
   }
 );
 
+export const fetchPreviewQuestionsForCreateQuiz = createAsyncThunk<any>(
+  "interviewer/previewQuestions",
+  async (_, thunkAPI: any) => {
+    try {
+      const createQuizBody =
+        thunkAPI.getState().interviewer.createQuizSetWiseInfoBody;
+      const response =
+        await apiAgent.interviewer.getPreviewQuestionsForCreateQuiz(
+          createQuizBody
+        );
+
+      return response.data;
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue({ error: error.respone });
+    }
+  }
+);
+
+export const genrateQuizLink = createAsyncThunk(
+  "interviewer/genrateQuizLink",
+  async (createQuizBody: any, thunkAPI: any) => {
+    try {
+      const response = await apiAgent.interviewer.createQuiz(createQuizBody);
+      return response.data;
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue({ error: error.response });
+    }
+  }
+);
+
 export const interviewerSlice = createSlice({
   name: "interviewer",
   initialState,
@@ -164,16 +199,19 @@ export const interviewerSlice = createSlice({
         : (state.isReviewModalOpen = true);
     },
     handleSelectQuestionsModal: (state: any) => {
-      state.isSelectQuesitonModalOpen
-        ? (state.isSelectQuesitonModalOpen = false)
-        : (state.isSelectQuesitonModalOpen = true);
+      console.log("modal open reducer called");
+      // if (state.isSelectQuestionModalOpen) {
+      //   state.selectQuestions = [];
+      // }
+      state.isSelectQuestionModalOpen
+        ? (state.isSelectQuestionModalOpen = false)
+        : (state.isSelectQuestionModalOpen = true);
     },
 
     handleSearchInputChange: (state: any, action: any) => {
       console.log("valueeee   i ssss", action.payload.target.value);
       state.searchText = action.payload.target.value;
     },
-
     handleRemoveQuestionSetsCreateQuizBody: (state: any, action: any) => {
       console.log(
         "in reducer delte",
@@ -185,12 +223,73 @@ export const interviewerSlice = createSlice({
           obj.subjectName === action.payload.subjectName &&
           obj.version === action.payload.version
       );
+
       if (existingIndex !== -1) {
         const newCreatQuizArr = [...state.createQuizSetWiseInfoBody];
         newCreatQuizArr.splice(existingIndex, 1);
 
         state.createQuizSetWiseInfoBody = newCreatQuizArr;
       }
+    },
+
+    handleSelectQuestionsCheckBoxChange: (state: any, action: any) => {
+      console.log("onchage reducer calleddd");
+      const existingIndex = state.createQuizSetWiseInfoBody.findIndex(
+        (obj: selectedQuestionsCreateQuizWithTag) =>
+          obj.subjectName === action.payload.questionDeatils.subjectName &&
+          obj.version === action.payload.questionDeatils.version
+      );
+      console.log("existng index is", existingIndex, action.payload.even);
+      if (action.payload.event.target.checked) {
+        if (existingIndex === -1) {
+          state.createQuizSetWiseInfoBody = [
+            ...state.createQuizSetWiseInfoBody,
+            {
+              version: action.payload.questionDeatils.version,
+              subjectName: action.payload.questionDeatils.subjectName,
+              tag: action.payload.questionDeatils.tag,
+              questionIds: [action.payload.questionDeatils.questionId],
+            },
+          ];
+          // setCreateQuizSetWiseInfo((prev: any) => [
+          //   ...prev,
+          //   {
+          //     version: questionDeatils.version,
+          //     subjectName: questionDeatils.subjectName,
+          //     tag: questionDeatils.tag,
+          //     questionIds: [questionDeatils.questionId],
+          //   },
+          // ]);
+        } else {
+          const newArray = [...state.createQuizSetWiseInfoBody];
+          newArray[existingIndex].questionIds.push(
+            action.payload.questionDeatils.questionId
+          );
+          //setCreateQuizSetWiseInfo(newArray);
+          state.createQuizSetWiseInfoBody = newArray;
+        }
+      } else {
+        console.log("inside else part of check false");
+        if (existingIndex !== -1) {
+          const newArray = [...state.createQuizSetWiseInfoBody];
+          const indexOfQuestionId = newArray[existingIndex].questionIds.indexOf(
+            action.payload.questionDeatils.questionId
+          );
+
+          newArray[existingIndex].questionIds.splice(indexOfQuestionId, 1);
+          if (newArray[existingIndex].questionIds.length < 1) {
+            newArray.splice(existingIndex, 1);
+          }
+          state.createQuizSetWiseInfoBody = newArray;
+          // setCreateQuizSetWiseInfo(newArray);
+        }
+      }
+    },
+
+    handlePreviewModal: (state: any) => {
+      state.previewModalStates.isPreviewModalOpen
+        ? (state.previewModalStates.isPreviewModalOpen = false)
+        : (state.previewModalStates.isPreviewModalOpen = true);
     },
   },
   extraReducers: (builder: any) => {
@@ -342,7 +441,7 @@ export const interviewerSlice = createSlice({
     builder.addCase(
       fetchQuestionForSetAndSubject.fulfilled,
       (state: any, action: any) => {
-        state.questionAnswersForSelecteQuestionsModal = action.payload;
+        state.selectQuestions = action.payload;
         state.loadingStatus.moadlLoader = false;
       }
     );
@@ -358,6 +457,40 @@ export const interviewerSlice = createSlice({
         state.loadingStatus.moadlLoader = true;
       }
     );
+
+    builder.addCase(
+      fetchPreviewQuestionsForCreateQuiz.fulfilled,
+      (state: any, action: any) => {
+        state.previewModalStates.previewQuestions = action.payload;
+        state.loadingStatus.moadlLoader = true;
+      }
+    );
+    builder.addCase(
+      fetchPreviewQuestionsForCreateQuiz.rejected,
+      (state: any, action: any) => {
+        state.loadingStatus.moadlLoader = true;
+      }
+    );
+    builder.addCase(
+      fetchPreviewQuestionsForCreateQuiz.pending,
+      (state: any, action: any) => {
+        state.loadingStatus.moadlLoader = true;
+      }
+    );
+
+    builder.addCase(genrateQuizLink.fulfilled, (state: any, action: any) => {
+      state.previewModalStates.quizLink = `${window.location.origin}/rms-aug/test/${action.payload?.quizId}/${action.payload?.quizLink}`;
+      state.previewModalStates.isPreviewModalOpen = false;
+      state.previewModalStates.previewQuestions = [];
+      state.createQuizSetWiseInfoBody = [];
+      state.loadingStatus.buttonLoader = false;
+    });
+    builder.addCase(genrateQuizLink.rejected, (state: any, action: any) => {
+      state.loadingStatus.buttonLoader = false;
+    });
+    builder.addCase(genrateQuizLink.pending, (state: any, action: any) => {
+      state.loadingStatus.buttonLoader = true;
+    });
   },
 });
 
@@ -366,4 +499,6 @@ export const {
   handleSelectQuestionsModal,
   handleRemoveQuestionSetsCreateQuizBody,
   handleSearchInputChange,
+  handleSelectQuestionsCheckBoxChange,
+  handlePreviewModal,
 } = interviewerSlice.actions;

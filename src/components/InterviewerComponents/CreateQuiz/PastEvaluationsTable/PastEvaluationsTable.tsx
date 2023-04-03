@@ -21,9 +21,9 @@ import {
 } from "../../../../api/apiAgent";
 import {
   Order,
-  submittedQuizAnswersResponse,
-  submittedQuizDetailedInfoResponse,
-} from "../../../../Interface/QuizDetails";
+  pastEvaluationsTableDataResponse,
+  submittedQuizIndividualSummaryResponse,
+} from "../../../../Interface/Interviewer/InterviewerInterface";
 import {
   fetchPastEvaluations,
   fetchPastEvaluationsIndividualAnswers,
@@ -52,9 +52,9 @@ const PastEvaluationsTable = (props: any) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [detailedSubmittedQuizInfoList, setDetailedSubmittedQuizInfoList] =
-    useState<submittedQuizAnswersResponse[]>([]);
+    useState<pastEvaluationsTableDataResponse[]>([]);
   const [individualQuizDetailedInfo, setIndividualQuizDetailedInfo] = useState<
-    submittedQuizDetailedInfoResponse[]
+    submittedQuizIndividualSummaryResponse[]
   >([]);
 
   const [openReviewModal, setOpenReviewModal] = useState<boolean>(false);

@@ -19,9 +19,18 @@ import { CircularProgress } from "@material-ui/core";
 import {
   selectedQuestionsCreateQuiz,
   selectedQuestionsCreateQuizWithTag,
-} from "../../../../Interface/QuizDetails";
+  subjectwiseQuizAnswersResponse,
+} from "../../../../Interface/Interviewer/InterviewerInterface";
 import { createQuiz } from "../../../../api/apiAgent";
 import { customStylesModal } from "../../SubmittedQuiz/SubmittedQuizes";
+import {
+  useAppDispatch,
+  useAppSelector,
+} from "../../../../Store/ConfigureStrore";
+import {
+  genrateQuizLink,
+  handlePreviewModal,
+} from "../../../../Redux/interviewerSlice";
 
 const PreviewQuestionsModal = (props: any) => {
   const {
@@ -29,7 +38,7 @@ const PreviewQuestionsModal = (props: any) => {
     setPreviewQuestionOpen,
     previewQuestionsData,
     setPreviewQuestionsData,
-    getQuestionIdFromNewCreateQuizBody,
+    // getQuestionIdFromNewCreateQuizBody,
     handleCheckBoxChange,
     createQuizSetWiseInfo,
     setCreateQuizSetWiseInfo,
@@ -37,6 +46,10 @@ const PreviewQuestionsModal = (props: any) => {
     setSubjectwiseDeatails,
     previewLoader,
   } = props;
+
+  const { previewModalStates, createQuizSetWiseInfoBody, loadingStatus } =
+    useAppSelector((state: any) => state.interviewer);
+  const dispatch = useAppDispatch();
 
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalQuestionCount, setTotalQuestionCount] = useState<number>(0);
@@ -64,7 +77,7 @@ const PreviewQuestionsModal = (props: any) => {
 
   const [buttonLoader, setButtonLoader] = useState<Boolean>(false);
   const handlePreviewPageChange = () => {
-    const totalQuestions = createQuizSetWiseInfo?.reduce(
+    const totalQuestions = createQuizSetWiseInfoBody?.reduce(
       (numOfElement: number, obj: selectedQuestionsCreateQuizWithTag) =>
         numOfElement + obj.questionIds.length,
       0
@@ -120,39 +133,52 @@ const PreviewQuestionsModal = (props: any) => {
     }
   };
 
-  const GenrateQuizLink = () => {
-    if (!addedTopic) {
-      setValidationError({ ...validationError, quizTopic: true });
-      return;
-    }
-    setButtonLoader(true);
-    const selectedQuestionCreateQuizBody: selectedQuestionsCreateQuiz[] =
-      createQuizSetWiseInfo.map((obj: selectedQuestionsCreateQuizWithTag) => {
-        const { tag, ...rest } = obj;
-        return rest;
-      });
-    const createQuizLinkBody = {
-      quizTopic: addedTopic,
-      totalQuestions: totalQuestionCount,
-      quizTimeInMinutes: assignedTestTime,
-      quizLinkExpireInHours: assignedTestExpiry,
-      quizSetWiseInfo: selectedQuestionCreateQuizBody,
-    };
-    createQuiz(createQuizLinkBody)
-      .then((response: any) => {
-        console.log("creat quiz response is", response.data);
-        setQuizLink(
-          `http://localhost:3000/rms-aug/test/${response.data?.quizId}/${response.data?.quizLink}`
+  const GenrateQuizLink = async () => {
+    console.log("generate callled");
+
+    try {
+      if (!addedTopic) {
+        setValidationError({ ...validationError, quizTopic: true });
+        return;
+      }
+      setButtonLoader(true);
+      const selectedQuestionCreateQuizBody: selectedQuestionsCreateQuiz[] =
+        createQuizSetWiseInfoBody.map(
+          (obj: selectedQuestionsCreateQuizWithTag) => {
+            const { tag, ...rest } = obj;
+            return rest;
+          }
         );
-        setPreviewQuestionOpen(false);
-        setCurrentPage(1);
-        setAddedTopic("");
-        // setSubjectwiseDeatails([]);
-        setPreviewQuestionsData([]);
-        setCreateQuizSetWiseInfo([]);
-      })
-      .catch((error: any) => console.log("Error in create quiz", error))
-      .finally(() => setButtonLoader(false));
+      console.log("select body is", selectedQuestionCreateQuizBody);
+      const createQuizLinkBody = {
+        quizTopic: addedTopic,
+        totalQuestions: totalQuestionCount,
+        quizTimeInMinutes: assignedTestTime,
+        quizLinkExpireInHours: assignedTestExpiry,
+        quizSetWiseInfo: selectedQuestionCreateQuizBody,
+      };
+
+      await dispatch(genrateQuizLink(createQuizLinkBody));
+      setAddedTopic("");
+      setCurrentPage(1);
+    } catch (error: any) {
+      console.log("Error in create Quiz", error);
+    }
+    // createQuiz(createQuizLinkBody)
+    //   .then((response: any) => {
+    //     console.log("creat quiz response is", response.data);
+    //     setQuizLink(
+    //       `http://localhost:3000/rms-aug/test/${response.data?.quizId}/${response.data?.quizLink}`
+    //     );
+    //     setPreviewQuestionOpen(false);
+    //     setCurrentPage(1);
+    //     setAddedTopic("");
+    //     // setSubjectwiseDeatails([]);
+    //     setPreviewQuestionsData([]);
+    //     setCreateQuizSetWiseInfo([]);
+    //   })
+    //   .catch((error: any) => console.log("Error in create quiz", error))
+    //   .finally(() => setButtonLoader(false));
   };
 
   // if (setPreviewLoader) {
@@ -163,37 +189,63 @@ const PreviewQuestionsModal = (props: any) => {
   //   );
   // }
 
+  const checkIdInCreateQuizBody = (
+    questionDeatils: subjectwiseQuizAnswersResponse
+  ) => {
+    const findIndex = createQuizSetWiseInfoBody?.findIndex(
+      (obj: any) =>
+        obj.subjectName === questionDeatils.subjectName &&
+        obj.version === questionDeatils.version
+    );
+    if (findIndex !== -1) {
+      const newArr = [...createQuizSetWiseInfoBody];
+      const isIdPresent = newArr[findIndex].questionIds.includes(
+        questionDeatils.questionId
+      );
+      if (isIdPresent) return true;
+      else return false;
+    } else {
+      return false;
+    }
+  };
+
   return (
     <>
       <ReactModal
-        isOpen={previewQuestionOpen}
+        isOpen={previewModalStates.isPreviewModalOpen}
         contentLabel="Minimal Modal Example"
         ariaHideApp={false}
         style={customStylesModal}
       >
-        {!previewLoader ? (
+        {!loadingStatus.modalLoader ? (
           <>
-            <Box
-              //   className="modal-container"
-              className="modal-content-container"
-            >
+            <Box className="modal-content-container">
               {currentPage === 1 ? (
                 <>
-                  <Box
-                  //  className="questions-container"
-                  >
-                    {previewQuestionsData?.map(
+                  <Box>
+                    {previewModalStates.previewQuestions?.map(
                       (questionData: any, index: number) => (
                         <Box key={index} className="questions">
                           <Typography>{`${index + 1}.  ${
                             questionData.question
                           }`}</Typography>
                           <Checkbox
-                            checked={getQuestionIdFromNewCreateQuizBody(
-                              questionData
-                            )}
+                            // checked={getQuestionIdFromNewCreateQuizBody(
+                            //   questionData
+                            // )}
+                            checked={checkIdInCreateQuizBody(questionData)}
+                            // onChange={(event: any) =>
+                            //   //handleCheckBoxChange(event, questionData)
+                            // }
                             onChange={(event: any) =>
-                              handleCheckBoxChange(event, questionData)
+                              // handleCheckBoxChange(event, obj)
+                              dispatch({
+                                type: "interviewer/handleSelectQuestionsCheckBoxChange",
+                                payload: {
+                                  event: event,
+                                  questionDeatils: questionData,
+                                },
+                              })
                             }
                             inputProps={{ "aria-label": "controlled" }}
                             className="select-check-box"
@@ -206,9 +258,7 @@ const PreviewQuestionsModal = (props: any) => {
               ) : (
                 <>
                   <Box>
-                    <Box
-                    //  className="questions-container"
-                    >
+                    <Box>
                       <Box className="quiz-topic-container">
                         <Box className="quiz-topic">
                           <Typography>Topcis Covered</Typography>
@@ -370,7 +420,8 @@ const PreviewQuestionsModal = (props: any) => {
                 variant="contained"
                 color="error"
                 onClick={() => {
-                  setPreviewQuestionOpen(false);
+                  // setPreviewQuestionOpen(false);
+                  dispatch(handlePreviewModal());
                   setCurrentPage(1);
                 }}
                 endIcon={<CloseIcon />}

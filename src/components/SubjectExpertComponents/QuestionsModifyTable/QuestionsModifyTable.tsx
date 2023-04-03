@@ -15,7 +15,7 @@ import {
   IconButton,
 } from "@mui/material";
 import { useState } from "react";
-import { Order } from "../../../Interface/QuizDetails";
+import { Order } from "../../../Interface/Interviewer/InterviewerInterface";
 import { getComparator } from "../../../utils/TableSortFunctions";
 import { QuestionsModifyTableColumns } from "./QuestionsModifyTableColumns";
 

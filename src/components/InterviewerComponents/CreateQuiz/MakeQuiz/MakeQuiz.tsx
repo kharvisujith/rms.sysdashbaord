@@ -5,7 +5,7 @@ import { useState } from "react";
 import "./MakeQuiz.style.scss";
 import PastEvaluationsTable from "../PastEvaluationsTable/PastEvaluationsTable";
 import SearchQuestionSets from "../SearchQuestionSets/SearchQuestionSets";
-import { submittedQuizResponse } from "../../../../Interface/QuizDetails";
+import { submittedQuizResponse } from "../../../../Interface/Interviewer/InterviewerInterface";
 import { getTotalSubmittedQuizInfo } from "../../../../api/apiAgent";
 
 const favSub = ["React", "javascript", "c#"];

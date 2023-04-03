@@ -5,7 +5,7 @@ import {
   verifyCandidateRequestBody,
 } from "../Interface/Candidate/CandidateInterface";
 
-import { createQuizRequestBody } from "../Interface/QuizDetails";
+import { createQuizRequestBody } from "../Interface/Interviewer/InterviewerInterface";
 import { UpdateQuestionsSet } from "../Interface/SubjectExpert/SubjectExpert";
 //import QuizDetails from "../Interface/QuizDetails";
 // import QuizDetails from "../Interface/QuizDetails";

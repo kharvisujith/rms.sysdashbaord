@@ -1,38 +1,3 @@
-// export interface QuizDetails {
-//   quizId: number;
-//   quizLink: string;
-//   quizLinkExpiresAt: string;
-//   // createdBy: string;
-//   // updatedBy: string;
-//   // createdDate: string;
-//   // updatedDate: string;
-// }
-
-// export interface questionAnswer {
-//   questionId: number;
-//   questionType: string;
-//   questionAnswers: string[];
-//   questionAnswerIds: string[];
-// }
-
-// export interface questionAnswerData {
-//   subjectName: string;
-//   setNumber: number;
-//   quizAnswers: questionAnswer[];
-// }
-
-// export interface quizSubmitRequest {
-//   quizId: number;
-//   data: questionAnswerData[];
-// }
-
-//export default QuizDetails;
-// export interface createQuizRequest {
-//   version: string;
-//   subjectName: string;
-//   totalQuestionsCount: number;
-// }
-
 //for interviewer
 export interface selectedQuestionsCreateQuizWithTag {
   subjectName: string;
@@ -61,7 +26,6 @@ export interface createQuizResponse {
 }
 
 //for both used
-
 export interface subjectWiseQuizListResponse {
   subjectName: string;
   version: string;
@@ -84,7 +48,7 @@ export interface subjectwiseQuizAnswersResponse {
   questionAnswersIds: string[];
 }
 
-export interface submittedQuizAnswersResponse {
+export interface pastEvaluationsTableDataResponse {
   questionId: number;
   version: string;
   subjectName: string;
@@ -109,7 +73,7 @@ export interface submittedQuizResponse {
   createdBy: string;
   createdDate: string;
 }
-export interface submittedQuizDetailedInfoResponse {
+export interface submittedQuizIndividualSummaryResponse {
   questionId: number;
   subjectName: string;
   version: string;
@@ -142,4 +106,30 @@ export interface createdQuizTableColumns {
   minWidth?: number;
   align?: "right";
   format?: (value: number) => string;
+}
+
+// pastEvaluationsTableData: [],
+// pastEvaluationIndividualSummaryData: [],
+// pastEvaluationIndividualAnswersData: [],
+// subjectwiseQuestionSets: [],
+// createQuizSetWiseInfoBody: [],
+// searchText: "",
+// selectQuestions: [],
+// isReviewModalOpen: false,
+// isSelectQuestionModalOpen: false,
+// previewModalStates: {
+//   isPreviewModalOpen: false,
+//   previewQuestions: [],
+//   quizLink: "",
+// },
+// loadingStatus: {
+//   tableLoader: false,
+//   moadlLoader: false,
+//   cardLoader: false,
+//   buttonLoader: false,
+// },
+
+export interface interviewerSliceStates {
+  pastEvaluationsTableData: pastEvaluationsTableDataResponse[];
+  pastEvaluationIndividualSummaryData: submittedQuizIndividualSummaryResponse[];
 }
