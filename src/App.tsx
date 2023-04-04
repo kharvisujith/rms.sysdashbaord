@@ -16,7 +16,7 @@ const App = () => {
   history.location = useLocation();
 
   const [role, setRole] =
-    useState<"Interviewer" | "Subject Expert" | null>("Interviewer");
+    useState<"Interviewer" | "Subject Expert" | null>("Subject Expert");
 
   useEffect(() => {}, []);
   return (

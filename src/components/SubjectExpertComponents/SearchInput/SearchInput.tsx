@@ -6,10 +6,14 @@ import {
   InputAdornment,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import { searchInputProps } from "../../../Interface/SubjectExpert/SearchInput";
+import { useAppDispatch, useAppSelector } from "../../../Store/ConfigureStrore";
+import { handleSearchText } from "../../../Redux/subjectexpertSlice";
 
-const SearchInput = (props: searchInputProps) => {
-  const { setSearchText, text } = props;
+const SearchInput = (props: any) => {
+  const { from } = props;
+  const dispatch = useAppDispatch();
+  const { searchText } = useAppSelector((state: any) => state.subjectExpert);
+  // const { setSearchText } = props;
   return (
     <>
       <Box>
@@ -20,11 +24,17 @@ const SearchInput = (props: searchInputProps) => {
           }}
           variant="standard"
         >
-          <InputLabel htmlFor="search">{text}</InputLabel>
+          <InputLabel htmlFor="search">{"Search"}</InputLabel>
           <Input
             id="search"
             type="text"
-            onChange={(e: any) => setSearchText(e.target.value)}
+            onChange={(e: any) =>
+              // setSearchText(e.target.value)
+              dispatch({
+                type: "subjectExpert/handleSearchText",
+                payload: { value: e?.target.value, from: from },
+              })
+            }
             endAdornment={
               <InputAdornment position="end">
                 <SearchIcon />

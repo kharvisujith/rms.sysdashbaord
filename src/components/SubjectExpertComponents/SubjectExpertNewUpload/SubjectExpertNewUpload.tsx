@@ -10,7 +10,7 @@ import SelectSubject from "../SelectSubject/SelectSubject";
 
 const SubjectExpertNewUpload = () => {
   const [subject, setSubject] = useState<string>("ALL");
-  const [searchText, setSearchText] = useState<string>("");
+  //const [searchText, setSearchText] = useState<string>("");
 
   const [subjectWiseQuestionSets, setSubjectWiseQuestionSets] = useState<
     questionSets[]
@@ -45,15 +45,17 @@ const SubjectExpertNewUpload = () => {
             setSubject={setSubject}
             subjectwiseQuizDetails={subjectwiseQuizDetails}
           />
-          <SearchInput setSearchText={setSearchText} text={"search"} />
-          <SelectSubject subject={subject} setSubject={setSubject} />
+          <SearchInput from="newUpload" />
+          <SelectSubject
+          //subject={subject} setSubject={setSubject}
+          />
         </Box>
 
         <QuestionSetsTable
           subjectWiseQuestionSets={subjectWiseQuestionSets}
           // setSubjectWiseQuestionSets={setSubjectWiseQuestionSets}
           isQuizSetExists={isQuizSetExists}
-          searchText={searchText}
+          //  searchText={searchText}
         />
       </Box>
     </>

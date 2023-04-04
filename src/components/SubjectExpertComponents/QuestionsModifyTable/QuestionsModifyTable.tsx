@@ -14,7 +14,7 @@ import {
   Button,
   IconButton,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Order } from "../../../Interface/Interviewer/InterviewerInterface";
 import { getComparator } from "../../../utils/TableSortFunctions";
 import { QuestionsModifyTableColumns } from "./QuestionsModifyTableColumns";
@@ -22,20 +22,33 @@ import { QuestionsModifyTableColumns } from "./QuestionsModifyTableColumns";
 import DeleteIcon from "@mui/icons-material/Delete";
 import {
   deleteQuestionSet,
-  getSubjectwiseQuizAnswers,
+  getSubjectwiseQuestionSets,
+  getSubjectwiseQuiz,
 } from "../../../api/apiAgent";
 import ModifyQuestionsModal from "./ModifyQuestionsModal";
 import Swal from "sweetalert2";
 import { questionsForSetWithAnswers } from "../../../Interface/SubjectExpert/SubjectExpert";
+import { useAppDispatch, useAppSelector } from "../../../Store/ConfigureStrore";
+import {
+  deleteSelectedQuesitonSet,
+  fetchModifyModalQuestions,
+  fetchSubjectwiseQuestionSets,
+  handleModifyQuesitonModal,
+  setSearchTextToEmpty,
+} from "../../../Redux/subjectexpertSlice";
 
-const QuestionsModifyTable = (props: any) => {
-  const {
-    QuestionsModifyTableData,
-    subjectwiseQuizDetails,
-    isQuizSetExists,
-    searchText,
-    subject,
-  } = props;
+const QuestionsModifyTable = () => {
+  // const {
+  //  QuestionsModifyTableData,
+  //  subjectwiseQuizDetails,
+  // isQuizSetExists,
+  // searchText,
+  //  subject,
+  //} = props;
+
+  const dispatch = useAppDispatch();
+  const { searchText, questionsModifyTableData, loadingStatus, subject } =
+    useAppSelector((state: any) => state.subjectExpert);
 
   const [order, setOrder] = useState<Order>("asc");
   const [orderBy, setOrderBy] = useState<string>("version");
@@ -76,24 +89,31 @@ const QuestionsModifyTable = (props: any) => {
   const fetchSubjectwiseQuizQuestonAnswers = (
     questionDetails: questionsForSetWithAnswers
   ) => {
-    getSubjectwiseQuizAnswers(
-      questionDetails.version,
-      questionDetails.subjectName
-    )
-      .then((response: any) => {
-        setModifyQuestionsData(response.data);
-      })
-      .catch((error: any) => {
-        // setLoader(false);
-        console.log("error in subjwise answersapi");
-      });
+    // getSubjectwiseQuizAnswers(
+    //   questionDetails.version,
+    //   questionDetails.subjectName
+    // )
+    //   .then((response: any) => {
+    //     setModifyQuestionsData(response.data);
+    //   })
+    //   .catch((error: any) => {
+    //     // setLoader(false);
+    //     console.log("error in subjwise answersapi");
+    //   });
   };
-  const handleModifyQuestionsModal = (questionDetails: any) => {
-    fetchSubjectwiseQuizQuestonAnswers(questionDetails);
-    setOpenModifyQuestionsModal(true);
+  const handleModifyQuestionsModal = async (questionDetails: any) => {
+    try {
+      console.log("quesiotn detailsss is", questionDetails);
+      dispatch(handleModifyQuesitonModal());
+      await dispatch(fetchModifyModalQuestions(questionDetails));
+    } catch (error: any) {
+      console.log("Error in fetching data in modify modal");
+    }
+    //fetchSubjectwiseQuizQuestonAnswers(questionDetails);
+    // setOpenModifyQuestionsModal(true);
   };
 
-  const deleteSelectedQuestionSet = (row: any) => {
+  const deleteSelectedQuestionSet = async (row: any) => {
     Swal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
@@ -104,32 +124,60 @@ const QuestionsModifyTable = (props: any) => {
       confirmButtonText: "Yes, delete it!",
       showLoaderOnConfirm: true,
       customClass: "swal-alert",
-    }).then((result) => {
+    }).then(async (result) => {
       if (result.isConfirmed) {
-        deleteQuestionSet(row.version, row.subjectName)
-          .then((response: any) => {
-            subjectwiseQuizDetails(subject);
-            setLoader(false);
-            Swal.fire({
-              title: "Success",
-              text: "Deleted Succesfully",
-              timer: 3000,
-              icon: "success",
-              confirmButtonText: "Okay",
-              customClass: "swal-alert",
-            });
-          })
-          .catch((error: any) => {
-            setLoader(false);
-            Swal.fire({
-              title: "error",
-              text: "Failed to delete",
-              timer: 3000,
-              icon: "error",
-              confirmButtonText: "Okay",
-              customClass: "swal-alert",
-            });
+        try {
+          const response = await dispatch(deleteSelectedQuesitonSet(row));
+          console.log("response of delte is", response);
+
+          Swal.fire({
+            title: "Success",
+            text: "Deleted Succesfully",
+            timer: 3000,
+            icon: "success",
+            confirmButtonText: "Okay",
+            customClass: "swal-alert",
           });
+          if (response.meta.requestStatus === "fulfilled") {
+            await dispatch(fetchSubjectwiseQuestionSets());
+          }
+        } catch (error: any) {
+          Swal.fire({
+            title: "error",
+            text: "Failed to delete",
+            timer: 3000,
+            icon: "error",
+            confirmButtonText: "Okay",
+            customClass: "swal-alert",
+          });
+          console.log("Error in delete question set", error);
+        }
+
+        // deleteQuestionSet(row.version, row.subjectName)
+        //   .then((response: any) => {
+        //     getSubjectwiseQuiz(subject);
+        //     setLoader(false);
+        // Swal.fire({
+        //   title: "Success",
+        //   text: "Deleted Succesfully",
+        //   timer: 3000,
+        //   icon: "success",
+        //   confirmButtonText: "Okay",
+        //   customClass: "swal-alert",
+        // });
+        // }
+        // )
+        //   .catch((error: any) => {
+        //     setLoader(false);
+        // Swal.fire({
+        //   title: "error",
+        //   text: "Failed to delete",
+        //   timer: 3000,
+        //   icon: "error",
+        //   confirmButtonText: "Okay",
+        //   customClass: "swal-alert",
+        // });
+        //   });
       }
     });
   };
@@ -157,6 +205,13 @@ const QuestionsModifyTable = (props: any) => {
       </Button>
     );
   };
+
+  useEffect(() => {
+    dispatch({
+      type: "subjectExpert/setSearchTextToEmpty",
+      payload: { from: "home" },
+    });
+  }, []);
   return (
     <>
       <Box>
@@ -186,77 +241,75 @@ const QuestionsModifyTable = (props: any) => {
                   ))}
                 </TableRow>
               </TableHead>
-              {!loader ? (
-                <TableBody>
-                  {isQuizSetExists &&
-                    QuestionsModifyTableData.slice()
-                      .sort(getComparator(order, orderBy))
-                      .filter(
-                        (row: any) =>
-                          !searchText.length ||
-                          row.subjectName
-                            .toLowerCase()
-                            .includes(searchText.toLowerCase()) ||
-                          row.version
-                            .toString()
-                            .toLowerCase()
-                            .includes(searchText.toString().toLowerCase()) ||
-                          row.tag
-                            .toString()
-                            .toLowerCase()
-                            .includes(searchText.toString().toLowerCase()) ||
-                          row.createdBy
-                            ?.toLowerCase()
-                            .includes(searchText.toLowerCase())
-                      )
-                      .slice(
-                        page * rowsPerPage,
-                        page * rowsPerPage + rowsPerPage
-                      )
-                      .map((row: any, index: number) => {
-                        return (
-                          <TableRow
-                            hover
-                            role="checkbox"
-                            tabIndex={-1}
-                            key={index}
-                          >
-                            {QuestionsModifyTableColumns.map(
-                              (column: any, index: number) => {
-                                const value = row[column.id];
-                                return (
-                                  <TableCell key={index} align={column.align}>
-                                    {column.id === "view"
-                                      ? viewButton(row)
-                                      : column.id === "delete"
-                                      ? DeleteButton(row)
-                                      : value}
-                                  </TableCell>
-                                );
-                              }
-                            )}
-                          </TableRow>
-                        );
-                      })}
-                </TableBody>
-              ) : null}
+              {/* {!loadingStatus.tableLoader ? ( */}
+              <TableBody>
+                {questionsModifyTableData?.length > 0 &&
+                  questionsModifyTableData
+                    .slice()
+                    .sort(getComparator(order, orderBy))
+                    .filter(
+                      (row: any) =>
+                        !searchText?.home?.length ||
+                        row.subjectName
+                          .toLowerCase()
+                          .includes(searchText.home.toLowerCase()) ||
+                        row.version
+                          .toString()
+                          .toLowerCase()
+                          .includes(searchText.home.toString().toLowerCase()) ||
+                        row.tag
+                          .toString()
+                          .toLowerCase()
+                          .includes(searchText.home.toString().toLowerCase()) ||
+                        row.createdBy
+                          ?.toLowerCase()
+                          .includes(searchText.home.toLowerCase())
+                    )
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((row: any, index: number) => {
+                      return (
+                        <TableRow
+                          hover
+                          role="checkbox"
+                          tabIndex={-1}
+                          key={index}
+                        >
+                          {QuestionsModifyTableColumns.map(
+                            (column: any, index: number) => {
+                              const value = row[column.id];
+                              return (
+                                <TableCell key={index} align={column.align}>
+                                  {column.id === "view"
+                                    ? viewButton(row)
+                                    : column.id === "delete"
+                                    ? DeleteButton(row)
+                                    : value}
+                                </TableCell>
+                              );
+                            }
+                          )}
+                        </TableRow>
+                      );
+                    })}
+              </TableBody>
+              {/* ) : null} */}
             </Table>
           </TableContainer>
-          {loader ? (
+          {/* {loader ? (
             <Box className="table-loader">
               <CircularProgress />
             </Box>
-          ) : null}
-          {!isQuizSetExists && (
+          ) : null} */}
+          {questionsModifyTableData?.length < 1 && (
             <Box className="table-loader">
               <Typography>No Data Available</Typography>
             </Box>
           )}
-          {isQuizSetExists && (
+          {questionsModifyTableData?.length > 0 && (
             <TablePagination
               rowsPerPageOptions={[10, 25, 100]}
               component="div"
-              count={QuestionsModifyTableData.length}
+              count={questionsModifyTableData?.length}
               rowsPerPage={rowsPerPage}
               page={page}
               onPageChange={handleChangePage}
@@ -266,14 +319,14 @@ const QuestionsModifyTable = (props: any) => {
         </Paper>
       </Box>
       <ModifyQuestionsModal
-        openModifyQuestionsModal={openModifyQuestionsModal}
-        setOpenModifyQuestionsModal={setOpenModifyQuestionsModal}
-        modifyQuestionsData={modifyQuestionsData}
-        setModifyQuestionsData={setModifyQuestionsData}
-        fetchSubjectwiseQuizQuestonAnswers={fetchSubjectwiseQuizQuestonAnswers}
-        subjectwiseQuizDetails={subjectwiseQuizDetails}
-        //   subject={subject}
-        //  currentTableRowDetails={currentTableRowDetails}
+      //   openModifyQuestionsModal={openModifyQuestionsModal}
+      //  setOpenModifyQuestionsModal={setOpenModifyQuestionsModal}
+      //    modifyQuestionsData={modifyQuestionsData}
+      //  setModifyQuestionsData={setModifyQuestionsData}
+      // fetchSubjectwiseQuizQuestonAnswers={fetchSubjectwiseQuizQuestonAnswers}
+      // subjectwiseQuizDetails={subjectwiseQuizDetails}
+      //   subject={subject}
+      //  currentTableRowDetails={currentTableRowDetails}
       />
     </>
   );

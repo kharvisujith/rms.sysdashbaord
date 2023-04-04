@@ -21,8 +21,8 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import {
+  getQuestionAnswersForQuestionSet,
   getSubjectwiseQuiz,
-  getSubjectwiseQuizAnswers,
 } from "../../../api/apiAgent";
 import {
   Order,
@@ -35,9 +35,13 @@ import {
 import { getComparator } from "../../../utils/TableSortFunctions";
 import { QuestionSetscolumns } from "./QuestionSetsTableColumn";
 import ViewQuestionsModal from "./ViewQuestionModal";
+import { useAppDispatch, useAppSelector } from "../../../Store/ConfigureStrore";
 
 const QuestionSetsTable = (props: any) => {
-  const { subjectWiseQuestionSets, isQuizSetExists, searchText } = props;
+  const { subjectWiseQuestionSets, isQuizSetExists } = props;
+
+  const dispatch = useAppDispatch();
+  const { searchText } = useAppSelector((state: any) => state.subjectExpert);
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -77,7 +81,7 @@ const QuestionSetsTable = (props: any) => {
 
   const openViewQuestions = (row: any) => {
     setOpenViewQuestionsModal(true);
-    getSubjectwiseQuizAnswers(row.version, row.subjectName)
+    getQuestionAnswersForQuestionSet(row.version, row.subjectName)
       .then((response: any) => {
         setViewQuestions(response.data);
         // setLoader(false);
@@ -99,6 +103,13 @@ const QuestionSetsTable = (props: any) => {
       </Button>
     );
   };
+
+  useEffect(() => {
+    dispatch({
+      type: "subjectExpert/setSearchTextToEmpty",
+      payload: { from: "newUpload" },
+    });
+  }, []);
 
   return (
     <>
@@ -137,27 +148,31 @@ const QuestionSetsTable = (props: any) => {
                       .sort(getComparator(order, orderBy))
                       .filter(
                         (row: questionSets) =>
-                          !searchText.length ||
+                          !searchText.newUpload.length ||
                           row.subjectName
                             .toLowerCase()
-                            .includes(searchText.toLowerCase()) ||
+                            .includes(searchText.newUpload.toLowerCase()) ||
                           row.version
                             .toString()
                             .toLowerCase()
-                            .includes(searchText.toString().toLowerCase()) ||
+                            .includes(
+                              searchText.newUpload.toString().toLowerCase()
+                            ) ||
                           row.totalQuestionsCount
                             .toString()
                             .toLowerCase()
-                            .includes(searchText.toString().toLowerCase()) ||
+                            .includes(
+                              searchText.newUpload.toString().toLowerCase()
+                            ) ||
                           row.createdBy
                             ?.toLowerCase()
-                            .includes(searchText.toLowerCase()) ||
+                            .includes(searchText.newUpload.toLowerCase()) ||
                           row.updatedBy
                             ?.toLowerCase()
-                            .includes(searchText.toLowerCase()) ||
+                            .includes(searchText.newUpload.toLowerCase()) ||
                           row.createdDate
                             ?.toLowerCase()
-                            .includes(searchText.toLowerCase())
+                            .includes(searchText.newUpload.toLowerCase())
                       )
                       .slice(
                         page * rowsPerPage,

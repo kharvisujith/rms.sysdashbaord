@@ -9,8 +9,8 @@ import { IconButton } from "@material-ui/core";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import {
+  apiAgent,
   deleteQuestionsById,
-  getSubjectwiseQuizAnswers,
   updateQuestion,
 } from "../../../api/apiAgent";
 import Swal from "sweetalert2";
@@ -19,21 +19,36 @@ import {
   UpdateQuestionsSet,
 } from "../../../Interface/SubjectExpert/SubjectExpert";
 import EditPopover from "./EditPopover/EditPopover";
+import { useAppDispatch, useAppSelector } from "../../../Store/ConfigureStrore";
+import {
+  closeModifyQuestionModal,
+  deleteQuestion,
+  fetchSubjectwiseQuestionSets,
+  handleModifyQuesitonModal,
+} from "../../../Redux/subjectexpertSlice";
 
-const ModifyQuestionsModal = (props: any) => {
+const ModifyQuestionsModal = () => {
+  // const {
+  //   openModifyQuestionsModal,
+  //   setOpenModifyQuestionsModal,
+  //   modifyQuestionsData,
+  //   setModifyQuestionsData,
+  //   fetchSubjectwiseQuizQuestonAnswers,
+  //   subjectwiseQuizDetails,
+  //   //   subject,
+  //   //   orignalData,
+  //   //  currentTableRowDetails,
+  // } = props;
+
+  const dispatch = useAppDispatch();
   const {
-    openModifyQuestionsModal,
-    setOpenModifyQuestionsModal,
-    modifyQuestionsData,
-    setModifyQuestionsData,
-    fetchSubjectwiseQuizQuestonAnswers,
-    subjectwiseQuizDetails,
-    //   subject,
-    //   orignalData,
-    //  currentTableRowDetails,
-  } = props;
+    searchText,
+    modifyModalQuestions,
+    loadingStatus,
+    isModifyQuestionsModalOpen,
+  } = useAppSelector((state: any) => state.subjectExpert);
 
-  const [searchText, setSearchText] = useState<string>("");
+  //const [searchText, setSearchText] = useState<string>("");
   const [anchorElEdit, setAnchorElEdit] =
     useState<HTMLButtonElement | null>(null);
 
@@ -73,8 +88,9 @@ const ModifyQuestionsModal = (props: any) => {
   };
 
   const handleCloseEditModal = () => {
+    dispatch(closeModifyQuestionModal());
     clearEditData();
-    setOpenModifyQuestionsModal(false);
+    // dispatch(handleModifyQuesitonModal());
   };
 
   const handleDeleteQuestion = async (questionDetails: any) => {
@@ -91,15 +107,8 @@ const ModifyQuestionsModal = (props: any) => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const deleteResponse = await deleteQuestionsById(
-            questionDetails.questionId,
-            questionDetails.version,
-            questionDetails.subjectName
-          );
-          if (deleteResponse.status !== 200) {
-            throw new Error(`Delete API error:: ${deleteResponse.status}`);
-          }
-          clearEditData();
+          await dispatch(deleteQuestion(questionDetails));
+          //   clearEditData();
           Swal.fire({
             title: "Success",
             text: "Deleted Succesfully",
@@ -108,29 +117,35 @@ const ModifyQuestionsModal = (props: any) => {
             customClass: "swal-alert",
           });
 
-          const fetchQuestionResponse = await getSubjectwiseQuizAnswers(
-            questionDetails.version,
-            questionDetails.subjectName
-          );
-          if (fetchQuestionResponse.status === 204) {
-            handleCloseEditModal();
-            setModifyQuestionsData(fetchQuestionResponse.data);
-          } else if (fetchQuestionResponse.status !== 200) {
-            throw new Error(
-              `Fetch questions API error:: ${fetchQuestionResponse.status}`
+          const response =
+            await apiAgent.subjectExpert.getQuestionAnswersForQuestionSet(
+              questionDetails.version,
+              questionDetails.subjectName
             );
+          console.log(
+            "response in after dlete get quesiton is is",
+            response,
+            response.data
+          );
+
+          if (response.status === 204) {
+            handleCloseEditModal();
+            dispatch(fetchSubjectwiseQuestionSets());
+          } else if (response.status === 200) {
+            dispatch({
+              type: "subjectExpert/setModalQuestions",
+              payload: { value: response.data },
+            });
           }
-          setModifyQuestionsData(fetchQuestionResponse.data);
-          subjectwiseQuizDetails();
         } catch (error: any) {
           console.log("Error", error);
-          Swal.fire({
-            title: "error",
-            text: "Failed to delete",
-            icon: "error",
-            confirmButtonText: "Okay",
-            customClass: "swal-alert",
-          });
+          // Swal.fire({
+          //   title: "error",
+          //   text: "Failed to delete",
+          //   icon: "error",
+          //   confirmButtonText: "Okay",
+          //   customClass: "swal-alert",
+          // });
         }
       }
     });
@@ -139,7 +154,7 @@ const ModifyQuestionsModal = (props: any) => {
   const confirmSave = () => {
     Swal.fire({
       title: "Are you sure?",
-      text: `Modified ${editedQuestions?.updateQuizDetails?.length} Questions out of ${modifyQuestionsData?.length}`,
+      text: `Modified ${editedQuestions?.updateQuizDetails?.length} Questions out of ${modifyModalQuestions?.length}`,
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
@@ -177,54 +192,57 @@ const ModifyQuestionsModal = (props: any) => {
   };
 
   useEffect(() => {
-    if (modifyQuestionsData?.length > 0) {
-      const newArr = JSON.parse(JSON.stringify(modifyQuestionsData));
+    if (modifyModalQuestions?.length > 0) {
+      const newArr = JSON.parse(JSON.stringify(modifyModalQuestions));
       setTempQuestionData([...newArr]);
     }
-  }, [modifyQuestionsData]);
+  }, [modifyModalQuestions]);
+
+  useEffect(() => {
+    dispatch({
+      type: "subjectExpert/setSearchTextToEmpty",
+      payload: { from: "modifyModal" },
+    });
+  }, []);
 
   return (
     <>
       <ReactModal
-        isOpen={openModifyQuestionsModal}
+        isOpen={isModifyQuestionsModalOpen}
         contentLabel="Minimal Modal Example"
         ariaHideApp={false}
         style={customStyles}
       >
         <>
-          <Box
-            // className="modal-container"
-            //className="modal-content-container"
-            className="modal-content-container-subparts"
-          >
+          <Box className="modal-content-container-subparts">
             <>
               <Box>
-                {modifyQuestionsData?.length > 0 && (
+                {modifyModalQuestions?.length > 0 && (
                   <Box>
                     <Box className="modal-headings-container">
                       <Box className="headings">
                         <Typography className="topic">Subject : </Typography>
                         <Typography>
-                          {modifyQuestionsData[0]?.subjectName}
+                          {modifyModalQuestions[0]?.subjectName}
                         </Typography>
                       </Box>
                       <Box className="headings">
                         <Typography className="topic">
                           Description :{" "}
                         </Typography>
-                        <Typography>{modifyQuestionsData[0]?.tag}</Typography>
+                        <Typography>{modifyModalQuestions[0]?.tag}</Typography>
                       </Box>
                       <Box className="headings">
                         <Typography className="topic">Version : </Typography>
                         <Typography>
-                          {modifyQuestionsData[0]?.version}
+                          {modifyModalQuestions[0]?.version}
                         </Typography>
                       </Box>
                       <Box className="headings">
                         <Typography className="topic">
                           TotalQuestions :
                         </Typography>
-                        <Typography>{modifyQuestionsData.length}</Typography>
+                        <Typography>{modifyModalQuestions.length}</Typography>
                       </Box>
                     </Box>
                     <LinearProgress
@@ -238,21 +256,18 @@ const ModifyQuestionsModal = (props: any) => {
 
               <Box className="modal-body">
                 <Box>
-                  <SearchInput
-                    setSearchText={setSearchText}
-                    text={"Search in Questions"}
-                  />
+                  <SearchInput from={"modifyModal"} />
                 </Box>
                 <Box>
-                  {modifyQuestionsData?.length > 0 &&
-                    modifyQuestionsData
+                  {modifyModalQuestions?.length > 0 &&
+                    modifyModalQuestions
                       .slice()
                       .filter(
                         (row: questionsForSetWithAnswers) =>
-                          !searchText.length ||
+                          !searchText?.modifyModal?.length ||
                           row.question
                             .toLowerCase()
-                            .includes(searchText.toLowerCase())
+                            .includes(searchText.modifyModal.toLowerCase())
                       )
                       .map(
                         (
@@ -318,7 +333,7 @@ const ModifyQuestionsModal = (props: any) => {
                 )}
               </Box>
 
-              <EditPopover
+              {/* <EditPopover
                 anchorElEdit={anchorElEdit}
                 setAnchorElEdit={setAnchorElEdit}
                 handleCloseEdit={handleCloseEdit}
@@ -328,14 +343,14 @@ const ModifyQuestionsModal = (props: any) => {
                 setEditedQuestions={setEditedQuestions}
                 tempQuestionData={tempQuestionData}
                 setTempQuestionData={setTempQuestionData}
-                modifyQuestionsData={modifyQuestionsData}
+                //  modifyQuestionsData={modifyQuestionsData}
                 //  setModifyQuestionsData={setModifyQuestionsData}
                 // orignalData={orignalData}
                 editedQuestionNumbers={editedQuestionNumbers}
                 setEditedQuestionNumbers={setEditedQuestionNumbers}
                 validationError={validationError}
                 setValidationError={setValidationError}
-              />
+              /> */}
             </>
           </Box>
           <Box

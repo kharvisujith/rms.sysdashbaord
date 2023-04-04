@@ -1,3 +1,5 @@
+import { subjectWiseQuizListResponse } from "../Interviewer/InterviewerInterface";
+
 export interface QuesitonSetsTableColumns {
   id:
     | "subjectName"
@@ -51,4 +53,12 @@ export interface UpdateQuestionsSet {
   subjectName: string;
   tag: string;
   updateQuizDetails: questionForUpdate[];
+}
+
+export interface subjectExpertSliceState {
+  searchText: string;
+  subject: string;
+  questionsModifyTableData: subjectWiseQuizListResponse[]; // this should be moved to common
+  isModifyQuestionsModalOpen: boolean;
+  modifyModalQuestions: questionsForSetWithAnswers;
 }

@@ -9,34 +9,34 @@ import SearchInput from "../SearchInput/SearchInput";
 import QuestionsModifyTable from "../QuestionsModifyTable/QuestionsModifyTable";
 
 const SubjectExpertHome = () => {
-  const [subject, setSubject] = useState<string>("ALL");
-  const [subjectWiseQuestionSets, setSubjectWiseQuestionSets] = useState<
-    subjectWiseQuizListResponse[]
-  >([]);
-  const [isQuizSetExists, setIsQuizSetExists] = useState<boolean>(true);
-  const [searchText, setSearchText] = useState<string>("");
+  // const [subject, setSubject] = useState<string>("ALL");
+  // const [subjectWiseQuestionSets, setSubjectWiseQuestionSets] = useState<
+  //   subjectWiseQuizListResponse[]
+  // >([]);
+  //const [isQuizSetExists, setIsQuizSetExists] = useState<boolean>(true);
+  // const [searchText, setSearchText] = useState<string>("");
 
-  const subjectwiseQuizDetails = async () => {
-    // setLoader(true);
-    getSubjectwiseQuiz(subject === "ALL" ? "" : subject)
-      .then((response: any) => {
-        // setLoader(false);
-        if (response.status === 204) {
-          setIsQuizSetExists(false);
-        } else {
-          setSubjectWiseQuestionSets(response.data);
-          setIsQuizSetExists(true);
-        }
-      })
-      .catch((error: any) => {
-        console.log("error in subjwiseapi");
-        //     setLoader(false);
-      });
-  };
+  // const subjectwiseQuizDetails = async () => {
+  // setLoader(true);
+  //  getSubjectwiseQuiz(subject === "ALL" ? "" : subject)
+  //     .then((response: any) => {
+  //       // setLoader(false);
+  //       if (response.status === 204) {
+  //         setIsQuizSetExists(false);
+  //       } else {
+  //         setSubjectWiseQuestionSets(response.data);
+  //         setIsQuizSetExists(true);
+  //       }
+  //     })
+  //     .catch((error: any) => {
+  //       console.log("error in subjwiseapi");
+  //       //     setLoader(false);
+  //     });
+  // };
 
-  useEffect(() => {
-    subjectwiseQuizDetails();
-  }, [subject]);
+  // useEffect(() => {
+  //   subjectwiseQuizDetails();
+  // }, [subject]);
   return (
     <>
       <Box className="container">
@@ -54,17 +54,19 @@ const SubjectExpertHome = () => {
             </Button>
           </Box>
 
-          <SearchInput setSearchText={setSearchText} text={"search"} />
-          <SelectSubject subject={subject} setSubject={setSubject} />
+          <SearchInput from={"home"} />
+          <SelectSubject
+          // subject={subject} setSubject={setSubject}
+          />
         </Box>
 
         <Box>
           <QuestionsModifyTable
-            QuestionsModifyTableData={subjectWiseQuestionSets}
-            subjectwiseQuizDetails={subjectwiseQuizDetails}
-            subject={subject}
-            isQuizSetExists={isQuizSetExists}
-            searchText={searchText}
+          //  QuestionsModifyTableData={subjectWiseQuestionSets}
+          //  subjectwiseQuizDetails={subjectwiseQuizDetails}
+          //  subject={subject}
+          //  isQuizSetExists={isQuizSetExists}
+          // searchText={searchText}
           />
         </Box>
       </Box>

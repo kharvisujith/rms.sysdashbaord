@@ -27,7 +27,6 @@ import {
   subjectWiseQuizListResponse,
 } from "../../../../Interface/Interviewer/InterviewerInterface";
 import { getComparator } from "../../../../utils/TableSortFunctions";
-import { getSubjectwiseQuizAnswers } from "../../../../api/apiAgent";
 import {
   useAppDispatch,
   useAppSelector,

@@ -78,9 +78,12 @@ export const getSubjectwiseQuiz = (subject: string) => {
 };
 
 // this is dup, changed name -> setSubject
-export const getSubjectwiseQuizAnswers = (version: any, subject: any) => {
+export const getQuestionAnswersForQuestionSet = (
+  version: any,
+  subjectName: any
+) => {
   return axiosClient.get(
-    `quiz/SubjectExpert/questions?version=${version}&subject=${subject}`
+    `quiz/SubjectExpert/questions?version=${version}&subject=${subjectName}`
   );
 };
 // export const submitQuiz = (quizAnswers: any) => {
@@ -182,6 +185,7 @@ export const filterQuestionsSets = (requestBody: string[]) => {
   });
 };
 
+//for subjectexpert
 export const deleteQuestionSet = (version: string, subject: string) => {
   return axiosClient.delete(
     `quiz/SubjectExpert?version=${version}&subject=${subject}`
@@ -189,12 +193,13 @@ export const deleteQuestionSet = (version: string, subject: string) => {
 };
 
 export const deleteQuestionsById = (
-  questionId: number,
-  version: string,
-  subject: string
+  // questionId: number,
+  // version: string,
+  // subject: string
+  questionDetails: any
 ) => {
   return axiosClient.delete(
-    `quiz/SubjectExpert/${questionId}?&version=${version}&subject=${subject}`
+    `quiz/SubjectExpert/${questionDetails.questionId}?&version=${questionDetails.version}&subject=${questionDetails.subjectName}`
   );
 };
 
@@ -221,16 +226,17 @@ export const apiAgent = {
     getPastEvaluationsIndividualSummary: getPastEvaluationsIndividualSummary,
     getPreviewQuestionsForCreateQuiz: getPreviewQuestionsForCreateQuiz,
     filterQuestionsSets: filterQuestionsSets,
-    deleteQuestionSet: deleteQuestionSet,
-    deleteQuestionsById: deleteQuestionsById,
+    // deleteQuestionsById: deleteQuestionsById,
     getSubjectwiseQuestionSets: getSubjectwiseQuestionSets,
     getQuestionAnswersForSetAndSubject: getQuestionAnswersForSetAndSubject,
   },
   subjectExpert: {
     downnLoadExcel: downnLoadExcel,
     upLoadExcel: upLoadExcel,
-    getSubjectwiseQuiz: getSubjectwiseQuiz,
-    getSubjectwiseQuizAnswers: getSubjectwiseQuizAnswers,
+    getSubjectwiseQuestionSets: getSubjectwiseQuestionSets,
+    getQuestionAnswersForQuestionSet: getQuestionAnswersForQuestionSet,
+    deleteQuestionSet: deleteQuestionSet,
+    deleteQuestionsById: deleteQuestionsById,
     updateQuestion: updateQuestion,
   },
 };
