@@ -6,8 +6,13 @@ import { Box, Typography } from "@mui/material";
 import { LinearProgress } from "@mui/material";
 import "./AllQuestionsAnswers.style.scss";
 import { questionsForSetWithAnswers } from "../../../Interface/SubjectExpert/SubjectExpert";
+import { useAppSelector } from "../../../Store/ConfigureStrore";
 const AllQuestionsAnswers = (props: any) => {
-  const { viewQuestions } = props;
+  // const { viewQuestions } = props;
+
+  const {
+    viewQuestionModalState: { isViewQuestionModalOpen, viewQuestions },
+  } = useAppSelector((state: any) => state.subjectExpert);
 
   return (
     <>
@@ -23,7 +28,7 @@ const AllQuestionsAnswers = (props: any) => {
         <LinearProgress variant={"determinate"} color={"primary"} value={0} />
       </Box>
       <Box className="questions-body">
-        {viewQuestions &&
+        {viewQuestions.length > 0 &&
           viewQuestions?.map(
             (question: questionsForSetWithAnswers, index: number) => {
               switch (question.questionType) {

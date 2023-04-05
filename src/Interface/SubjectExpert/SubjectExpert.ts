@@ -61,4 +61,15 @@ export interface subjectExpertSliceState {
   questionsModifyTableData: subjectWiseQuizListResponse[]; // this should be moved to common
   isModifyQuestionsModalOpen: boolean;
   modifyModalQuestions: questionsForSetWithAnswers;
+  editQuestionStates: {
+    anchorElEdit: HTMLButtonElement | null;
+    editQuestionDetails: questionsForSetWithAnswers;
+    editedQuestions: UpdateQuestionsSet | null;
+    tempQuestionData: questionsForSetWithAnswers[] | [];
+    editedQuestionNumbers: any[];
+    viewQuestionModalState: {
+      isViewQuestionModalOpen: boolean;
+      viewQuestions: questionSets;
+    };
+  };
 }

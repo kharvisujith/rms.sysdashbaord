@@ -21,10 +21,12 @@ import {
 import EditPopover from "./EditPopover/EditPopover";
 import { useAppDispatch, useAppSelector } from "../../../Store/ConfigureStrore";
 import {
+  clearEditData,
   closeModifyQuestionModal,
   deleteQuestion,
   fetchSubjectwiseQuestionSets,
   handleModifyQuesitonModal,
+  updateEditedQuestion,
 } from "../../../Redux/subjectexpertSlice";
 
 const ModifyQuestionsModal = () => {
@@ -46,6 +48,11 @@ const ModifyQuestionsModal = () => {
     modifyModalQuestions,
     loadingStatus,
     isModifyQuestionsModalOpen,
+    editQuestionStates: {
+      editedQuestions,
+      editedQuestionNumbers,
+      tempQuestionData,
+    },
   } = useAppSelector((state: any) => state.subjectExpert);
 
   //const [searchText, setSearchText] = useState<string>("");
@@ -55,16 +62,16 @@ const ModifyQuestionsModal = () => {
   const [editQuestionDetails, setEditQuestionDetails] =
     useState<questionsForSetWithAnswers | null>();
 
-  const [tempQuestionData, setTempQuestionData] = useState<
-    questionsForSetWithAnswers[] | []
-  >([]);
+  // const [tempQuestionData, setTempQuestionData] = useState<
+  //   questionsForSetWithAnswers[] | []
+  // >([]);
 
-  const [editedQuestions, setEditedQuestions] =
-    useState<UpdateQuestionsSet | null>();
+  // const [editedQuestions, setEditedQuestions] =
+  //   useState<UpdateQuestionsSet | null>();
 
-  const [editedQuestionNumbers, setEditedQuestionNumbers] = useState<
-    any[] | []
-  >([]);
+  // const [editedQuestionNumbers, setEditedQuestionNumbers] = useState<
+  //   any[] | []
+  // >([]);
 
   const [validationError, setValidationError] = useState<any[]>([]);
 
@@ -74,23 +81,29 @@ const ModifyQuestionsModal = () => {
 
   const handleOpenEditPopover = (
     event: any,
-    questiondetails: questionsForSetWithAnswers
+    questionDetails: questionsForSetWithAnswers
   ) => {
-    setEditQuestionDetails(questiondetails);
-    setAnchorElEdit(event.currentTarget);
+    console.log("inside open function");
+    // setEditQuestionDetails(questiondetails);
+    // setAnchorElEdit(event.currentTarget);
+    dispatch({
+      type: "subjectExpert/openEditPopover",
+      payload: { event: event, questionDetails: questionDetails },
+    });
   };
 
-  const clearEditData = () => {
-    setTempQuestionData([]);
-    setEditedQuestions(null);
-    setEditedQuestionNumbers([]);
-    setValidationError([]);
-  };
+  // const clearEditData = () => {
+  //   // setTempQuestionData([]);
+  //   // setEditedQuestions(null);
+  //   // setEditedQuestionNumbers([]);
+  //   setValidationError([]);
+  //   dispatch(clearEditData())
+  // };
 
   const handleCloseEditModal = () => {
+    setValidationError([]);
     dispatch(closeModifyQuestionModal());
-    clearEditData();
-    // dispatch(handleModifyQuesitonModal());
+    dispatch(clearEditData());
   };
 
   const handleDeleteQuestion = async (questionDetails: any) => {
@@ -122,16 +135,12 @@ const ModifyQuestionsModal = () => {
               questionDetails.version,
               questionDetails.subjectName
             );
-          console.log(
-            "response in after dlete get quesiton is is",
-            response,
-            response.data
-          );
 
           if (response.status === 204) {
             handleCloseEditModal();
-            dispatch(fetchSubjectwiseQuestionSets());
+            await dispatch(fetchSubjectwiseQuestionSets());
           } else if (response.status === 200) {
+            clearEditData();
             dispatch({
               type: "subjectExpert/setModalQuestions",
               payload: { value: response.data },
@@ -139,13 +148,6 @@ const ModifyQuestionsModal = () => {
           }
         } catch (error: any) {
           console.log("Error", error);
-          // Swal.fire({
-          //   title: "error",
-          //   text: "Failed to delete",
-          //   icon: "error",
-          //   confirmButtonText: "Okay",
-          //   customClass: "swal-alert",
-          // });
         }
       }
     });
@@ -162,31 +164,33 @@ const ModifyQuestionsModal = () => {
       confirmButtonText: "Yes, Update",
       showLoaderOnConfirm: true,
       customClass: "swal-alert",
-    }).then((result) => {
+    }).then(async (result) => {
       if (result.isConfirmed) {
-        updateQuestion(editedQuestions!)
-          .then((response: any) => {
-            Swal.fire({
-              title: "Success",
-              text: "Updated Succesfully",
-              icon: "success",
-              confirmButtonText: "Okay",
-              customClass: "swal-alert",
-            });
-          })
-          .then(() => {
-            handleCloseEditModal();
-          })
-          .catch((error: any) => {
-            console.log("error in questions updated");
-            Swal.fire({
-              title: "error",
-              text: "Failed to delete",
-              icon: "error",
-              confirmButtonText: "Okay",
-              customClass: "swal-alert",
-            });
-          });
+        await dispatch(updateEditedQuestion(editedQuestions));
+        setValidationError([]);
+        // updateQuestion(editedQuestions!)
+        //   .then((response: any) => {
+        //     Swal.fire({
+        //       title: "Success",
+        //       text: "Updated Succesfully",
+        //       icon: "success",
+        //       confirmButtonText: "Okay",
+        //       customClass: "swal-alert",
+        //     });
+        //   })
+        //   .then(() => {
+        //     handleCloseEditModal();
+        //   })
+        //   .catch((error: any) => {
+        //     console.log("error in questions updated");
+        //     Swal.fire({
+        //       title: "error",
+        //       text: "Failed to delete",
+        //       icon: "error",
+        //       confirmButtonText: "Okay",
+        //       customClass: "swal-alert",
+        //     });
+        //   });
       }
     });
   };
@@ -194,7 +198,12 @@ const ModifyQuestionsModal = () => {
   useEffect(() => {
     if (modifyModalQuestions?.length > 0) {
       const newArr = JSON.parse(JSON.stringify(modifyModalQuestions));
-      setTempQuestionData([...newArr]);
+      // setTempQuestionData([...newArr]);
+
+      dispatch({
+        type: "subjectExpert/setTempQuestionData",
+        payload: { data: newArr },
+      });
     }
   }, [modifyModalQuestions]);
 
@@ -333,24 +342,21 @@ const ModifyQuestionsModal = () => {
                 )}
               </Box>
 
-              {/* <EditPopover
-                anchorElEdit={anchorElEdit}
-                setAnchorElEdit={setAnchorElEdit}
-                handleCloseEdit={handleCloseEdit}
-                editQuestionDetails={editQuestionDetails}
-                //   setEditQuestionDetails={setEditQuestionDetails}
-                editedQuestions={editedQuestions}
-                setEditedQuestions={setEditedQuestions}
-                tempQuestionData={tempQuestionData}
-                setTempQuestionData={setTempQuestionData}
-                //  modifyQuestionsData={modifyQuestionsData}
-                //  setModifyQuestionsData={setModifyQuestionsData}
-                // orignalData={orignalData}
-                editedQuestionNumbers={editedQuestionNumbers}
-                setEditedQuestionNumbers={setEditedQuestionNumbers}
-                validationError={validationError}
-                setValidationError={setValidationError}
-              /> */}
+              <EditPopover
+              // anchorElEdit={anchorElEdit}
+              // setAnchorElEdit={setAnchorElEdit}
+              // handleCloseEdit={handleCloseEdit}
+              // editQuestionDetails={editQuestionDetails}
+              //   setEditQuestionDetails={setEditQuestionDetails}
+              //  editedQuestions={editedQuestions}
+              //  setEditedQuestions={setEditedQuestions}
+              //  tempQuestionData={tempQuestionData}
+              //  setTempQuestionData={setTempQuestionData}
+              //   editedQuestionNumbers={editedQuestionNumbers}
+              //  setEditedQuestionNumbers={setEditedQuestionNumbers}
+              // validationError={validationError}
+              // setValidationError={setValidationError}
+              />
             </>
           </Box>
           <Box

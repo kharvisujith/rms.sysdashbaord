@@ -18,26 +18,49 @@ import {
 } from "../../../../Interface/SubjectExpert/SubjectExpert";
 import { optionIds } from "../../../../utils/Utils";
 import "./EditPopver.styles.scss";
+import {
+  useAppDispatch,
+  useAppSelector,
+} from "../../../../Store/ConfigureStrore";
+import {
+  closeEditPopover,
+  setTempQuestionData,
+} from "../../../../Redux/subjectexpertSlice";
 
 const EditPopover = (props: any) => {
+  // const {
+  // anchorElEdit,
+  // setAnchorElEdit,
+  // handleCloseEdit,
+  // editQuestionDetails,
+  // setEditQuestionDetails,
+  // editedQuestions,
+  // setEditedQuestions,
+  // tempQuestionData,
+  // setTempQuestionData,
+  // questionIndexInTempData,
+  // setQuestionIndexInTempData,
+  // modifyQuestionsData,
+  // setModifyQuestionsData,
+  // orignalData,
+  // editedQuestionNumbers,
+  // setEditedQuestionNumbers,
+  // } = props;
+
+  const dispatch = useAppDispatch();
   const {
-    anchorElEdit,
-    setAnchorElEdit,
-    handleCloseEdit,
-    editQuestionDetails,
-    setEditQuestionDetails,
-    editedQuestions,
-    setEditedQuestions,
-    tempQuestionData,
-    setTempQuestionData,
-    questionIndexInTempData,
-    setQuestionIndexInTempData,
-    modifyQuestionsData,
-    setModifyQuestionsData,
-    orignalData,
-    editedQuestionNumbers,
-    setEditedQuestionNumbers,
-  } = props;
+    modifyModalQuestions,
+    editQuestionStates: {
+      tempQuestionData,
+      editQuestionDetails,
+      editedQuestions,
+      editedQuestionNumbers,
+    },
+  } = useAppSelector((state: any) => state.subjectExpert);
+
+  const {
+    editQuestionStates: { anchorElEdit },
+  } = useAppSelector((state: any) => state.subjectExpert);
 
   const [validationError, setValidationError] = useState<any[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
@@ -74,6 +97,8 @@ const EditPopover = (props: any) => {
           } else {
             const newValArr = [...validationError];
             newValArr[existingIndex].questionType = true;
+            // this line I added extra
+            setValidationError(newValArr);
           }
         }
 
@@ -159,21 +184,54 @@ const EditPopover = (props: any) => {
           HandlValidationsChange("questionType-remove");
         }
 
-        newArr[currentQuestionIndex].questionType = event.target.value;
+        // newArr[currentQuestionIndex].questionType = event.target.value;
 
-        setTempQuestionData(newArr);
+        // const newQuestion = {
+        //   ...newArr[currentQuestionIndex],
+        //   questionType: event.target.value,
+        // };
+        newArr[currentQuestionIndex] = {
+          ...newArr[currentQuestionIndex],
+          questionType: event.target.value,
+        };
+
+        // setTempQuestionData(newArr);
+        dispatch({
+          type: "subjectExpert/setTempQuestionData",
+          payload: { data: newArr },
+        });
 
         break;
 
       case "question":
-        newArr[currentQuestionIndex].question = event.target.value;
-        setTempQuestionData(newArr);
+        // newArr[currentQuestionIndex].question = event.target.value;
+
+        newArr[currentQuestionIndex] = {
+          ...newArr[currentQuestionIndex],
+          question: event.target.value,
+        };
+
+        dispatch({
+          type: "subjectExpert/setTempQuestionData",
+          payload: { data: newArr },
+        });
+        //  setTempQuestionData(newArr);
+
         break;
 
       case "questionOptions":
-        newArr[currentQuestionIndex].questionOptions =
-          event.target.value.split(",");
-        setTempQuestionData(newArr);
+        // newArr[currentQuestionIndex].questionOptions =
+        //   event.target.value.split(",");
+
+        newArr[currentQuestionIndex] = {
+          ...newArr[currentQuestionIndex],
+          questionOptions: event.target.value.split(","),
+        };
+        dispatch({
+          type: "subjectExpert/setTempQuestionData",
+          payload: { data: newArr },
+        });
+        //  setTempQuestionData(newArr);
         break;
 
       case "questionAnswers":
@@ -200,9 +258,17 @@ const EditPopover = (props: any) => {
           isValidationError = true;
         }
 
-        newArr[currentQuestionIndex].questionAnswers =
-          event.target.value.split(",");
-        setTempQuestionData(newArr);
+        // newArr[currentQuestionIndex].questionAnswers =
+        //   event.target.value.split(",");
+        newArr[currentQuestionIndex] = {
+          ...newArr[currentQuestionIndex],
+          questionAnswers: event.target.value.split(","),
+        };
+        dispatch({
+          type: "subjectExpert/setTempQuestionData",
+          payload: { data: newArr },
+        });
+        //  setTempQuestionData(newArr);
 
         break;
 
@@ -220,7 +286,7 @@ const EditPopover = (props: any) => {
       )
     );
 
-    const updateQuesitonBody = {
+    const updateQuestionBody = {
       questionId: tempQuestionData[currentQuestionIndex].questionId,
       question: tempQuestionData[currentQuestionIndex].question,
       questionType: tempQuestionData[currentQuestionIndex].questionType,
@@ -239,28 +305,59 @@ const EditPopover = (props: any) => {
 
       if (existingIndex === -1) {
         const newArr = [...editedQuestions.updateQuizDetails];
-        newArr.push(updateQuesitonBody);
-        setEditedQuestions((prev: UpdateQuestionsSet) => ({
-          ...prev,
-          updateQuizDetails: newArr,
-        }));
+        newArr.push(updateQuestionBody);
+        // setEditedQuestions((prev: UpdateQuestionsSet) => ({
+        //   ...prev,
+        //   updateQuizDetails: newArr,
+        // }));
+        dispatch({
+          type: "subjectExpert/setEditedQuestions",
+          payload: {
+            data: {
+              ...editedQuestions,
+              updateQuizDetails: newArr,
+            },
+          },
+        });
       } else {
         const newArr = [...editedQuestions.updateQuizDetails];
-        newArr[existingIndex] = updateQuesitonBody;
-        setEditedQuestions((prev: UpdateQuestionsSet) => ({
-          ...prev,
-          updateQuizDetails: newArr,
-        }));
+        newArr[existingIndex] = updateQuestionBody;
+
+        // setEditedQuestions((prev: UpdateQuestionsSet) => ({
+        //   ...prev,
+        //   updateQuizDetails: newArr,
+        // }));
+        dispatch({
+          type: "subjectExpert/setEditedQuestions",
+          payload: {
+            data: {
+              ...editedQuestions,
+              updateQuizDetails: newArr,
+            },
+          },
+        });
       }
     } else {
-      setEditedQuestions({
-        version: editQuestionDetails.version,
-        subjectName: editQuestionDetails.subjectName,
-        tag: editQuestionDetails.tag,
-        updateQuizDetails: [updateQuesitonBody],
+      dispatch({
+        type: "subjectExpert/setEditedQuestions",
+        payload: {
+          data: {
+            version: editQuestionDetails.version,
+            subjectName: editQuestionDetails.subjectName,
+            tag: editQuestionDetails.tag,
+            updateQuizDetails: [updateQuestionBody],
+          },
+        },
       });
+      // setEditedQuestions({
+      //   version: editQuestionDetails.version,
+      //   subjectName: editQuestionDetails.subjectName,
+      //   tag: editQuestionDetails.tag,
+      //   updateQuizDetails: [updateQuesitonBody],
+      // });
     }
 
+    // this was already commented
     // if (!editedQuestionNumbers.includes(currentQuestionIndex + 1)) {
     //   setEditedQuestionNumbers((prev: number[]) => [
     //     ...prev,
@@ -273,13 +370,28 @@ const EditPopover = (props: any) => {
         (cur: any) => cur.questionNumber === currentQuestionIndex + 1
       );
       if (existingIndex === -1) {
-        setEditedQuestionNumbers([
+        const data = [
           ...newArr,
           {
             questionNumber: currentQuestionIndex + 1,
             questionType: tempQuestionData[currentQuestionIndex].questionType,
           },
-        ]);
+        ];
+
+        dispatch({
+          type: "subjectExpert/setEditedQuestionNumbers",
+          payload: {
+            data: data,
+          },
+        });
+
+        // setEditedQuestionNumbers([
+        //   ...newArr,
+        //   {
+        //     questionNumber: currentQuestionIndex + 1,
+        //     questionType: tempQuestionData[currentQuestionIndex].questionType,
+        //   },
+        // ]);
       } else {
         newArr[existingIndex] = {
           questionNumber: currentQuestionIndex + 1,
@@ -287,16 +399,28 @@ const EditPopover = (props: any) => {
         };
       }
     } else {
-      setEditedQuestionNumbers([
-        {
-          questionNumber: currentQuestionIndex + 1,
-          questionType: tempQuestionData[currentQuestionIndex].questionType,
+      // setEditedQuestionNumbers([
+      // {
+      //   questionNumber: currentQuestionIndex + 1,
+      //   questionType: tempQuestionData[currentQuestionIndex].questionType,
+      // },
+      // ]);
+      dispatch({
+        type: "subjectExpert/setEditedQuestionNumbers",
+        payload: {
+          data: [
+            {
+              questionNumber: currentQuestionIndex + 1,
+              questionType: tempQuestionData[currentQuestionIndex].questionType,
+            },
+          ],
         },
-      ]);
+      });
     }
 
     setSaveRefDisabled(true);
-    setAnchorElEdit(null);
+    // setAnchorElEdit(null);
+    dispatch(closeEditPopover());
   };
 
   const compareFieldsAtIndex = (obj1: any, obj2: any) => {
@@ -311,6 +435,7 @@ const EditPopover = (props: any) => {
     return areEqual;
   };
 
+  // this can be here
   const checkSaveReferenceDisabled = (
     updateQuestionData: any,
     isValidationError: boolean
@@ -327,7 +452,7 @@ const EditPopover = (props: any) => {
         if (existingIndex === -1) {
           if (
             JSON.stringify(updateQuestionData[currentQuestionIndex]) ===
-            JSON.stringify(modifyQuestionsData[currentQuestionIndex])
+            JSON.stringify(modifyModalQuestions[currentQuestionIndex])
           ) {
             setSaveRefDisabled(true);
           } else {
@@ -343,7 +468,7 @@ const EditPopover = (props: any) => {
       } else {
         if (
           JSON.stringify(updateQuestionData[currentQuestionIndex]) ===
-          JSON.stringify(modifyQuestionsData[currentQuestionIndex])
+          JSON.stringify(modifyModalQuestions[currentQuestionIndex])
         ) {
           setSaveRefDisabled(true);
         } else {
@@ -353,6 +478,7 @@ const EditPopover = (props: any) => {
     }
   };
 
+  // this can be here
   const checkQustionTypeValidation = () => {
     if (validationError.length > 0) {
       const index = validationError?.findIndex(
@@ -364,6 +490,8 @@ const EditPopover = (props: any) => {
     }
     return false;
   };
+
+  // this can be here
   const checkQuestionAnswersValidation = () => {
     if (validationError.length > 0) {
       const index = validationError?.findIndex(
@@ -376,6 +504,7 @@ const EditPopover = (props: any) => {
     return false;
   };
 
+  // this can be here
   const CheckSaveButtonDisabledOnEnter = (index: number) => {
     if (checkQuestionAnswersValidation() || checkQustionTypeValidation()) {
       setSaveRefDisabled(true);
@@ -388,7 +517,7 @@ const EditPopover = (props: any) => {
         if (existingIndex === -1) {
           if (
             JSON.stringify(tempQuestionData[index]) ===
-            JSON.stringify(modifyQuestionsData[index])
+            JSON.stringify(modifyModalQuestions[index])
           ) {
             setSaveRefDisabled(true);
           } else {
@@ -404,7 +533,7 @@ const EditPopover = (props: any) => {
       } else {
         if (
           JSON.stringify(tempQuestionData[index]) ===
-          JSON.stringify(modifyQuestionsData[index])
+          JSON.stringify(modifyModalQuestions[index])
         ) {
           setSaveRefDisabled(true);
         } else {
@@ -415,8 +544,8 @@ const EditPopover = (props: any) => {
   };
 
   useEffect(() => {
-    if (modifyQuestionsData.length > 0) {
-      const currentQuestionIndex = modifyQuestionsData?.findIndex(
+    if (modifyModalQuestions?.length > 0) {
+      const currentQuestionIndex = modifyModalQuestions?.findIndex(
         (obj: questionsForSetWithAnswers) =>
           obj.questionId === editQuestionDetails?.questionId
       );
@@ -431,8 +560,13 @@ const EditPopover = (props: any) => {
         // );
       }
     }
-  }, [anchorElEdit, modifyQuestionsData, editQuestionDetails]);
+  }, [anchorElEdit, modifyModalQuestions, editQuestionDetails]);
 
+  console.log(
+    "edited quesiton and question numbers on save ref isss",
+    editedQuestions,
+    editedQuestionNumbers
+  );
   return (
     <>
       <Popover
@@ -440,13 +574,19 @@ const EditPopover = (props: any) => {
         anchorEl={anchorElEdit}
         onClose={() => {
           // setSaveRefDisabled(true);
-          handleCloseEdit();
+          // handleCloseEdit();
+          //  dispatch({
+          //   type: "subjectExpert/handleEditPopover",
+          //   payload: { event: event, questionDetails: questionDetails },
+          // });
+          dispatch(closeEditPopover());
         }}
         anchorOrigin={{
           vertical: "bottom",
           horizontal: "left",
         }}
       >
+        {/* <h1>keeeekeeeeeeeeeeeeek</h1> */}
         {tempQuestionData.length > 0 && (
           <Box className="edit-popover-container">
             <FormControl variant="standard">

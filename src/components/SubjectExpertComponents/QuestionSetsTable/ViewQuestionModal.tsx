@@ -2,22 +2,29 @@ import { Box, Button } from "@mui/material";
 import ReactModal from "react-modal";
 import AllQuestionsAnswers from "../DispalyQuizQuestionsAnswers/AllQuestionsAnswers";
 import CloseIcon from "@mui/icons-material/Close";
+import { useAppDispatch, useAppSelector } from "../../../Store/ConfigureStrore";
+import { handleViewQuestionModal } from "../../../Redux/subjectexpertSlice";
 
 export const customStyles = {
   overlay: { zIndex: 1000 },
 };
 
-const ViewQuestionsModal = (props: any) => {
+const ViewQuestionsModal = () => {
+  // const {
+  //   openViewQuestionsModal,
+  //   setOpenViewQuestionsModal,
+  //  // viewQuestions,
+  //   //  setViewQuestions,
+  // } = props;
+
+  const dispatch = useAppDispatch();
   const {
-    openViewQuestionsModal,
-    setOpenViewQuestionsModal,
-    viewQuestions,
-    //  setViewQuestions,
-  } = props;
+    viewQuestionModalState: { isViewQuestionModalOpen, viewQuestions },
+  } = useAppSelector((state: any) => state.subjectExpert);
   return (
     <>
       <ReactModal
-        isOpen={openViewQuestionsModal}
+        isOpen={isViewQuestionModalOpen}
         contentLabel="Minimal Modal Example"
         ariaHideApp={false}
         style={customStyles}
@@ -29,15 +36,15 @@ const ViewQuestionsModal = (props: any) => {
             </Box>
           ) : ( */}
           <AllQuestionsAnswers
-            viewQuestions={viewQuestions}
-            // setViewQuestions={setViewQuestions}
+          // viewQuestions={viewQuestions}
+          // setViewQuestions={setViewQuestions}
           />
 
           <Box className="close-button-container">
             <Button
               variant="contained"
               color="error"
-              onClick={() => setOpenViewQuestionsModal(false)}
+              onClick={() => dispatch(handleViewQuestionModal())}
               endIcon={<CloseIcon />}
             >
               Close

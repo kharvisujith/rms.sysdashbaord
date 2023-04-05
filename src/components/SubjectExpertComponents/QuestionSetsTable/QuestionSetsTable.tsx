@@ -36,12 +36,19 @@ import { getComparator } from "../../../utils/TableSortFunctions";
 import { QuestionSetscolumns } from "./QuestionSetsTableColumn";
 import ViewQuestionsModal from "./ViewQuestionModal";
 import { useAppDispatch, useAppSelector } from "../../../Store/ConfigureStrore";
+import {
+  fetcQuestionsForSet,
+  fetchSubjectwiseQuestionSets,
+  handleViewQuestionModal,
+} from "../../../Redux/subjectexpertSlice";
 
 const QuestionSetsTable = (props: any) => {
-  const { subjectWiseQuestionSets, isQuizSetExists } = props;
+  //const { subjectWiseQuestionSets, isQuizSetExists } = props;
 
   const dispatch = useAppDispatch();
-  const { searchText } = useAppSelector((state: any) => state.subjectExpert);
+  const { searchText, subject, questionsModifyTableData } = useAppSelector(
+    (state: any) => state.subjectExpert
+  );
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -79,17 +86,26 @@ const QuestionSetsTable = (props: any) => {
     setOrderBy(property);
   };
 
-  const openViewQuestions = (row: any) => {
-    setOpenViewQuestionsModal(true);
-    getQuestionAnswersForQuestionSet(row.version, row.subjectName)
-      .then((response: any) => {
-        setViewQuestions(response.data);
-        // setLoader(false);
-      })
-      .catch((error: any) => {
-        // setLoader(false);
-        console.log("error in subjwise answersapi");
-      });
+  const openViewQuestions = async (questionDetails: any) => {
+    dispatch(handleViewQuestionModal());
+
+    try {
+      await dispatch(
+        fetcQuestionsForSet({ questionDetails, from: "newUpload" })
+      );
+    } catch (error: any) {
+      console.log("Error in getting modal questions");
+    }
+    // setOpenViewQuestionsModal(true);
+    // getQuestionAnswersForQuestionSet(row.version, row.subjectName)
+    //   .then((response: any) => {
+    //     setViewQuestions(response.data);
+    //     // setLoader(false);
+    //   })
+    //   .catch((error: any) => {
+    //     // setLoader(false);
+    //     console.log("error in subjwise answersapi");
+    //   });
   };
 
   const viewButton = (row: any) => {
@@ -103,6 +119,19 @@ const QuestionSetsTable = (props: any) => {
       </Button>
     );
   };
+
+  const subjectwiseQuizDetails = async () => {
+    try {
+      console.log("inside select subject Becase subject chnageddd");
+      await dispatch(fetchSubjectwiseQuestionSets());
+    } catch (error: any) {
+      console.log("Error in fetching quiz data", error);
+    }
+  };
+
+  useEffect(() => {
+    subjectwiseQuizDetails();
+  }, [subject]);
 
   useEffect(() => {
     dispatch({
@@ -142,8 +171,8 @@ const QuestionSetsTable = (props: any) => {
               </TableHead>
               {!loader ? (
                 <TableBody>
-                  {isQuizSetExists &&
-                    subjectWiseQuestionSets
+                  {questionsModifyTableData?.length > 0 &&
+                    questionsModifyTableData
                       .slice()
                       .sort(getComparator(order, orderBy))
                       .filter(
@@ -216,16 +245,16 @@ const QuestionSetsTable = (props: any) => {
               <CircularProgress />
             </Box>
           ) : null}
-          {!isQuizSetExists && (
+          {questionsModifyTableData?.length < 1 && (
             <Box className="table-loader">
               <Typography>No Data Available</Typography>
             </Box>
           )}
-          {isQuizSetExists && (
+          {questionsModifyTableData?.length > 0 && (
             <TablePagination
               rowsPerPageOptions={[10, 25, 100]}
               component="div"
-              count={subjectWiseQuestionSets.length}
+              count={questionsModifyTableData.length}
               rowsPerPage={rowsPerPage}
               page={page}
               onPageChange={handleChangePage}
@@ -235,10 +264,10 @@ const QuestionSetsTable = (props: any) => {
         </Paper>
       </Box>
       <ViewQuestionsModal
-        openViewQuestionsModal={openViewQuestionsModal}
-        setOpenViewQuestionsModal={setOpenViewQuestionsModal}
-        viewQuestions={viewQuestions}
-        setViewQuestions={setViewQuestions}
+      //  openViewQuestionsModal={openViewQuestionsModal}
+      //  setOpenViewQuestionsModal={setOpenViewQuestionsModal}
+      //  viewQuestions={viewQuestions}
+      //  setViewQuestions={setViewQuestions}
       />
     </>
   );

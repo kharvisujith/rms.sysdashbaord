@@ -18,23 +18,23 @@ const SubjectExpertNewUpload = () => {
   const [isQuizSetExists, setIsQuizSetExists] = useState<boolean>(true);
 
   const subjectwiseQuizDetails = async (subject: string) => {
-    getSubjectwiseQuiz(subject === "ALL" ? "" : subject)
-      .then((response: any) => {
-        if (response.status === 204) {
-          setIsQuizSetExists(false);
-        } else {
-          setSubjectWiseQuestionSets(response.data);
-          setIsQuizSetExists(true);
-        }
-      })
-      .catch((error: any) => {
-        console.log("error in subjwiseapi");
-      });
+    // getSubjectwiseQuiz(subject === "ALL" ? "" : subject)
+    //   .then((response: any) => {
+    //     if (response.status === 204) {
+    //       setIsQuizSetExists(false);
+    //     } else {
+    //       setSubjectWiseQuestionSets(response.data);
+    //       setIsQuizSetExists(true);
+    //     }
+    //   })
+    //   .catch((error: any) => {
+    //     console.log("error in subjwiseapi");
+    //   });
   };
 
-  useEffect(() => {
-    subjectwiseQuizDetails(subject);
-  }, [subject]);
+  // useEffect(() => {
+  //   subjectwiseQuizDetails(subject);
+  // }, [subject]);
 
   return (
     <>

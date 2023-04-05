@@ -33,21 +33,6 @@ const SelectSubject = () => {
     } catch (error: any) {
       console.log("Error in fetching quiz data", error);
     }
-    // setLoader(true);
-    // getSubjectwiseQuiz(subject === "ALL" ? "" : subject)
-    //   .then((response: any) => {
-    //     // setLoader(false);
-    //     if (response.status === 204) {
-    //       setIsQuizSetExists(false);
-    //     } else {
-    //       setSubjectWiseQuestionSets(response.data);
-    //       setIsQuizSetExists(true);
-    //     }
-    //   })
-    //   .catch((error: any) => {
-    //     console.log("error in subjwiseapi");
-    //     //     setLoader(false);
-    //   });
   };
 
   useEffect(() => {

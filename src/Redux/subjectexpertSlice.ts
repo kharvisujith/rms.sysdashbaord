@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { apiAgent } from "../api/apiAgent";
 import Swal from "sweetalert2";
+import { UpdateQuestionsSet } from "../Interface/SubjectExpert/SubjectExpert";
 
 const initialState: any = {
   searchText: {
@@ -12,6 +13,19 @@ const initialState: any = {
   questionsModifyTableData: [],
   isModifyQuestionsModalOpen: false,
   modifyModalQuestions: [],
+  editQuestionStates: {
+    anchorElEdit: null,
+    editQuestionDetails: {},
+    editedQuestions: null,
+    tempQuestionData: [],
+    editedQuestionNumbers: [],
+    //  validationError: [],
+  },
+  viewQuestionModalState: {
+    isViewQuestionModalOpen: false,
+    viewQuestions: [],
+  },
+
   loadingStatus: {
     tableLoader: false,
   },
@@ -83,9 +97,29 @@ export const deleteQuestion = createAsyncThunk<any, any>(
   }
 );
 
-export const fetchModifyModalQuestions = createAsyncThunk<any, any>(
+// export const fetcQuestionsForSet = createAsyncThunk<any, any>(
+//   "subjectExpert/modifyMdalQuesitons",
+//   async (questionDetails: any, thunkAPI: any) => {
+//     try {
+//       console.log("yessss its called form add case");
+//       const response =
+//         await apiAgent.subjectExpert.getQuestionAnswersForQuestionSet(
+//           questionDetails.version,
+//           questionDetails.subjectName
+//         );
+//       console.log("response is", response.data);
+//       return response.data;
+//     } catch (error: any) {
+//       return thunkAPI.rejectWithValue({ error: error.response });
+//     }
+//   }
+// );
+export const fetcQuestionsForSet = createAsyncThunk<
+  any,
+  { questionDetails: any; from: any }
+>(
   "subjectExpert/modifyMdalQuesitons",
-  async (questionDetails: any, thunkAPI: any) => {
+  async ({ questionDetails, from }, thunkAPI: any) => {
     try {
       console.log("yessss its called form add case");
       const response =
@@ -94,9 +128,20 @@ export const fetchModifyModalQuestions = createAsyncThunk<any, any>(
           questionDetails.subjectName
         );
       console.log("response is", response.data);
-      return response.data;
+      return { data: response.data, from: from };
     } catch (error: any) {
       return thunkAPI.rejectWithValue({ error: error.response });
+    }
+  }
+);
+
+export const updateEditedQuestion = createAsyncThunk<any, UpdateQuestionsSet>(
+  "subjectExpert/updateQuestion",
+  async (data: UpdateQuestionsSet, thunkAPI: any) => {
+    try {
+      const respone = await apiAgent.subjectExpert.updateQuestion(data);
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue({ error: error.respone });
     }
   }
 );
@@ -183,26 +228,109 @@ export const subjectExpertSlice = createSlice({
       return kk;
     },
     handleModifyQuesitonModal: (state: any) => {
-      console.log("modal togle off called");
-      // const newState = state.isModifyQuestionsModalOpen
-      //   ? { ...state, isModifyQuestionsModalOpen: false }
-      //   : { ...state, isModifyQuestionsModalOpen: true };
-      console.log("vlaue in herer is", state.isModifyQuestionsModalOpen);
       if (state.isModifyQuestionsModalOpen) {
-        console.log("inside togle if");
         return {
           ...state,
           isModifyQuestionsModalOpen: false,
         };
       } else {
-        console.log("inside elsei togle off");
         return {
           ...state,
           isModifyQuestionsModalOpen: true,
         };
       }
+    },
+    setTempQuestionData: (state: any, action: any) => {
+      console.log(
+        "setTemplate Questoin DAta is clledd and payload is",
+        action.payload.data
+      );
+      return {
+        ...state,
+        editQuestionStates: {
+          ...state.editQuestionStates,
+          tempQuestionData: action.payload.data,
+        },
+      };
+    },
 
-      // return newState;
+    openEditPopover: (state: any, action: any) => {
+      console.log(
+        "open edit popver called and payload is",
+        action.payload.event.currentTarget
+      );
+      return {
+        ...state,
+        editQuestionStates: {
+          ...state.editQuestionStates,
+          anchorElEdit: action.payload.event.currentTarget,
+          editQuestionDetails: action.payload.questionDetails,
+        },
+      };
+    },
+    closeEditPopover: (state: any) => {
+      return {
+        ...state,
+        editQuestionStates: {
+          ...state.editQuestionStates,
+          anchorElEdit: null,
+        },
+      };
+    },
+    setEditedQuestions: (state: any, action: any) => {
+      console.log("set edited quesiton payload is", action.payload.data);
+
+      return {
+        ...state,
+        editQuestionStates: {
+          ...state.editQuestionStates,
+          editedQuestions: action.payload.data,
+        },
+      };
+    },
+    setEditedQuestionNumbers: (state: any, action: any) => {
+      console.log(
+        "set edited question numbers called and payloadis",
+        action.payload.data
+      );
+      return {
+        ...state,
+        editQuestionStates: {
+          ...state.editQuestionStates,
+          editedQuestionNumbers: action.payload.data,
+        },
+      };
+    },
+    clearEditData: (state: any) => {
+      console.log("inside clear data reducer");
+
+      return {
+        ...state,
+        editQuestionStates: {
+          ...state.editQuestionStates,
+          editedQuestions: null,
+          tempQuestionData: [],
+          editedQuestionNumbers: [],
+        },
+      };
+    },
+
+    handleViewQuestionModal: (state: any) => {
+      return state.viewQuestionModalState.isViewQuestionModalOpen
+        ? {
+            ...state,
+            viewQuestionModalState: {
+              ...state.viewQuestionModalState,
+              isViewQuestionModalOpen: false,
+            },
+          }
+        : {
+            ...state,
+            viewQuestionModalState: {
+              ...state.viewQuestionModalState,
+              isViewQuestionModalOpen: true,
+            },
+          };
     },
   },
   extraReducers: (builder: any) => {
@@ -247,21 +375,31 @@ export const subjectExpertSlice = createSlice({
     );
 
     builder.addCase(
-      fetchModifyModalQuestions.fulfilled,
+      fetcQuestionsForSet.fulfilled,
       (state: any, action: any) => {
         console.log("fullfilleddd paylaod is", action.payload);
-        return {
-          ...state,
-          modifyModalQuestions: action.payload,
-        };
+        if (action.payload.from === "home") {
+          return {
+            ...state,
+            modifyModalQuestions: action.payload.data,
+          };
+        } else {
+          return {
+            ...state,
+            viewQuestionModalState: {
+              ...state.viewQuestionModalState,
+              viewQuestions: action.payload.data,
+            },
+          };
+        }
       }
     );
     builder.addCase(
-      fetchModifyModalQuestions.rejected,
+      fetcQuestionsForSet.rejected,
       (state: any, action: any) => {}
     );
     builder.addCase(
-      fetchModifyModalQuestions.pending,
+      fetcQuestionsForSet.pending,
       (state: any, action: any) => {}
     );
 
@@ -279,6 +417,56 @@ export const subjectExpertSlice = createSlice({
       deleteSelectedQuesitonSet.pending,
       (state: any, action: any) => {}
     );
+
+    builder.addCase(
+      updateEditedQuestion.fulfilled,
+      (state: any, action: any) => {
+        Swal.fire({
+          title: "Success",
+          text: "Updated Succesfully",
+          icon: "success",
+          confirmButtonText: "Okay",
+          customClass: "swal-alert",
+        });
+        return {
+          ...state,
+          isModifyQuestionsModalOpen: false,
+          editQuestionStates: {
+            ...state.editQuestionStates,
+            editedQuestions: null,
+            tempQuestionData: [],
+            editedQuestionNumbers: [],
+          },
+        };
+        // state = {
+        //   ...state,
+        //   editQuestionStates: {
+        //     ...state.editQuestionStates,
+        //     anchorElEdit: null,
+        //     editedQuestions: null,
+        //     tempQuestionData: [],
+        //     editedQuestionNumbers: [],
+        //   },
+        // };
+      }
+    );
+
+    builder.addCase(
+      updateEditedQuestion.rejected,
+      (state: any, action: any) => {
+        Swal.fire({
+          title: "error",
+          text: "Failed to delete",
+          icon: "error",
+          confirmButtonText: "Okay",
+          customClass: "swal-alert",
+        });
+      }
+    );
+    builder.addCase(
+      updateEditedQuestion.pending,
+      (state: any, action: any) => {}
+    );
   },
 });
 
@@ -288,4 +476,11 @@ export const {
   handleModifyQuesitonModal,
   setSearchTextToEmpty,
   closeModifyQuestionModal,
+  setTempQuestionData,
+  openEditPopover,
+  closeEditPopover,
+  setEditedQuestions,
+  setEditedQuestionNumbers,
+  clearEditData,
+  handleViewQuestionModal,
 } = subjectExpertSlice.actions;

@@ -31,7 +31,7 @@ import { questionsForSetWithAnswers } from "../../../Interface/SubjectExpert/Sub
 import { useAppDispatch, useAppSelector } from "../../../Store/ConfigureStrore";
 import {
   deleteSelectedQuesitonSet,
-  fetchModifyModalQuestions,
+  fetcQuestionsForSet,
   fetchSubjectwiseQuestionSets,
   handleModifyQuesitonModal,
   setSearchTextToEmpty,
@@ -105,7 +105,7 @@ const QuestionsModifyTable = () => {
     try {
       console.log("quesiotn detailsss is", questionDetails);
       dispatch(handleModifyQuesitonModal());
-      await dispatch(fetchModifyModalQuestions(questionDetails));
+      await dispatch(fetcQuestionsForSet({ questionDetails, from: "home" }));
     } catch (error: any) {
       console.log("Error in fetching data in modify modal");
     }
@@ -205,6 +205,20 @@ const QuestionsModifyTable = () => {
       </Button>
     );
   };
+
+  // this has to be  added here and removed form select subject comp
+  // const subjectwiseQuizDetails = async () => {
+  //   try {
+  //     console.log("inside select subject Becase subject chnageddd");
+  //     await dispatch(fetchSubjectwiseQuestionSets());
+  //   } catch (error: any) {
+  //     console.log("Error in fetching quiz data", error);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   subjectwiseQuizDetails();
+  // }, [subject]);
 
   useEffect(() => {
     dispatch({

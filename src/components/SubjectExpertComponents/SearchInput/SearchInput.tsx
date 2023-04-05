@@ -12,8 +12,7 @@ import { handleSearchText } from "../../../Redux/subjectexpertSlice";
 const SearchInput = (props: any) => {
   const { from } = props;
   const dispatch = useAppDispatch();
-  const { searchText } = useAppSelector((state: any) => state.subjectExpert);
-  // const { setSearchText } = props;
+
   return (
     <>
       <Box>
