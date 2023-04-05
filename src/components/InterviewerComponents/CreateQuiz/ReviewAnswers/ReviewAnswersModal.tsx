@@ -14,9 +14,10 @@ import { customStylesModal } from "../../../../utils/Utils";
 
 const ReviewAnswersModal = () => {
   const dispatch = useAppDispatch();
-  const { loadingStatus, isReviewModalOpen } = useAppSelector(
-    (state: any) => state.interviewer
-  );
+  const {
+    loadingStatus: { modalLoader },
+    isReviewModalOpen,
+  } = useAppSelector((state: any) => state.interviewer);
   return (
     <>
       <ReactModal
@@ -27,7 +28,7 @@ const ReviewAnswersModal = () => {
       >
         <>
           <AllSubmittedQuestionsAnswers />
-          {!loadingStatus.modalLoader ? (
+          {!modalLoader ? (
             <Box className="close-button-container">
               <Button
                 variant="contained"

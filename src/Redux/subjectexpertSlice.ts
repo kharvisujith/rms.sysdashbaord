@@ -28,6 +28,7 @@ const initialState: any = {
 
   loadingStatus: {
     tableLoader: false,
+    modalLoader: false,
   },
 };
 
@@ -382,10 +383,18 @@ export const subjectExpertSlice = createSlice({
           return {
             ...state,
             modifyModalQuestions: action.payload.data,
+            loadingStatus: {
+              ...state.loadingStatus,
+              modalLoader: false,
+            },
           };
         } else {
           return {
             ...state,
+            loadingStatus: {
+              ...state.loadingStatus,
+              modalLoader: false,
+            },
             viewQuestionModalState: {
               ...state.viewQuestionModalState,
               viewQuestions: action.payload.data,
@@ -394,14 +403,24 @@ export const subjectExpertSlice = createSlice({
         }
       }
     );
-    builder.addCase(
-      fetcQuestionsForSet.rejected,
-      (state: any, action: any) => {}
-    );
-    builder.addCase(
-      fetcQuestionsForSet.pending,
-      (state: any, action: any) => {}
-    );
+    builder.addCase(fetcQuestionsForSet.rejected, (state: any, action: any) => {
+      return {
+        ...state,
+        loadingStatus: {
+          ...state.loadingStatus,
+          modalLoader: false,
+        },
+      };
+    });
+    builder.addCase(fetcQuestionsForSet.pending, (state: any, action: any) => {
+      return {
+        ...state,
+        loadingStatus: {
+          ...state.loadingStatus,
+          modalLoader: true,
+        },
+      };
+    });
 
     builder.addCase(
       deleteSelectedQuesitonSet.fulfilled,

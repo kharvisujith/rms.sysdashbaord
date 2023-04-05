@@ -1,4 +1,4 @@
-import { Box, Button } from "@mui/material";
+import { Box, Button, CircularProgress } from "@mui/material";
 import ReactModal from "react-modal";
 import AllQuestionsAnswers from "../DispalyQuizQuestionsAnswers/AllQuestionsAnswers";
 import CloseIcon from "@mui/icons-material/Close";
@@ -19,8 +19,10 @@ const ViewQuestionsModal = () => {
 
   const dispatch = useAppDispatch();
   const {
-    viewQuestionModalState: { isViewQuestionModalOpen, viewQuestions },
+    viewQuestionModalState: { isViewQuestionModalOpen },
+    loadingStatus: { modalLoader },
   } = useAppSelector((state: any) => state.subjectExpert);
+
   return (
     <>
       <ReactModal
@@ -29,28 +31,31 @@ const ViewQuestionsModal = () => {
         ariaHideApp={false}
         style={customStyles}
       >
-        <>
-          {/* {loader ? (
+        <Box className="modal-container">
+          {modalLoader ? (
             <Box className="modal-loader">
               <CircularProgress />
             </Box>
-          ) : ( */}
-          <AllQuestionsAnswers
-          // viewQuestions={viewQuestions}
-          // setViewQuestions={setViewQuestions}
-          />
-
-          <Box className="close-button-container">
-            <Button
-              variant="contained"
-              color="error"
-              onClick={() => dispatch(handleViewQuestionModal())}
-              endIcon={<CloseIcon />}
-            >
-              Close
-            </Button>
-          </Box>
-        </>
+          ) : (
+            <>
+              <AllQuestionsAnswers />
+              <Box className="footer-container">
+                {!modalLoader ? (
+                  <Box className="footer-content">
+                    <Button
+                      variant="contained"
+                      color="error"
+                      onClick={() => dispatch(handleViewQuestionModal())}
+                      endIcon={<CloseIcon />}
+                    >
+                      Close
+                    </Button>
+                  </Box>
+                ) : null}
+              </Box>
+            </>
+          )}
+        </Box>
       </ReactModal>
     </>
   );

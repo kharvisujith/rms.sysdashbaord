@@ -46,9 +46,12 @@ const QuestionSetsTable = (props: any) => {
   //const { subjectWiseQuestionSets, isQuizSetExists } = props;
 
   const dispatch = useAppDispatch();
-  const { searchText, subject, questionsModifyTableData } = useAppSelector(
-    (state: any) => state.subjectExpert
-  );
+  const {
+    searchText,
+    subject,
+    questionsModifyTableData,
+    loadingStatus: { tableLoader },
+  } = useAppSelector((state: any) => state.subjectExpert);
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -59,7 +62,7 @@ const QuestionSetsTable = (props: any) => {
     useState<Boolean>(false);
   const [viewQuestions, setViewQuestions] = useState<questionSets[]>([]);
 
-  const [loader, setLoader] = useState<boolean>(false);
+  //const [loader, setLoader] = useState<boolean>(false);
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -169,7 +172,7 @@ const QuestionSetsTable = (props: any) => {
                   ))}
                 </TableRow>
               </TableHead>
-              {!loader ? (
+              {!tableLoader ? (
                 <TableBody>
                   {questionsModifyTableData?.length > 0 &&
                     questionsModifyTableData
@@ -240,7 +243,7 @@ const QuestionSetsTable = (props: any) => {
               ) : null}
             </Table>
           </TableContainer>
-          {loader ? (
+          {tableLoader ? (
             <Box className="table-loader">
               <CircularProgress />
             </Box>

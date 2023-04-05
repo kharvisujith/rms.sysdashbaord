@@ -26,18 +26,18 @@ const SelectSubject = () => {
     //setSubject(event.target.value);
   };
 
-  const subjectwiseQuizDetails = async () => {
-    try {
-      console.log("inside select subject Becase subject chnageddd");
-      await dispatch(fetchSubjectwiseQuestionSets());
-    } catch (error: any) {
-      console.log("Error in fetching quiz data", error);
-    }
-  };
+  // const subjectwiseQuizDetails = async () => {
+  //   try {
+  //     console.log("inside select subject Becase subject chnageddd");
+  //     await dispatch(fetchSubjectwiseQuestionSets());
+  //   } catch (error: any) {
+  //     console.log("Error in fetching quiz data", error);
+  //   }
+  // };
 
-  useEffect(() => {
-    subjectwiseQuizDetails();
-  }, [subject]);
+  // useEffect(() => {
+  //   subjectwiseQuizDetails();
+  // }, [subject]);
   return (
     <>
       <Box>

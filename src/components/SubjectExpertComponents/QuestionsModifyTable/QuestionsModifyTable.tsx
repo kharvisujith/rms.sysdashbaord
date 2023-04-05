@@ -47,8 +47,12 @@ const QuestionsModifyTable = () => {
   //} = props;
 
   const dispatch = useAppDispatch();
-  const { searchText, questionsModifyTableData, loadingStatus, subject } =
-    useAppSelector((state: any) => state.subjectExpert);
+  const {
+    searchText,
+    questionsModifyTableData,
+    loadingStatus: { tableLoader },
+    subject,
+  } = useAppSelector((state: any) => state.subjectExpert);
 
   const [order, setOrder] = useState<Order>("asc");
   const [orderBy, setOrderBy] = useState<string>("version");
@@ -207,18 +211,18 @@ const QuestionsModifyTable = () => {
   };
 
   // this has to be  added here and removed form select subject comp
-  // const subjectwiseQuizDetails = async () => {
-  //   try {
-  //     console.log("inside select subject Becase subject chnageddd");
-  //     await dispatch(fetchSubjectwiseQuestionSets());
-  //   } catch (error: any) {
-  //     console.log("Error in fetching quiz data", error);
-  //   }
-  // };
+  const subjectwiseQuizDetails = async () => {
+    try {
+      console.log("inside select subject Becase subject chnageddd");
+      await dispatch(fetchSubjectwiseQuestionSets());
+    } catch (error: any) {
+      console.log("Error in fetching quiz data", error);
+    }
+  };
 
-  // useEffect(() => {
-  //   subjectwiseQuizDetails();
-  // }, [subject]);
+  useEffect(() => {
+    subjectwiseQuizDetails();
+  }, [subject]);
 
   useEffect(() => {
     dispatch({
@@ -255,65 +259,72 @@ const QuestionsModifyTable = () => {
                   ))}
                 </TableRow>
               </TableHead>
-              {/* {!loadingStatus.tableLoader ? ( */}
-              <TableBody>
-                {questionsModifyTableData?.length > 0 &&
-                  questionsModifyTableData
-                    .slice()
-                    .sort(getComparator(order, orderBy))
-                    .filter(
-                      (row: any) =>
-                        !searchText?.home?.length ||
-                        row.subjectName
-                          .toLowerCase()
-                          .includes(searchText.home.toLowerCase()) ||
-                        row.version
-                          .toString()
-                          .toLowerCase()
-                          .includes(searchText.home.toString().toLowerCase()) ||
-                        row.tag
-                          .toString()
-                          .toLowerCase()
-                          .includes(searchText.home.toString().toLowerCase()) ||
-                        row.createdBy
-                          ?.toLowerCase()
-                          .includes(searchText.home.toLowerCase())
-                    )
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((row: any, index: number) => {
-                      return (
-                        <TableRow
-                          hover
-                          role="checkbox"
-                          tabIndex={-1}
-                          key={index}
-                        >
-                          {QuestionsModifyTableColumns.map(
-                            (column: any, index: number) => {
-                              const value = row[column.id];
-                              return (
-                                <TableCell key={index} align={column.align}>
-                                  {column.id === "view"
-                                    ? viewButton(row)
-                                    : column.id === "delete"
-                                    ? DeleteButton(row)
-                                    : value}
-                                </TableCell>
-                              );
-                            }
-                          )}
-                        </TableRow>
-                      );
-                    })}
-              </TableBody>
-              {/* ) : null} */}
+              {!tableLoader ? (
+                <TableBody>
+                  {questionsModifyTableData?.length > 0 &&
+                    questionsModifyTableData
+                      .slice()
+                      .sort(getComparator(order, orderBy))
+                      .filter(
+                        (row: any) =>
+                          !searchText?.home?.length ||
+                          row.subjectName
+                            .toLowerCase()
+                            .includes(searchText.home.toLowerCase()) ||
+                          row.version
+                            .toString()
+                            .toLowerCase()
+                            .includes(
+                              searchText.home.toString().toLowerCase()
+                            ) ||
+                          row.tag
+                            .toString()
+                            .toLowerCase()
+                            .includes(
+                              searchText.home.toString().toLowerCase()
+                            ) ||
+                          row.createdBy
+                            ?.toLowerCase()
+                            .includes(searchText.home.toLowerCase())
+                      )
+                      .slice(
+                        page * rowsPerPage,
+                        page * rowsPerPage + rowsPerPage
+                      )
+                      .map((row: any, index: number) => {
+                        return (
+                          <TableRow
+                            hover
+                            role="checkbox"
+                            tabIndex={-1}
+                            key={index}
+                          >
+                            {QuestionsModifyTableColumns.map(
+                              (column: any, index: number) => {
+                                const value = row[column.id];
+                                return (
+                                  <TableCell key={index} align={column.align}>
+                                    {column.id === "view"
+                                      ? viewButton(row)
+                                      : column.id === "delete"
+                                      ? DeleteButton(row)
+                                      : value}
+                                  </TableCell>
+                                );
+                              }
+                            )}
+                          </TableRow>
+                        );
+                      })}
+                </TableBody>
+              ) : null}
             </Table>
           </TableContainer>
-          {/* {loader ? (
+          {tableLoader ? (
             <Box className="table-loader">
               <CircularProgress />
             </Box>
-          ) : null} */}
+          ) : null}
           {questionsModifyTableData?.length < 1 && (
             <Box className="table-loader">
               <Typography>No Data Available</Typography>

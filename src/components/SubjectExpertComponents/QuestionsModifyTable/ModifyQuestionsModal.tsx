@@ -1,4 +1,10 @@
-import { Box, Button, LinearProgress, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  CircularProgress,
+  LinearProgress,
+  Typography,
+} from "@mui/material";
 import ReactModal from "react-modal";
 import { customStyles } from "../QuestionSetsTable/ViewQuestionModal";
 import CloseIcon from "@mui/icons-material/Close";
@@ -26,6 +32,7 @@ import {
   deleteQuestion,
   fetchSubjectwiseQuestionSets,
   handleModifyQuesitonModal,
+  handleViewQuestionModal,
   updateEditedQuestion,
 } from "../../../Redux/subjectexpertSlice";
 
@@ -46,7 +53,7 @@ const ModifyQuestionsModal = () => {
   const {
     searchText,
     modifyModalQuestions,
-    loadingStatus,
+    loadingStatus: { modalLoader },
     isModifyQuestionsModalOpen,
     editQuestionStates: {
       editedQuestions,
@@ -214,6 +221,14 @@ const ModifyQuestionsModal = () => {
     });
   }, []);
 
+  // if (modalLoader) {
+  //   return (
+  //     <Box className="page-loader">
+  //       <CircularProgress />
+  //     </Box>
+  //   );
+  // }
+
   return (
     <>
       <ReactModal
@@ -222,166 +237,145 @@ const ModifyQuestionsModal = () => {
         ariaHideApp={false}
         style={customStyles}
       >
-        <>
-          <Box className="modal-content-container-subparts">
+        <Box className="modal-container">
+          {modalLoader ? (
+            <Box className="modal-loader">
+              <CircularProgress />
+            </Box>
+          ) : (
             <>
-              <Box>
-                {modifyModalQuestions?.length > 0 && (
-                  <Box>
-                    <Box className="modal-headings-container">
-                      <Box className="headings">
-                        <Typography className="topic">Subject : </Typography>
-                        <Typography>
-                          {modifyModalQuestions[0]?.subjectName}
-                        </Typography>
-                      </Box>
-                      <Box className="headings">
-                        <Typography className="topic">
-                          Description :{" "}
-                        </Typography>
-                        <Typography>{modifyModalQuestions[0]?.tag}</Typography>
-                      </Box>
-                      <Box className="headings">
-                        <Typography className="topic">Version : </Typography>
-                        <Typography>
-                          {modifyModalQuestions[0]?.version}
-                        </Typography>
-                      </Box>
-                      <Box className="headings">
-                        <Typography className="topic">
-                          TotalQuestions :
-                        </Typography>
-                        <Typography>{modifyModalQuestions.length}</Typography>
-                      </Box>
-                    </Box>
-                    <LinearProgress
-                      variant={"determinate"}
-                      color={"primary"}
-                      value={0}
-                    />
+              <Box className="header-container">
+                <Box className="header-content">
+                  <Box className="headings">
+                    <Typography className="topic">Subject : </Typography>
+                    <Typography>
+                      {modifyModalQuestions[0]?.subjectName}
+                    </Typography>
                   </Box>
-                )}
+                  <Box className="headings">
+                    <Typography className="topic">Description : </Typography>
+                    <Typography>{modifyModalQuestions[0]?.tag}</Typography>
+                  </Box>
+                  <Box className="headings">
+                    <Typography className="topic">Version : </Typography>
+                    <Typography>{modifyModalQuestions[0]?.version}</Typography>
+                  </Box>
+                  <Box className="headings">
+                    <Typography className="topic">TotalQuestions :</Typography>
+                    <Typography>{modifyModalQuestions.length}</Typography>
+                  </Box>
+                </Box>
+                <LinearProgress
+                  variant={"determinate"}
+                  color={"primary"}
+                  value={0}
+                />
               </Box>
-
-              <Box className="modal-body">
+              <Box className="content-container">
                 <Box>
-                  <SearchInput from={"modifyModal"} />
-                </Box>
-                <Box>
-                  {modifyModalQuestions?.length > 0 &&
-                    modifyModalQuestions
-                      .slice()
-                      .filter(
-                        (row: questionsForSetWithAnswers) =>
-                          !searchText?.modifyModal?.length ||
-                          row.question
-                            .toLowerCase()
-                            .includes(searchText.modifyModal.toLowerCase())
-                      )
-                      .map(
-                        (
-                          questionDeatails: questionsForSetWithAnswers,
-                          index: number
-                        ) => (
-                          <Box className="question-main" key={index}>
-                            <Typography>{`${index + 1}. ${
-                              questionDeatails.question
-                            }`}</Typography>
-                            <Box className="icons-box">
-                              <IconButton
-                                size="small"
-                                onClick={(event: any) =>
-                                  handleOpenEditPopover(event, questionDeatails)
-                                }
-                              >
-                                <EditIcon fontSize="small" />
-                              </IconButton>
-                              <IconButton
-                                size="small"
-                                onClick={() =>
-                                  handleDeleteQuestion(questionDeatails)
-                                }
-                              >
-                                <DeleteIcon fontSize="small" />
-                              </IconButton>
-                            </Box>
-                          </Box>
+                  <Box>
+                    <SearchInput from={"modifyModal"} />
+                  </Box>
+                  <Box>
+                    {modifyModalQuestions?.length > 0 &&
+                      modifyModalQuestions
+                        .slice()
+                        .filter(
+                          (row: questionsForSetWithAnswers) =>
+                            !searchText?.modifyModal?.length ||
+                            row.question
+                              .toLowerCase()
+                              .includes(searchText.modifyModal.toLowerCase())
                         )
-                      )}
-                </Box>
-                {editedQuestions && editedQuestionNumbers?.length > 0 && (
-                  <>
-                    <Box className="info-div">
-                      <Typography
-                        variant="body1"
-                        className="info"
-                      >{`Total Modified Questions : ${editedQuestionNumbers?.length}`}</Typography>
-
-                      <Box
-                        //sx={{ display: "flex" }}
-                        className="question-details"
-                      >
+                        .map(
+                          (
+                            questionDeatails: questionsForSetWithAnswers,
+                            index: number
+                          ) => (
+                            <Box className="question-main" key={index}>
+                              <Typography>{`${index + 1}. ${
+                                questionDeatails.question
+                              }`}</Typography>
+                              <Box className="icons-box">
+                                <IconButton
+                                  size="small"
+                                  onClick={(event: any) =>
+                                    handleOpenEditPopover(
+                                      event,
+                                      questionDeatails
+                                    )
+                                  }
+                                >
+                                  <EditIcon fontSize="small" />
+                                </IconButton>
+                                <IconButton
+                                  size="small"
+                                  onClick={() =>
+                                    handleDeleteQuestion(questionDeatails)
+                                  }
+                                >
+                                  <DeleteIcon fontSize="small" />
+                                </IconButton>
+                              </Box>
+                            </Box>
+                          )
+                        )}
+                  </Box>
+                  {editedQuestions && editedQuestionNumbers?.length > 0 && (
+                    <>
+                      <Box className="info-div">
                         <Typography
                           variant="body1"
                           className="info"
-                        >{`Question Numbers : ${` `}`}</Typography>
-                        {editedQuestionNumbers.length > 0 &&
-                          editedQuestionNumbers?.map(
-                            (cur: any, index: number) => (
-                              <Typography className="info" key={index}>
-                                {` ${cur.questionNumber}-${cur.questionType[0]}`}
-                                {index < editedQuestionNumbers.length - 1
-                                  ? `,`
-                                  : null}
-                              </Typography>
-                            )
-                          )}
-                      </Box>
-                    </Box>
-                  </>
-                )}
-              </Box>
+                        >{`Total Modified Questions : ${editedQuestionNumbers?.length}`}</Typography>
 
-              <EditPopover
-              // anchorElEdit={anchorElEdit}
-              // setAnchorElEdit={setAnchorElEdit}
-              // handleCloseEdit={handleCloseEdit}
-              // editQuestionDetails={editQuestionDetails}
-              //   setEditQuestionDetails={setEditQuestionDetails}
-              //  editedQuestions={editedQuestions}
-              //  setEditedQuestions={setEditedQuestions}
-              //  tempQuestionData={tempQuestionData}
-              //  setTempQuestionData={setTempQuestionData}
-              //   editedQuestionNumbers={editedQuestionNumbers}
-              //  setEditedQuestionNumbers={setEditedQuestionNumbers}
-              // validationError={validationError}
-              // setValidationError={setValidationError}
-              />
+                        <Box className="question-details">
+                          <Typography
+                            variant="body1"
+                            className="info"
+                          >{`Question Numbers : ${` `}`}</Typography>
+                          {editedQuestionNumbers.length > 0 &&
+                            editedQuestionNumbers?.map(
+                              (cur: any, index: number) => (
+                                <Typography className="info" key={index}>
+                                  {` ${cur.questionNumber}-${cur.questionType[0]}`}
+                                  {index < editedQuestionNumbers.length - 1
+                                    ? `,`
+                                    : null}
+                                </Typography>
+                              )
+                            )}
+                        </Box>
+                      </Box>
+                    </>
+                  )}
+                </Box>
+                <EditPopover />
+              </Box>
+              <Box className="footer-container">
+                <Box className="footer-content">
+                  <Button
+                    variant="contained"
+                    onClick={confirmSave}
+                    color="primary"
+                    className="save-button"
+                    disabled={editedQuestions ? false : true}
+                  >
+                    Save
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="error"
+                    onClick={handleCloseEditModal}
+                    endIcon={<CloseIcon />}
+                  >
+                    Close
+                  </Button>
+                </Box>
+              </Box>
             </>
-          </Box>
-          <Box
-            // className="modal-buttons-container"
-            className="close-button-container"
-          >
-            <Button
-              variant="contained"
-              onClick={confirmSave}
-              color="primary"
-              className="save-button"
-              disabled={editedQuestions ? false : true}
-            >
-              Save
-            </Button>
-            <Button
-              variant="contained"
-              color="error"
-              onClick={handleCloseEditModal}
-              endIcon={<CloseIcon />}
-            >
-              Close
-            </Button>
-          </Box>
-        </>
+          )}
+        </Box>
       </ReactModal>
     </>
   );

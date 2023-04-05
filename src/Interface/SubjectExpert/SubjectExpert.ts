@@ -72,4 +72,8 @@ export interface subjectExpertSliceState {
       viewQuestions: questionSets;
     };
   };
+  loadingStatus: {
+    tableLoader: boolean;
+    modalLoader: boolean;
+  };
 }
