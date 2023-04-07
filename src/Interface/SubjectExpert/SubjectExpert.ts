@@ -56,21 +56,25 @@ export interface UpdateQuestionsSet {
 }
 
 export interface subjectExpertSliceState {
-  searchText: string;
+  searchText: {
+    home: string;
+    newUpload: string;
+    modifyModal: string;
+  };
   subject: string;
   questionsModifyTableData: subjectWiseQuizListResponse[]; // this should be moved to common
   isModifyQuestionsModalOpen: boolean;
-  modifyModalQuestions: questionsForSetWithAnswers;
+  modifyModalQuestions: questionsForSetWithAnswers | [];
   editQuestionStates: {
     anchorElEdit: HTMLButtonElement | null;
-    editQuestionDetails: questionsForSetWithAnswers;
+    editQuestionDetails: questionsForSetWithAnswers | {};
     editedQuestions: UpdateQuestionsSet | null;
     tempQuestionData: questionsForSetWithAnswers[] | [];
     editedQuestionNumbers: any[];
-    viewQuestionModalState: {
-      isViewQuestionModalOpen: boolean;
-      viewQuestions: questionSets;
-    };
+  };
+  viewQuestionModalState: {
+    isViewQuestionModalOpen: boolean;
+    viewQuestions: questionSets[] | [];
   };
   loadingStatus: {
     tableLoader: boolean;

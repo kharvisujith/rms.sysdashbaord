@@ -1,9 +1,12 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { apiAgent } from "../api/apiAgent";
 import Swal from "sweetalert2";
-import { UpdateQuestionsSet } from "../Interface/SubjectExpert/SubjectExpert";
+import {
+  UpdateQuestionsSet,
+  subjectExpertSliceState,
+} from "../Interface/SubjectExpert/SubjectExpert";
 
-const initialState: any = {
+const initialState: subjectExpertSliceState = {
   searchText: {
     home: "",
     newUpload: "",
@@ -19,7 +22,6 @@ const initialState: any = {
     editedQuestions: null,
     tempQuestionData: [],
     editedQuestionNumbers: [],
-    //  validationError: [],
   },
   viewQuestionModalState: {
     isViewQuestionModalOpen: false,
@@ -269,7 +271,7 @@ export const subjectExpertSlice = createSlice({
   extraReducers: (builder: any) => {
     builder.addCase(
       fetchSubjectwiseQuestionSets.fulfilled,
-      (state: any, action: any) => {
+      (state: subjectExpertSliceState, action: any) => {
         return {
           ...state,
           questionsModifyTableData: action.payload,
@@ -282,7 +284,7 @@ export const subjectExpertSlice = createSlice({
     );
     builder.addCase(
       fetchSubjectwiseQuestionSets.rejected,
-      (state: any, action: any) => {
+      (state: subjectExpertSliceState, action: any) => {
         return {
           ...state,
           loadingStatus: {
@@ -294,7 +296,7 @@ export const subjectExpertSlice = createSlice({
     );
     builder.addCase(
       fetchSubjectwiseQuestionSets.pending,
-      (state: any, action: any) => {
+      (state: subjectExpertSliceState, action: any) => {
         return {
           ...state,
           loadingStatus: {
@@ -307,7 +309,7 @@ export const subjectExpertSlice = createSlice({
 
     builder.addCase(
       fetcQuestionsForSet.fulfilled,
-      (state: any, action: any) => {
+      (state: subjectExpertSliceState, action: any) => {
         if (action.payload.from === "home") {
           return {
             ...state,
@@ -332,41 +334,47 @@ export const subjectExpertSlice = createSlice({
         }
       }
     );
-    builder.addCase(fetcQuestionsForSet.rejected, (state: any, action: any) => {
-      return {
-        ...state,
-        loadingStatus: {
-          ...state.loadingStatus,
-          modalLoader: false,
-        },
-      };
-    });
-    builder.addCase(fetcQuestionsForSet.pending, (state: any, action: any) => {
-      return {
-        ...state,
-        loadingStatus: {
-          ...state.loadingStatus,
-          modalLoader: true,
-        },
-      };
-    });
+    builder.addCase(
+      fetcQuestionsForSet.rejected,
+      (state: subjectExpertSliceState, action: any) => {
+        return {
+          ...state,
+          loadingStatus: {
+            ...state.loadingStatus,
+            modalLoader: false,
+          },
+        };
+      }
+    );
+    builder.addCase(
+      fetcQuestionsForSet.pending,
+      (state: subjectExpertSliceState, action: any) => {
+        return {
+          ...state,
+          loadingStatus: {
+            ...state.loadingStatus,
+            modalLoader: true,
+          },
+        };
+      }
+    );
 
     builder.addCase(
       deleteSelectedQuesitonSet.fulfilled,
-      (state: any, action: any) => {}
+      (state: subjectExpertSliceState, action: any) => {}
     );
     builder.addCase(
       deleteSelectedQuesitonSet.rejected,
-      (state: any, action: any) => {}
+      (state: subjectExpertSliceState, action: any) => {}
     );
     builder.addCase(
       deleteSelectedQuesitonSet.pending,
-      (state: any, action: any) => {}
+      (state: subjectExpertSliceState, action: any) => {}
     );
 
     builder.addCase(
       updateEditedQuestion.fulfilled,
-      (state: any, action: any) => {
+      (state: subjectExpertSliceState, action: any) => {
         Swal.fire({
           title: "Success",
           text: "Updated Succesfully",
@@ -389,7 +397,7 @@ export const subjectExpertSlice = createSlice({
 
     builder.addCase(
       updateEditedQuestion.rejected,
-      (state: any, action: any) => {
+      (state: subjectExpertSliceState, action: any) => {
         Swal.fire({
           title: "error",
           text: "Failed to delete",
@@ -401,7 +409,7 @@ export const subjectExpertSlice = createSlice({
     );
     builder.addCase(
       updateEditedQuestion.pending,
-      (state: any, action: any) => {}
+      (state: subjectExpertSliceState, action: any) => {}
     );
   },
 });
