@@ -36,14 +36,11 @@ export const fetchSubjectwiseQuestionSets = createAsyncThunk<any>(
   "subjectExpert/subjectwiseQuestionSets",
   async (_, thunkAPI: any) => {
     try {
-      console.log("fetch subject wise thunk for home table called  called");
       const subject = thunkAPI.getState().subjectExpert.subject;
-      console.log(thunkAPI.getState());
-      console.log("subjct is ", subject);
       const response = await apiAgent.subjectExpert.getSubjectwiseQuestionSets(
         subject === "ALL" || subject === "" ? "" : subject
       );
-      console.log(response.data);
+
       return response.data;
     } catch (error: any) {
       return thunkAPI.rejectWithValue({ error: error.respone });
@@ -67,23 +64,6 @@ export const deleteSelectedQuesitonSet = createAsyncThunk<any, any>(
   }
 );
 
-// export const deleteQuestionById = createAsyncThunk<any, any>(
-//   "subjectExpert/deleteQuestion",
-//   async (questionDetails: any, thunkAPI: any) => {
-//     try {
-//       console.log("state in delete thunk functonis", thunkAPI.getState());
-
-//       const response = await apiAgent.subjectExpert.deleteQuestionsById(
-//         questionDetails
-//       );
-//       //return { questionDetails, response };
-//       console.log("responsein delete thunk is", response);
-//       return response;
-//     } catch (error: any) {
-//       return thunkAPI.rejectWithValue({ error: error.respone });
-//     }
-//   }
-// );
 export const deleteQuestion = createAsyncThunk<any, any>(
   "subjectExpert/deleteQuestion",
   async (questionDetails: any, thunkAPI: any) => {
@@ -91,30 +71,13 @@ export const deleteQuestion = createAsyncThunk<any, any>(
       const response = await apiAgent.subjectExpert.deleteQuestionsById(
         questionDetails
       );
-      console.log(response);
+      return response;
     } catch (error: any) {
       return thunkAPI.rejectWithValue({ error: error.respone });
     }
   }
 );
 
-// export const fetcQuestionsForSet = createAsyncThunk<any, any>(
-//   "subjectExpert/modifyMdalQuesitons",
-//   async (questionDetails: any, thunkAPI: any) => {
-//     try {
-//       console.log("yessss its called form add case");
-//       const response =
-//         await apiAgent.subjectExpert.getQuestionAnswersForQuestionSet(
-//           questionDetails.version,
-//           questionDetails.subjectName
-//         );
-//       console.log("response is", response.data);
-//       return response.data;
-//     } catch (error: any) {
-//       return thunkAPI.rejectWithValue({ error: error.response });
-//     }
-//   }
-// );
 export const fetcQuestionsForSet = createAsyncThunk<
   any,
   { questionDetails: any; from: any }
@@ -122,13 +85,11 @@ export const fetcQuestionsForSet = createAsyncThunk<
   "subjectExpert/modifyMdalQuesitons",
   async ({ questionDetails, from }, thunkAPI: any) => {
     try {
-      console.log("yessss its called form add case");
       const response =
         await apiAgent.subjectExpert.getQuestionAnswersForQuestionSet(
           questionDetails.version,
           questionDetails.subjectName
         );
-      console.log("response is", response.data);
       return { data: response.data, from: from };
     } catch (error: any) {
       return thunkAPI.rejectWithValue({ error: error.response });
@@ -140,7 +101,8 @@ export const updateEditedQuestion = createAsyncThunk<any, UpdateQuestionsSet>(
   "subjectExpert/updateQuestion",
   async (data: UpdateQuestionsSet, thunkAPI: any) => {
     try {
-      const respone = await apiAgent.subjectExpert.updateQuestion(data);
+      const response = await apiAgent.subjectExpert.updateQuestion(data);
+      return response;
     } catch (error: any) {
       return thunkAPI.rejectWithValue({ error: error.respone });
     }
@@ -152,8 +114,6 @@ export const subjectExpertSlice = createSlice({
   initialState,
   reducers: {
     handleSearchText: (state: any, action: any) => {
-      console.log("action.payload issss", action.payload, action.payload.from);
-
       switch (action.payload.from) {
         case "home":
           return {
@@ -188,12 +148,6 @@ export const subjectExpertSlice = createSlice({
     },
 
     setModalQuestions: (state: any, action: any) => {
-      console.log(
-        "action payloadddd is",
-        action,
-        action.payload.value
-        // action.paylaod.value
-      );
       return {
         ...state,
         modifyModalQuestions: action.payload.value,
@@ -201,7 +155,6 @@ export const subjectExpertSlice = createSlice({
     },
 
     setSearchTextToEmpty: (state: any, action: any) => {
-      console.log("action is", action.payload.from);
       return {
         ...state,
         searchText: {
@@ -211,21 +164,16 @@ export const subjectExpertSlice = createSlice({
       };
     },
     handleSubject: (state: any, action: any) => {
-      console.log("state in subject is", state);
-      console.log("action.payload is", action.payload.value);
-      // state.subject = action.payload.event.target.value;
       return {
         ...state,
         subject: action.payload.value,
       };
     },
     closeModifyQuestionModal: (state: any) => {
-      console.log("closee callled");
       const kk = {
         ...state,
         isModifyQuestionsModalOpen: false,
       };
-      console.log("kk is", kk);
       return kk;
     },
     handleModifyQuesitonModal: (state: any) => {
@@ -242,10 +190,6 @@ export const subjectExpertSlice = createSlice({
       }
     },
     setTempQuestionData: (state: any, action: any) => {
-      console.log(
-        "setTemplate Questoin DAta is clledd and payload is",
-        action.payload.data
-      );
       return {
         ...state,
         editQuestionStates: {
@@ -256,10 +200,6 @@ export const subjectExpertSlice = createSlice({
     },
 
     openEditPopover: (state: any, action: any) => {
-      console.log(
-        "open edit popver called and payload is",
-        action.payload.event.currentTarget
-      );
       return {
         ...state,
         editQuestionStates: {
@@ -279,8 +219,6 @@ export const subjectExpertSlice = createSlice({
       };
     },
     setEditedQuestions: (state: any, action: any) => {
-      console.log("set edited quesiton payload is", action.payload.data);
-
       return {
         ...state,
         editQuestionStates: {
@@ -290,10 +228,6 @@ export const subjectExpertSlice = createSlice({
       };
     },
     setEditedQuestionNumbers: (state: any, action: any) => {
-      console.log(
-        "set edited question numbers called and payloadis",
-        action.payload.data
-      );
       return {
         ...state,
         editQuestionStates: {
@@ -303,8 +237,6 @@ export const subjectExpertSlice = createSlice({
       };
     },
     clearEditData: (state: any) => {
-      console.log("inside clear data reducer");
-
       return {
         ...state,
         editQuestionStates: {
@@ -358,13 +290,11 @@ export const subjectExpertSlice = createSlice({
             tableLoader: false,
           },
         };
-        // state.loadingStatus.tableLoader = false;
       }
     );
     builder.addCase(
       fetchSubjectwiseQuestionSets.pending,
       (state: any, action: any) => {
-        // state.loadingStatus.tableLoader = true;
         return {
           ...state,
           loadingStatus: {
@@ -378,7 +308,6 @@ export const subjectExpertSlice = createSlice({
     builder.addCase(
       fetcQuestionsForSet.fulfilled,
       (state: any, action: any) => {
-        console.log("fullfilleddd paylaod is", action.payload);
         if (action.payload.from === "home") {
           return {
             ...state,
@@ -424,9 +353,7 @@ export const subjectExpertSlice = createSlice({
 
     builder.addCase(
       deleteSelectedQuesitonSet.fulfilled,
-      (state: any, action: any) => {
-        console.log("fullfilledd in delete question set");
-      }
+      (state: any, action: any) => {}
     );
     builder.addCase(
       deleteSelectedQuesitonSet.rejected,
@@ -457,16 +384,6 @@ export const subjectExpertSlice = createSlice({
             editedQuestionNumbers: [],
           },
         };
-        // state = {
-        //   ...state,
-        //   editQuestionStates: {
-        //     ...state.editQuestionStates,
-        //     anchorElEdit: null,
-        //     editedQuestions: null,
-        //     tempQuestionData: [],
-        //     editedQuestionNumbers: [],
-        //   },
-        // };
       }
     );
 

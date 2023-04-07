@@ -99,16 +99,6 @@ const QuestionSetsTable = (props: any) => {
     } catch (error: any) {
       console.log("Error in getting modal questions");
     }
-    // setOpenViewQuestionsModal(true);
-    // getQuestionAnswersForQuestionSet(row.version, row.subjectName)
-    //   .then((response: any) => {
-    //     setViewQuestions(response.data);
-    //     // setLoader(false);
-    //   })
-    //   .catch((error: any) => {
-    //     // setLoader(false);
-    //     console.log("error in subjwise answersapi");
-    //   });
   };
 
   const viewButton = (row: any) => {
@@ -125,7 +115,6 @@ const QuestionSetsTable = (props: any) => {
 
   const subjectwiseQuizDetails = async () => {
     try {
-      console.log("inside select subject Becase subject chnageddd");
       await dispatch(fetchSubjectwiseQuestionSets());
     } catch (error: any) {
       console.log("Error in fetching quiz data", error);

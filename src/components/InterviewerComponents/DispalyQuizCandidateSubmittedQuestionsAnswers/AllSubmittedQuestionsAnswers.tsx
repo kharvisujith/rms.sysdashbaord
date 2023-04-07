@@ -22,36 +22,30 @@ const AllSubmittedQuestionsAnswers = (props: any) => {
 
   const dispatch = useAppDispatch();
   const {
-    loadingStatus,
+    loadingStatus: { modalLoader },
     pastEvaluationIndividualSummaryData,
     pastEvaluationIndividualAnswersData,
   } = useAppSelector((state: any) => state.interviewer);
 
-  if (loadingStatus.modalLoader) {
-    return (
-      <Box className="page-loader">
-        <CircularProgress />
-      </Box>
-    );
-  }
+  // if (loadingStatus.modalLoader) {
+  //   return (
+  //     <Box className="page-loader">
+  //       <CircularProgress />
+  //     </Box>
+  //   );
+  // }
 
-  if (
-    !loadingStatus.modalLoader &&
-    pastEvaluationIndividualSummaryData?.length < 1
-  ) {
+  if (!modalLoader && pastEvaluationIndividualSummaryData?.length < 1) {
     return (
-      <Box className="modal-content-container message-box">
+      <Box className="content-container no-content">
         <Typography>Candidate Has Not Answered Any of the Questions</Typography>
       </Box>
     );
   }
   return (
     <>
-      <Box
-        // className="modal-container"
-        className="modal-content-container"
-      >
-        <Box className="progress-box">
+      <Box className="content-container">
+        <Box>
           <TableContainer className="popup-left-table">
             <Table>
               <TableHead

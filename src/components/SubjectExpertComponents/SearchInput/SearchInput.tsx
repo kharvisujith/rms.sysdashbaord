@@ -6,8 +6,7 @@ import {
   InputAdornment,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import { useAppDispatch, useAppSelector } from "../../../Store/ConfigureStrore";
-import { handleSearchText } from "../../../Redux/subjectexpertSlice";
+import { useAppDispatch } from "../../../Store/ConfigureStrore";
 
 const SearchInput = (props: any) => {
   const { from } = props;
@@ -28,7 +27,6 @@ const SearchInput = (props: any) => {
             id="search"
             type="text"
             onChange={(e: any) =>
-              // setSearchText(e.target.value)
               dispatch({
                 type: "subjectExpert/handleSearchText",
                 payload: { value: e?.target.value, from: from },

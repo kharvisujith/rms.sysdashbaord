@@ -1,4 +1,4 @@
-import { Box, Button } from "@mui/material";
+import { Box, Button, CircularProgress } from "@mui/material";
 import ReactModal from "react-modal";
 
 import "./ReviewAnswersModal.style.scss";
@@ -11,6 +11,7 @@ import {
 } from "../../../../Store/ConfigureStrore";
 import { handleReviewAnswersModal } from "../../../../Redux/interviewerSlice";
 import { customStylesModal } from "../../../../utils/Utils";
+import "../../../Common/Common.style.scss";
 
 const ReviewAnswersModal = () => {
   const dispatch = useAppDispatch();
@@ -26,21 +27,29 @@ const ReviewAnswersModal = () => {
         ariaHideApp={false}
         style={customStylesModal}
       >
-        <>
-          <AllSubmittedQuestionsAnswers />
-          {!modalLoader ? (
-            <Box className="close-button-container">
-              <Button
-                variant="contained"
-                color="error"
-                onClick={() => dispatch(handleReviewAnswersModal())}
-                endIcon={<CloseIcon />}
-              >
-                Close
-              </Button>
+        <Box className="modal-container">
+          {modalLoader ? (
+            <Box className="modal-loader">
+              <CircularProgress />
             </Box>
-          ) : null}
-        </>
+          ) : (
+            <>
+              <AllSubmittedQuestionsAnswers />
+              <Box className="footer-container">
+                <Box className="footer-content">
+                  <Button
+                    variant="contained"
+                    color="error"
+                    onClick={() => dispatch(handleReviewAnswersModal())}
+                    endIcon={<CloseIcon />}
+                  >
+                    Close
+                  </Button>
+                </Box>
+              </Box>
+            </>
+          )}
+        </Box>
       </ReactModal>
     </>
   );

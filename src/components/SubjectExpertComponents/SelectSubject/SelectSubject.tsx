@@ -6,16 +6,9 @@ import {
   MenuItem,
   SelectChangeEvent,
 } from "@mui/material";
-import { selectSubjectProps } from "../../../Interface/SubjectExpert/SelectSubject";
 import { useAppDispatch, useAppSelector } from "../../../Store/ConfigureStrore";
-import {
-  fetchSubjectwiseQuestionSets,
-  handleSubject,
-} from "../../../Redux/subjectexpertSlice";
-import { useEffect } from "react";
 
 const SelectSubject = () => {
-  //const { subject, setSubject } = props;
   const dispatch = useAppDispatch();
   const { subject } = useAppSelector((state: any) => state.subjectExpert);
   const handleSubjectChange = (event: SelectChangeEvent) => {
@@ -23,21 +16,8 @@ const SelectSubject = () => {
       type: "subjectExpert/handleSubject",
       payload: { value: event.target.value },
     });
-    //setSubject(event.target.value);
   };
 
-  // const subjectwiseQuizDetails = async () => {
-  //   try {
-  //     console.log("inside select subject Becase subject chnageddd");
-  //     await dispatch(fetchSubjectwiseQuestionSets());
-  //   } catch (error: any) {
-  //     console.log("Error in fetching quiz data", error);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   subjectwiseQuizDetails();
-  // }, [subject]);
   return (
     <>
       <Box>

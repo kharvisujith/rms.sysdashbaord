@@ -124,6 +124,11 @@
     border: 2px solid pink;
     overflow-y: scroll;
   }
+  .no-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
   .footer-container {
     height: auto;
     border: 2px solid green;

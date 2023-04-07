@@ -20,32 +20,18 @@ import { getComparator } from "../../../utils/TableSortFunctions";
 import { QuestionsModifyTableColumns } from "./QuestionsModifyTableColumns";
 
 import DeleteIcon from "@mui/icons-material/Delete";
-import {
-  deleteQuestionSet,
-  getSubjectwiseQuestionSets,
-  getSubjectwiseQuiz,
-} from "../../../api/apiAgent";
+
 import ModifyQuestionsModal from "./ModifyQuestionsModal";
 import Swal from "sweetalert2";
-import { questionsForSetWithAnswers } from "../../../Interface/SubjectExpert/SubjectExpert";
 import { useAppDispatch, useAppSelector } from "../../../Store/ConfigureStrore";
 import {
   deleteSelectedQuesitonSet,
   fetcQuestionsForSet,
   fetchSubjectwiseQuestionSets,
   handleModifyQuesitonModal,
-  setSearchTextToEmpty,
 } from "../../../Redux/subjectexpertSlice";
 
 const QuestionsModifyTable = () => {
-  // const {
-  //  QuestionsModifyTableData,
-  //  subjectwiseQuizDetails,
-  // isQuizSetExists,
-  // searchText,
-  //  subject,
-  //} = props;
-
   const dispatch = useAppDispatch();
   const {
     searchText,
@@ -58,13 +44,6 @@ const QuestionsModifyTable = () => {
   const [orderBy, setOrderBy] = useState<string>("version");
   const [page, setPage] = useState<number>(0);
   const [rowsPerPage, setRowsPerPage] = useState<number>(10);
-  const [loader, setLoader] = useState<boolean>(false);
-
-  const [openModifyQuestionsModal, setOpenModifyQuestionsModal] =
-    useState<Boolean>(false);
-  const [modifyQuestionsData, setModifyQuestionsData] = useState<
-    questionsForSetWithAnswers[] | []
-  >([]);
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -90,31 +69,13 @@ const QuestionsModifyTable = () => {
     setOrderBy(property);
   };
 
-  const fetchSubjectwiseQuizQuestonAnswers = (
-    questionDetails: questionsForSetWithAnswers
-  ) => {
-    // getSubjectwiseQuizAnswers(
-    //   questionDetails.version,
-    //   questionDetails.subjectName
-    // )
-    //   .then((response: any) => {
-    //     setModifyQuestionsData(response.data);
-    //   })
-    //   .catch((error: any) => {
-    //     // setLoader(false);
-    //     console.log("error in subjwise answersapi");
-    //   });
-  };
   const handleModifyQuestionsModal = async (questionDetails: any) => {
     try {
-      console.log("quesiotn detailsss is", questionDetails);
       dispatch(handleModifyQuesitonModal());
       await dispatch(fetcQuestionsForSet({ questionDetails, from: "home" }));
     } catch (error: any) {
       console.log("Error in fetching data in modify modal");
     }
-    //fetchSubjectwiseQuizQuestonAnswers(questionDetails);
-    // setOpenModifyQuestionsModal(true);
   };
 
   const deleteSelectedQuestionSet = async (row: any) => {
@@ -132,7 +93,6 @@ const QuestionsModifyTable = () => {
       if (result.isConfirmed) {
         try {
           const response = await dispatch(deleteSelectedQuesitonSet(row));
-          console.log("response of delte is", response);
 
           Swal.fire({
             title: "Success",
@@ -156,32 +116,6 @@ const QuestionsModifyTable = () => {
           });
           console.log("Error in delete question set", error);
         }
-
-        // deleteQuestionSet(row.version, row.subjectName)
-        //   .then((response: any) => {
-        //     getSubjectwiseQuiz(subject);
-        //     setLoader(false);
-        // Swal.fire({
-        //   title: "Success",
-        //   text: "Deleted Succesfully",
-        //   timer: 3000,
-        //   icon: "success",
-        //   confirmButtonText: "Okay",
-        //   customClass: "swal-alert",
-        // });
-        // }
-        // )
-        //   .catch((error: any) => {
-        //     setLoader(false);
-        // Swal.fire({
-        //   title: "error",
-        //   text: "Failed to delete",
-        //   timer: 3000,
-        //   icon: "error",
-        //   confirmButtonText: "Okay",
-        //   customClass: "swal-alert",
-        // });
-        //   });
       }
     });
   };
@@ -210,10 +144,8 @@ const QuestionsModifyTable = () => {
     );
   };
 
-  // this has to be  added here and removed form select subject comp
   const subjectwiseQuizDetails = async () => {
     try {
-      console.log("inside select subject Becase subject chnageddd");
       await dispatch(fetchSubjectwiseQuestionSets());
     } catch (error: any) {
       console.log("Error in fetching quiz data", error);
@@ -343,16 +275,7 @@ const QuestionsModifyTable = () => {
           )}
         </Paper>
       </Box>
-      <ModifyQuestionsModal
-      //   openModifyQuestionsModal={openModifyQuestionsModal}
-      //  setOpenModifyQuestionsModal={setOpenModifyQuestionsModal}
-      //    modifyQuestionsData={modifyQuestionsData}
-      //  setModifyQuestionsData={setModifyQuestionsData}
-      // fetchSubjectwiseQuizQuestonAnswers={fetchSubjectwiseQuizQuestonAnswers}
-      // subjectwiseQuizDetails={subjectwiseQuizDetails}
-      //   subject={subject}
-      //  currentTableRowDetails={currentTableRowDetails}
-      />
+      <ModifyQuestionsModal />
     </>
   );
 };

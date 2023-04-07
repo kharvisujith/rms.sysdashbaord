@@ -20,7 +20,7 @@ const SelectQuestionsModal = () => {
     isSelectQuestionModalOpen,
     selectQuestions,
     createQuizSetWiseInfoBody,
-    loadingStatus,
+    loadingStatus: { modalLoader },
   } = useAppSelector((state: any) => state.interviewer);
   const dispatch = useAppDispatch();
 
@@ -52,51 +52,54 @@ const SelectQuestionsModal = () => {
         ariaHideApp={false}
         style={customStylesModal}
       >
-        {!loadingStatus.modalLoader ? (
-          <>
-            <Box className="modal-content-container">
-              {selectQuestions?.map(
-                (
-                  questionData: subjectwiseQuizAnswersResponse,
-                  index: number
-                ) => (
-                  <Box key={index} className="questions">
-                    <Typography className="text">{`${index + 1}.  ${
-                      questionData.question
-                    }`}</Typography>
-                    <Checkbox
-                      checked={checkIdInCreateQuizBody(questionData)}
-                      onChange={(event: any) =>
-                        dispatch({
-                          type: "interviewer/handleSelectQuestionsCheckBoxChange",
-                          payload: {
-                            event: event,
-                            questionDeatils: questionData,
-                          },
-                        })
-                      }
-                      inputProps={{ "aria-label": "controlled" }}
-                      className="select-check-box"
-                    />
-                  </Box>
-                )
-              )}
+        <Box className="modal-container">
+          {modalLoader ? (
+            <Box className="modal-loader">
+              <CircularProgress />
             </Box>
-
-            <Box className="close-button-container">
-              <Button
-                variant="contained"
-                onClick={() => dispatch(handleSelectQuestionsModal())}
-              >
-                Save
-              </Button>
-            </Box>
-          </>
-        ) : (
-          <Box className="modal-loader">
-            <CircularProgress />
-          </Box>
-        )}
+          ) : (
+            <>
+              <Box className="content-container">
+                {selectQuestions?.map(
+                  (
+                    questionData: subjectwiseQuizAnswersResponse,
+                    index: number
+                  ) => (
+                    <Box key={index} className="questions">
+                      <Typography className="text">{`${index + 1}.  ${
+                        questionData.question
+                      }`}</Typography>
+                      <Checkbox
+                        checked={checkIdInCreateQuizBody(questionData)}
+                        onChange={(event: any) =>
+                          dispatch({
+                            type: "interviewer/handleSelectQuestionsCheckBoxChange",
+                            payload: {
+                              event: event,
+                              questionDeatils: questionData,
+                            },
+                          })
+                        }
+                        inputProps={{ "aria-label": "controlled" }}
+                        className="select-check-box"
+                      />
+                    </Box>
+                  )
+                )}
+              </Box>
+              <Box className="footer-container">
+                <Box className="footer-content">
+                  <Button
+                    variant="contained"
+                    onClick={() => dispatch(handleSelectQuestionsModal())}
+                  >
+                    Save
+                  </Button>
+                </Box>
+              </Box>
+            </>
+          )}
+        </Box>
       </ReactModal>
     </>
   );

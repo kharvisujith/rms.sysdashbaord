@@ -17,24 +17,7 @@ const SubjectExpertNewUpload = () => {
   >([]);
   const [isQuizSetExists, setIsQuizSetExists] = useState<boolean>(true);
 
-  const subjectwiseQuizDetails = async (subject: string) => {
-    // getSubjectwiseQuiz(subject === "ALL" ? "" : subject)
-    //   .then((response: any) => {
-    //     if (response.status === 204) {
-    //       setIsQuizSetExists(false);
-    //     } else {
-    //       setSubjectWiseQuestionSets(response.data);
-    //       setIsQuizSetExists(true);
-    //     }
-    //   })
-    //   .catch((error: any) => {
-    //     console.log("error in subjwiseapi");
-    //   });
-  };
-
-  // useEffect(() => {
-  //   subjectwiseQuizDetails(subject);
-  // }, [subject]);
+  const subjectwiseQuizDetails = async (subject: string) => {};
 
   return (
     <>
@@ -46,16 +29,12 @@ const SubjectExpertNewUpload = () => {
             subjectwiseQuizDetails={subjectwiseQuizDetails}
           />
           <SearchInput from="newUpload" />
-          <SelectSubject
-          //subject={subject} setSubject={setSubject}
-          />
+          <SelectSubject />
         </Box>
 
         <QuestionSetsTable
           subjectWiseQuestionSets={subjectWiseQuestionSets}
-          // setSubjectWiseQuestionSets={setSubjectWiseQuestionSets}
           isQuizSetExists={isQuizSetExists}
-          //  searchText={searchText}
         />
       </Box>
     </>

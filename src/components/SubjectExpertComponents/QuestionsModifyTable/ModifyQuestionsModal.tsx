@@ -14,16 +14,9 @@ import { useEffect, useState } from "react";
 import { IconButton } from "@material-ui/core";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import {
-  apiAgent,
-  deleteQuestionsById,
-  updateQuestion,
-} from "../../../api/apiAgent";
+import { apiAgent } from "../../../api/apiAgent";
 import Swal from "sweetalert2";
-import {
-  questionsForSetWithAnswers,
-  UpdateQuestionsSet,
-} from "../../../Interface/SubjectExpert/SubjectExpert";
+import { questionsForSetWithAnswers } from "../../../Interface/SubjectExpert/SubjectExpert";
 import EditPopover from "./EditPopover/EditPopover";
 import { useAppDispatch, useAppSelector } from "../../../Store/ConfigureStrore";
 import {
@@ -31,81 +24,30 @@ import {
   closeModifyQuestionModal,
   deleteQuestion,
   fetchSubjectwiseQuestionSets,
-  handleModifyQuesitonModal,
-  handleViewQuestionModal,
   updateEditedQuestion,
 } from "../../../Redux/subjectexpertSlice";
 
 const ModifyQuestionsModal = () => {
-  // const {
-  //   openModifyQuestionsModal,
-  //   setOpenModifyQuestionsModal,
-  //   modifyQuestionsData,
-  //   setModifyQuestionsData,
-  //   fetchSubjectwiseQuizQuestonAnswers,
-  //   subjectwiseQuizDetails,
-  //   //   subject,
-  //   //   orignalData,
-  //   //  currentTableRowDetails,
-  // } = props;
-
   const dispatch = useAppDispatch();
   const {
     searchText,
     modifyModalQuestions,
     loadingStatus: { modalLoader },
     isModifyQuestionsModalOpen,
-    editQuestionStates: {
-      editedQuestions,
-      editedQuestionNumbers,
-      tempQuestionData,
-    },
+    editQuestionStates: { editedQuestions, editedQuestionNumbers },
   } = useAppSelector((state: any) => state.subjectExpert);
 
-  //const [searchText, setSearchText] = useState<string>("");
-  const [anchorElEdit, setAnchorElEdit] =
-    useState<HTMLButtonElement | null>(null);
-
-  const [editQuestionDetails, setEditQuestionDetails] =
-    useState<questionsForSetWithAnswers | null>();
-
-  // const [tempQuestionData, setTempQuestionData] = useState<
-  //   questionsForSetWithAnswers[] | []
-  // >([]);
-
-  // const [editedQuestions, setEditedQuestions] =
-  //   useState<UpdateQuestionsSet | null>();
-
-  // const [editedQuestionNumbers, setEditedQuestionNumbers] = useState<
-  //   any[] | []
-  // >([]);
-
   const [validationError, setValidationError] = useState<any[]>([]);
-
-  const handleCloseEdit = () => {
-    setAnchorElEdit(null);
-  };
 
   const handleOpenEditPopover = (
     event: any,
     questionDetails: questionsForSetWithAnswers
   ) => {
-    console.log("inside open function");
-    // setEditQuestionDetails(questiondetails);
-    // setAnchorElEdit(event.currentTarget);
     dispatch({
       type: "subjectExpert/openEditPopover",
       payload: { event: event, questionDetails: questionDetails },
     });
   };
-
-  // const clearEditData = () => {
-  //   // setTempQuestionData([]);
-  //   // setEditedQuestions(null);
-  //   // setEditedQuestionNumbers([]);
-  //   setValidationError([]);
-  //   dispatch(clearEditData())
-  // };
 
   const handleCloseEditModal = () => {
     setValidationError([]);
@@ -128,7 +70,6 @@ const ModifyQuestionsModal = () => {
       if (result.isConfirmed) {
         try {
           await dispatch(deleteQuestion(questionDetails));
-          //   clearEditData();
           Swal.fire({
             title: "Success",
             text: "Deleted Succesfully",
@@ -175,29 +116,6 @@ const ModifyQuestionsModal = () => {
       if (result.isConfirmed) {
         await dispatch(updateEditedQuestion(editedQuestions));
         setValidationError([]);
-        // updateQuestion(editedQuestions!)
-        //   .then((response: any) => {
-        //     Swal.fire({
-        //       title: "Success",
-        //       text: "Updated Succesfully",
-        //       icon: "success",
-        //       confirmButtonText: "Okay",
-        //       customClass: "swal-alert",
-        //     });
-        //   })
-        //   .then(() => {
-        //     handleCloseEditModal();
-        //   })
-        //   .catch((error: any) => {
-        //     console.log("error in questions updated");
-        //     Swal.fire({
-        //       title: "error",
-        //       text: "Failed to delete",
-        //       icon: "error",
-        //       confirmButtonText: "Okay",
-        //       customClass: "swal-alert",
-        //     });
-        //   });
       }
     });
   };
@@ -205,7 +123,6 @@ const ModifyQuestionsModal = () => {
   useEffect(() => {
     if (modifyModalQuestions?.length > 0) {
       const newArr = JSON.parse(JSON.stringify(modifyModalQuestions));
-      // setTempQuestionData([...newArr]);
 
       dispatch({
         type: "subjectExpert/setTempQuestionData",
@@ -220,14 +137,6 @@ const ModifyQuestionsModal = () => {
       payload: { from: "modifyModal" },
     });
   }, []);
-
-  // if (modalLoader) {
-  //   return (
-  //     <Box className="page-loader">
-  //       <CircularProgress />
-  //     </Box>
-  //   );
-  // }
 
   return (
     <>
@@ -350,7 +259,10 @@ const ModifyQuestionsModal = () => {
                     </>
                   )}
                 </Box>
-                <EditPopover />
+                <EditPopover
+                  validationError={validationError}
+                  setValidationError={setValidationError}
+                />
               </Box>
               <Box className="footer-container">
                 <Box className="footer-content">

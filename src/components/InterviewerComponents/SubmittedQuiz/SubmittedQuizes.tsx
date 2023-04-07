@@ -279,14 +279,14 @@ const SubmitedQuizes = (props: any) => {
           ) : null}
         </Paper>
       </Box>
-      <Box className="quiz-start-btn-wrap">
+      <Box>
         <ReactModal
           isOpen={OpenTestModal}
           contentLabel="Minimal Modal Example"
           ariaHideApp={false}
           style={customStylesModal}
         >
-          <>
+          <Box className="modal-container">
             {loader ? (
               <Box className="modal-loader">
                 <CircularProgress />
@@ -298,17 +298,21 @@ const SubmitedQuizes = (props: any) => {
               />
             )}
 
-            <Box className="close-button-container">
-              <Button
-                variant="contained"
-                color="error"
-                onClick={endTestButtonHandler}
-                endIcon={<CloseIcon />}
-              >
-                Close
-              </Button>
+            <Box className="footer-container">
+              {!loader && (
+                <Box className="footer-content">
+                  <Button
+                    variant="contained"
+                    color="error"
+                    onClick={endTestButtonHandler}
+                    endIcon={<CloseIcon />}
+                  >
+                    Close
+                  </Button>
+                </Box>
+              )}
             </Box>
-          </>
+          </Box>
         </ReactModal>
       </Box>
     </>

@@ -8,13 +8,11 @@ import {
   FormControl,
   InputLabel,
   Select,
-  SelectChangeEvent,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import {
   questionForUpdate,
   questionsForSetWithAnswers,
-  UpdateQuestionsSet,
 } from "../../../../Interface/SubjectExpert/SubjectExpert";
 import { optionIds } from "../../../../utils/Utils";
 import "./EditPopver.styles.scss";
@@ -22,31 +20,10 @@ import {
   useAppDispatch,
   useAppSelector,
 } from "../../../../Store/ConfigureStrore";
-import {
-  closeEditPopover,
-  setTempQuestionData,
-} from "../../../../Redux/subjectexpertSlice";
+import { closeEditPopover } from "../../../../Redux/subjectexpertSlice";
 
 const EditPopover = (props: any) => {
-  // const {
-  // anchorElEdit,
-  // setAnchorElEdit,
-  // handleCloseEdit,
-  // editQuestionDetails,
-  // setEditQuestionDetails,
-  // editedQuestions,
-  // setEditedQuestions,
-  // tempQuestionData,
-  // setTempQuestionData,
-  // questionIndexInTempData,
-  // setQuestionIndexInTempData,
-  // modifyQuestionsData,
-  // setModifyQuestionsData,
-  // orignalData,
-  // editedQuestionNumbers,
-  // setEditedQuestionNumbers,
-  // } = props;
-
+  const { validationError, setValidationError } = props;
   const dispatch = useAppDispatch();
   const {
     modifyModalQuestions,
@@ -62,7 +39,7 @@ const EditPopover = (props: any) => {
     editQuestionStates: { anchorElEdit },
   } = useAppSelector((state: any) => state.subjectExpert);
 
-  const [validationError, setValidationError] = useState<any[]>([]);
+  //  const [validationError, setValidationError] = useState<any[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
   const [currentQuestionId, setCurrentQuestionId] = useState<any>();
   const [saveRefDisabled, setSaveRefDisabled] = useState<boolean>(true);
@@ -153,7 +130,6 @@ const EditPopover = (props: any) => {
         if (validationError.length > 0) {
           const existingIndex = validationError.findIndex(
             (cur: any) => cur.questionId === currentQuestionId
-            //tempQuestionData[currentQuestionIndex].questionId
           );
 
           const newValArr = [...validationError];
@@ -553,32 +529,16 @@ const EditPopover = (props: any) => {
       setCurrentQuestionId(tempQuestionData[currentQuestionIndex]?.questionId);
       if (tempQuestionData.length > 0) {
         CheckSaveButtonDisabledOnEnter(currentQuestionIndex);
-        // checkSaveReferenceDisabled(
-        //   tempQuestionData,
-        //   checkQuestionAnswersValidation() || checkQustionTypeValidation(),
-        //   currentQuestionIndex
-        // );
       }
     }
   }, [anchorElEdit, modifyModalQuestions, editQuestionDetails]);
 
-  console.log(
-    "edited quesiton and question numbers on save ref isss",
-    editedQuestions,
-    editedQuestionNumbers
-  );
   return (
     <>
       <Popover
         open={Boolean(anchorElEdit)}
         anchorEl={anchorElEdit}
         onClose={() => {
-          // setSaveRefDisabled(true);
-          // handleCloseEdit();
-          //  dispatch({
-          //   type: "subjectExpert/handleEditPopover",
-          //   payload: { event: event, questionDetails: questionDetails },
-          // });
           dispatch(closeEditPopover());
         }}
         anchorOrigin={{
@@ -586,7 +546,6 @@ const EditPopover = (props: any) => {
           horizontal: "left",
         }}
       >
-        {/* <h1>keeeekeeeeeeeeeeeeek</h1> */}
         {tempQuestionData.length > 0 && (
           <Box className="edit-popover-container">
             <FormControl variant="standard">
