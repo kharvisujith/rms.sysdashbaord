@@ -34,6 +34,12 @@ import {
   submittedQuizResponse,
 } from "../../../Interface/Interviewer/InterviewerInterface";
 import { customStylesModal } from "../../../utils/Utils";
+import {
+  fetchPastEvaluationsIndividualAnswers,
+  fetchPastEvaluationsIndividualSummary,
+  handleReviewAnswersModal,
+} from "../../../Redux/interviewerSlice";
+import { useAppDispatch, useAppSelector } from "../../../Store/ConfigureStrore";
 
 //this has to in utils
 // export const customStylesModal = {
@@ -41,6 +47,12 @@ import { customStylesModal } from "../../../utils/Utils";
 // };
 
 const SubmitedQuizes = (props: any) => {
+  const dispatch = useAppDispatch();
+  const {
+    loadingStatus: { modalLoader },
+    isReviewModalOpen,
+  } = useAppSelector((state: any) => state.interviewer);
+
   const [page, setPage] = useState<number>(0);
   const [rowsPerPage, setRowsPerPage] = useState<number>(10);
   const [totalSubmittedQuizInfoList, setTotalSubmittedQuizInfoList] = useState<
@@ -97,6 +109,16 @@ const SubmitedQuizes = (props: any) => {
 
   const endTestButtonHandler = () => {
     setOpenTestModal(false);
+  };
+
+  const handleOpenReviewModal = async (testId: any) => {
+    dispatch(handleReviewAnswersModal());
+    try {
+      await dispatch(fetchPastEvaluationsIndividualSummary(testId));
+      await dispatch(fetchPastEvaluationsIndividualAnswers(testId));
+    } catch (error: any) {
+      console.log("error in review model", error);
+    }
   };
 
   const StartTestViewButtonHandler = async (data: any) => {
@@ -235,7 +257,8 @@ const SubmitedQuizes = (props: any) => {
                                     className="table-button"
                                     variant="contained"
                                     onClick={() =>
-                                      StartTestViewButtonHandler(value)
+                                      // StartTestViewButtonHandler(value)
+                                      handleOpenReviewModal(value)
                                     }
                                   >
                                     Review
@@ -281,36 +304,37 @@ const SubmitedQuizes = (props: any) => {
       </Box>
       <Box>
         <ReactModal
-          isOpen={OpenTestModal}
+          isOpen={isReviewModalOpen}
           contentLabel="Minimal Modal Example"
           ariaHideApp={false}
           style={customStylesModal}
         >
           <Box className="modal-container">
-            {loader ? (
+            {modalLoader ? (
               <Box className="modal-loader">
                 <CircularProgress />
               </Box>
             ) : (
               <AllSubmittedQuestionsAnswers
-                quizSubjectInfo={detailedSubmittedQuizInfoList}
-                totalQuizDetailedInfo={individualQuizDetailedInfo}
+              // quizSubjectInfo={detailedSubmittedQuizInfoList}
+              // totalQuizDetailedInfo={individualQuizDetailedInfo}
               />
             )}
 
             <Box className="footer-container">
-              {!loader && (
-                <Box className="footer-content">
-                  <Button
-                    variant="contained"
-                    color="error"
-                    onClick={endTestButtonHandler}
-                    endIcon={<CloseIcon />}
-                  >
-                    Close
-                  </Button>
-                </Box>
-              )}
+              {/* {!loader && ( */}
+              <Box className="footer-content">
+                <Button
+                  variant="contained"
+                  color="error"
+                  // onClick={endTestButtonHandler}
+                  onClick={() => dispatch(handleReviewAnswersModal())}
+                  endIcon={<CloseIcon />}
+                >
+                  Close
+                </Button>
+              </Box>
+              {/* )} */}
             </Box>
           </Box>
         </ReactModal>

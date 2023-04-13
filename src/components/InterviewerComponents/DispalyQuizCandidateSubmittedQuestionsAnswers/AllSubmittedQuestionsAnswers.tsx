@@ -27,14 +27,6 @@ const AllSubmittedQuestionsAnswers = (props: any) => {
     pastEvaluationIndividualAnswersData,
   } = useAppSelector((state: any) => state.interviewer);
 
-  // if (loadingStatus.modalLoader) {
-  //   return (
-  //     <Box className="page-loader">
-  //       <CircularProgress />
-  //     </Box>
-  //   );
-  // }
-
   if (!modalLoader && pastEvaluationIndividualSummaryData?.length < 1) {
     return (
       <Box className="content-container no-content">

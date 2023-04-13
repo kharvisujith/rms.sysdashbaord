@@ -72,7 +72,6 @@ const PastEvaluationsTable = () => {
 
   const handleOpenReviewModal = async (testId: any) => {
     dispatch(handleReviewAnswersModal());
-
     try {
       await dispatch(fetchPastEvaluationsIndividualSummary(testId));
       await dispatch(fetchPastEvaluationsIndividualAnswers(testId));
