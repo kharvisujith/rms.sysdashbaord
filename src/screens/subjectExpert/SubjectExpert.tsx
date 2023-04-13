@@ -1,11 +1,9 @@
 import TopNavBar from "../../components/TopNavBar/TopNavBar";
 import SubjectExpertHome from "../../components/SubjectExpertComponents/SubjectExpertHome/SubjectExpertHome";
-const SubjectExpert = (props: any) => {
+const SubjectExpert = () => {
   return (
     <>
-      <TopNavBar
-      //role={props.role} setRole={props.setRole}
-      />
+      <TopNavBar />
       <SubjectExpertHome />
     </>
   );

@@ -1,12 +1,10 @@
 import SubjectExpertNewUpload from "../../components/SubjectExpertComponents/SubjectExpertNewUpload/SubjectExpertNewUpload";
 import TopNavBar from "../../components/TopNavBar/TopNavBar";
 
-const SubjectExpertUpload = (props: any) => {
+const SubjectExpertUpload = () => {
   return (
     <>
-      <TopNavBar
-      //  role={props.role} setRole={props.setRole}
-      />
+      <TopNavBar />
       <SubjectExpertNewUpload />
     </>
   );

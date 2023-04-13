@@ -6,7 +6,6 @@ import {
   verifyCandidateRequestBody,
 } from "../Interface/Candidate/CandidateInterface";
 import { history } from "../utils/helper/_helper";
-import Swal from "sweetalert2";
 
 const initialState: candiDateSliceStates = {
   verifyCredentials: {
@@ -19,27 +18,12 @@ const initialState: candiDateSliceStates = {
   },
   errorMessage: "",
   testQuestions: [],
-
   isTestStarted: Boolean(localStorage.getItem("testStarted")) || false,
-  // selectedAnswers: [],
-
   loadingStatus: {
     buttonLoader: false,
     pageLoader: false,
   },
 };
-
-// export const submitQuiz = createAsyncThunk<any, any>(
-//   "candidate/submitquiz",
-//   async (data: any, thunkAPI: any) => {
-//     try {
-//       const res = await apiAgent.candidate.submitQuiz(data);
-//       return res;
-//     } catch (error: any) {
-//       thunkAPI.rejectWithValue({ error: error.response.data });
-//     }
-//   }
-// );
 
 export const verifyCandidate = createAsyncThunk<
   { data: verifyCandidateRequestBody; fromPage: string },
@@ -58,9 +42,6 @@ export const submitCandidateInfo = createAsyncThunk<any, any>(
   async (data: submitCandidateInfoRequestBody, thunkAPI) => {
     try {
       const res = await apiAgent.candidate.submitCandidateInfo(data);
-      // if (!res) {
-      //   throw new Error("Invalid credentials");
-      // }
       return res.data;
     } catch (error: any) {
       return thunkAPI.rejectWithValue({ error: error.response.data });

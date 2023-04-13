@@ -1,12 +1,10 @@
 import SubmitedQuizes from "../../components/InterviewerComponents/SubmittedQuiz/SubmittedQuizes";
 import TopNavBar from "../../components/TopNavBar/TopNavBar";
 
-const SubmittedQuizScreen = (props: any) => {
+const SubmittedQuizScreen = () => {
   return (
     <>
-      <TopNavBar
-      //role={props.role} setRole={props.setRole}
-      />
+      <TopNavBar />
       <SubmitedQuizes />
     </>
   );

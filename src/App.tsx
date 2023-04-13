@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import PageNotFound from "./screens/PageNotFound/PageNotFound";
 import SubjectExpert from "./screens/subjectExpert/SubjectExpert";
@@ -17,44 +17,15 @@ const App = () => {
   history.navigate = useNavigate();
   history.location = useLocation();
 
-  // const [role, setRole] =
-  //   useState<"Interviewer" | "Subject Expert" | null>("Interviewer");
-
   useEffect(() => {}, []);
   return (
     <>
-      {/* {role === "Interviewer" || role === "Subject Expert" ? (
-        <TopNavBar role={role} setRole={setRole} />
-      ) : null} */}
       {role === "Interviewer" ? (
         <>
-          {/* <TopNavBar role={role} setRole={setRole} /> */}
-
           <Routes>
-            <Route
-              path="/"
-              element={
-                <InterviewerHomeScreen
-                // role={role} setRole={setRole}
-                />
-              }
-            />
-            <Route
-              path="/createquiz"
-              element={
-                <CreateQuizScreen
-                // role={role} setRole={setRole}
-                />
-              }
-            />
-            <Route
-              path="/submitted-quiz"
-              element={
-                <SubmittedQuizScreen
-                //   role={role} setRole={setRole}
-                />
-              }
-            />
+            <Route path="/" element={<InterviewerHomeScreen />} />
+            <Route path="/createquiz" element={<CreateQuizScreen />} />
+            <Route path="/submitted-quiz" element={<SubmittedQuizScreen />} />
             <Route path="*" element={<PageNotFound />} />
             <Route
               path="/rms-aug/test/:id/:key"
@@ -66,23 +37,11 @@ const App = () => {
         </>
       ) : role === "Subject Expert" ? (
         <>
-          {/* <TopNavBar role={role} setRole={setRole} /> */}
           <Routes>
-            <Route
-              path="/"
-              element={
-                <SubjectExpert
-                //  role={role} setRole={setRole}
-                />
-              }
-            />
+            <Route path="/" element={<SubjectExpert />} />
             <Route
               path="/subjectexpert/new"
-              element={
-                <SubjectExpertUpload
-                // role={role} setRole={setRole}
-                />
-              }
+              element={<SubjectExpertUpload />}
             />
             <Route path="*" element={<PageNotFound />} />
             <Route

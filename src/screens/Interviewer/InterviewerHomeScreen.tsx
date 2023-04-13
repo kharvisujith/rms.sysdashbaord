@@ -1,11 +1,9 @@
 import InterviewerQuizTable from "../../components/InterviewerComponents/InterviewerHome/InterviewerQuizTable";
 import TopNavBar from "../../components/TopNavBar/TopNavBar";
-const InterviewerHomeScreen = (props: any) => {
+const InterviewerHomeScreen = () => {
   return (
     <>
-      <TopNavBar
-      //  role={props.role} setRole={props.setRole}
-      />
+      <TopNavBar />
       <InterviewerQuizTable />
     </>
   );

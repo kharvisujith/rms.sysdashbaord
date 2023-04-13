@@ -1,13 +1,11 @@
 import MakeQuiz from "../../components/InterviewerComponents/CreateQuiz/MakeQuiz/MakeQuiz";
 import TopNavBar from "../../components/TopNavBar/TopNavBar";
 
-const CreateQuizScreen = (props: any) => {
+const CreateQuizScreen = () => {
   return (
     <>
       <>
-        <TopNavBar
-        //  role={props.role} setRole={props.setRole}
-        />
+        <TopNavBar />
         <MakeQuiz />
       </>
     </>

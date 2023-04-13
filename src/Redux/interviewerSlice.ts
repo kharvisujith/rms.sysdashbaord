@@ -174,9 +174,6 @@ export const interviewerSlice = createSlice({
       };
     },
     handleReviewAnswersModal: (state: interviewerSliceStates) => {
-      // state.isReviewModalOpen
-      //   ? (state.isReviewModalOpen = false)
-      //   : (state.isReviewModalOpen = true);
       if (state.isReviewModalOpen) {
         return {
           ...state,
@@ -188,21 +185,8 @@ export const interviewerSlice = createSlice({
           isReviewModalOpen: true,
         };
       }
-
-      // return state.isReviewModalOpen
-      //   ? {
-      //       ...state,
-      //       isReviewModalOpen: false,
-      //     }
-      //   : {
-      // ...state,
-      // isReviewModalOpen: true,
-      //     };
     },
     handleSelectQuestionsModal: (state: interviewerSliceStates) => {
-      // state.isSelectQuestionModalOpen
-      //   ? (state.isSelectQuestionModalOpen = false)
-      //   : (state.isSelectQuestionModalOpen = true);
       return state.isSelectQuestionModalOpen
         ? {
             ...state,
@@ -215,7 +199,6 @@ export const interviewerSlice = createSlice({
     },
 
     handleSearchInputChange: (state: interviewerSliceStates, action: any) => {
-      // state.searchText = action.payload.target.value;
       return {
         ...state,
         searchText: action.payload.target.value,
@@ -234,8 +217,6 @@ export const interviewerSlice = createSlice({
       if (existingIndex !== -1) {
         const newCreatQuizArr = [...state.createQuizSetWiseInfoBody];
         newCreatQuizArr.splice(existingIndex, 1);
-
-        // state.createQuizSetWiseInfoBody = newCreatQuizArr;
         return {
           ...state,
           createQuizSetWiseInfoBody: newCreatQuizArr,
@@ -254,15 +235,6 @@ export const interviewerSlice = createSlice({
       );
       if (action.payload.event.target.checked) {
         if (existingIndex === -1) {
-          // state.createQuizSetWiseInfoBody = [
-          //   ...state.createQuizSetWiseInfoBody,
-          //   {
-          //     version: action.payload.questionDeatils.version,
-          //     subjectName: action.payload.questionDeatils.subjectName,
-          //     tag: action.payload.questionDeatils.tag,
-          //     questionIds: [action.payload.questionDeatils.questionId],
-          //   },
-          // ];
           return {
             ...state,
             createQuizSetWiseInfoBody: {
@@ -278,7 +250,6 @@ export const interviewerSlice = createSlice({
           newArray[existingIndex].questionIds.push(
             action.payload.questionDeatils.questionId
           );
-          // state.createQuizSetWiseInfoBody = newArray;
           return { ...state, createQuizSetWiseInfoBody: newArray };
         }
       } else {
@@ -292,17 +263,12 @@ export const interviewerSlice = createSlice({
           if (newArray[existingIndex].questionIds.length < 1) {
             newArray.splice(existingIndex, 1);
           }
-          //  state.createQuizSetWiseInfoBody = newArray;
           return { ...state, createQuizSetWiseInfoBody: newArray };
         }
       }
     },
 
     handlePreviewModal: (state: interviewerSliceStates) => {
-      // state.previewModalStates.isPreviewModalOpen
-      //   ? (state.previewModalStates.isPreviewModalOpen = false)
-      //   : (state.previewModalStates.isPreviewModalOpen = true);
-
       return state.previewModalStates.isPreviewModalOpen
         ? {
             ...state,
@@ -324,8 +290,6 @@ export const interviewerSlice = createSlice({
     builder.addCase(
       fetchPastEvaluations.fulfilled,
       (state: interviewerSliceStates, action: any) => {
-        // state.pastEvaluationsTableData = action.payload;
-        // state.loadingStatus.tableLoader = false;
         return {
           ...state,
           pastEvaluationsTableData: action.payload,
@@ -339,7 +303,6 @@ export const interviewerSlice = createSlice({
     builder.addCase(
       fetchPastEvaluations.rejected,
       (state: interviewerSliceStates, action: any) => {
-        // state.loadingStatus.tableLoader = false;
         return {
           ...state,
           loadingStatus: {
@@ -352,7 +315,6 @@ export const interviewerSlice = createSlice({
     builder.addCase(
       fetchPastEvaluations.pending,
       (state: interviewerSliceStates, action: any) => {
-        // state.loadingStatus.tableLoader = true;
         return {
           ...state,
           loadingStatus: {
@@ -366,8 +328,6 @@ export const interviewerSlice = createSlice({
     builder.addCase(
       fetchPastEvaluationsIndividualSummary.fulfilled,
       (state: interviewerSliceStates, action: any) => {
-        // state.pastEvaluationIndividualSummaryData = action.payload;
-        // state.loadingStatus.moadlLoader = false;
         return {
           ...state,
           pastEvaluationIndividualSummaryData: action.payload,
@@ -381,7 +341,6 @@ export const interviewerSlice = createSlice({
     builder.addCase(
       fetchPastEvaluationsIndividualSummary.rejected,
       (state: interviewerSliceStates, action: any) => {
-        // state.loadingStatus.moadlLoader = false;
         return {
           ...state,
           loadingStatus: {
@@ -394,7 +353,6 @@ export const interviewerSlice = createSlice({
     builder.addCase(
       fetchPastEvaluationsIndividualSummary.pending,
       (state: interviewerSliceStates, action: any) => {
-        // state.loadingStatus.moadlLoader = true;
         return {
           ...state,
           loadingStatus: {
@@ -407,8 +365,6 @@ export const interviewerSlice = createSlice({
     builder.addCase(
       fetchPastEvaluationsIndividualAnswers.fulfilled,
       (state: interviewerSliceStates, action: any) => {
-        // state.pastEvaluationIndividualAnswersData = action.payload;
-        // state.loadingStatus.moadlLoader = false;
         return {
           ...state,
           pastEvaluationIndividualAnswersData: action.payload,
@@ -422,7 +378,6 @@ export const interviewerSlice = createSlice({
     builder.addCase(
       fetchPastEvaluationsIndividualAnswers.rejected,
       (state: interviewerSliceStates, action: any) => {
-        // state.loadingStatus.moadlLoader = false;
         return {
           ...state,
           loadingStatus: {
@@ -435,7 +390,6 @@ export const interviewerSlice = createSlice({
     builder.addCase(
       fetchPastEvaluationsIndividualAnswers.pending,
       (state: interviewerSliceStates, action: any) => {
-        // state.loadingStatus.moadlLoader = true;
         return {
           ...state,
           loadingStatus: {
@@ -449,8 +403,6 @@ export const interviewerSlice = createSlice({
     builder.addCase(
       fetchsubjectwiseQuestionSets.fulfilled,
       (state: interviewerSliceStates, action: any) => {
-        // state.subjectwiseQuestionSets = action.payload;
-        // state.loadingStatus.cardLoader = false;
         return {
           ...state,
           subjectwiseQuestionSets: action.payload,
@@ -464,7 +416,6 @@ export const interviewerSlice = createSlice({
     builder.addCase(
       fetchsubjectwiseQuestionSets.rejected,
       (state: interviewerSliceStates, action: any) => {
-        // state.loadingStatus.cardLoader = false;
         return {
           ...state,
           loadingStatus: {
@@ -477,7 +428,6 @@ export const interviewerSlice = createSlice({
     builder.addCase(
       fetchsubjectwiseQuestionSets.pending,
       (state: interviewerSliceStates, action: any) => {
-        // state.loadingStatus.cardLoader = true;
         return {
           ...state,
           loadingStatus: {
@@ -503,15 +453,6 @@ export const interviewerSlice = createSlice({
           );
 
           if (existingIndex === -1) {
-            // state.createQuizSetWiseInfoBody = [
-            //   ...state.createQuizSetWiseInfoBody,
-            //   {
-            // version: action.payload.subjecDetails.version,
-            // subjectName: action.payload.subjecDetails.subjectName,
-            // tag: action.payload.subjecDetails.tag,
-            // questionIds: questionIdsArray,
-            //   },
-            // ];
             return {
               ...state,
               createQuizSetWiseInfoBody: [
@@ -528,20 +469,10 @@ export const interviewerSlice = createSlice({
         }
       }
     );
-    // builder.addCase(
-    //   handleAddQuestionSetsToCreteQuizBody.rejected,
-    //   (state: interviewerSliceStates, action: any) => {}
-    // );
-    // builder.addCase(
-    //   handleAddQuestionSetsToCreteQuizBody.pending,
-    //   (state: interviewerSliceStates, action: any) => {}
-    // );
 
     builder.addCase(
       fetchFilteredQuestionSets.fulfilled,
       (state: interviewerSliceStates, action: any) => {
-        //  state.subjectwiseQuestionSets = action.payload;
-        // state.loadingStatus.cardLoader = false;
         return {
           ...state,
           subjectwiseQuestionSets: action.payload,
@@ -555,7 +486,6 @@ export const interviewerSlice = createSlice({
     builder.addCase(
       fetchFilteredQuestionSets.rejected,
       (state: interviewerSliceStates, action: any) => {
-        // state.loadingStatus.cardLoader = false;
         return {
           ...state,
           loadingStatus: {
@@ -568,7 +498,6 @@ export const interviewerSlice = createSlice({
     builder.addCase(
       fetchFilteredQuestionSets.pending,
       (state: interviewerSliceStates, action: any) => {
-        // state.loadingStatus.cardLoader = true;
         return {
           ...state,
           loadingStatus: {
@@ -582,8 +511,6 @@ export const interviewerSlice = createSlice({
     builder.addCase(
       fetchQuestionForSetAndSubject.fulfilled,
       (state: interviewerSliceStates, action: any) => {
-        //  state.selectQuestions = action.payload;
-        //   state.loadingStatus.moadlLoader = false;
         return {
           ...state,
           selectQuestions: action.payload,
@@ -597,7 +524,6 @@ export const interviewerSlice = createSlice({
     builder.addCase(
       fetchQuestionForSetAndSubject.rejected,
       (state: interviewerSliceStates, action: any) => {
-        //state.loadingStatus.moadlLoader = false;
         return {
           ...state,
           loadingStatus: {
@@ -610,7 +536,6 @@ export const interviewerSlice = createSlice({
     builder.addCase(
       fetchQuestionForSetAndSubject.pending,
       (state: interviewerSliceStates, action: any) => {
-        // state.loadingStatus.moadlLoader = true;
         return {
           ...state,
           loadingStatus: {
@@ -624,8 +549,6 @@ export const interviewerSlice = createSlice({
     builder.addCase(
       fetchPreviewQuestionsForCreateQuiz.fulfilled,
       (state: interviewerSliceStates, action: any) => {
-        //  state.previewModalStates.previewQuestions = action.payload;
-        //  state.loadingStatus.moadlLoader = true;
         return {
           ...state,
           previewModalStates: {
@@ -642,7 +565,6 @@ export const interviewerSlice = createSlice({
     builder.addCase(
       fetchPreviewQuestionsForCreateQuiz.rejected,
       (state: interviewerSliceStates, action: any) => {
-        // state.loadingStatus.moadlLoader = false;
         return {
           ...state,
           loadingStatus: {
@@ -655,7 +577,6 @@ export const interviewerSlice = createSlice({
     builder.addCase(
       fetchPreviewQuestionsForCreateQuiz.pending,
       (state: interviewerSliceStates, action: any) => {
-        // state.loadingStatus.moadlLoader = true;
         return {
           ...state,
           loadingStatus: {
@@ -669,11 +590,6 @@ export const interviewerSlice = createSlice({
     builder.addCase(
       genrateQuizLink.fulfilled,
       (state: interviewerSliceStates, action: any) => {
-        // state.previewModalStates.quizLink = `${window.location.origin}/rms-aug/test/${action.payload?.quizId}/${action.payload?.quizLink}`;
-        // state.previewModalStates.isPreviewModalOpen = false;
-        // state.previewModalStates.previewQuestions = [];
-        // state.createQuizSetWiseInfoBody = [];
-        // state.loadingStatus.buttonLoader = false;
         return {
           ...state,
           previewModalStates: {
@@ -692,7 +608,6 @@ export const interviewerSlice = createSlice({
     builder.addCase(
       genrateQuizLink.rejected,
       (state: interviewerSliceStates, action: any) => {
-        //state.loadingStatus.buttonLoader = false;
         return {
           ...state,
           loadingStatus: {
@@ -705,7 +620,6 @@ export const interviewerSlice = createSlice({
     builder.addCase(
       genrateQuizLink.pending,
       (state: interviewerSliceStates, action: any) => {
-        // state.loadingStatus.buttonLoader = true;
         return {
           ...state,
           loadingStatus: {
