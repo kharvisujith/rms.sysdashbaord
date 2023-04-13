@@ -4,7 +4,9 @@ import TopNavBar from "../../components/TopNavBar/TopNavBar";
 const SubjectExpertUpload = (props: any) => {
   return (
     <>
-      <TopNavBar role={props.role} setRole={props.setRole} />
+      <TopNavBar
+      //  role={props.role} setRole={props.setRole}
+      />
       <SubjectExpertNewUpload />
     </>
   );

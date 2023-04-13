@@ -26,6 +26,7 @@ const initialState: interviewerSliceStates = {
     cardLoader: false,
     buttonLoader: false,
   },
+  role: localStorage.getItem("role") || "Interviewer",
 };
 
 export const fetchPastEvaluations = createAsyncThunk<any>(
@@ -166,7 +167,13 @@ export const interviewerSlice = createSlice({
   name: "interviewer",
   initialState,
   reducers: {
-    handleReviewAnswersModal: (state: any) => {
+    handleRole: (state: interviewerSliceStates, action: any) => {
+      return {
+        ...state,
+        role: action.payload,
+      };
+    },
+    handleReviewAnswersModal: (state: interviewerSliceStates) => {
       // state.isReviewModalOpen
       //   ? (state.isReviewModalOpen = false)
       //   : (state.isReviewModalOpen = true);
@@ -718,4 +725,5 @@ export const {
   handleSearchInputChange,
   handleSelectQuestionsCheckBoxChange,
   handlePreviewModal,
+  handleRole,
 } = interviewerSlice.actions;

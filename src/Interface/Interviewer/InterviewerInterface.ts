@@ -150,4 +150,5 @@ export interface interviewerSliceStates {
     cardLoader: boolean;
     buttonLoader: boolean;
   };
+  role: any;
 }

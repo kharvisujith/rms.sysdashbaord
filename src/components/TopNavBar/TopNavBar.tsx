@@ -27,6 +27,7 @@ import { randomColor } from "../../utils/Utils";
 import logo from "../../assets/images/logo.png";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { number } from "prop-types";
+import { useAppDispatch, useAppSelector } from "../../Store/ConfigureStrore";
 
 const subjectExperPages = [
   { name: "Home", route: "/" },
@@ -39,8 +40,9 @@ const InterviewerPages = [
 ];
 const settings = ["Logout"];
 
-const TopNavBar = (props: any) => {
-  const { role, setRole } = props;
+const TopNavBar = () => {
+  const { role } = useAppSelector((state: any) => state.interviewer);
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
@@ -63,9 +65,10 @@ const TopNavBar = (props: any) => {
   };
 
   const handleRoleChange = (event: SelectChangeEvent) => {
-    setRole(event.target.value);
+    dispatch({ type: "interviewer/handleRole", payload: event.target.value });
     setAnchorElUser(null);
     navigate("/");
+    localStorage.setItem("role", event.target.value);
   };
 
   return (
@@ -147,7 +150,6 @@ const TopNavBar = (props: any) => {
                       >
                         {page.name}
                       </NavLink>
-                      {/* <Typography textAlign="center">{page.name}</Typography> */}
                     </MenuItem>
                   ))
                 : null}

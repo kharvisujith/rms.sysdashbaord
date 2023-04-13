@@ -33,8 +33,8 @@ const SubjectExpertNewUpload = () => {
         </Box>
 
         <QuestionSetsTable
-          subjectWiseQuestionSets={subjectWiseQuestionSets}
-          isQuizSetExists={isQuizSetExists}
+        // subjectWiseQuestionSets={subjectWiseQuestionSets}
+        // isQuizSetExists={isQuizSetExists}
         />
       </Box>
     </>

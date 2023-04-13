@@ -14,12 +14,16 @@ import {
 } from "@mui/material";
 import { ChangeEvent, useState } from "react";
 import Swal from "sweetalert2";
-import { upLoadExcel } from "../../../api/apiAgent";
+import { apiAgent, upLoadExcel } from "../../../api/apiAgent";
 import "./DownloadAndUpload.style.scss";
+import { useAppDispatch } from "../../../Store/ConfigureStrore";
+import { fetchSubjectwiseQuestionSets } from "../../../Redux/subjectexpertSlice";
 
 const UploadDialog = (props: any) => {
   const { openFileUpload, setOpenFileUpload, subject, subjectwiseQuizDetails } =
     props;
+
+  const dispatch = useAppDispatch();
 
   const [formError, setFormError] = useState<any>({
     version: false,
@@ -34,20 +38,20 @@ const UploadDialog = (props: any) => {
   });
   const [file, setFile] = useState<File>();
   const [loader, setLoader] = useState<Boolean>(false);
-  const handleUploadClick = () => {
+  const handleUploadClick = async () => {
     if (uploadData.version && uploadData.subject && uploadData.tags && file) {
       setLoader(true);
       const formData = new FormData();
       formData.append("formFile", file);
 
-      upLoadExcel(
-        uploadData.version,
-        uploadData.subject,
-        uploadData.tags,
-        formData
-      )
-        .then((res) => res.data)
-        .then((res) => {
+      try {
+        const response = await apiAgent.subjectExpert.upLoadExcel(
+          uploadData.version,
+          uploadData.subject,
+          uploadData.tags,
+          formData
+        );
+        if (response.status === 200) {
           setLoader(false);
           setOpenFileUpload(false);
           subjectwiseQuizDetails(subject);
@@ -59,17 +63,53 @@ const UploadDialog = (props: any) => {
             confirmButtonText: "Okay",
             customClass: "swal-alert",
           });
-        })
-        .catch((error: any) => {
-          setLoader(false);
-          Swal.fire({
-            title: "Failed",
-            text: "Failed to Upload Question Set",
-            icon: "error",
-            confirmButtonText: "Okay",
-            customClass: "swal-alert",
-          });
+          try {
+            await dispatch(fetchSubjectwiseQuestionSets());
+          } catch (error: any) {
+            console.log("Error in fetching quiz data", error);
+          }
+        }
+      } catch (error: any) {
+        setLoader(false);
+        Swal.fire({
+          title: "Failed",
+          text: "Failed to Upload Question Set",
+          icon: "error",
+          confirmButtonText: "Okay",
+          customClass: "swal-alert",
         });
+      }
+
+      // upLoadExcel(
+      //   uploadData.version,
+      //   uploadData.subject,
+      //   uploadData.tags,
+      //   formData
+      // )
+      //   .then((res) => res.data)
+      //   .then((res) => {
+      //     setLoader(false);
+      //     setOpenFileUpload(false);
+      //     subjectwiseQuizDetails(subject);
+      //     setUploadData({ version: "", subject: "", tags: "" });
+      //     Swal.fire({
+      //       title: "Success",
+      //       text: "Question Set Uploaded Succesfully",
+      //       icon: "success",
+      //       confirmButtonText: "Okay",
+      //       customClass: "swal-alert",
+      //     });
+      //   })
+      //   .catch((error: any) => {
+      //     setLoader(false);
+      //     Swal.fire({
+      //       title: "Failed",
+      //       text: "Failed to Upload Question Set",
+      //       icon: "error",
+      //       confirmButtonText: "Okay",
+      //       customClass: "swal-alert",
+      //     });
+      //   });
     } else if (!uploadData.version) {
       setFormError({ ...formError, version: true });
     } else if (!uploadData.subject) {
@@ -110,6 +150,7 @@ const UploadDialog = (props: any) => {
             type="text"
             className="items"
             onChange={handleTextChange}
+            required
           />
           {formError.version && (
             <Typography className="error">
@@ -119,7 +160,7 @@ const UploadDialog = (props: any) => {
 
           <FormControl variant="standard" className="items">
             <InputLabel id="demo-simple-select-standard-label">
-              Subject
+              Subject*
             </InputLabel>
             <Select
               name="subject"
@@ -127,6 +168,7 @@ const UploadDialog = (props: any) => {
               value={subject === "ALL" ? uploadData.subject : subject}
               onChange={handleTextChange}
               disabled={subject === "ALL" ? false : true}
+              required
             >
               <MenuItem value="">
                 <em>None</em>
@@ -146,6 +188,7 @@ const UploadDialog = (props: any) => {
             type="text"
             className="items"
             onChange={handleTextChange}
+            required
           />
           {formError.tags && (
             <Typography className="error">Please Enter Tags</Typography>
