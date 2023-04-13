@@ -1,0 +1,23 @@
+.container {
+  margin-left: 5%;
+  margin-right: 5%;
+
+  .options-box {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 5%;
+
+    .buttons-container {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 5%;
+      width: 100%;
+
+      .button-option {
+        width: fit-content;
+      }
+    }
+  }
+}

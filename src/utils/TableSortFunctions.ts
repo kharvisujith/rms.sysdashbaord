@@ -1,4 +1,4 @@
-import { subjectWiseQuizListResponse } from "../Interface/QuizDetails";
+import { subjectWiseQuizListResponse } from "../Interface/Interviewer/InterviewerInterface";
 
 export const getComparator = (order: string, orderBy: string) => {
   return order === "desc"

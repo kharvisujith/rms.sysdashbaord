@@ -1,4 +1,4 @@
-export const optionIds = ["A", "B", "C", "D"];
+export const optionIds = ["A", "B", "C", "D", "E", "F"];
 
 export const findInnerArrayElement = (outerArray: any, innerElement: any) => {
   for (let i = 0; i < outerArray.length; i++) {
@@ -28,4 +28,8 @@ export const randomColor = () => {
   let color = "#" + hex.toString(16);
 
   return color;
+};
+
+export const customStylesModal = {
+  overlay: { zIndex: 1000 },
 };

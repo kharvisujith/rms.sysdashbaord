@@ -25,9 +25,14 @@ import "./TopNavBar.style.scss";
 import { setOriginalNode } from "typescript";
 import { randomColor } from "../../utils/Utils";
 import logo from "../../assets/images/logo.png";
+import LogoutIcon from "@mui/icons-material/Logout";
 import { number } from "prop-types";
+import { useAppDispatch, useAppSelector } from "../../Store/ConfigureStrore";
 
-const subjectExperPages = [{ name: "Home", route: "/" }];
+const subjectExperPages = [
+  { name: "Home", route: "/" },
+  { name: "New Upload", route: "/subjectexpert/new" },
+];
 const InterviewerPages = [
   { name: "Home", route: "/" },
   { name: "Create Quiz", route: "/createquiz" },
@@ -35,8 +40,9 @@ const InterviewerPages = [
 ];
 const settings = ["Logout"];
 
-const TopNavBar = (props: any) => {
-  const { role, setRole } = props;
+const TopNavBar = () => {
+  const { role } = useAppSelector((state: any) => state.interviewer);
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
@@ -59,9 +65,10 @@ const TopNavBar = (props: any) => {
   };
 
   const handleRoleChange = (event: SelectChangeEvent) => {
-    setRole(event.target.value);
+    dispatch({ type: "interviewer/handleRole", payload: event.target.value });
     setAnchorElUser(null);
     navigate("/");
+    localStorage.setItem("role", event.target.value);
   };
 
   return (
@@ -109,10 +116,18 @@ const TopNavBar = (props: any) => {
                       key={index}
                       onClick={() => handleCloseNavMenu(page.route)}
                     >
-                      <NavLink
+                      {/* <NavLink
                         to={page.route}
                         className={({ isActive }) =>
                           isActive ? "active-page" : "page-names"
+                        }
+                      >
+                        {page.name}
+                      </NavLink> */}
+                      <NavLink
+                        to={page.route}
+                        className={({ isActive }) =>
+                          isActive ? "active-page-menu" : "page-menu"
                         }
                       >
                         {page.name}
@@ -135,7 +150,6 @@ const TopNavBar = (props: any) => {
                       >
                         {page.name}
                       </NavLink>
-                      {/* <Typography textAlign="center">{page.name}</Typography> */}
                     </MenuItem>
                   ))
                 : null}
@@ -150,7 +164,7 @@ const TopNavBar = (props: any) => {
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {role === "Subject Expert"
               ? subjectExperPages.map((page: any, index: number) => (
-                  <Box className="pages">
+                  <Box className="pages" key={index}>
                     <NavLink
                       to={page.route}
                       className={({ isActive }) =>
@@ -162,8 +176,8 @@ const TopNavBar = (props: any) => {
                   </Box>
                 ))
               : role === "Interviewer"
-              ? InterviewerPages.map((page: any) => (
-                  <Box className="pages">
+              ? InterviewerPages.map((page: any, index: any) => (
+                  <Box className="pages" key={index}>
                     <NavLink
                       to={page.route}
                       className={({ isActive }) =>
@@ -184,7 +198,11 @@ const TopNavBar = (props: any) => {
                 arrow
               >
                 <IconButton sx={{ p: 0 }} onClick={handleOpenUserMenu}>
-                  <Avatar>
+                  <Avatar
+                    style={{
+                      backgroundColor: "grey",
+                    }}
+                  >
                     <AccountCircle />
                   </Avatar>
                 </IconButton>
@@ -240,9 +258,14 @@ const TopNavBar = (props: any) => {
                   </Select>
                 </FormControl>
 
-                {settings.map((setting) => (
-                  <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                {settings.map((setting: any, index: number) => (
+                  <MenuItem onClick={handleCloseUserMenu} key={index}>
+                    <IconButton>
+                      <LogoutIcon />
+                    </IconButton>
                     <Typography textAlign="center">{setting}</Typography>
+
+                    {/* <Typography textAlign="center">{setting}</Typography> */}
                   </MenuItem>
                 ))}
               </Menu>

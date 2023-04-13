@@ -1,0 +1,43 @@
+.headings {
+  display: flex;
+  text-transform: uppercase;
+
+  .topic {
+    font-weight: 530;
+    padding-right: 0.2rem;
+  }
+}
+
+.question-main {
+  display: flex;
+  justify-content: flex-start;
+  gap: 2%;
+  align-items: center;
+  margin-bottom: 0.5rem;
+
+  .icons-box {
+    width: 10%;
+    display: flex;
+    gap: 15%;
+    justify-content: flex-start;
+  }
+}
+
+.info-div {
+  margin: top 1rem;
+  margin-bottom: 1rem;
+  .question-details {
+    display: flex;
+  }
+  .info {
+    font-weight: 520;
+    font-size: 1rem;
+    margin-right: 0.3rem;
+  }
+}
+
+.save-button {
+  padding-top: 0.4rem;
+  padding-bottom: 0.4rem;
+  width: 10%;
+}

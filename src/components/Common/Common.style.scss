@@ -1,0 +1,138 @@
+.page-loader {
+  width: 100%;
+  height: 80vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.table-loader {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  padding: 1rem;
+}
+
+.modal-loader {
+  width: 100%;
+  height: 90%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.button-loader {
+  margin: 1rem;
+}
+
+/* these should be moved to common.scss in subject expert later */
+.MuiTableCell-root {
+  padding: 0.5rem !important;
+}
+
+.table-button {
+  height: 1.5rem !important;
+}
+.delete-icon {
+  height: 1.5rem !important;
+}
+
+/* for sweetalert */
+.swal-alert {
+  width: 25rem !important;
+  height: 20rem !important;
+  font-size: 0.8rem !important;
+}
+
+::-webkit-scrollbar {
+  width: 0.3rem;
+  height: 0.4rem;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  /* background: #ebebeb; */
+  background: #000;
+  border-radius: 20px;
+}
+
+//this has to be changeddd to --> footer-content
+// .close-button-container {
+//   margin-top: 0.5rem;
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   gap: 10%;
+//   border: 2px solid purple;
+// }
+
+// .modal-content-container {
+//   height: 86%;
+//   padding-left: 1rem;
+//   padding-right: 1rem;
+//   overflow-y: scroll;
+// }
+
+// .modal-content-container-subparts {
+//   height: 86%;
+//   padding-left: 1rem;
+//   padding-right: 1rem;
+
+//   .modal-headers-info {
+//     height: fit-content;
+//     border: 2px solid cyan;
+//   }
+
+//   .modal-content-body {
+//     height: 80%;
+//   }
+// }
+
+// .modal-content-container-subparts {
+//   // height: 86%;
+//   padding-left: 1rem;
+//   padding-right: 1rem;
+// }
+
+.modal-container {
+  height: 99%;
+  display: flex;
+  flex-direction: column;
+
+  .header-container {
+    height: auto;
+
+    .header-content {
+      display: flex;
+      justify-content: center;
+      gap: 3%;
+      padding: 0.3rem;
+    }
+  }
+  .content-container {
+    flex: 1;
+    overflow-y: scroll;
+  }
+  .no-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .footer-container {
+    height: auto;
+
+    .footer-content {
+      // margin-top: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10%;
+      // border: 2px solid purple;
+    }
+  }
+}

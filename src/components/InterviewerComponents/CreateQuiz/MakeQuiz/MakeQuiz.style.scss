@@ -1,0 +1,24 @@
+.container {
+  margin-left: 5%;
+  margin-right: 5%;
+  // border: 2px solid yellow;
+  .favorites-container {
+    margin-bottom: 2rem;
+
+    .tags-box {
+      display: flex;
+      align-items: flex-end;
+      // border: 2px solid red;
+
+      .tags-container {
+        min-height: 4rem;
+        padding: 1rem;
+
+        .tagname {
+          margin: 0.3rem;
+          text-transform: capitalize;
+        }
+      }
+    }
+  }
+}

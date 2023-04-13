@@ -1,0 +1,30 @@
+.main-layout-wrap {
+  display: flex;
+  flex-direction: column;
+
+  .info-box {
+    display: flex;
+    flex-direction: column;
+    margin: 3rem;
+
+    .info-details {
+      margin-left: 6rem;
+      text-transform: capitalize;
+    }
+  }
+
+  .start-test-box {
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    justify-content: center;
+
+    .start-test-btn {
+      padding-top: 1rem;
+      padding-bottom: 1rem;
+      padding-left: 3rem;
+      padding-right: 3rem;
+      font-size: 1.5rem;
+    }
+  }
+}
