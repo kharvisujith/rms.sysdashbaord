@@ -3,7 +3,9 @@ import SubjectExpertHome from "../../components/SubjectExpertComponents/SubjectE
 const SubjectExpert = (props: any) => {
   return (
     <>
-      <TopNavBar role={props.role} setRole={props.setRole} />
+      <TopNavBar
+      //role={props.role} setRole={props.setRole}
+      />
       <SubjectExpertHome />
     </>
   );
